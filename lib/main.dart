@@ -22,8 +22,8 @@ import 'src/crashlytics/crashlytics.dart';
 import 'src/games_services/games_services.dart';
 import 'src/games_services/score.dart';
 import 'src/in_app_purchase/in_app_purchase.dart';
-import 'src/level_selection/level_selection_screen.dart';
-import 'src/level_selection/levels.dart';
+import 'src/tutorial/tutorial_screen.dart';
+import 'src/tutorial/levels.dart';
 import 'src/main_menu/main_menu_screen.dart';
 import 'src/play_session/play_session_screen.dart';
 import 'src/player_progress/persistence/local_storage_player_progress_persistence.dart';
@@ -132,10 +132,9 @@ class MyApp extends StatelessWidget {
               const MainMenuScreen(key: Key('main menu')),
           routes: [
             GoRoute(
-                path: 'play',
+                path: 'tutorial',
                 pageBuilder: (context, state) => buildMyTransition<void>(
-                      child: const LevelSelectionScreen(
-                          key: Key('level selection')),
+                      child: const TutorialScreen(key: Key('tutorial')),
                       color: context.watch<Palette>().backgroundLevelSelection,
                     ),
                 routes: [
@@ -143,7 +142,7 @@ class MyApp extends StatelessWidget {
                     path: 'session/:level',
                     pageBuilder: (context, state) {
                       final levelNumber = int.parse(state.params['level']!);
-                      final level = gameLevels
+                      final level = tutorialLevels
                           .singleWhere((e) => e.number == levelNumber);
                       return buildMyTransition<void>(
                         child: PlaySessionScreen(
