@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:game_template/src/game_data/letter_grid.dart';
 import 'package:game_template/src/game_data/letter_tile.dart';
+import 'package:game_template/src/game_data/word_helper.dart';
 import 'package:game_template/src/game_widgets/letter_tile_widget.dart';
 
 class LetterGridWidget extends StatefulWidget {
@@ -29,7 +32,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         ])
       ],
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        ElevatedButton(onPressed: () {}, child: Text('Submit')),
+        ElevatedButton(onPressed: submitGuess, child: Text('Submit')),
         ElevatedButton(onPressed: clearGuess, child: Text('Clear')),
       ])
     ]);
@@ -50,5 +53,24 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         }
       }
     });
+  }
+
+  void submitGuess() {
+    if (_guess.length < 3) {
+      log('guess must be at least 3 letters');
+    } else if (WordHelper.isValidWord(_guess)) {
+      setState(() {
+        for (LetterTile? tile in _grid.letterTiles) {
+          if (tile != null && tile.selected) {
+            //will need to consider start and end tiles
+            tile.selected = false;
+            tile.addCharge();
+          }
+        }
+      });
+    } else {
+      log('invalid word');
+    }
+    clearGuess();
   }
 }
