@@ -3,6 +3,7 @@ class LetterTile {
   late TileType tileType;
   late int requiredCharges;
   late int currentCharges;
+  bool selected = false;
 
   LetterTile(String letter, TileType tileType, int requiredCharges,
       int currentCharges) {

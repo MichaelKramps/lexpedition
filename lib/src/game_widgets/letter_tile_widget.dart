@@ -4,44 +4,69 @@ import 'package:game_template/src/game_widgets/tile_info_widget.dart';
 
 class LetterTileWidget extends StatefulWidget {
   final LetterTile? letterTile;
+  final Function(String) updateGuess;
 
-  LetterTileWidget({super.key, required this.letterTile});
+  LetterTileWidget(
+      {super.key, required this.letterTile, required this.updateGuess});
 
   @override
   State<LetterTileWidget> createState() => _LetterTileWidgetState();
 
-  Color determineTileColor(letterTile) {
+  Color determineTileColor(LetterTile letterTile) {
     if (letterTile.isCharged()) {
-      return Colors.yellow;
+      return Colors.amber;
     }
 
     switch (letterTile.tileType) {
       case (TileType.start):
-        return Colors.green;
+        return Colors.green.shade700;
       case (TileType.end):
-        return Colors.red;
+        return Colors.red.shade700;
       default:
-        return Colors.blue;
+        return Colors.blueGrey.shade600;
+    }
+  }
+
+  BorderSide determineBorder(LetterTile letterTile) {
+    if (letterTile.selected) {
+      return BorderSide(width: 1, color: Colors.orange);
+    } else {
+      return BorderSide(width: 0);
     }
   }
 }
 
 class _LetterTileWidgetState extends State<LetterTileWidget> {
+  late LetterTile? _tile = widget.letterTile;
+
   @override
   Widget build(BuildContext context) {
-    if (widget.letterTile != null) {
-      final ButtonStyle style = ElevatedButton.styleFrom(
-          fixedSize: Size.fromHeight(50),
-          backgroundColor: widget.determineTileColor(widget.letterTile));
-
+    if (_tile != null) {
       LetterTile nonNullLetterTile =
-          widget.letterTile ?? new LetterTile('', TileType.basic, 0, 0);
-      return ElevatedButton(
-          onPressed: () {},
-          style: style,
-          child: TileInfoWidget(letterTile: nonNullLetterTile));
+          _tile ?? new LetterTile('', TileType.basic, 0, 0);
+
+      final ButtonStyle style = ElevatedButton.styleFrom(
+          fixedSize: Size.square(80),
+          backgroundColor: widget.determineTileColor(nonNullLetterTile),
+          side: widget.determineBorder(nonNullLetterTile));
+
+      return Container(
+          margin: EdgeInsets.all(2),
+          child: ElevatedButton(
+              onPressed: () {
+                widget.updateGuess(nonNullLetterTile.letter.toUpperCase());
+                setState((() {
+                  nonNullLetterTile.selected = true;
+                }));
+              },
+              style: style,
+              child: TileInfoWidget(letterTile: nonNullLetterTile)));
     } else {
-      return SizedBox(width: 50, height: 50);
+      return Container(
+          margin: EdgeInsets.all(2),
+          width: 80,
+          height: 80,
+          color: Colors.grey.shade200);
     }
   }
 }

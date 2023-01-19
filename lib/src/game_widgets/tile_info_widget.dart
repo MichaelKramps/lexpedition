@@ -11,7 +11,7 @@ class TileInfoWidget extends StatefulWidget {
 
   Color determineDotColor(int charge, int currentCharges) {
     if (charge < currentCharges) {
-      return Colors.green;
+      return Colors.amber;
     } else {
       return Colors.black;
     }
@@ -21,15 +21,17 @@ class TileInfoWidget extends StatefulWidget {
 class _TileInfoWidgetState extends State<TileInfoWidget> {
   @override
   Widget build(BuildContext context) {
-    String letter = widget.letterTile?.letter.toUpperCase() ?? '';
-    return Column(children: [
-      Text(letter),
-      Row(children: [
+    String letter = widget.letterTile.letter.toUpperCase();
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Text(letter, style: TextStyle(fontSize: 56)),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         for (int charge = 0;
             charge < widget.letterTile.requiredCharges;
             charge++) ...[
           Text('.',
               style: TextStyle(
+                  fontSize: 32,
+                  height: 0.3,
                   color: widget.determineDotColor(
                       charge, widget.letterTile.currentCharges)))
         ]
