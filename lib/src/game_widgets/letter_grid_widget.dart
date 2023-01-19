@@ -68,6 +68,10 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
           }
         }
       });
+      // check for win condition
+      if (_grid.isFullyCharged()) {
+        log('grid fully charged!');
+      }
     } else {
       log('invalid word');
     }

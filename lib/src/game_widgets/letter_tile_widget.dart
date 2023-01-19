@@ -66,7 +66,7 @@ class _LetterTileWidgetState extends State<LetterTileWidget> {
           margin: EdgeInsets.all(2),
           width: 80,
           height: 80,
-          color: Colors.grey.shade200);
+          color: Colors.grey.shade300);
     }
   }
 }
