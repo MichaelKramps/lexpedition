@@ -28,11 +28,15 @@ class LetterTile {
   }
 
   bool allowedToSelect(LetterTile nextSelection) {
-    for (int allowedIndex in this.adjacentIndexes()) {
-      if (allowedIndex == nextSelection.index) {
-        return true;
+    if (!nextSelection.selected) {
+      //cannot select same tile twice
+      for (int allowedIndex in this.adjacentIndexes()) {
+        if (allowedIndex == nextSelection.index) {
+          return true;
+        }
       }
     }
+
     return false;
   }
 
@@ -72,7 +76,9 @@ class LetterTile {
     for (int row in rowsToCheck) {
       for (int column in columnsToCheck) {
         int thisIndex = (row * 6) + column;
-        adjacentIndexes.add(thisIndex);
+        if (thisIndex != this.index) {
+          adjacentIndexes.add(thisIndex);
+        }
       }
     }
 
