@@ -37,30 +37,29 @@ class LetterTileWidget extends StatefulWidget {
 }
 
 class _LetterTileWidgetState extends State<LetterTileWidget> {
-  late LetterTile? _tile = widget.letterTile;
+  late LetterTile _tile =
+      widget.letterTile ?? new LetterTile('', TileType.basic, 0, 0, -1);
 
   @override
   Widget build(BuildContext context) {
-    if (_tile != null) {
-      LetterTile nonNullLetterTile =
-          _tile ?? new LetterTile('', TileType.basic, 0, 0);
-
+    if (widget.letterTile != null) {
       final ButtonStyle style = ElevatedButton.styleFrom(
           fixedSize: Size.square(80),
-          backgroundColor: widget.determineTileColor(nonNullLetterTile),
-          side: widget.determineBorder(nonNullLetterTile));
+          backgroundColor: widget.determineTileColor(_tile),
+          side: widget.determineBorder(_tile));
 
       return Container(
           margin: EdgeInsets.all(2),
           child: ElevatedButton(
               onPressed: () {
-                widget.updateGuess(nonNullLetterTile);
-                setState((() {
-                  nonNullLetterTile.selected = true;
-                }));
+                if (widget.updateGuess(_tile)) {
+                  setState((() {
+                    _tile.selected = true;
+                  }));
+                }
               },
               style: style,
-              child: TileInfoWidget(letterTile: nonNullLetterTile)));
+              child: TileInfoWidget(letterTile: _tile)));
     } else {
       return Container(
           margin: EdgeInsets.all(2),

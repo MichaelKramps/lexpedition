@@ -22,6 +22,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   late LetterGrid _grid = widget.letterGrid;
   String _guess = '';
   List<LetterTile> _guessTiles = [];
+  SprayDirection sprayDirection = SprayDirection.up;
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +43,16 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     ]);
   }
 
-  void updateGuess(LetterTile letterTile) {
-    setState(() {
-      _guess += letterTile.letter;
-      _guessTiles.add(letterTile);
-    });
+  bool updateGuess(LetterTile letterTile) {
+    //verify we are allowed to this tile
+    if (_guess.length == 0 || _guessTiles.last.allowedToSelect(letterTile)) {
+      setState(() {
+        _guess += letterTile.letter;
+        _guessTiles.add(letterTile);
+      });
+      return true;
+    }
+    return false;
   }
 
   void clearGuess() {

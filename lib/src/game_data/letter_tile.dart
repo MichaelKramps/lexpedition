@@ -3,28 +3,16 @@ class LetterTile {
   late TileType tileType;
   late int requiredCharges;
   late int currentCharges;
+  late int index = -1;
   bool selected = false;
 
   LetterTile(String letter, TileType tileType, int requiredCharges,
-      int currentCharges) {
+      int currentCharges, int index) {
     this.letter = letter;
     this.tileType = tileType;
     this.requiredCharges = requiredCharges;
     this.currentCharges = currentCharges;
-  }
-
-  LetterTile.withLetter(String letter) {
-    this.letter = letter;
-    this.tileType = TileType.basic;
-    this.requiredCharges = 1;
-    this.currentCharges = 0;
-  }
-
-  LetterTile.withLetterAndType(String letter, TileType tileType) {
-    this.letter = letter;
-    this.tileType = tileType;
-    this.requiredCharges = 1;
-    this.currentCharges = 0;
+    this.index = index;
   }
 
   void addCharge() {
@@ -37,6 +25,58 @@ class LetterTile {
 
   bool isCharged() {
     return this.currentCharges >= this.requiredCharges;
+  }
+
+  bool allowedToSelect(LetterTile nextSelection) {
+    for (int allowedIndex in this.adjacentIndexes()) {
+      if (allowedIndex == nextSelection.index) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  List<int> adjacentIndexes() {
+    int row = (index / 6).floor();
+    List<int> rowsToCheck = [row];
+
+    if (row == 0) {
+      //first row
+      rowsToCheck.add(row + 1);
+    } else if (row == 5) {
+      //last row
+      rowsToCheck.add(row - 1);
+    } else {
+      //middle row
+      rowsToCheck.add(row - 1);
+      rowsToCheck.add(row + 1);
+    }
+
+    int column = index % 6;
+    List<int> columnsToCheck = [column];
+
+    if (column == 0) {
+      //first column
+      columnsToCheck.add(column + 1);
+    } else if (column == 5) {
+      //last column
+      columnsToCheck.add(column - 1);
+    } else {
+      //middle column
+      columnsToCheck.add(column - 1);
+      columnsToCheck.add(column + 1);
+    }
+
+    List<int> adjacentIndexes = [];
+
+    for (int row in rowsToCheck) {
+      for (int column in columnsToCheck) {
+        int thisIndex = (row * 6) + column;
+        adjacentIndexes.add(thisIndex);
+      }
+    }
+
+    return adjacentIndexes;
   }
 }
 

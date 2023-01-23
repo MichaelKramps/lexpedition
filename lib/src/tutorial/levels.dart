@@ -118,7 +118,7 @@ var tutorialLevels = [
         null,
         'a030',
         'r110',
-        'n010',
+        'o010',
         null,
         null,
         null,

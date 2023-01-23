@@ -13,14 +13,15 @@ class LetterGrid {
   List<LetterTile?> decodeLetterTiles(List<String?> encodedTiles) {
     List<LetterTile?> decodedLetterTiles = [];
 
-    for (final encodedTile in encodedTiles) {
+    for (int index = 0; index < encodedTiles.length; index++) {
+      String? encodedTile = encodedTiles[index];
       if (encodedTile != null) {
         String letter = encodedTile[0];
         TileType tileType = TileType.values[int.parse(encodedTile[1])];
         int requiredCharges = int.parse(encodedTile[2]);
         int currentCharges = int.parse(encodedTile[3]);
-        final LetterTile thisDecodedLetterTile =
-            LetterTile(letter, tileType, requiredCharges, currentCharges);
+        final LetterTile thisDecodedLetterTile = LetterTile(
+            letter, tileType, requiredCharges, currentCharges, index);
         thisDecodedLetterTile.letter = encodedTile[0];
 
         decodedLetterTiles.add(thisDecodedLetterTile);
@@ -64,3 +65,5 @@ class LetterGrid {
     return true;
   }
 }
+
+enum SprayDirection { up, right, down, left }
