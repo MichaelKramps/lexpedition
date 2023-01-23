@@ -24,18 +24,29 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   List<LetterTile> _guessTiles = [];
   SprayDirection sprayDirection = SprayDirection.up;
 
+  GlobalKey gridKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Column(children: [
       Text(_guess, style: TextStyle(fontSize: 32)),
-      for (var row in _grid.rows) ...[
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          for (var letterTile in row) ...[
-            LetterTileWidget(
-                letterTile: letterTile, updateGuess: this.updateGuess)
-          ]
-        ])
-      ],
+      Row(children: [
+        Spacer(),
+        Listener(
+            key: gridKey,
+            onPointerDown: (event) =>
+                {handlePointerDown(event.position.dx, event.position.dy)},
+            child: Column(children: [
+              for (var row in _grid.rows) ...[
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  for (var letterTile in row) ...[
+                    LetterTileWidget(letterTile: letterTile)
+                  ]
+                ])
+              ]
+            ])),
+        Spacer()
+      ]),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         ElevatedButton(onPressed: submitGuess, child: Text('Submit')),
         ElevatedButton(onPressed: clearGuess, child: Text('Clear')),
@@ -43,16 +54,17 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     ]);
   }
 
-  bool updateGuess(LetterTile letterTile) {
-    //verify we are allowed to this tile
+  void updateGuess(int index) {
+    LetterTile letterTile = _grid.letterTiles[index] ??
+        new LetterTile('a', TileType.basic, 0, 0, 0);
+    //verify we are allowed to select this tile
     if (_guess.length == 0 || _guessTiles.last.allowedToSelect(letterTile)) {
       setState(() {
+        letterTile.select();
         _guess += letterTile.letter;
         _guessTiles.add(letterTile);
       });
-      return true;
     }
-    return false;
   }
 
   void clearGuess() {
@@ -97,5 +109,30 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       log('invalid word');
     }
     clearGuess();
+  }
+
+  void handlePointerDown(double pointerx, double pointery) {
+    int selectedIndex = determineTileIndex(pointerx, pointery);
+
+    if (selectedIndex > -1) {
+      updateGuess(selectedIndex);
+    }
+  }
+
+  int determineTileIndex(double pointerx, double pointery) {
+    RenderBox? renderBox =
+        gridKey.currentContext?.findRenderObject() as RenderBox;
+    Offset gridPosition = renderBox.localToGlobal(Offset.zero);
+    double gridx = gridPosition.dx;
+    double gridy = gridPosition.dy;
+
+    log('grid ' + gridx.toString() + ':' + gridy.toString());
+    log('pointer ' + pointerx.toString() + ':' + pointery.toString());
+
+    if (true) {
+      return 0;
+    }
+
+    return -1;
   }
 }

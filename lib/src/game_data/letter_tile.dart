@@ -23,6 +23,10 @@ class LetterTile {
     this.currentCharges -= 1;
   }
 
+  void select() {
+    this.selected = true;
+  }
+
   bool isCharged() {
     return this.currentCharges >= this.requiredCharges;
   }
