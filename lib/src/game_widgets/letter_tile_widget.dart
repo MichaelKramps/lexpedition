@@ -4,7 +4,7 @@ import 'package:game_template/src/game_widgets/tile_info_widget.dart';
 
 class LetterTileWidget extends StatefulWidget {
   final LetterTile? letterTile;
-  final Function(String) updateGuess;
+  final Function(LetterTile) updateGuess;
 
   LetterTileWidget(
       {super.key, required this.letterTile, required this.updateGuess});
@@ -54,7 +54,7 @@ class _LetterTileWidgetState extends State<LetterTileWidget> {
           margin: EdgeInsets.all(2),
           child: ElevatedButton(
               onPressed: () {
-                widget.updateGuess(nonNullLetterTile.letter.toUpperCase());
+                widget.updateGuess(nonNullLetterTile);
                 setState((() {
                   nonNullLetterTile.selected = true;
                 }));

@@ -21,6 +21,7 @@ class LetterGridWidget extends StatefulWidget {
 class _LetterGridWidgetState extends State<LetterGridWidget> {
   late LetterGrid _grid = widget.letterGrid;
   String _guess = '';
+  List<LetterTile> _guessTiles = [];
 
   @override
   Widget build(BuildContext context) {
@@ -41,15 +42,17 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     ]);
   }
 
-  void updateGuess(String letter) {
+  void updateGuess(LetterTile letterTile) {
     setState(() {
-      _guess += letter;
+      _guess += letterTile.letter;
+      _guessTiles.add(letterTile);
     });
   }
 
   void clearGuess() {
     setState(() {
       _guess = '';
+      _guessTiles = [];
       for (LetterTile? tile in _grid.letterTiles) {
         if (tile != null) {
           tile.selected = false;
@@ -63,11 +66,20 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       log('guess must be at least 3 letters');
     } else if (WordHelper.isValidWord(_guess)) {
       setState(() {
-        for (LetterTile? tile in _grid.letterTiles) {
-          if (tile != null && tile.selected) {
-            //will need to consider start and end tiles
-            tile.selected = false;
-            tile.addCharge();
+        for (int tile = 0; tile < _grid.letterTiles.length; tile++) {
+          LetterTile? thisTile = _grid.letterTiles[tile];
+          if (thisTile != null && thisTile.selected) {
+            thisTile.selected = false;
+            bool qualifiesAsBasicTile = thisTile.tileType == TileType.basic;
+            bool qualifiesAsStartTile = thisTile.tileType == TileType.start &&
+                thisTile == _guessTiles[0];
+            bool qualifiesAsEndTile = thisTile.tileType == TileType.end &&
+                thisTile == _guessTiles[_guessTiles.length - 1];
+            if (qualifiesAsBasicTile ||
+                qualifiesAsStartTile ||
+                qualifiesAsEndTile) {
+              thisTile.addCharge();
+            }
           }
         }
       });
