@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:game_template/src/game_data/letter_grid.dart';
 import 'package:game_template/src/game_widgets/letter_grid_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
@@ -78,7 +79,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                     ),
                     const Spacer(),
                     LetterGridWidget(
-                        letterGrid: widget.level.letterGrid,
+                        letterGrid: new LetterGrid(widget.level.gridCode),
                         playerWon: _playerWon),
                     const Spacer(),
                     Padding(

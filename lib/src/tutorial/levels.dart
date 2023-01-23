@@ -9,7 +9,7 @@ var tutorialLevels = [
     name: 'Basic Tile',
     number: 1,
     difficulty: 5,
-    letterGrid: new LetterGrid([
+    gridCode: [
       't020',
       'c021',
       null,
@@ -34,7 +34,7 @@ var tutorialLevels = [
       null,
       null,
       null
-    ]),
+    ],
     // TODO: When ready, change these achievement IDs.
     // You configure this in App Store Connect.
     achievementIdIOS: 'first_win',
@@ -45,7 +45,7 @@ var tutorialLevels = [
     name: 'Start Tile',
     number: 2,
     difficulty: 42,
-    letterGrid: new LetterGrid([
+    gridCode: [
       't020',
       'e110',
       null,
@@ -70,13 +70,13 @@ var tutorialLevels = [
       null,
       null,
       null
-    ]),
+    ],
   ),
   TutorialLevel(
     name: 'End Tile',
     number: 3,
     difficulty: 100,
-    letterGrid: new LetterGrid([
+    gridCode: [
       'e210',
       't210',
       null,
@@ -84,7 +84,7 @@ var tutorialLevels = [
       null,
       null,
       'a020',
-      'r110',
+      'r010',
       null,
       null,
       null,
@@ -101,10 +101,66 @@ var tutorialLevels = [
       null,
       null,
       null
-    ]),
+    ],
     achievementIdIOS: 'finished',
     achievementIdAndroid: 'CdfIhE96aspNWLGSQg',
   ),
+  TutorialLevel(
+      name: 'All 3 Tile Types',
+      number: 4,
+      difficulty: 100,
+      gridCode: [
+        'e220',
+        't210',
+        's010',
+        null,
+        null,
+        null,
+        'a030',
+        'r110',
+        'n010',
+        null,
+        null,
+        null,
+        'l021',
+        'p110',
+        'd010',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]),
+  TutorialLevel(name: 'Energy Spray', number: 5, difficulty: 100, gridCode: [
+    'e210',
+    't010',
+    's010',
+    'z010',
+    null,
+    null,
+    'a030',
+    'r110',
+    'r010',
+    'n020',
+    null,
+    null,
+    'l021',
+    'p010',
+    'd010',
+    'u010',
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]),
 ];
 
 class TutorialLevel {
@@ -114,7 +170,7 @@ class TutorialLevel {
 
   final int difficulty;
 
-  final LetterGrid letterGrid;
+  final List<String?> gridCode;
 
   /// The achievement to unlock when the level is finished, if any.
   final String? achievementIdIOS;
@@ -127,7 +183,7 @@ class TutorialLevel {
     required this.name,
     required this.number,
     required this.difficulty,
-    required this.letterGrid,
+    required this.gridCode,
     this.achievementIdIOS,
     this.achievementIdAndroid,
   }) : assert(
