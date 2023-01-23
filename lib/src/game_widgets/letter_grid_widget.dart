@@ -9,7 +9,10 @@ import 'package:game_template/src/game_widgets/letter_tile_widget.dart';
 class LetterGridWidget extends StatefulWidget {
   final LetterGrid letterGrid;
 
-  const LetterGridWidget({super.key, required this.letterGrid});
+  final Function() playerWon;
+
+  const LetterGridWidget(
+      {super.key, required this.letterGrid, required this.playerWon});
 
   @override
   State<LetterGridWidget> createState() => _LetterGridWidgetState();
@@ -70,7 +73,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       });
       // check for win condition
       if (_grid.isFullyCharged()) {
-        log('grid fully charged!');
+        widget.playerWon();
       }
     } else {
       log('invalid word');

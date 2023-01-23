@@ -77,7 +77,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                       ),
                     ),
                     const Spacer(),
-                    LetterGridWidget(letterGrid: widget.level.letterGrid),
+                    LetterGridWidget(
+                        letterGrid: widget.level.letterGrid,
+                        playerWon: _playerWon),
                     const Spacer(),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
