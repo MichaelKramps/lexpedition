@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:game_template/src/game_data/letter_grid.dart';
 import 'package:game_template/src/game_data/letter_tile.dart';
+import 'package:game_template/src/game_widgets/SprayWidget.dart';
 import 'package:game_template/src/game_widgets/tile_info_widget.dart';
 
 class LetterTileWidget extends StatelessWidget {
   final LetterTile? letterTile;
+  final SprayDirection sprayDirection;
 
-  const LetterTileWidget({super.key, required this.letterTile});
+  const LetterTileWidget(
+      {super.key, required this.letterTile, required this.sprayDirection});
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +19,19 @@ class LetterTileWidget extends StatelessWidget {
           backgroundColor: determineTileColor(letterTile),
           side: determineBorder(letterTile));
 
-      return Container(
-          margin: EdgeInsets.all(2),
-          child: ElevatedButton(
-              onPressed: () {},
-              style: style,
-              child: TileInfoWidget(
-                  letterTile: letterTile ??
-                      new LetterTile('l', TileType.basic, 0, 0, 0))));
+      return Stack(children: [
+        Container(
+            margin: EdgeInsets.all(2),
+            child: ElevatedButton(
+                onPressed: () {},
+                style: style,
+                child: TileInfoWidget(
+                    letterTile: letterTile ??
+                        new LetterTile('l', TileType.basic, 0, 0, 0)))),
+        SprayWidget(
+            sprayDirection: sprayDirection,
+            beginSprayAnimation: letterTile?.sprayFrom ?? false)
+      ]);
     } else {
       return Container(
           margin: EdgeInsets.all(2),

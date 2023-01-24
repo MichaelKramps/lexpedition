@@ -49,7 +49,9 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
               for (var row in _grid.rows) ...[
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   for (var letterTile in row) ...[
-                    LetterTileWidget(letterTile: letterTile)
+                    LetterTileWidget(
+                        letterTile: letterTile,
+                        sprayDirection: _grid.sprayDirection)
                   ]
                 ])
               ]
@@ -62,7 +64,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
               semanticLabel: 'Settings',
             ),
           ),
-          SprayWidget(
+          SprayDirectionWidget(
               sprayDirection: _grid.sprayDirection,
               changeDirection: updateSprayDirection),
           ElevatedButton(onPressed: submitGuess, child: Text('Submit')),
@@ -101,7 +103,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     });
   }
 
-  void submitGuess() {
+  void submitGuess() async {
     if (_guess.length < 3) {
       log('guess must be at least 3 letters');
     } else if (WordHelper.isValidWord(_guess)) {
@@ -134,6 +136,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
           if (_grid.isFullyCharged()) {
             widget.playerWon();
           }
+          await Future<void>.delayed(const Duration(milliseconds: 200));
         }
       }
     } else {
@@ -196,14 +199,29 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     });
   }
 
-  void fireSpray(LetterTile lastTile) {
+  void fireSpray(LetterTile lastTile) async {
     List<int> indexesToSpray = findSprayedIndexes(lastTile.index);
+
     setState(() {
-      for (int index in indexesToSpray) {
-        LetterTile? thisTile = _grid.letterTiles[index];
-        thisTile?.addCharge();
-      }
+      lastTile.spray();
     });
+    await Future<void>.delayed(const Duration(milliseconds: 75));
+    setState(() {
+      lastTile.unspray();
+    });
+
+    for (int index in indexesToSpray) {
+      LetterTile? thisTile = _grid.letterTiles[index];
+      await Future<void>.delayed(const Duration(milliseconds: 75));
+      setState(() {
+        thisTile?.spray();
+        thisTile?.addCharge();
+      });
+      await Future<void>.delayed(const Duration(milliseconds: 75));
+      setState(() {
+        thisTile?.unspray();
+      });
+    }
   }
 
   List<int> findSprayedIndexes(int lastIndex) {

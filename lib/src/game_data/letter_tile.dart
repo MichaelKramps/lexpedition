@@ -5,6 +5,7 @@ class LetterTile {
   late int currentCharges;
   late int index = -1;
   bool selected = false;
+  bool sprayFrom = false;
 
   LetterTile(String letter, TileType tileType, int requiredCharges,
       int currentCharges, int index) {
@@ -25,6 +26,14 @@ class LetterTile {
 
   void select() {
     this.selected = true;
+  }
+
+  void spray() {
+    this.sprayFrom = true;
+  }
+
+  void unspray() {
+    this.sprayFrom = false;
   }
 
   bool isCharged() {
