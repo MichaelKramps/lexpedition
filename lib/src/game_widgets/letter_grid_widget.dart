@@ -5,6 +5,8 @@ import 'package:game_template/src/game_data/letter_grid.dart';
 import 'package:game_template/src/game_data/letter_tile.dart';
 import 'package:game_template/src/game_data/word_helper.dart';
 import 'package:game_template/src/game_widgets/letter_tile_widget.dart';
+import 'package:game_template/src/game_widgets/spray_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class LetterGridWidget extends StatefulWidget {
   final LetterGrid letterGrid;
@@ -25,6 +27,11 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   SprayDirection sprayDirection = SprayDirection.up;
 
   GlobalKey gridKey = GlobalKey();
+  late RenderBox renderBox =
+      gridKey.currentContext?.findRenderObject() as RenderBox;
+  late Offset gridPosition = renderBox.localToGlobal(Offset.zero);
+  late double _gridx = gridPosition.dx;
+  late double _gridy = gridPosition.dy;
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +54,24 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
                 ])
               ]
             ])),
-        Spacer()
-      ]),
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        ElevatedButton(onPressed: submitGuess, child: Text('Submit')),
-        ElevatedButton(onPressed: clearGuess, child: Text('Clear')),
+        Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          InkResponse(
+            onTap: () => GoRouter.of(context).push('/settings'),
+            child: Image.asset(
+              'assets/images/settings.png',
+              semanticLabel: 'Settings',
+            ),
+          ),
+          SprayWidget(
+              sprayDirection: _grid.sprayDirection,
+              changeDirection: updateSprayDirection),
+          ElevatedButton(onPressed: submitGuess, child: Text('Submit')),
+          ElevatedButton(onPressed: clearGuess, child: Text('Clear')),
+          ElevatedButton(
+            onPressed: () => GoRouter.of(context).go('/tutorial'),
+            child: const Text('Back'),
+          ),
+        ])
       ])
     ]);
   }
@@ -85,20 +105,22 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     if (_guess.length < 3) {
       log('guess must be at least 3 letters');
     } else if (WordHelper.isValidWord(_guess)) {
+      int numberFullyCharged = 0;
       setState(() {
-        for (int tile = 0; tile < _grid.letterTiles.length; tile++) {
-          LetterTile? thisTile = _grid.letterTiles[tile];
-          if (thisTile != null && thisTile.selected) {
-            thisTile.selected = false;
-            bool qualifiesAsBasicTile = thisTile.tileType == TileType.basic;
-            bool qualifiesAsStartTile = thisTile.tileType == TileType.start &&
-                thisTile == _guessTiles[0];
-            bool qualifiesAsEndTile = thisTile.tileType == TileType.end &&
-                thisTile == _guessTiles[_guessTiles.length - 1];
-            if (qualifiesAsBasicTile ||
-                qualifiesAsStartTile ||
-                qualifiesAsEndTile) {
-              thisTile.addCharge();
+        for (int tile = 0; tile < _guessTiles.length; tile++) {
+          LetterTile thisTile = _guessTiles[tile];
+          thisTile.selected = false;
+          bool qualifiesAsBasicTile = thisTile.tileType == TileType.basic;
+          bool qualifiesAsStartTile =
+              thisTile.tileType == TileType.start && thisTile == _guessTiles[0];
+          bool qualifiesAsEndTile = thisTile.tileType == TileType.end &&
+              thisTile == _guessTiles[_guessTiles.length - 1];
+          if (qualifiesAsBasicTile ||
+              qualifiesAsStartTile ||
+              qualifiesAsEndTile) {
+            thisTile.addCharge();
+            if (thisTile.currentCharges == thisTile.requiredCharges) {
+              numberFullyCharged += 1;
             }
           }
         }
@@ -106,6 +128,13 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       // check for win condition
       if (_grid.isFullyCharged()) {
         widget.playerWon();
+      } else {
+        if (_guess.length >= 5 || numberFullyCharged >= 3) {
+          fireSpray(_guessTiles.last);
+          if (_grid.isFullyCharged()) {
+            widget.playerWon();
+          }
+        }
       }
     } else {
       log('invalid word');
@@ -122,14 +151,8 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   }
 
   int determineTileIndex(double pointerx, double pointery) {
-    RenderBox? renderBox =
-        gridKey.currentContext?.findRenderObject() as RenderBox;
-    Offset gridPosition = renderBox.localToGlobal(Offset.zero);
-    double gridx = gridPosition.dx;
-    double gridy = gridPosition.dy;
-
-    int xDistance = (pointerx - gridx).round();
-    int yDistance = (pointery - gridy).round();
+    int xDistance = (pointerx - _gridx).round();
+    int yDistance = (pointery - _gridy).round();
 
     int row = -1;
     int column = -1;
@@ -165,5 +188,63 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     int index = (row * 6) + (column);
 
     return (row * 6) + (column);
+  }
+
+  void updateSprayDirection() {
+    setState(() {
+      _grid.changeSprayDirection();
+    });
+  }
+
+  void fireSpray(LetterTile lastTile) {
+    List<int> indexesToSpray = findSprayedIndexes(lastTile.index);
+    setState(() {
+      for (int index in indexesToSpray) {
+        LetterTile? thisTile = _grid.letterTiles[index];
+        thisTile?.addCharge();
+      }
+    });
+  }
+
+  List<int> findSprayedIndexes(int lastIndex) {
+    List<int> indexesToSpray = [];
+
+    int interval;
+
+    switch (_grid.sprayDirection) {
+      case (SprayDirection.up):
+        interval = -6;
+        break;
+      case (SprayDirection.right):
+        interval = 1;
+        break;
+      case (SprayDirection.down):
+        interval = 6;
+        break;
+      case (SprayDirection.left):
+        interval = -1;
+        break;
+    }
+
+    int currentIndex = lastIndex;
+
+    while (currentIndex > -1 && currentIndex < 24) {
+      currentIndex += interval;
+      if (_grid.sprayDirection == SprayDirection.right) {
+        List<int> disqualifiers = [6, 12, 18];
+        if (disqualifiers.contains(currentIndex)) {
+          break;
+        }
+      }
+      if (_grid.sprayDirection == SprayDirection.left) {
+        List<int> disqualifiers = [5, 11, 17];
+        if (disqualifiers.contains(currentIndex)) {
+          break;
+        }
+      }
+      indexesToSpray.add(currentIndex);
+    }
+
+    return indexesToSpray;
   }
 }

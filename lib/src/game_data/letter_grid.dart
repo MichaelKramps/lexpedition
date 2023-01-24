@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'letter_tile.dart';
 
 class LetterGrid {
   late List<LetterTile?> letterTiles;
   late List<List<LetterTile?>> rows;
+  SprayDirection sprayDirection = SprayDirection.up;
 
   LetterGrid(List<String?> letterTiles) {
     assert(letterTiles.length == 24);
@@ -63,6 +66,14 @@ class LetterGrid {
     }
 
     return true;
+  }
+
+  void changeSprayDirection() {
+    if (sprayDirection == SprayDirection.values.last) {
+      sprayDirection = SprayDirection.values.first;
+    } else {
+      sprayDirection = SprayDirection.values[sprayDirection.index + 1];
+    }
   }
 }
 

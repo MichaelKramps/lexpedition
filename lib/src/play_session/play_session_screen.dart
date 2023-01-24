@@ -62,39 +62,9 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
           backgroundColor: palette.backgroundPlaySession,
           body: Stack(
             children: [
-              Center(
-                // This is the entirety of the "game".
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: InkResponse(
-                        onTap: () => GoRouter.of(context).push('/settings'),
-                        child: Image.asset(
-                          'assets/images/settings.png',
-                          semanticLabel: 'Settings',
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    LetterGridWidget(
-                        letterGrid: new LetterGrid(widget.level.gridCode),
-                        playerWon: _playerWon),
-                    const Spacer(),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () => GoRouter.of(context).go('/tutorial'),
-                          child: const Text('Back'),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              LetterGridWidget(
+                  letterGrid: new LetterGrid(widget.level.gridCode),
+                  playerWon: _playerWon),
               SizedBox.expand(
                 child: Visibility(
                   visible: _duringCelebration,
