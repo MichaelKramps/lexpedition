@@ -218,7 +218,6 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       await Future<void>.delayed(const Duration(milliseconds: 75));
       setState(() {
         thisTile?.spray();
-        thisTile?.addCharge();
       });
       await Future<void>.delayed(const Duration(milliseconds: 75));
       setState(() {

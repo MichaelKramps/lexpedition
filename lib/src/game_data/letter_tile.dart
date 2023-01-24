@@ -36,10 +36,19 @@ class LetterTile {
 
   void spray() {
     this.sprayFrom = true;
+    if (this.clearOfObstacles()) {
+      this.addCharge();
+    }
+    //must come after clearOfObstacles check
+    this.addObstacleCharge();
   }
 
   void unspray() {
     this.sprayFrom = false;
+  }
+
+  void addObstacleCharge() {
+    this.currentObstacleCharges += 1;
   }
 
   bool isCharged() {
