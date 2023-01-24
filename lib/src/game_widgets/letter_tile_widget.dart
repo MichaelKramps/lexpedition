@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:game_template/src/game_data/letter_grid.dart';
 import 'package:game_template/src/game_data/letter_tile.dart';
-import 'package:game_template/src/game_widgets/SprayWidget.dart';
+import 'package:game_template/src/game_widgets/obstacle_widget.dart';
+import 'package:game_template/src/game_widgets/spray_widget.dart';
 import 'package:game_template/src/game_widgets/tile_info_widget.dart';
 
 class LetterTileWidget extends StatelessWidget {
@@ -14,6 +15,8 @@ class LetterTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (letterTile != null) {
+      LetterTile nonNullTile =
+          letterTile ?? new LetterTile('l', TileType.basic, 0, 0, 0);
       final ButtonStyle style = ElevatedButton.styleFrom(
           fixedSize: Size.square(80),
           backgroundColor: determineTileColor(letterTile),
@@ -25,12 +28,11 @@ class LetterTileWidget extends StatelessWidget {
             child: ElevatedButton(
                 onPressed: () {},
                 style: style,
-                child: TileInfoWidget(
-                    letterTile: letterTile ??
-                        new LetterTile('l', TileType.basic, 0, 0, 0)))),
+                child: TileInfoWidget(letterTile: nonNullTile))),
+        ObstacleWidget(visible: !nonNullTile.clearOfObstacles()),
         SprayWidget(
             sprayDirection: sprayDirection,
-            beginSprayAnimation: letterTile?.sprayFrom ?? false)
+            beginSprayAnimation: nonNullTile.sprayFrom)
       ]);
     } else {
       return Container(

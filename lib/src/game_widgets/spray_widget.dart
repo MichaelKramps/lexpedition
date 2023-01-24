@@ -1,44 +1,35 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:game_template/src/game_data/letter_grid.dart';
 
-class SprayDirectionWidget extends StatelessWidget {
+class SprayWidget extends StatefulWidget {
   final SprayDirection sprayDirection;
-  final Function changeDirection;
+  final bool beginSprayAnimation;
 
-  const SprayDirectionWidget(
-      {super.key, required this.sprayDirection, required this.changeDirection});
+  const SprayWidget(
+      {super.key,
+      required this.sprayDirection,
+      required this.beginSprayAnimation});
+
+  @override
+  State<SprayWidget> createState() => _SprayWidgetState();
+}
+
+class _SprayWidgetState extends State<SprayWidget> {
+  Offset _offset = Offset.zero;
 
   @override
   Widget build(BuildContext context) {
-    return InkResponse(
-      onTap: () => {changeDirection()},
-      child: Image.asset(
-        determineImage(),
-        semanticLabel: 'Spray Direction',
-      ),
-    );
+    return Visibility(
+        visible: widget.beginSprayAnimation,
+        maintainAnimation: false,
+        child: Image.asset('assets/images/spray.png', height: 80, width: 80));
   }
 
-  String determineImage() {
-    String path = 'assets/images/';
-
-    switch (sprayDirection) {
-      case (SprayDirection.right):
-        path += 'sprayright';
-        break;
-      case (SprayDirection.down):
-        path += 'spraydown';
-        break;
-      case (SprayDirection.left):
-        path += 'sprayleft';
-        break;
-      default:
-        path += 'sprayup';
-        break;
-    }
-
-    path += '.png';
-
-    return path;
+  void determineNewOffset() {
+    setState(() {
+      _offset = Offset(_offset.dx - 50, _offset.dy);
+    });
   }
 }

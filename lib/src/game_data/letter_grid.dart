@@ -22,10 +22,9 @@ class LetterGrid {
         String letter = encodedTile[0];
         TileType tileType = TileType.values[int.parse(encodedTile[1])];
         int requiredCharges = int.parse(encodedTile[2]);
-        int currentCharges = int.parse(encodedTile[3]);
+        int requiredObstacleCharges = int.parse(encodedTile[3]);
         final LetterTile thisDecodedLetterTile = LetterTile(
-            letter, tileType, requiredCharges, currentCharges, index);
-        thisDecodedLetterTile.letter = encodedTile[0];
+            letter, tileType, requiredCharges, requiredObstacleCharges, index);
 
         decodedLetterTiles.add(thisDecodedLetterTile);
       } else {

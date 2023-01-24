@@ -1,18 +1,24 @@
+import 'dart:developer';
+
 class LetterTile {
   late String letter;
   late TileType tileType;
   late int requiredCharges;
   late int currentCharges;
+  late int requiredObstacleCharges;
+  late int currentObstacleCharges;
   late int index = -1;
   bool selected = false;
   bool sprayFrom = false;
 
   LetterTile(String letter, TileType tileType, int requiredCharges,
-      int currentCharges, int index) {
+      int requiredObstacleCharges, int index) {
     this.letter = letter;
     this.tileType = tileType;
     this.requiredCharges = requiredCharges;
-    this.currentCharges = currentCharges;
+    this.currentCharges = 0;
+    this.requiredObstacleCharges = requiredObstacleCharges;
+    this.currentObstacleCharges = 0;
     this.index = index;
   }
 
@@ -40,9 +46,14 @@ class LetterTile {
     return this.currentCharges >= this.requiredCharges;
   }
 
+  bool clearOfObstacles() {
+    return this.currentObstacleCharges >= this.requiredObstacleCharges;
+  }
+
   bool allowedToSelect(LetterTile nextSelection) {
     if (!nextSelection.selected) {
       //cannot select same tile twice
+      //cannot select a tile with an obstacle on it
       for (int allowedIndex in this.adjacentIndexes()) {
         if (allowedIndex == nextSelection.index) {
           return true;

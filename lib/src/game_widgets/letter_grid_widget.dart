@@ -5,7 +5,7 @@ import 'package:game_template/src/game_data/letter_grid.dart';
 import 'package:game_template/src/game_data/letter_tile.dart';
 import 'package:game_template/src/game_data/word_helper.dart';
 import 'package:game_template/src/game_widgets/letter_tile_widget.dart';
-import 'package:game_template/src/game_widgets/spray_widget.dart';
+import 'package:game_template/src/game_widgets/spray_direction_widget.dart';
 import 'package:go_router/go_router.dart';
 
 class LetterGridWidget extends StatefulWidget {
@@ -42,9 +42,9 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         Listener(
             key: gridKey,
             onPointerDown: (event) =>
-                {handleMouseEvent(event.position.dx, event.position.dy)},
+                {handleMouseEvent(event.position.dx, event.position.dy, 0)},
             onPointerMove: (event) =>
-                {handleMouseEvent(event.position.dx, event.position.dy)},
+                {handleMouseEvent(event.position.dx, event.position.dy, 10)},
             child: Column(children: [
               for (var row in _grid.rows) ...[
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -82,7 +82,8 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     LetterTile letterTile = _grid.letterTiles[index] ??
         new LetterTile('a', TileType.basic, 0, 0, 0);
     //verify we are allowed to select this tile
-    if (_guess.length == 0 || _guessTiles.last.allowedToSelect(letterTile)) {
+    if (letterTile.clearOfObstacles() &&
+        (_guess.length == 0 || _guessTiles.last.allowedToSelect(letterTile))) {
       setState(() {
         letterTile.select();
         _guess += letterTile.letter;
@@ -145,42 +146,44 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     clearGuess();
   }
 
-  void handleMouseEvent(double pointerx, double pointery) {
-    int selectedIndex = determineTileIndex(pointerx, pointery);
+  void handleMouseEvent(
+      double pointerx, double pointery, int shrinkClickableSpace) {
+    int selectedIndex =
+        determineTileIndex(pointerx, pointery, shrinkClickableSpace);
 
     if (selectedIndex > -1 && _grid.letterTiles[selectedIndex] != null) {
       updateGuess(selectedIndex);
     }
   }
 
-  int determineTileIndex(double pointerx, double pointery) {
+  int determineTileIndex(double pointerx, double pointery, int shrink) {
     int xDistance = (pointerx - _gridx).round();
     int yDistance = (pointery - _gridy).round();
 
     int row = -1;
     int column = -1;
 
-    if (yDistance > 10 && yDistance < 81) {
+    if (yDistance > (10 + shrink) && yDistance < (81 - shrink)) {
       row = 0;
-    } else if (yDistance > 90 && yDistance < 161) {
+    } else if (yDistance > (90 + shrink) && yDistance < (161 - shrink)) {
       row = 1;
-    } else if (yDistance > 170 && yDistance < 241) {
+    } else if (yDistance > (170 + shrink) && yDistance < (241 - shrink)) {
       row = 2;
-    } else if (yDistance > 250 && yDistance < 321) {
+    } else if (yDistance > (250 + shrink) && yDistance < (321 - shrink)) {
       row = 3;
     }
 
-    if (xDistance > 10 && xDistance < 81) {
+    if (xDistance > (10 + shrink) && xDistance < (81 - shrink)) {
       column = 0;
-    } else if (xDistance > 90 && xDistance < 161) {
+    } else if (xDistance > (90 + shrink) && xDistance < (161 - shrink)) {
       column = 1;
-    } else if (xDistance > 170 && xDistance < 241) {
+    } else if (xDistance > (170 + shrink) && xDistance < (241 - shrink)) {
       column = 2;
-    } else if (xDistance > 250 && xDistance < 321) {
+    } else if (xDistance > (250 + shrink) && xDistance < (321 - shrink)) {
       column = 3;
-    } else if (xDistance > 330 && xDistance < 401) {
+    } else if (xDistance > (330 + shrink) && xDistance < (401 - shrink)) {
       column = 4;
-    } else if (xDistance > 410 && xDistance < 481) {
+    } else if (xDistance > (410 + shrink) && xDistance < (481 - shrink)) {
       column = 5;
     }
 
