@@ -35,7 +35,9 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         Listener(
             key: gridKey,
             onPointerDown: (event) =>
-                {handlePointerDown(event.position.dx, event.position.dy)},
+                {handleMouseEvent(event.position.dx, event.position.dy)},
+            onPointerMove: (event) =>
+                {handleMouseEvent(event.position.dx, event.position.dy)},
             child: Column(children: [
               for (var row in _grid.rows) ...[
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -111,10 +113,10 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     clearGuess();
   }
 
-  void handlePointerDown(double pointerx, double pointery) {
+  void handleMouseEvent(double pointerx, double pointery) {
     int selectedIndex = determineTileIndex(pointerx, pointery);
 
-    if (selectedIndex > -1) {
+    if (selectedIndex > -1 && _grid.letterTiles[selectedIndex] != null) {
       updateGuess(selectedIndex);
     }
   }
@@ -126,13 +128,42 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     double gridx = gridPosition.dx;
     double gridy = gridPosition.dy;
 
-    log('grid ' + gridx.toString() + ':' + gridy.toString());
-    log('pointer ' + pointerx.toString() + ':' + pointery.toString());
+    int xDistance = (pointerx - gridx).round();
+    int yDistance = (pointery - gridy).round();
 
-    if (true) {
-      return 0;
+    int row = -1;
+    int column = -1;
+
+    if (yDistance > 10 && yDistance < 81) {
+      row = 0;
+    } else if (yDistance > 90 && yDistance < 161) {
+      row = 1;
+    } else if (yDistance > 170 && yDistance < 241) {
+      row = 2;
+    } else if (yDistance > 250 && yDistance < 321) {
+      row = 3;
     }
 
-    return -1;
+    if (xDistance > 10 && xDistance < 81) {
+      column = 0;
+    } else if (xDistance > 90 && xDistance < 161) {
+      column = 1;
+    } else if (xDistance > 170 && xDistance < 241) {
+      column = 2;
+    } else if (xDistance > 250 && xDistance < 321) {
+      column = 3;
+    } else if (xDistance > 330 && xDistance < 401) {
+      column = 4;
+    } else if (xDistance > 410 && xDistance < 481) {
+      column = 5;
+    }
+
+    if (row < 0 || column < 0) {
+      return -1;
+    }
+
+    int index = (row * 6) + (column);
+
+    return (row * 6) + (column);
   }
 }
