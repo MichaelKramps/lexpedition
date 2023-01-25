@@ -74,6 +74,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
           SprayDirectionWidget(
               sprayDirection: _grid.sprayDirection,
               changeDirection: updateSprayDirection),
+          Text(_grid.guesses.length.toString(), style: TextStyle(fontSize: 48)),
           ElevatedButton(onPressed: submitGuess, child: Text('Submit')),
           ElevatedButton(onPressed: clearGuess, child: Text('Clear')),
           ElevatedButton(
@@ -115,6 +116,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     if (_guess.length < 3) {
       showBadGuess();
     } else if (_grid.isNewGuess(_guess) && WordHelper.isValidWord(_guess)) {
+      _grid.guesses.add(_guess);
       int numberFullyCharged = 0;
       setState(() {
         for (int tile = 0; tile < _guessTiles.length; tile++) {
@@ -136,11 +138,13 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         }
       });
       // check for win condition
+      log('checking time #1');
       if (_grid.isFullyCharged()) {
         widget.playerWon();
       } else {
         if (_guess.length >= 5 || numberFullyCharged >= 3) {
-          fireSpray(_guessTiles.last);
+          await fireSpray(_guessTiles.last);
+          log('checking for win condition #2');
           if (_grid.isFullyCharged()) {
             widget.playerWon();
           }
@@ -219,16 +223,10 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     });
   }
 
-  void fireSpray(LetterTile lastTile) async {
+  Future<void> fireSpray(LetterTile lastTile) async {
     List<int> indexesToSpray = findSprayedIndexes(lastTile.index);
 
-    setState(() {
-      lastTile.spray();
-    });
-    await Future<void>.delayed(const Duration(milliseconds: 75));
-    setState(() {
-      lastTile.unspray();
-    });
+    log(indexesToSpray.toString());
 
     for (int index in indexesToSpray) {
       LetterTile? thisTile = _grid.letterTiles[index];
@@ -241,6 +239,8 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         thisTile?.unspray();
       });
     }
+
+    log('finished firing spray');
   }
 
   List<int> findSprayedIndexes(int lastIndex) {
@@ -266,6 +266,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     int currentIndex = lastIndex;
 
     while (currentIndex > -1 && currentIndex < 24) {
+      indexesToSpray.add(currentIndex);
       currentIndex += interval;
       if (_grid.sprayDirection == SprayDirection.right) {
         List<int> disqualifiers = [6, 12, 18];
@@ -279,7 +280,6 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
           break;
         }
       }
-      indexesToSpray.add(currentIndex);
     }
 
     return indexesToSpray;

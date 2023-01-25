@@ -52,6 +52,7 @@ class LetterTile {
   }
 
   bool isCharged() {
+    //log(this.letter + ' : ' + this.currentCharges.toString());
     return this.currentCharges >= this.requiredCharges;
   }
 
