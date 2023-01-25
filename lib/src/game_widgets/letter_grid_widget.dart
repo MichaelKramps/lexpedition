@@ -25,6 +25,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   String _guess = '';
   List<LetterTile> _guessTiles = [];
   SprayDirection sprayDirection = SprayDirection.up;
+  bool _showBadGuess = false;
 
   GlobalKey gridKey = GlobalKey();
   late RenderBox renderBox =
@@ -36,7 +37,13 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Text(_guess, style: TextStyle(fontSize: 32)),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Text(_guess, style: TextStyle(fontSize: 32)),
+        Visibility(
+            visible: _showBadGuess,
+            child: Image.asset('assets/images/badguess.png',
+                height: 32, width: 32))
+      ]),
       Row(children: [
         Spacer(),
         Listener(
@@ -106,8 +113,8 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
 
   void submitGuess() async {
     if (_guess.length < 3) {
-      log('guess must be at least 3 letters');
-    } else if (WordHelper.isValidWord(_guess)) {
+      showBadGuess();
+    } else if (_grid.isNewGuess(_guess) && WordHelper.isValidWord(_guess)) {
       int numberFullyCharged = 0;
       setState(() {
         for (int tile = 0; tile < _guessTiles.length; tile++) {
@@ -141,9 +148,19 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         }
       }
     } else {
-      log('invalid word');
+      showBadGuess();
     }
     clearGuess();
+  }
+
+  void showBadGuess() async {
+    setState(() {
+      _showBadGuess = true;
+    });
+    await Future<void>.delayed(const Duration(milliseconds: 1000));
+    setState(() {
+      _showBadGuess = false;
+    });
   }
 
   void handleMouseEvent(

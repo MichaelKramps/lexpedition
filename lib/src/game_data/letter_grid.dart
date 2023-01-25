@@ -6,6 +6,7 @@ class LetterGrid {
   late List<LetterTile?> letterTiles;
   late List<List<LetterTile?>> rows;
   SprayDirection sprayDirection = SprayDirection.up;
+  List<String> guesses = [];
 
   LetterGrid(List<String?> letterTiles) {
     assert(letterTiles.length == 24);
@@ -65,6 +66,14 @@ class LetterGrid {
     }
 
     return true;
+  }
+
+  void addGuess(String guess) {
+    this.guesses.add(guess);
+  }
+
+  bool isNewGuess(String guess) {
+    return !this.guesses.contains(guess);
   }
 
   void changeSprayDirection() {
