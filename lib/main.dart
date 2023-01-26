@@ -11,6 +11,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:game_template/src/level_info/tutorial_intros.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -138,6 +139,18 @@ class MyApp extends StatelessWidget {
                       color: context.watch<Palette>().backgroundLevelSelection,
                     ),
                 routes: [
+                  GoRoute(
+                    path: 'intro/:level/:par',
+                    pageBuilder: (context, state) {
+                      final levelNumber = int.parse(state.params['level']!);
+                      final par = int.parse(state.params['par']!);
+                      return buildMyTransition<void>(
+                        child:
+                            TutorialIntroWidget(level: levelNumber, par: par),
+                        color: context.watch<Palette>().backgroundPlaySession,
+                      );
+                    },
+                  ),
                   GoRoute(
                     path: 'session/:level',
                     pageBuilder: (context, state) {

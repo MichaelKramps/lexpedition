@@ -48,8 +48,8 @@ class TutorialScreen extends StatelessWidget {
                         final audioController = context.read<AudioController>();
                         audioController.playSfx(SfxType.buttonTap);
 
-                        GoRouter.of(context)
-                            .go('/tutorial/session/${level.number}');
+                        GoRouter.of(context).go(
+                            '/tutorial/intro/${level.number}/${level.difficulty}');
                       },
                       leading: Text(level.number.toString()),
                       title: Text('${level.name}'),
