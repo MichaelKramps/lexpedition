@@ -17,15 +17,19 @@ class LetterTileWidget extends StatelessWidget {
     if (letterTile != null) {
       LetterTile nonNullTile =
           letterTile ?? new LetterTile('l', TileType.basic, 0, 0, 0);
-      final ButtonStyle style = ElevatedButton.styleFrom(
+      final ButtonStyle style = TextButton.styleFrom(
           fixedSize: Size.square(80),
-          backgroundColor: determineTileColor(letterTile),
+          backgroundColor: Colors.black.withOpacity(0.0),
           side: determineBorder(letterTile));
 
       return Stack(children: [
         Container(
             margin: EdgeInsets.all(2),
-            child: ElevatedButton(
+            decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(determineTileImage(letterTile)),
+                    fit: BoxFit.cover)),
+            child: TextButton(
                 onPressed: () {},
                 style: style,
                 child: TileInfoWidget(letterTile: nonNullTile))),
@@ -39,34 +43,43 @@ class LetterTileWidget extends StatelessWidget {
           margin: EdgeInsets.all(2),
           width: 80,
           height: 80,
-          color: Colors.grey.shade300);
+          color: Colors.grey.shade300.withOpacity(0.2));
     }
   }
 
-  Color determineTileColor(LetterTile? letterTile) {
+  String determineTileImage(LetterTile? letterTile) {
+    String imagePath = 'assets/images/';
+
     if (letterTile != null && letterTile.isCharged()) {
-      return Colors.amber;
+      switch (letterTile.tileType) {
+        case (TileType.start):
+          return imagePath + 'yellow-start.png';
+        case (TileType.end):
+          return imagePath + 'yellow-end.png';
+        default:
+          return imagePath + 'yellow-basic.png';
+      }
     }
 
     if (letterTile != null) {
       switch (letterTile.tileType) {
         case (TileType.start):
-          return Colors.green.shade700.withOpacity(0.2);
+          return imagePath + 'green-start.png';
         case (TileType.end):
-          return Colors.red.shade700.withOpacity(0.2);
+          return imagePath + 'red-end.png';
         default:
-          return Colors.blueGrey.shade600.withOpacity(0.2);
+          return imagePath + 'blue-basic.png';
       }
     }
 
-    return Colors.black.withOpacity(0.1);
+    return imagePath + 'blue-basic.png';
   }
 
   BorderSide determineBorder(LetterTile? letterTile) {
     if (letterTile != null && letterTile.selected) {
       return BorderSide(width: 1, color: Colors.orange);
     } else {
-      return BorderSide(width: 0);
+      return BorderSide(width: 0, color: Colors.transparent);
     }
   }
 }

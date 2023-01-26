@@ -10,22 +10,25 @@ class TileInfoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     String letter = letterTile.letter.toUpperCase();
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Text(letter, style: TextStyle(fontSize: 56)),
+      Text(letter,
+          style: TextStyle(
+              fontSize: 56,
+              color: determineTextColor(
+                  letterTile.requiredCharges, letterTile.currentCharges))),
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        for (int charge = 0; charge < letterTile.requiredCharges; charge++) ...[
+        for (int charge = 0;
+            charge < (letterTile.requiredCharges - letterTile.currentCharges);
+            charge++) ...[
           Text('.',
-              style: TextStyle(
-                  fontSize: 32,
-                  height: 0.3,
-                  color: determineDotColor(charge, letterTile.currentCharges)))
+              style: TextStyle(fontSize: 48, height: 0.01, color: Colors.white))
         ]
       ])
     ]);
   }
 
-  Color determineDotColor(int charge, int currentCharges) {
-    if (charge < currentCharges) {
-      return Colors.amber;
+  Color determineTextColor(int requiredCharges, int currentCharges) {
+    if (currentCharges < requiredCharges) {
+      return Colors.white;
     } else {
       return Colors.black;
     }

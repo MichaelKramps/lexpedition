@@ -14,29 +14,11 @@ class SprayDirectionWidget extends StatelessWidget {
       onTap: () => {changeDirection()},
       child: Image.asset(
         determineImage(),
-        height: determineHeight(),
-        width: determineWidth(),
+        height: 60,
+        width: 60,
         semanticLabel: 'Spray Direction',
       ),
     );
-  }
-
-  double determineHeight() {
-    if (sprayDirection == SprayDirection.left ||
-        sprayDirection == SprayDirection.right) {
-      return 50;
-    } else {
-      return 50;
-    }
-  }
-
-  double determineWidth() {
-    if (sprayDirection == SprayDirection.left ||
-        sprayDirection == SprayDirection.right) {
-      return 50;
-    } else {
-      return 50;
-    }
   }
 
   String determineImage() {

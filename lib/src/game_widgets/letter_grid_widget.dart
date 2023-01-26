@@ -36,49 +36,75 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(_guess,
-            style: TextStyle(
-                fontSize: 32, color: _showBadGuess ? Colors.red : Colors.black))
-      ]),
-      Row(children: [
-        Spacer(),
-        Listener(
-            key: gridKey,
-            onPointerDown: (event) =>
-                {handleMouseEvent(event.position.dx, event.position.dy, 0)},
-            onPointerMove: (event) =>
-                {handleMouseEvent(event.position.dx, event.position.dy, 10)},
-            child: Column(children: [
-              for (var row in _grid.rows) ...[
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  for (var letterTile in row) ...[
-                    LetterTileWidget(
-                        letterTile: letterTile,
-                        sprayDirection: _grid.sprayDirection)
-                  ]
-                ])
-              ]
-            ])),
-        Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          InkResponse(
-            onTap: () => GoRouter.of(context).push('/settings'),
-            child: Image.asset(
-              'assets/images/settings.png',
-              semanticLabel: 'Settings',
-            ),
-          ),
+    final ButtonStyle buttonStyle = TextButton.styleFrom(
+        backgroundColor: Colors.amber.withOpacity(0.75),
+        side: BorderSide(width: 0, color: Colors.transparent));
+
+    return Stack(children: [
+      Container(
+          decoration: BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage('assets/images/g4.bmp'), fit: BoxFit.cover),
+      )),
+      Column(children: [
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           SprayDirectionWidget(
               sprayDirection: _grid.sprayDirection,
               changeDirection: updateSprayDirection),
-          Text(_grid.guesses.length.toString(), style: TextStyle(fontSize: 48)),
-          ElevatedButton(onPressed: submitGuess, child: Text('Submit')),
-          ElevatedButton(onPressed: clearGuess, child: Text('Clear')),
+          Container(
+              width: 280,
+              margin: EdgeInsets.all(4),
+              child: Text(_guess.toUpperCase(),
+                  style: TextStyle(
+                      fontSize: 32,
+                      backgroundColor: Colors.white.withOpacity(0.3),
+                      color: _showBadGuess ? Colors.red : Colors.black))),
+          Container(
+              margin: EdgeInsets.all(4),
+              child: ElevatedButton(
+                  style: buttonStyle,
+                  onPressed: submitGuess,
+                  child: Text('Submit'))),
           ElevatedButton(
-            onPressed: () => GoRouter.of(context).go('/tutorial'),
-            child: const Text('Back'),
-          ),
+              style: buttonStyle, onPressed: clearGuess, child: Text('Clear')),
+        ]),
+        Row(children: [
+          Spacer(),
+          Listener(
+              key: gridKey,
+              onPointerDown: (event) =>
+                  {handleMouseEvent(event.position.dx, event.position.dy, 0)},
+              onPointerMove: (event) =>
+                  {handleMouseEvent(event.position.dx, event.position.dy, 10)},
+              child: Column(children: [
+                for (var row in _grid.rows) ...[
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    for (var letterTile in row) ...[
+                      LetterTileWidget(
+                          letterTile: letterTile,
+                          sprayDirection: _grid.sprayDirection)
+                    ]
+                  ])
+                ]
+              ])),
+          Expanded(
+              flex: 1,
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+                Text(_grid.guesses.length.toString(),
+                    style: TextStyle(fontSize: 48, color: Colors.black)),
+                InkResponse(
+                  onTap: () => GoRouter.of(context).push('/settings'),
+                  child: Image.asset(
+                    'assets/images/settings.png',
+                    semanticLabel: 'Settings',
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () => GoRouter.of(context).go('/tutorial'),
+                  child: const Text('Back'),
+                )
+              ]))
         ])
       ])
     ]);
