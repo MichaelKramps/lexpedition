@@ -47,36 +47,27 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
 
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => LevelState(
-            goal: widget.level.difficulty,
-            onWin: _playerWon,
-          ),
-        ),
-      ],
-      child: IgnorePointer(
-        ignoring: _duringCelebration,
-        child: Scaffold(
-          backgroundColor: palette.backgroundPlaySession,
-          body: Stack(
-            children: [
-              LetterGridWidget(
-                  letterGrid: new LetterGrid(widget.level.gridCode),
-                  playerWon: _playerWon),
-              SizedBox.expand(
-                child: Visibility(
-                  visible: _duringCelebration,
-                  child: IgnorePointer(
-                    child: Confetti(
-                      isStopped: !_duringCelebration,
-                    ),
+    return IgnorePointer(
+      ignoring: _duringCelebration,
+      child: Scaffold(
+        backgroundColor: palette.backgroundPlaySession,
+        body: Stack(
+          children: [
+            LetterGridWidget(
+                letterGrid: new LetterGrid(
+                    widget.level.gridCode, widget.level.difficulty),
+                playerWon: _playerWon),
+            SizedBox.expand(
+              child: Visibility(
+                visible: _duringCelebration,
+                child: IgnorePointer(
+                  child: Confetti(
+                    isStopped: !_duringCelebration,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -97,11 +88,12 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     }
   }
 
-  Future<void> _playerWon() async {
+  Future<void> _playerWon(int guesses, int par) async {
     _log.info('Level ${widget.level.number} won');
 
     final score = Score(
       widget.level.number,
+      guesses,
       widget.level.difficulty,
       DateTime.now().difference(_startOfPlay),
     );

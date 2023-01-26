@@ -8,7 +8,7 @@ var tutorialLevels = [
   TutorialLevel(
     name: 'Basic Tile',
     number: 1,
-    difficulty: 5,
+    difficulty: 2,
     gridCode: [
       't020',
       'c020',
@@ -44,7 +44,7 @@ var tutorialLevels = [
   TutorialLevel(
     name: 'Start Tile',
     number: 2,
-    difficulty: 42,
+    difficulty: 2,
     gridCode: [
       't020',
       'e110',
@@ -75,7 +75,7 @@ var tutorialLevels = [
   TutorialLevel(
     name: 'End Tile',
     number: 3,
-    difficulty: 100,
+    difficulty: 2,
     gridCode: [
       'e210',
       't210',
@@ -105,37 +105,33 @@ var tutorialLevels = [
     achievementIdIOS: 'finished',
     achievementIdAndroid: 'CdfIhE96aspNWLGSQg',
   ),
-  TutorialLevel(
-      name: 'All 3 Tile Types',
-      number: 4,
-      difficulty: 100,
-      gridCode: [
-        'e220',
-        't210',
-        's010',
-        null,
-        null,
-        null,
-        'a030',
-        'r110',
-        'o010',
-        null,
-        null,
-        null,
-        'l020',
-        'p110',
-        'd010',
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]),
-  TutorialLevel(name: 'Energy Spray', number: 5, difficulty: 100, gridCode: [
+  TutorialLevel(name: 'All 3 Tile Types', number: 4, difficulty: 3, gridCode: [
+    'e220',
+    't210',
+    's010',
+    null,
+    null,
+    null,
+    'a030',
+    'r110',
+    'o010',
+    null,
+    null,
+    null,
+    'l020',
+    'p110',
+    'd010',
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ]),
+  TutorialLevel(name: 'Energy Spray', number: 5, difficulty: 4, gridCode: [
     'e210',
     't010',
     's010',
@@ -161,7 +157,7 @@ var tutorialLevels = [
     null,
     null
   ]),
-  TutorialLevel(name: 'Statues', number: 6, difficulty: 100, gridCode: [
+  TutorialLevel(name: 'Statues', number: 6, difficulty: 4, gridCode: [
     'e210',
     't010',
     's011',
@@ -187,7 +183,7 @@ var tutorialLevels = [
     null,
     null
   ]),
-  TutorialLevel(name: 'Anti Magic', number: 7, difficulty: 100, gridCode: [
+  TutorialLevel(name: 'Anti Magic', number: 7, difficulty: 4, gridCode: [
     'e210',
     't010',
     's010',

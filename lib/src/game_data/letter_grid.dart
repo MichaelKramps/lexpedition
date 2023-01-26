@@ -7,11 +7,13 @@ class LetterGrid {
   late List<List<LetterTile?>> rows;
   SprayDirection sprayDirection = SprayDirection.up;
   List<String> guesses = [];
+  late int par;
 
-  LetterGrid(List<String?> letterTiles) {
+  LetterGrid(List<String?> letterTiles, int par) {
     assert(letterTiles.length == 24);
     this.letterTiles = this.decodeLetterTiles(letterTiles);
     this.rows = this.setRows(this.letterTiles);
+    this.par = par;
   }
 
   List<LetterTile?> decodeLetterTiles(List<String?> encodedTiles) {

@@ -7,21 +7,18 @@ import 'package:flutter/foundation.dart';
 /// Encapsulates a score and the arithmetic to compute it.
 @immutable
 class Score {
-  final int score;
+  final int difficulty;
+  final int guesses;
 
   final Duration duration;
 
   final int level;
 
-  factory Score(int level, int difficulty, Duration duration) {
-    // The higher the difficulty, the higher the score.
-    var score = difficulty;
-    // The lower the time to beat the level, the higher the score.
-    score *= 10000 ~/ (duration.inSeconds.abs() + 1);
-    return Score._(score, duration, level);
+  factory Score(int level, int guesses, int difficulty, Duration duration) {
+    return Score._(difficulty, guesses, duration, level);
   }
 
-  const Score._(this.score, this.duration, this.level);
+  const Score._(this.difficulty, this.guesses, this.duration, this.level);
 
   String get formattedTime {
     final buf = StringBuffer();
@@ -42,7 +39,4 @@ class Score {
         .padLeft(2, '0'));
     return buf.toString();
   }
-
-  @override
-  String toString() => 'Score<$score,$formattedTime,$level>';
 }

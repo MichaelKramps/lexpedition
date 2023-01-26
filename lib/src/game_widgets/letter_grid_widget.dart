@@ -11,7 +11,7 @@ import 'package:go_router/go_router.dart';
 class LetterGridWidget extends StatefulWidget {
   final LetterGrid letterGrid;
 
-  final Function() playerWon;
+  final Function(int, int) playerWon;
 
   const LetterGridWidget(
       {super.key, required this.letterGrid, required this.playerWon});
@@ -92,7 +92,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
               child:
                   Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                 Text(_grid.guesses.length.toString(),
-                    style: TextStyle(fontSize: 48, color: Colors.black)),
+                    style: TextStyle(fontSize: 45, color: Colors.black)),
                 InkResponse(
                   onTap: () => GoRouter.of(context).push('/settings'),
                   child: Image.asset(
@@ -162,15 +162,13 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         }
       });
       // check for win condition
-      log('checking time #1');
       if (_grid.isFullyCharged()) {
-        widget.playerWon();
+        widget.playerWon(_grid.guesses.length, _grid.par);
       } else {
         if (_guess.length >= 5 || numberFullyCharged >= 3) {
           await fireSpray(_guessTiles.last);
-          log('checking for win condition #2');
           if (_grid.isFullyCharged()) {
-            widget.playerWon();
+            widget.playerWon(_grid.guesses.length, _grid.par);
           }
           await Future<void>.delayed(const Duration(milliseconds: 200));
         }

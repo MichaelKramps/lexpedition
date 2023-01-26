@@ -109,7 +109,7 @@ class GamesServicesController {
           // TODO: When ready, change these leaderboard IDs.
           iOSLeaderboardID: 'some_id_from_app_store',
           androidLeaderboardID: 'sOmE_iD_fRoM_gPlAy',
-          value: score.score,
+          value: score.guesses,
         ),
       );
     } catch (e) {
