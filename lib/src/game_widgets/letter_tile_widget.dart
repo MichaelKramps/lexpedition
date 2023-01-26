@@ -51,15 +51,15 @@ class LetterTileWidget extends StatelessWidget {
     if (letterTile != null) {
       switch (letterTile.tileType) {
         case (TileType.start):
-          return Colors.green.shade700;
+          return Colors.green.shade700.withOpacity(0.2);
         case (TileType.end):
-          return Colors.red.shade700;
+          return Colors.red.shade700.withOpacity(0.2);
         default:
-          return Colors.blueGrey.shade600;
+          return Colors.blueGrey.shade600.withOpacity(0.2);
       }
     }
 
-    return Colors.black;
+    return Colors.black.withOpacity(0.1);
   }
 
   BorderSide determineBorder(LetterTile? letterTile) {

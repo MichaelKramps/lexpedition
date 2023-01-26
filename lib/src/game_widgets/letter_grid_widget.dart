@@ -38,11 +38,9 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   Widget build(BuildContext context) {
     return Column(children: [
       Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(_guess, style: TextStyle(fontSize: 32)),
-        Visibility(
-            visible: _showBadGuess,
-            child: Image.asset('assets/images/badguess.png',
-                height: 32, width: 32))
+        Text(_guess,
+            style: TextStyle(
+                fontSize: 32, color: _showBadGuess ? Colors.red : Colors.black))
       ]),
       Row(children: [
         Spacer(),
@@ -114,7 +112,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
 
   void submitGuess() async {
     if (_guess.length < 3) {
-      showBadGuess();
+      await showBadGuess();
     } else if (_grid.isNewGuess(_guess) && WordHelper.isValidWord(_guess)) {
       _grid.guesses.add(_guess);
       int numberFullyCharged = 0;
@@ -152,12 +150,12 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         }
       }
     } else {
-      showBadGuess();
+      await showBadGuess();
     }
     clearGuess();
   }
 
-  void showBadGuess() async {
+  Future<void> showBadGuess() async {
     setState(() {
       _showBadGuess = true;
     });
