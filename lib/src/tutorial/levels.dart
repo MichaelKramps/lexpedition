@@ -105,7 +105,7 @@ var tutorialLevels = [
     achievementIdIOS: 'finished',
     achievementIdAndroid: 'CdfIhE96aspNWLGSQg',
   ),
-  TutorialLevel(name: 'All 3 Tile Types', number: 4, difficulty: 3, gridCode: [
+  TutorialLevel(name: 'All 3 Tile Types', number: 4, difficulty: 4, gridCode: [
     'e220',
     't210',
     's010',
@@ -131,7 +131,7 @@ var tutorialLevels = [
     null,
     null
   ]),
-  TutorialLevel(name: 'Energy Spray', number: 5, difficulty: 4, gridCode: [
+  TutorialLevel(name: 'Magic Blast', number: 5, difficulty: 4, gridCode: [
     'e210',
     't010',
     's010',
@@ -157,7 +157,7 @@ var tutorialLevels = [
     null,
     null
   ]),
-  TutorialLevel(name: 'Statues', number: 6, difficulty: 4, gridCode: [
+  TutorialLevel(name: 'Obstacles', number: 6, difficulty: 5, gridCode: [
     'e210',
     't010',
     's011',
@@ -182,33 +182,7 @@ var tutorialLevels = [
     null,
     null,
     null
-  ]),
-  TutorialLevel(name: 'Anti Magic', number: 7, difficulty: 4, gridCode: [
-    'e210',
-    't010',
-    's010',
-    'z010',
-    null,
-    null,
-    'a030',
-    'r121',
-    'r010',
-    'n010',
-    null,
-    null,
-    'l020',
-    'p010',
-    'd010',
-    'u010',
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null
-  ]),
+  ])
 ];
 
 class TutorialLevel {

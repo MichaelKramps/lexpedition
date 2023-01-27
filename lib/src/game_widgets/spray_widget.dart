@@ -24,7 +24,7 @@ class _SprayWidgetState extends State<SprayWidget> {
     return Visibility(
         visible: widget.beginSprayAnimation,
         maintainAnimation: false,
-        child: Image.asset('assets/images/spray.png', height: 80, width: 80));
+        child: Image.asset('assets/images/blast.png', height: 80, width: 80));
   }
 
   void determineNewOffset() {

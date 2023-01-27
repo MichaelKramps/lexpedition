@@ -252,11 +252,11 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
 
     for (int index in indexesToSpray) {
       LetterTile? thisTile = _grid.letterTiles[index];
-      await Future<void>.delayed(const Duration(milliseconds: 75));
+      await Future<void>.delayed(const Duration(milliseconds: 150));
       setState(() {
         thisTile?.spray();
       });
-      await Future<void>.delayed(const Duration(milliseconds: 75));
+      await Future<void>.delayed(const Duration(milliseconds: 150));
       setState(() {
         thisTile?.unspray();
       });
