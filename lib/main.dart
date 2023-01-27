@@ -162,6 +162,7 @@ class MyApp extends StatelessWidget {
                       return buildMyTransition<void>(
                         child: PlaySessionScreen(
                           level,
+                          '/tutorial/won',
                           key: const Key('play session'),
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,
@@ -177,7 +178,8 @@ class MyApp extends StatelessWidget {
                       return buildMyTransition<void>(
                         child: WinGameScreen(
                           score: score,
-                          key: const Key('win game'),
+                          continueRoute: '/tutorial',
+                          key: const Key('tutorial win'),
                         ),
                         color: context.watch<Palette>().backgroundPlaySession,
                       );
@@ -190,9 +192,27 @@ class MyApp extends StatelessWidget {
                   const SettingsScreen(key: Key('settings')),
             ),
             GoRoute(
-              path: 'freeplay',
-              builder: (context, state) => const FreePlay(key: Key('freeplay')),
-            ),
+                path: 'freeplay',
+                builder: (context, state) =>
+                    const FreePlay(key: Key('freeplay')),
+                routes: [
+                  GoRoute(
+                    path: 'won',
+                    pageBuilder: (context, state) {
+                      final map = state.extra! as Map<String, dynamic>;
+                      final score = map['score'] as Score;
+
+                      return buildMyTransition<void>(
+                        child: WinGameScreen(
+                          score: score,
+                          continueRoute: '/freeplay',
+                          key: const Key('freeplay win'),
+                        ),
+                        color: context.watch<Palette>().backgroundPlaySession,
+                      );
+                    },
+                  ),
+                ]),
           ]),
     ],
   );

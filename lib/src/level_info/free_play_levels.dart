@@ -16,7 +16,7 @@ var freePlayLevels = [
     'o010',
     null,
     null,
-    'r011',
+    'r010',
     'e210',
     null,
     null,
@@ -26,7 +26,7 @@ var freePlayLevels = [
     null,
     null,
     null,
-    'e010',
+    'a010',
     'r010',
     null,
     null

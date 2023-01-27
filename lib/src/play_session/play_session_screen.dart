@@ -15,7 +15,6 @@ import 'package:provider/provider.dart';
 import '../ads/ads_controller.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
-import '../games_services/games_services.dart';
 import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
 import '../game_data/levels.dart';
@@ -25,8 +24,9 @@ import '../style/palette.dart';
 
 class PlaySessionScreen extends StatefulWidget {
   final Level level;
+  final String winRoute;
 
-  const PlaySessionScreen(this.level, {super.key});
+  const PlaySessionScreen(this.level, this.winRoute, {super.key});
 
   @override
   State<PlaySessionScreen> createState() => _PlaySessionScreenState();
@@ -110,24 +110,24 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     final audioController = context.read<AudioController>();
     audioController.playSfx(SfxType.congrats);
 
-    final gamesServicesController = context.read<GamesServicesController?>();
-    if (gamesServicesController != null) {
-      // Award achievement.
-      //if (widget.level.awardsAchievement) {
-      //  await gamesServicesController.awardAchievement(
-      //    android: widget.level.achievementIdAndroid!,
-      //    iOS: widget.level.achievementIdIOS!,
-      //  );
-      //}
+    //final gamesServicesController = context.read<GamesServicesController?>();
+    //if (gamesServicesController != null) {
+    // Award achievement.
+    //if (widget.level.awardsAchievement) {
+    //  await gamesServicesController.awardAchievement(
+    //    android: widget.level.achievementIdAndroid!,
+    //    iOS: widget.level.achievementIdIOS!,
+    //  );
+    //}
 
-      // Send score to leaderboard.
-      //await gamesServicesController.submitLeaderboardScore(score);
-    }
+    // Send score to leaderboard.
+    //await gamesServicesController.submitLeaderboardScore(score);
+    //}
 
     /// Give the player some time to see the celebration animation.
     await Future<void>.delayed(_celebrationDuration);
     if (!mounted) return;
 
-    GoRouter.of(context).go('/tutorial/won', extra: {'score': score});
+    GoRouter.of(context).go(widget.winRoute, extra: {'score': score});
   }
 }
