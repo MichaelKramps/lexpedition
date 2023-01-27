@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:game_template/src/game_data/letter_grid.dart';
@@ -14,17 +15,16 @@ import 'package:provider/provider.dart';
 import '../ads/ads_controller.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
-import '../game_internals/level_state.dart';
 import '../games_services/games_services.dart';
 import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
-import '../tutorial/levels.dart';
+import '../game_data/levels.dart';
 import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
 import '../style/palette.dart';
 
 class PlaySessionScreen extends StatefulWidget {
-  final TutorialLevel level;
+  final Level level;
 
   const PlaySessionScreen(this.level, {super.key});
 
@@ -45,6 +45,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log(widget.level.difficulty.toString());
     final palette = context.watch<Palette>();
 
     return IgnorePointer(
@@ -89,10 +90,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   }
 
   Future<void> _playerWon(int guesses, int par) async {
-    _log.info('Level ${widget.level.number} won');
-
     final score = Score(
-      widget.level.number,
       guesses,
       widget.level.difficulty,
       DateTime.now().difference(_startOfPlay),
@@ -115,15 +113,15 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
     final gamesServicesController = context.read<GamesServicesController?>();
     if (gamesServicesController != null) {
       // Award achievement.
-      if (widget.level.awardsAchievement) {
-        await gamesServicesController.awardAchievement(
-          android: widget.level.achievementIdAndroid!,
-          iOS: widget.level.achievementIdIOS!,
-        );
-      }
+      //if (widget.level.awardsAchievement) {
+      //  await gamesServicesController.awardAchievement(
+      //    android: widget.level.achievementIdAndroid!,
+      //    iOS: widget.level.achievementIdIOS!,
+      //  );
+      //}
 
       // Send score to leaderboard.
-      await gamesServicesController.submitLeaderboardScore(score);
+      //await gamesServicesController.submitLeaderboardScore(score);
     }
 
     /// Give the player some time to see the celebration animation.

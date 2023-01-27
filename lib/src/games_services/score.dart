@@ -12,13 +12,11 @@ class Score {
 
   final Duration duration;
 
-  final int level;
-
-  factory Score(int level, int guesses, int difficulty, Duration duration) {
-    return Score._(difficulty, guesses, duration, level);
+  factory Score(int guesses, int difficulty, Duration duration) {
+    return Score._(difficulty, guesses, duration);
   }
 
-  const Score._(this.difficulty, this.guesses, this.duration, this.level);
+  const Score._(this.difficulty, this.guesses, this.duration);
 
   String get formattedTime {
     final buf = StringBuffer();

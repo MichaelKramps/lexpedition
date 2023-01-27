@@ -11,6 +11,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:game_template/src/free_play/free_play.dart';
+import 'package:game_template/src/level_info/free_play_levels.dart';
 import 'package:game_template/src/level_info/tutorial_intros.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
@@ -24,7 +26,7 @@ import 'src/games_services/games_services.dart';
 import 'src/games_services/score.dart';
 import 'src/in_app_purchase/in_app_purchase.dart';
 import 'src/tutorial/tutorial_screen.dart';
-import 'src/tutorial/levels.dart';
+import 'src/tutorial/tutorial_levels.dart';
 import 'src/main_menu/main_menu_screen.dart';
 import 'src/play_session/play_session_screen.dart';
 import 'src/player_progress/persistence/local_storage_player_progress_persistence.dart';
@@ -186,6 +188,10 @@ class MyApp extends StatelessWidget {
               path: 'settings',
               builder: (context, state) =>
                   const SettingsScreen(key: Key('settings')),
+            ),
+            GoRoute(
+              path: 'freeplay',
+              builder: (context, state) => const FreePlay(key: Key('freeplay')),
             ),
           ]),
     ],

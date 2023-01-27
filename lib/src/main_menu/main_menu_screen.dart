@@ -3,6 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
+import 'package:game_template/src/player_progress/player_progress.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -22,6 +23,7 @@ class MainMenuScreen extends StatelessWidget {
     final gamesServicesController = context.watch<GamesServicesController?>();
     final settingsController = context.watch<SettingsController>();
     final audioController = context.watch<AudioController>();
+    final playerProgress = context.watch<PlayerProgress>();
 
     return Scaffold(
       backgroundColor: palette.backgroundMain,
@@ -44,6 +46,15 @@ class MainMenuScreen extends StatelessWidget {
         rectangularMenuArea: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            Visibility(
+                visible: playerProgress.highestLevelReached >= 6,
+                child: ElevatedButton(
+                  onPressed: () {
+                    audioController.playSfx(SfxType.buttonTap);
+                    GoRouter.of(context).go('/freeplay');
+                  },
+                  child: const Text('Free Play'),
+                )),
             ElevatedButton(
               onPressed: () {
                 audioController.playSfx(SfxType.buttonTap);
