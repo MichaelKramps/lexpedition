@@ -193,8 +193,7 @@ class MyApp extends StatelessWidget {
             ),
             GoRoute(
                 path: 'freeplay',
-                builder: (context, state) =>
-                    const FreePlay(key: Key('freeplay')),
+                builder: (context, state) => FreePlay(key: UniqueKey()),
                 routes: [
                   GoRoute(
                     path: 'won',

@@ -12,7 +12,7 @@ class FreePlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Level level =
-        freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length - 1));
-    return PlaySessionScreen(level, '/freeplay/won');
+        freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
+    return new PlaySessionScreen(level, '/freeplay/won');
   }
 }
