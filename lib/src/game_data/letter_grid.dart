@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'letter_tile.dart';
 
 class LetterGrid {
-  late List<LetterTile?> letterTiles;
-  late List<List<LetterTile?>> rows;
+  late List<LetterTile> letterTiles;
+  late List<List<LetterTile>> rows;
   SprayDirection sprayDirection = SprayDirection.up;
   List<String> guesses = [];
   late int par;
@@ -16,8 +16,8 @@ class LetterGrid {
     this.par = par;
   }
 
-  List<LetterTile?> decodeLetterTiles(List<String?> encodedTiles) {
-    List<LetterTile?> decodedLetterTiles = [];
+  List<LetterTile> decodeLetterTiles(List<String?> encodedTiles) {
+    List<LetterTile> decodedLetterTiles = [];
 
     for (int index = 0; index < encodedTiles.length; index++) {
       String? encodedTile = encodedTiles[index];
@@ -31,19 +31,19 @@ class LetterGrid {
 
         decodedLetterTiles.add(thisDecodedLetterTile);
       } else {
-        decodedLetterTiles.add(null);
+        decodedLetterTiles.add(LetterTile('', TileType.empty, 0, 0, index));
       }
     }
 
     return decodedLetterTiles;
   }
 
-  List<List<LetterTile?>> setRows(List<LetterTile?> letterTiles) {
-    List<List<LetterTile?>> rows = [];
+  List<List<LetterTile>> setRows(List<LetterTile> letterTiles) {
+    List<List<LetterTile>> rows = [];
 
     for (int row = 0; row < 4; row++) {
       //all grids should be 4x6
-      List<LetterTile?> thisRow = [];
+      List<LetterTile> thisRow = [];
 
       int baseIndex = row * 6;
 
@@ -62,7 +62,7 @@ class LetterGrid {
 
   bool isFullyCharged() {
     for (var tile in this.letterTiles) {
-      if (tile != null && !tile.isCharged()) {
+      if (!tile.isCharged()) {
         return false;
       }
     }

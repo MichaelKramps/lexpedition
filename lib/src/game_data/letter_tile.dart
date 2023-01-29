@@ -120,4 +120,4 @@ class LetterTile {
   }
 }
 
-enum TileType { basic, start, end }
+enum TileType { basic, start, end, empty }

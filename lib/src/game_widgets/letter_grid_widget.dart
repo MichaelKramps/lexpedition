@@ -128,10 +128,8 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     setState(() {
       _guess = '';
       _guessTiles = [];
-      for (LetterTile? tile in _grid.letterTiles) {
-        if (tile != null) {
-          tile.selected = false;
-        }
+      for (LetterTile tile in _grid.letterTiles) {
+        tile.selected = false;
       }
     });
   }
@@ -251,14 +249,14 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     log(indexesToSpray.toString());
 
     for (int index in indexesToSpray) {
-      LetterTile? thisTile = _grid.letterTiles[index];
+      LetterTile thisTile = _grid.letterTiles[index];
       await Future<void>.delayed(const Duration(milliseconds: 150));
       setState(() {
-        thisTile?.spray();
+        thisTile.spray();
       });
       await Future<void>.delayed(const Duration(milliseconds: 150));
       setState(() {
-        thisTile?.unspray();
+        thisTile.unspray();
       });
     }
 

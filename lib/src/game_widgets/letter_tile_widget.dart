@@ -6,7 +6,7 @@ import 'package:game_template/src/game_widgets/spray_widget.dart';
 import 'package:game_template/src/game_widgets/tile_info_widget.dart';
 
 class LetterTileWidget extends StatelessWidget {
-  final LetterTile? letterTile;
+  final LetterTile letterTile;
   final SprayDirection sprayDirection;
 
   const LetterTileWidget(
@@ -14,9 +14,7 @@ class LetterTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (letterTile != null) {
-      LetterTile nonNullTile =
-          letterTile ?? new LetterTile('l', TileType.basic, 0, 0, 0);
+    if (letterTile.tileType != TileType.empty) {
       final ButtonStyle style = TextButton.styleFrom(
           fixedSize: Size.square(80),
           backgroundColor: Colors.black.withOpacity(0.0),
@@ -32,18 +30,23 @@ class LetterTileWidget extends StatelessWidget {
             child: TextButton(
                 onPressed: () {},
                 style: style,
-                child: TileInfoWidget(letterTile: nonNullTile))),
-        ObstacleWidget(visible: !nonNullTile.clearOfObstacles()),
+                child: TileInfoWidget(letterTile: letterTile))),
+        ObstacleWidget(visible: !letterTile.clearOfObstacles()),
         SprayWidget(
             sprayDirection: sprayDirection,
-            beginSprayAnimation: nonNullTile.sprayFrom)
+            beginSprayAnimation: letterTile.sprayFrom)
       ]);
     } else {
-      return Container(
-          margin: EdgeInsets.all(2),
-          width: 80,
-          height: 80,
-          color: Colors.grey.shade300.withOpacity(0.2));
+      return Stack(children: [
+        Container(
+            margin: EdgeInsets.all(2),
+            width: 80,
+            height: 80,
+            color: Colors.grey.shade300.withOpacity(0.2)),
+        SprayWidget(
+            sprayDirection: sprayDirection,
+            beginSprayAnimation: letterTile.sprayFrom)
+      ]);
     }
   }
 
