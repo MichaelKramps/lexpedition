@@ -424,7 +424,7 @@ var freePlayLevels = [
   Level(difficulty: 6, gridCode: [
     's020',
     't020',
-    'l040',
+    'l031',
     'e040',
     's040',
     's240',
@@ -525,7 +525,7 @@ var freePlayLevels = [
     null,
     null
   ]),
-  Level(difficulty: 6, gridCode: [
+  Level(difficulty: 12, gridCode: [
     'f130',
     'i030',
     'l030',

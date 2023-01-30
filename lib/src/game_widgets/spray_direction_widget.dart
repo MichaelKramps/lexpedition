@@ -25,14 +25,8 @@ class SprayDirectionWidget extends StatelessWidget {
     String path = 'assets/images/';
 
     switch (sprayDirection) {
-      case (SprayDirection.right):
+      case (SprayDirection.horizontal):
         path += 'staveright';
-        break;
-      case (SprayDirection.down):
-        path += 'stavedown';
-        break;
-      case (SprayDirection.left):
-        path += 'staveleft';
         break;
       default:
         path += 'staveup';

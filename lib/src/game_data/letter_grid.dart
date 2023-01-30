@@ -5,7 +5,7 @@ import 'letter_tile.dart';
 class LetterGrid {
   late List<LetterTile> letterTiles;
   late List<List<LetterTile>> rows;
-  SprayDirection sprayDirection = SprayDirection.up;
+  SprayDirection sprayDirection = SprayDirection.vertical;
   List<String> guesses = [];
   late int par;
 
@@ -87,4 +87,4 @@ class LetterGrid {
   }
 }
 
-enum SprayDirection { up, right, down, left }
+enum SprayDirection { vertical, horizontal }

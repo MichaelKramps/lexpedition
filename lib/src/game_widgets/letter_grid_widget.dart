@@ -24,7 +24,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   late LetterGrid _grid = widget.letterGrid;
   String _guess = '';
   List<LetterTile> _guessTiles = [];
-  SprayDirection sprayDirection = SprayDirection.up;
+  SprayDirection sprayDirection = SprayDirection.vertical;
   bool _showBadGuess = false;
 
   GlobalKey gridKey = GlobalKey();
@@ -247,14 +247,14 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
 
     for (int index in indexesToSpray) {
       LetterTile thisTile = _grid.letterTiles[index];
-      await Future<void>.delayed(const Duration(milliseconds: 150));
       setState(() {
         thisTile.spray();
       });
-      await Future<void>.delayed(const Duration(milliseconds: 150));
-      setState(() {
-        thisTile.unspray();
-      });
+      Future<void>.delayed(const Duration(milliseconds: 250), (() {
+        setState(() {
+          thisTile.unspray();
+        });
+      }));
     }
 
     log('finished firing spray');
@@ -263,37 +263,38 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   List<int> findSprayedIndexes(int lastIndex) {
     List<int> indexesToSpray = [];
 
-    int interval;
+    int upInterval;
+    int downInterval;
 
     switch (_grid.sprayDirection) {
-      case (SprayDirection.up):
-        interval = -6;
+      case (SprayDirection.horizontal):
+        upInterval = 1;
+        downInterval = -1;
         break;
-      case (SprayDirection.right):
-        interval = 1;
-        break;
-      case (SprayDirection.down):
-        interval = 6;
-        break;
-      case (SprayDirection.left):
-        interval = -1;
-        break;
+      default:
+        upInterval = 6;
+        downInterval = -6;
     }
 
-    int currentIndex = lastIndex;
-
-    while (currentIndex > -1 && currentIndex < 24) {
-      indexesToSpray.add(currentIndex);
-      currentIndex += interval;
-      if (_grid.sprayDirection == SprayDirection.right) {
+    int upIndex = lastIndex;
+    while (upIndex > -1 && upIndex < 24) {
+      indexesToSpray.add(upIndex);
+      upIndex += upInterval;
+      if (_grid.sprayDirection == SprayDirection.horizontal) {
         List<int> disqualifiers = [6, 12, 18];
-        if (disqualifiers.contains(currentIndex)) {
+        if (disqualifiers.contains(upIndex)) {
           break;
         }
       }
-      if (_grid.sprayDirection == SprayDirection.left) {
+    }
+
+    int downIndex = lastIndex;
+    while (downIndex > -1 && downIndex < 24) {
+      indexesToSpray.add(downIndex);
+      downIndex += downInterval;
+      if (_grid.sprayDirection == SprayDirection.horizontal) {
         List<int> disqualifiers = [5, 11, 17];
-        if (disqualifiers.contains(currentIndex)) {
+        if (disqualifiers.contains(downIndex)) {
           break;
         }
       }
