@@ -55,6 +55,7 @@ class MainMenuScreen extends StatelessWidget {
                   },
                   child: const Text('Free Play'),
                 )),
+            _gap,
             ElevatedButton(
               onPressed: () {
                 audioController.playSfx(SfxType.buttonTap);

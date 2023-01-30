@@ -101,7 +101,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () => GoRouter.of(context).go('/tutorial'),
+                  onPressed: () => GoRouter.of(context).go('/'),
                   child: const Text('Back'),
                 )
               ]))
@@ -111,8 +111,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   }
 
   void updateGuess(int index) {
-    LetterTile letterTile = _grid.letterTiles[index] ??
-        new LetterTile('a', TileType.basic, 0, 0, 0);
+    LetterTile letterTile = _grid.letterTiles[index];
     //verify we are allowed to select this tile
     if (letterTile.clearOfObstacles() &&
         (_guess.length == 0 || _guessTiles.last.allowedToSelect(letterTile))) {
@@ -192,7 +191,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     int selectedIndex =
         determineTileIndex(pointerx, pointery, shrinkClickableSpace);
 
-    if (selectedIndex > -1 && _grid.letterTiles[selectedIndex] != null) {
+    if (selectedIndex > -1) {
       updateGuess(selectedIndex);
     }
   }
@@ -231,8 +230,6 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     if (row < 0 || column < 0) {
       return -1;
     }
-
-    int index = (row * 6) + (column);
 
     return (row * 6) + (column);
   }
