@@ -22,7 +22,6 @@ class LetterGridWidget extends StatefulWidget {
 
 class _LetterGridWidgetState extends State<LetterGridWidget> {
   late LetterGrid _grid = widget.letterGrid;
-  String _guess = '';
   List<LetterTile> _guessTiles = [];
   bool _showBadGuess = false;
 
@@ -53,7 +52,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
           Container(
               width: 280,
               margin: EdgeInsets.all(4),
-              child: Text(_guess.toUpperCase(),
+              child: Text(getGuess(),
                   style: TextStyle(
                       fontSize: 32,
                       backgroundColor: Colors.white.withOpacity(0.3),
@@ -71,10 +70,13 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
           Spacer(),
           Listener(
               key: gridKey,
-              onPointerDown: (event) =>
-                  {handleMouseEvent(event.position.dx, event.position.dy, 0)},
-              onPointerMove: (event) =>
-                  {handleMouseEvent(event.position.dx, event.position.dy, 10)},
+              onPointerDown: (event) => {
+                    handleMouseEvent(event.position.dx, event.position.dy, true)
+                  },
+              onPointerMove: (event) => {
+                    handleMouseEvent(
+                        event.position.dx, event.position.dy, false)
+                  },
               child: Column(children: [
                 for (var row in _grid.rows) ...[
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -101,12 +103,12 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
                 ),
                 ElevatedButton(
                   onPressed: () => resetPuzzle(),
-                  child: const Text('Reset'),
+                  child: const Text('Restart'),
                 ),
                 SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () => GoRouter.of(context).go('/'),
-                  child: const Text('Back'),
+                  child: const Text('Home'),
                 )
               ]))
         ])
@@ -114,34 +116,48 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     ]);
   }
 
-  void updateGuess(int index) {
+  void updateGuess(int index, bool clickEvent) {
     LetterTile letterTile = _grid.letterTiles[index];
     //verify we are allowed to select this tile
     if (letterTile.clearOfObstacles() &&
-        (_guess.length == 0 || _guessTiles.last.allowedToSelect(letterTile))) {
+        (_guessTiles.length == 0 ||
+            _guessTiles.last.allowedToSelect(letterTile))) {
       setState(() {
         letterTile.select();
-        _guess += letterTile.letter;
         _guessTiles.add(letterTile);
+      });
+    } else if (clickEvent && letterTile.index == index) {
+      setState(() {
+        letterTile.unselect();
+        _guessTiles.removeLast();
       });
     }
   }
 
+  String getGuess() {
+    String guess = '';
+    for (LetterTile tile in _guessTiles) {
+      guess += tile.letter;
+    }
+
+    return guess.toUpperCase();
+  }
+
   void clearGuess() {
     setState(() {
-      _guess = '';
       _guessTiles = [];
       for (LetterTile tile in _grid.letterTiles) {
-        tile.selected = false;
+        tile.unselect();
       }
     });
   }
 
   void submitGuess() async {
-    if (_guess.length < 3) {
+    if (_guessTiles.length < 3) {
       await showBadGuess();
-    } else if (_grid.isNewGuess(_guess) && WordHelper.isValidWord(_guess)) {
-      _grid.guesses.add(_guess);
+    } else if (_grid.isNewGuess(getGuess()) &&
+        WordHelper.isValidWord(getGuess())) {
+      _grid.guesses.add(getGuess());
       int numberFullyCharged = 0;
       setState(() {
         for (int tile = 0; tile < _guessTiles.length; tile++) {
@@ -166,7 +182,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       if (_grid.isFullyCharged()) {
         widget.playerWon(_grid.guesses.length, _grid.par);
       } else {
-        if (_guess.length >= 5 || numberFullyCharged >= 3) {
+        if (_guessTiles.length >= 5 || numberFullyCharged >= 3) {
           await fireSpray(_guessTiles.last);
           if (_grid.isFullyCharged()) {
             widget.playerWon(_grid.guesses.length, _grid.par);
@@ -193,18 +209,17 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   void resetPuzzle() {
     setState(() {
       _grid.resetGrid();
-      _guess = '';
       _guessTiles = [];
     });
   }
 
-  void handleMouseEvent(
-      double pointerx, double pointery, int shrinkClickableSpace) {
+  void handleMouseEvent(double pointerx, double pointery, bool clickEvent) {
+    int shrinkClickableSpace = clickEvent ? 0 : 10;
     int selectedIndex =
         determineTileIndex(pointerx, pointery, shrinkClickableSpace);
 
     if (selectedIndex > -1) {
-      updateGuess(selectedIndex);
+      updateGuess(selectedIndex, clickEvent);
     }
   }
 

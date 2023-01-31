@@ -34,6 +34,10 @@ class LetterTile {
     this.selected = true;
   }
 
+  void unselect() {
+    this.selected = false;
+  }
+
   void spray() {
     this.sprayFrom = true;
     if (this.clearOfObstacles()) {
