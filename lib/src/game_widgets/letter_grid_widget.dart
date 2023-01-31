@@ -250,7 +250,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       setState(() {
         thisTile.spray();
       });
-      Future<void>.delayed(const Duration(milliseconds: 250), (() {
+      Future<void>.delayed(const Duration(milliseconds: 350), (() {
         setState(() {
           thisTile.unspray();
         });
@@ -288,7 +288,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       }
     }
 
-    int downIndex = lastIndex;
+    int downIndex = lastIndex + downInterval;
     while (downIndex > -1 && downIndex < 24) {
       indexesToSpray.add(downIndex);
       downIndex += downInterval;
