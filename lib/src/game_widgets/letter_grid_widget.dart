@@ -127,7 +127,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         letterTile.select();
         _guessTiles.add(letterTile);
       });
-    } else if (clickEvent && letterTile.index == index) {
+    } else if (clickEvent && index == _guessTiles.last.index) {
       setState(() {
         letterTile.unselect();
         _guessTiles.removeLast();
