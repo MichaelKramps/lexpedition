@@ -71,28 +71,31 @@ class TutorialIntroWidget extends StatelessWidget {
     TextStyle textStyle = const TextStyle(fontSize: 20);
 
     if (level == 1) {
-      text = 'Fully charge all the letter tiles to win the level!';
+      text =
+          'Use the letter tiles to make words. Words must be at least 3 letters long. Charge all the letter tiles to beat the level!';
     } else if (level == 2) {
       text =
-          'Green triangle tiles can only be charged if they are used at the beginning of a word!';
+          'To charge a letter tile, it may need to be used multiple times! The dots on the tile indicate the required number of uses.';
     } else if (level == 3) {
-      text =
-          'Red pentagon tiles can only be charged if they are used at the end of a word!';
+      text = 'Green triangle tiles must be used at the beginning of a word!';
     } else if (level == 4) {
-      text = 'Now try a level using all three types of tiles!';
+      text = 'Red pentagon tiles must be used at the end of a word!';
     } else if (level == 5) {
+      text = 'Now try a level using all three types of tiles!';
+    } else if (level == 6) {
       // need more complicated widget
       return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
         Text(
-            'When you make a word of 5+ letters, or fully charge 3+ tiles on the same word, a magic blast will fire from the last letter tile!',
+            'When you make a word of 5+ letters, a magic blast will fire from the last letter tile in the word. The magic blast can charge letter tiles!',
             style: textStyle),
         Image.asset('assets/images/staveup.png'),
         Text('Click on the stave to change the direction of the magic blast!',
-            style: textStyle),
-        Text('Hint: "RUN", "URN", "PLATE", "PLATS" or "LATER"',
             style: textStyle)
       ]);
-    } else if (level == 6) {
+    } else if (level == 7) {
+      text =
+          'You will also fire a magic blast when you charge 3+ tiles on a single word! Remember, a tile turns yellow when it charges.';
+    } else if (level == 8) {
       text = 'Clear obstacles from tiles using the magic blast!';
     }
 
@@ -100,6 +103,5 @@ class TutorialIntroWidget extends StatelessWidget {
       text,
       style: textStyle,
     );
-    ;
   }
 }
