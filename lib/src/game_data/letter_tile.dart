@@ -51,6 +51,12 @@ class LetterTile {
     this.currentObstacleCharges += 1;
   }
 
+  void resetTile() {
+    this.currentCharges = 0;
+    this.currentObstacleCharges = 0;
+    this.selected = false;
+  }
+
   bool isCharged() {
     //log(this.letter + ' : ' + this.currentCharges.toString());
     return this.currentCharges >= this.requiredCharges;

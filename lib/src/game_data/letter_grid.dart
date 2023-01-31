@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'letter_tile.dart';
 
 class LetterGrid {
@@ -58,6 +56,14 @@ class LetterGrid {
     }
 
     return rows;
+  }
+
+  void resetGrid() {
+    sprayDirection = SprayDirection.vertical;
+    guesses = [];
+    for (var tile in this.letterTiles) {
+      tile.resetTile();
+    }
   }
 
   bool isFullyCharged() {

@@ -24,7 +24,6 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   late LetterGrid _grid = widget.letterGrid;
   String _guess = '';
   List<LetterTile> _guessTiles = [];
-  SprayDirection sprayDirection = SprayDirection.vertical;
   bool _showBadGuess = false;
 
   GlobalKey gridKey = GlobalKey();
@@ -100,6 +99,11 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
                     semanticLabel: 'Settings',
                   ),
                 ),
+                ElevatedButton(
+                  onPressed: () => resetPuzzle(),
+                  child: const Text('Reset'),
+                ),
+                SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () => GoRouter.of(context).go('/'),
                   child: const Text('Back'),
@@ -183,6 +187,14 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     await Future<void>.delayed(const Duration(milliseconds: 1000));
     setState(() {
       _showBadGuess = false;
+    });
+  }
+
+  void resetPuzzle() {
+    setState(() {
+      _grid.resetGrid();
+      _guess = '';
+      _guessTiles = [];
     });
   }
 

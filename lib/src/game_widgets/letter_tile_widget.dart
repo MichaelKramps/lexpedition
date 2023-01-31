@@ -80,7 +80,7 @@ class LetterTileWidget extends StatelessWidget {
 
   BorderSide determineBorder(LetterTile? letterTile) {
     if (letterTile != null && letterTile.selected) {
-      return BorderSide(width: 1, color: Colors.orange);
+      return BorderSide(width: 2, color: Colors.orange);
     } else {
       return BorderSide(width: 0, color: Colors.transparent);
     }
