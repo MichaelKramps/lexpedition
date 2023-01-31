@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:game_template/src/game_data/constants.dart';
 import 'package:game_template/src/game_data/letter_grid.dart';
 import 'package:game_template/src/game_data/letter_tile.dart';
 import 'package:game_template/src/game_data/word_helper.dart';
@@ -230,27 +231,37 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     int row = -1;
     int column = -1;
 
-    if (yDistance > (10 + shrink) && yDistance < (81 - shrink)) {
+    if (yDistance > (Constants.tileOneStart + shrink) &&
+        yDistance < (Constants.tileOneEnd - shrink)) {
       row = 0;
-    } else if (yDistance > (90 + shrink) && yDistance < (161 - shrink)) {
+    } else if (yDistance > (Constants.tileTwoStart + shrink) &&
+        yDistance < (Constants.tileTwoEnd - shrink)) {
       row = 1;
-    } else if (yDistance > (170 + shrink) && yDistance < (241 - shrink)) {
+    } else if (yDistance > (Constants.tileThreeStart + shrink) &&
+        yDistance < (Constants.tileThreeEnd - shrink)) {
       row = 2;
-    } else if (yDistance > (250 + shrink) && yDistance < (321 - shrink)) {
+    } else if (yDistance > (Constants.tileFourStart + shrink) &&
+        yDistance < (Constants.tileFourEnd - shrink)) {
       row = 3;
     }
 
-    if (xDistance > (10 + shrink) && xDistance < (81 - shrink)) {
+    if (xDistance > (Constants.tileOneStart + shrink) &&
+        xDistance < (Constants.tileOneEnd - shrink)) {
       column = 0;
-    } else if (xDistance > (90 + shrink) && xDistance < (161 - shrink)) {
+    } else if (xDistance > (Constants.tileTwoStart + shrink) &&
+        xDistance < (Constants.tileTwoEnd - shrink)) {
       column = 1;
-    } else if (xDistance > (170 + shrink) && xDistance < (241 - shrink)) {
+    } else if (xDistance > (Constants.tileThreeStart + shrink) &&
+        xDistance < (Constants.tileThreeEnd - shrink)) {
       column = 2;
-    } else if (xDistance > (250 + shrink) && xDistance < (321 - shrink)) {
+    } else if (xDistance > (Constants.tileFourStart + shrink) &&
+        xDistance < (Constants.tileFourEnd - shrink)) {
       column = 3;
-    } else if (xDistance > (330 + shrink) && xDistance < (401 - shrink)) {
+    } else if (xDistance > (Constants.tileFiveStart + shrink) &&
+        xDistance < (Constants.tileFiveEnd - shrink)) {
       column = 4;
-    } else if (xDistance > (410 + shrink) && xDistance < (481 - shrink)) {
+    } else if (xDistance > (Constants.tileSixStart + shrink) &&
+        xDistance < (Constants.tileSixEnd - shrink)) {
       column = 5;
     }
 

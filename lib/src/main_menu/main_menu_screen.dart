@@ -63,7 +63,7 @@ class MainMenuScreen extends StatelessWidget {
                     audioController.playSfx(SfxType.buttonTap);
                     GoRouter.of(context).go('/buildpuzzle');
                   },
-                  child: const Text('Build Puzzle'),
+                  child: const Text('Puzzle Builder'),
                 )),
             _gap,
             ElevatedButton(

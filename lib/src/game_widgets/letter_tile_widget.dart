@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_template/src/game_data/constants.dart';
 import 'package:game_template/src/game_data/letter_grid.dart';
 import 'package:game_template/src/game_data/letter_tile.dart';
 import 'package:game_template/src/game_widgets/obstacle_widget.dart';
@@ -16,13 +17,13 @@ class LetterTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (letterTile.tileType != TileType.empty) {
       final ButtonStyle style = TextButton.styleFrom(
-          fixedSize: Size.square(80),
+          fixedSize: Size.square(Constants.tileSize),
           backgroundColor: Colors.black.withOpacity(0.0),
           side: determineBorder(letterTile));
 
       return Stack(children: [
         Container(
-            margin: EdgeInsets.all(2),
+            margin: EdgeInsets.all(Constants.tileMargin),
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage(determineTileImage(letterTile)),
