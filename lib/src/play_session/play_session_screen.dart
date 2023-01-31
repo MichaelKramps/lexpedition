@@ -45,7 +45,6 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.level.difficulty.toString());
     final palette = context.watch<Palette>();
 
     return IgnorePointer(

@@ -439,13 +439,13 @@ var freePlayLevels = [
     'n020',
     null,
     null,
-    null,
+    'x110',
     's020',
     'h020',
     'l020',
     null,
     null,
-    null
+    'x210'
   ]),
   Level(difficulty: 8, gridCode: [
     null,

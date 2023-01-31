@@ -51,15 +51,15 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
               sprayDirection: _grid.sprayDirection,
               changeDirection: updateSprayDirection),
           Container(
-              width: 280,
-              margin: EdgeInsets.all(4),
+              width: Constants.tileSize * 3.5,
+              margin: EdgeInsets.all(Constants.tileMargin * 2),
               child: Text(getGuess(),
                   style: TextStyle(
-                      fontSize: 32,
+                      fontSize: Constants.tileSize * 0.4,
                       backgroundColor: Colors.white.withOpacity(0.3),
                       color: _showBadGuess ? Colors.red : Colors.black))),
           Container(
-              margin: EdgeInsets.all(4),
+              margin: EdgeInsets.all(Constants.tileMargin * 2),
               child: ElevatedButton(
                   style: buttonStyle,
                   onPressed: submitGuess,
@@ -228,6 +228,12 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     int xDistance = (pointerx - _gridx).round();
     int yDistance = (pointery - _gridy).round();
 
+    log(_gridx.toString());
+    log(_gridy.toString());
+    log(pointerx.toString());
+    log(pointery.toString());
+    log(Constants.tileOneEnd.toString());
+
     int row = -1;
     int column = -1;
 
@@ -281,8 +287,6 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   Future<void> fireSpray(LetterTile lastTile) async {
     List<int> indexesToSpray = findSprayedIndexes(lastTile.index);
 
-    log(indexesToSpray.toString());
-
     for (int index in indexesToSpray) {
       LetterTile thisTile = _grid.letterTiles[index];
       setState(() {
@@ -294,8 +298,6 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         });
       }));
     }
-
-    log('finished firing spray');
   }
 
   List<int> findSprayedIndexes(int lastIndex) {

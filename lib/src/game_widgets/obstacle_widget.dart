@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:game_template/src/game_data/constants.dart';
 
 class ObstacleWidget extends StatelessWidget {
   final bool visible;
@@ -12,6 +13,6 @@ class ObstacleWidget extends StatelessWidget {
     return Visibility(
         visible: visible,
         child: Image.asset('assets/images/butterfly-icon.png',
-            height: 80, width: 80));
+            height: Constants.tileSize, width: Constants.tileSize));
   }
 }

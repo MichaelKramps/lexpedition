@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:game_template/src/game_data/constants.dart';
 import 'package:game_template/src/game_data/letter_grid.dart';
 
 class SprayWidget extends StatefulWidget {
@@ -24,7 +25,8 @@ class _SprayWidgetState extends State<SprayWidget> {
     return Visibility(
         visible: widget.beginSprayAnimation,
         maintainAnimation: false,
-        child: Image.asset('assets/images/blast.png', height: 80, width: 80));
+        child: Image.asset('assets/images/blast.png',
+            height: Constants.tileSize, width: Constants.tileSize));
   }
 
   void determineNewOffset() {

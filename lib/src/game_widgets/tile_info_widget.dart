@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_template/src/game_data/constants.dart';
 import 'package:game_template/src/game_data/letter_tile.dart';
 
 class TileInfoWidget extends StatelessWidget {
@@ -13,7 +14,7 @@ class TileInfoWidget extends StatelessWidget {
       return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text(letter,
             style: TextStyle(
-                fontSize: 56,
+                fontSize: Constants.tileSize * 0.7,
                 color: determineTextColor(
                     letterTile.requiredCharges, letterTile.currentCharges))),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -21,8 +22,10 @@ class TileInfoWidget extends StatelessWidget {
               charge < (letterTile.requiredCharges - letterTile.currentCharges);
               charge++) ...[
             Text('.',
-                style:
-                    TextStyle(fontSize: 48, height: 0.01, color: Colors.white))
+                style: TextStyle(
+                    fontSize: Constants.tileSize * 0.6,
+                    height: 0.01,
+                    color: Colors.white))
           ]
         ])
       ]);

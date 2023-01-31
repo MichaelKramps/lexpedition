@@ -79,12 +79,6 @@ class _BuildOnePlayerPuzzleWidgetState
     int xDistance = (pointerx - _gridx).round();
     int yDistance = (pointery - _gridy).round();
 
-    log(_gridx.toString());
-    log(_gridy.toString());
-    log(pointerx.toString());
-    log(pointery.toString());
-    log(renderBox.size.toString());
-
     int row = -1;
     int column = -1;
 

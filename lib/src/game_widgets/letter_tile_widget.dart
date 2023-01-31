@@ -40,9 +40,9 @@ class LetterTileWidget extends StatelessWidget {
     } else {
       return Stack(children: [
         Container(
-            margin: EdgeInsets.all(2),
-            width: 80,
-            height: 80,
+            margin: EdgeInsets.all(Constants.tileMargin),
+            width: Constants.tileSize,
+            height: Constants.tileSize,
             color: Colors.grey.shade300.withOpacity(0.2)),
         SprayWidget(
             sprayDirection: sprayDirection,

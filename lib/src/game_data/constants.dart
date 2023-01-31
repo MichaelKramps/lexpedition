@@ -1,17 +1,17 @@
 class Constants {
-  static double tileSize = 80;
-  static double tileMargin = 2;
+  static double tileSize = 70;
+  static double tileMargin = tileSize * 0.025;
 
-  static int tileOneStart = (tileMargin).round();
-  static int tileOneEnd = (tileSize + tileMargin).round();
-  static int tileTwoStart = (tileSize + (tileMargin * 3)).round();
-  static int tileTwoEnd = ((tileSize * 2) + (tileMargin * 4)).round();
-  static int tileThreeStart = ((tileSize * 2) + (tileMargin * 5)).round();
-  static int tileThreeEnd = ((tileSize * 3) + (tileMargin * 6)).round();
-  static int tileFourStart = ((tileSize * 3) + (tileMargin * 7)).round();
-  static int tileFourEnd = ((tileSize * 4) + (tileMargin * 8)).round();
-  static int tileFiveStart = ((tileSize * 4) + (tileMargin * 9)).round();
-  static int tileFiveEnd = ((tileSize * 5) + (tileMargin * 10)).round();
-  static int tileSixStart = ((tileSize * 5) + (tileMargin * 11)).round();
-  static int tileSixEnd = ((tileSize * 6) + (tileMargin * 12)).round();
+  static int tileOneStart = (tileMargin).ceil();
+  static int tileOneEnd = (tileSize + tileMargin).floor();
+  static int tileTwoStart = (tileSize + (tileMargin * 3)).ceil();
+  static int tileTwoEnd = ((tileSize * 2) + (tileMargin * 4)).floor();
+  static int tileThreeStart = ((tileSize * 2) + (tileMargin * 5)).ceil();
+  static int tileThreeEnd = ((tileSize * 3) + (tileMargin * 6)).floor();
+  static int tileFourStart = ((tileSize * 3) + (tileMargin * 7)).ceil();
+  static int tileFourEnd = ((tileSize * 4) + (tileMargin * 8)).floor();
+  static int tileFiveStart = ((tileSize * 4) + (tileMargin * 9)).ceil();
+  static int tileFiveEnd = ((tileSize * 5) + (tileMargin * 10)).floor();
+  static int tileSixStart = ((tileSize * 5) + (tileMargin * 11)).ceil();
+  static int tileSixEnd = ((tileSize * 6) + (tileMargin * 12)).floor();
 }
