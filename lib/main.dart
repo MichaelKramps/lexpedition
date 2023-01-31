@@ -11,6 +11,9 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:game_template/src/build_puzzle/build_one_player_puzzle_widget.dart';
+import 'package:game_template/src/build_puzzle/build_puzzle_screen.dart';
+import 'package:game_template/src/build_puzzle/build_two_player_puzzle_widget.dart';
 import 'package:game_template/src/free_play/free_play.dart';
 import 'package:game_template/src/level_info/free_play_levels.dart';
 import 'package:game_template/src/level_info/tutorial_intros.dart';
@@ -211,6 +214,22 @@ class MyApp extends StatelessWidget {
                       );
                     },
                   ),
+                ]),
+            GoRoute(
+                path: 'buildpuzzle',
+                builder: (context, state) =>
+                    const BuildPuzzleScreen(key: Key('build puzzle')),
+                routes: [
+                  GoRoute(
+                      path: '1player',
+                      builder: (context, state) =>
+                          const BuildOnePlayerPuzzleWidget(
+                              key: Key('build one player puzzle'))),
+                  GoRoute(
+                      path: '2player',
+                      builder: (context, state) =>
+                          const BuildTwoPlayerPuzzleWidget(
+                              key: Key('build two player puzzle')))
                 ]),
           ]),
     ],

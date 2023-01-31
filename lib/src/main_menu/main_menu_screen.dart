@@ -56,6 +56,16 @@ class MainMenuScreen extends StatelessWidget {
                   child: const Text('Free Play'),
                 )),
             _gap,
+            Visibility(
+                visible: playerProgress.highestLevelReached >= 6,
+                child: ElevatedButton(
+                  onPressed: () {
+                    audioController.playSfx(SfxType.buttonTap);
+                    GoRouter.of(context).go('/buildpuzzle');
+                  },
+                  child: const Text('Build Puzzle'),
+                )),
+            _gap,
             ElevatedButton(
               onPressed: () {
                 audioController.playSfx(SfxType.buttonTap);
