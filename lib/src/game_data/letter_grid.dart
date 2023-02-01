@@ -92,10 +92,11 @@ class LetterGrid {
 
     for (String? encodedTile in encodedTiles) {
       if (encodedTile == null) {
-        gridString += 'null,\n';
+        gridString += 'null,';
       } else {
+        gridString += '\'';
         gridString += encodedTile;
-        gridString += ',\n';
+        gridString += '\',';
       }
     }
 
