@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:game_template/src/build_puzzle/blank_grid.dart';
 import 'package:game_template/src/game_data/constants.dart';
 import 'package:game_template/src/game_data/letter_grid.dart';
+import 'package:game_template/src/game_data/letter_tile.dart';
 import 'package:game_template/src/game_widgets/letter_tile_widget.dart';
+import 'package:go_router/go_router.dart';
 
 class BuildOnePlayerPuzzleWidget extends StatefulWidget {
   const BuildOnePlayerPuzzleWidget({super.key});
@@ -31,23 +33,79 @@ class _BuildOnePlayerPuzzleWidgetState
     return Row(children: [
       Expanded(
           flex: 1,
-          child: Column(
-            children: [
-              Visibility(
-                  visible: true,
-                  child: Image.asset('assets/images/blue-basic.png')),
-              Visibility(
-                  visible: true,
-                  child: Image.asset('assets/images/green-start.png')),
-              Visibility(
-                  visible: true,
-                  child: Image.asset('assets/images/red-end.png')),
-            ],
-          )),
+          child: Stack(children: [
+            Visibility(
+                visible: showOptionOnStep(1),
+                child: Column(children: [
+                  buildTileTypeButton('blue-basic', TileType.basic),
+                  buildTileTypeButton('green-start', TileType.start),
+                  buildTileTypeButton('red-end', TileType.end),
+                ])),
+            Visibility(
+                visible: showOptionOnStep(2),
+                child: Column(
+                  children: [
+                    Row(children: [
+                      buildLetterButton('a'),
+                      buildLetterButton('b'),
+                      buildLetterButton('c'),
+                      buildLetterButton('d')
+                    ]),
+                    Row(children: [
+                      buildLetterButton('e'),
+                      buildLetterButton('f'),
+                      buildLetterButton('g'),
+                      buildLetterButton('h')
+                    ]),
+                    Row(children: [
+                      buildLetterButton('i'),
+                      buildLetterButton('j'),
+                      buildLetterButton('k'),
+                      buildLetterButton('l')
+                    ]),
+                    Row(children: [
+                      buildLetterButton('m'),
+                      buildLetterButton('n'),
+                      buildLetterButton('o'),
+                      buildLetterButton('p')
+                    ]),
+                    Row(children: [
+                      buildLetterButton('q'),
+                      buildLetterButton('r'),
+                      buildLetterButton('s'),
+                      buildLetterButton('t')
+                    ]),
+                    Row(children: [
+                      buildLetterButton('u'),
+                      buildLetterButton('v'),
+                      buildLetterButton('w'),
+                      buildLetterButton('x')
+                    ]),
+                    Row(children: [
+                      buildLetterButton('y'),
+                      buildLetterButton('z')
+                    ]),
+                  ],
+                )),
+            Visibility(
+                visible: showOptionOnStep(3),
+                child: Column(
+                  children: [
+                    buildChargesButton(1),
+                    buildChargesButton(2),
+                    buildChargesButton(3),
+                    buildChargesButton(4)
+                  ],
+                )),
+            Visibility(
+              visible: showOptionOnStep(4),
+              child: Column(children: [
+                buildObstacleButton(true),
+                buildObstacleButton(false)
+              ]),
+            )
+          ])),
       Column(children: [
-        Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text(_selectedIndex.toString())]),
         Listener(
             key: gridKey,
             onPointerDown: selectTile,
@@ -61,14 +119,12 @@ class _BuildOnePlayerPuzzleWidgetState
                   ]
                 ])
               ]
-            ])),
+            ]))
       ]),
-      Expanded(
-          flex: 1,
-          child: ElevatedButton(
-            onPressed: () => {},
-            child: Text('hi'),
-          ))
+      ElevatedButton(
+        onPressed: () => GoRouter.of(context).push('/'),
+        child: Text('Home'),
+      )
     ]);
   }
 
@@ -124,8 +180,89 @@ class _BuildOnePlayerPuzzleWidgetState
       selectedIndex = (row * 6) + (column);
     }
 
-    setState(() {
-      _selectedIndex = selectedIndex;
-    });
+    if (selectedIndex == _selectedIndex) {
+      // something else
+    } else {
+      setState(() {
+        if (_selectedIndex > -1) {
+          _grid.letterTiles[_selectedIndex].unselect();
+        }
+        _selectedIndex = selectedIndex;
+        _grid.letterTiles[selectedIndex].select();
+      });
+    }
+  }
+
+  bool showOptionOnStep(int step) {
+    if (_selectedIndex < 0) {
+      return false;
+    }
+
+    LetterTile selectedTile = _grid.letterTiles[_selectedIndex];
+
+    bool typeSelected = selectedTile.tileType != TileType.empty;
+    bool letterSelected = selectedTile.letter != '';
+    bool chargesSelected = selectedTile.requiredCharges > 0;
+
+    int currentStep = 1;
+    if (chargesSelected) {
+      currentStep = 4;
+    } else if (letterSelected) {
+      currentStep = 3;
+    } else if (typeSelected) {
+      currentStep = 2;
+    }
+
+    return step == currentStep;
+  }
+
+  Widget buildTileTypeButton(String path, TileType type) {
+    return ElevatedButton(
+        onPressed: () => {
+              setState(() {
+                _grid.letterTiles[_selectedIndex].tileType = type;
+              })
+            },
+        child: Image.asset('assets/images/' + path + '.png',
+            width: Constants.tileSize, height: Constants.tileSize));
+  }
+
+  Widget buildLetterButton(String letter) {
+    return ElevatedButton(
+        style:
+            TextButton.styleFrom(fixedSize: Size.square(Constants.smallFont)),
+        onPressed: () => {
+              setState(() {
+                _grid.letterTiles[_selectedIndex].letter = letter;
+              })
+            },
+        child: Text(letter.toUpperCase(),
+            style: TextStyle(fontSize: Constants.smallFont)));
+  }
+
+  Widget buildChargesButton(int numberCharges) {
+    return ElevatedButton(
+        style:
+            TextButton.styleFrom(fixedSize: Size.square(Constants.smallFont)),
+        onPressed: () => {
+              setState(() {
+                _grid.letterTiles[_selectedIndex].requiredCharges =
+                    numberCharges;
+              })
+            },
+        child: Text(numberCharges.toString(),
+            style: TextStyle(fontSize: Constants.smallFont)));
+  }
+
+  Widget buildObstacleButton(bool add) {
+    return ElevatedButton(
+        onPressed: () => {
+              setState(() {
+                _grid.letterTiles[_selectedIndex].requiredObstacleCharges =
+                    add ? 1 : 0;
+              })
+            },
+        child: Text(add ? 'Add Obstacle' : 'Remove Obstacle',
+            style: TextStyle(fontSize: Constants.verySmallFont)));
   }
 }

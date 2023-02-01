@@ -184,20 +184,16 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         widget.playerWon(_grid.guesses.length, _grid.par);
       } else {
         if (_guessTiles.length >= 5 || numberFullyCharged >= 3) {
-          log('firing spray');
           await fireSpray(_guessTiles.last);
           if (_grid.isFullyCharged()) {
             widget.playerWon(_grid.guesses.length, _grid.par);
           }
-          log('here 1');
           await Future<void>.delayed(const Duration(milliseconds: 200));
-          log('here 2');
         }
       }
     } else {
       await showBadGuess();
     }
-    log('finished submitting guess');
     clearGuess();
   }
 
@@ -296,7 +292,6 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         });
       }));
     }
-    log('finished fireSpray');
   }
 
   List<int> findSprayedIndexes(int lastIndex) {

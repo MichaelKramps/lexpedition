@@ -19,7 +19,7 @@ class LetterTileWidget extends StatelessWidget {
       final ButtonStyle style = TextButton.styleFrom(
           fixedSize: Size.square(Constants.tileSize),
           backgroundColor: Colors.black.withOpacity(0.0),
-          side: determineBorder(letterTile));
+          side: determineTileBorder(letterTile));
 
       return Stack(children: [
         Container(
@@ -43,7 +43,7 @@ class LetterTileWidget extends StatelessWidget {
             margin: EdgeInsets.all(Constants.tileMargin),
             width: Constants.tileSize,
             height: Constants.tileSize,
-            color: Colors.grey.shade300.withOpacity(0.2)),
+            color: determineEmptyColor(letterTile)),
         SprayWidget(
             sprayDirection: sprayDirection,
             beginSprayAnimation: letterTile.sprayFrom)
@@ -79,11 +79,19 @@ class LetterTileWidget extends StatelessWidget {
     return imagePath + 'blue-basic.png';
   }
 
-  BorderSide determineBorder(LetterTile? letterTile) {
-    if (letterTile != null && letterTile.selected) {
+  BorderSide determineTileBorder(LetterTile letterTile) {
+    if (letterTile.selected) {
       return BorderSide(width: 2, color: Colors.orange);
     } else {
       return BorderSide(width: 0, color: Colors.transparent);
+    }
+  }
+
+  Color determineEmptyColor(LetterTile letterTile) {
+    if (letterTile.selected) {
+      return Colors.orange.shade300.withOpacity(0.3);
+    } else {
+      return Colors.grey.shade300.withOpacity(0.2);
     }
   }
 }

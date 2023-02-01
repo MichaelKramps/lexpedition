@@ -1,5 +1,5 @@
 class Constants {
-  static double tileSize = 70;
+  static double tileSize = 80;
   static double tileMargin = tileSize * 0.025;
 
   static int tileOneStart = (tileMargin).ceil();
@@ -17,4 +17,5 @@ class Constants {
 
   static double bigFont = 56;
   static double smallFont = 32;
+  static double verySmallFont = 18;
 }
