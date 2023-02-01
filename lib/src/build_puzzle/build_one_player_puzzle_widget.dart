@@ -133,7 +133,8 @@ class _BuildOnePlayerPuzzleWidgetState
                   visible: showOptionOnStep(4),
                   child: Column(children: [
                     buildObstacleButton(true),
-                    buildObstacleButton(false)
+                    buildObstacleButton(false),
+                    buildClearTileButton(),
                   ]),
                 )
               ])
@@ -164,6 +165,13 @@ class _BuildOnePlayerPuzzleWidgetState
           ElevatedButton(
             onPressed: () => log(_grid.encodedGridToString()),
             child: Text('Log'),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => {
+              setState(() => {_grid = new LetterGrid(blankGrid, 2)})
+            },
+            child: Text('Clear'),
           ),
           SizedBox(height: 20),
           ElevatedButton(
@@ -276,6 +284,13 @@ class _BuildOnePlayerPuzzleWidgetState
             style: TextStyle(fontSize: Constants.verySmallFont)));
   }
 
+  Widget buildClearTileButton() {
+    return ElevatedButton(
+        onPressed: clearSelectedTile,
+        child: Text('Clear Tile',
+            style: TextStyle(fontSize: Constants.verySmallFont)));
+  }
+
   void setLetterTile(
       {TileType? tileType,
       String? letter,
@@ -301,6 +316,17 @@ class _BuildOnePlayerPuzzleWidgetState
       letterTile.requiredObstacleCharges = requiredObstacleCharges == null
           ? backupObstacleCharges
           : requiredObstacleCharges;
+    });
+  }
+
+  void clearSelectedTile() {
+    setState(() {
+      LetterTile letterTile = _grid.letterTiles[_selectedIndex];
+
+      letterTile.letter = '';
+      letterTile.tileType = TileType.empty;
+      letterTile.requiredCharges = 0;
+      letterTile.requiredObstacleCharges = 0;
     });
   }
 }
