@@ -14,4 +14,7 @@ class Constants {
   static int tileFiveEnd = ((tileSize * 5) + (tileMargin * 10)).floor();
   static int tileSixStart = ((tileSize * 5) + (tileMargin * 11)).ceil();
   static int tileSixEnd = ((tileSize * 6) + (tileMargin * 12)).floor();
+
+  static double bigFont = 56;
+  static double smallFont = 32;
 }

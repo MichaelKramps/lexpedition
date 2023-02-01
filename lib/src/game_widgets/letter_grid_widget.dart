@@ -184,16 +184,20 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         widget.playerWon(_grid.guesses.length, _grid.par);
       } else {
         if (_guessTiles.length >= 5 || numberFullyCharged >= 3) {
+          log('firing spray');
           await fireSpray(_guessTiles.last);
           if (_grid.isFullyCharged()) {
             widget.playerWon(_grid.guesses.length, _grid.par);
           }
+          log('here 1');
           await Future<void>.delayed(const Duration(milliseconds: 200));
+          log('here 2');
         }
       }
     } else {
       await showBadGuess();
     }
+    log('finished submitting guess');
     clearGuess();
   }
 
@@ -227,12 +231,6 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   int determineTileIndex(double pointerx, double pointery, int shrink) {
     int xDistance = (pointerx - _gridx).round();
     int yDistance = (pointery - _gridy).round();
-
-    log(_gridx.toString());
-    log(_gridy.toString());
-    log(pointerx.toString());
-    log(pointery.toString());
-    log(Constants.tileOneEnd.toString());
 
     int row = -1;
     int column = -1;
@@ -298,48 +296,31 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         });
       }));
     }
+    log('finished fireSpray');
   }
 
   List<int> findSprayedIndexes(int lastIndex) {
-    List<int> indexesToSpray = [];
+    List<List<int>> rows = [
+      [0, 1, 2, 3, 4, 5],
+      [6, 7, 8, 9, 10, 11],
+      [12, 13, 14, 15, 16, 17],
+      [18, 19, 20, 21, 22, 23]
+    ];
+    List<List<int>> columns = [
+      [0, 6, 12, 18],
+      [1, 7, 13, 19],
+      [2, 8, 14, 20],
+      [3, 9, 15, 21],
+      [4, 10, 16, 22],
+      [5, 11, 17, 23]
+    ];
 
-    int upInterval;
-    int downInterval;
-
-    switch (_grid.sprayDirection) {
-      case (SprayDirection.horizontal):
-        upInterval = 1;
-        downInterval = -1;
-        break;
-      default:
-        upInterval = 6;
-        downInterval = -6;
+    if (_grid.sprayDirection == SprayDirection.horizontal) {
+      int whichRow = (lastIndex / 6).floor();
+      return rows[whichRow];
+    } else {
+      int whichColumn = lastIndex % 6;
+      return columns[whichColumn];
     }
-
-    int upIndex = lastIndex;
-    while (upIndex > -1 && upIndex < 24) {
-      indexesToSpray.add(upIndex);
-      upIndex += upInterval;
-      if (_grid.sprayDirection == SprayDirection.horizontal) {
-        List<int> disqualifiers = [6, 12, 18];
-        if (disqualifiers.contains(upIndex)) {
-          break;
-        }
-      }
-    }
-
-    int downIndex = lastIndex + downInterval;
-    while (downIndex > -1 && downIndex < 24) {
-      indexesToSpray.add(downIndex);
-      downIndex += downInterval;
-      if (_grid.sprayDirection == SprayDirection.horizontal) {
-        List<int> disqualifiers = [5, 11, 17];
-        if (disqualifiers.contains(downIndex)) {
-          break;
-        }
-      }
-    }
-
-    return indexesToSpray;
   }
 }

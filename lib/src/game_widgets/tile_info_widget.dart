@@ -14,7 +14,7 @@ class TileInfoWidget extends StatelessWidget {
       return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Text(letter,
             style: TextStyle(
-                fontSize: Constants.tileSize * 0.7,
+                fontSize: Constants.bigFont,
                 color: determineTextColor(
                     letterTile.requiredCharges, letterTile.currentCharges))),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -23,7 +23,7 @@ class TileInfoWidget extends StatelessWidget {
               charge++) ...[
             Text('.',
                 style: TextStyle(
-                    fontSize: Constants.tileSize * 0.6,
+                    fontSize: Constants.smallFont,
                     height: 0.01,
                     color: Colors.white))
           ]
