@@ -1,6 +1,7 @@
 import 'letter_tile.dart';
 
 class LetterGrid {
+  late List<String?> encodedTiles;
   late List<LetterTile> letterTiles;
   late List<List<LetterTile>> rows;
   SprayDirection sprayDirection = SprayDirection.vertical;
@@ -9,6 +10,7 @@ class LetterGrid {
 
   LetterGrid(List<String?> letterTiles, int par) {
     assert(letterTiles.length == 24);
+    this.encodedTiles = letterTiles;
     this.letterTiles = this.decodeLetterTiles(letterTiles);
     this.rows = this.setRows(this.letterTiles);
     this.par = par;
@@ -56,6 +58,49 @@ class LetterGrid {
     }
 
     return rows;
+  }
+
+  List<String?> getReEncodedGrid() {
+    List<String?> reEncodedGrid = [];
+
+    for (int tileIndex = 0; tileIndex < letterTiles.length; tileIndex++) {
+      LetterTile thisTile = letterTiles[tileIndex];
+      bool hasLetter = thisTile.letter != '';
+      bool hasType = thisTile.tileType != TileType.empty;
+
+      late String? thisTileEncoding;
+      if (hasLetter && hasType) {
+        thisTileEncoding = thisTile.letter; //letter encoding
+        thisTileEncoding +=
+            thisTile.tileType.index.toString(); //tile type encoding
+        thisTileEncoding +=
+            thisTile.requiredCharges.toString(); //charges encoding
+        thisTileEncoding +=
+            thisTile.requiredObstacleCharges.toString(); //obstacle encoding
+      } else {
+        thisTileEncoding = null;
+      }
+      reEncodedGrid.add(thisTileEncoding);
+    }
+
+    return reEncodedGrid;
+  }
+
+  String encodedGridToString() {
+    encodedTiles = getReEncodedGrid();
+    String gridString = '[\n';
+
+    for (String? encodedTile in encodedTiles) {
+      if (encodedTile == null) {
+        gridString += 'null,\n';
+      } else {
+        gridString += encodedTile;
+        gridString += ',\n';
+      }
+    }
+
+    gridString += '\n]';
+    return gridString;
   }
 
   void resetGrid() {

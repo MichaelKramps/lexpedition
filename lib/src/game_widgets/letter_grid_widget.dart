@@ -43,7 +43,8 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       Container(
           decoration: BoxDecoration(
         image: DecorationImage(
-            image: AssetImage('assets/images/g4.bmp'), fit: BoxFit.cover),
+            image: AssetImage(Constants.backgroundImagePath),
+            fit: BoxFit.cover),
       )),
       Column(children: [
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [

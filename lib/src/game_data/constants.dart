@@ -18,4 +18,8 @@ class Constants {
   static double bigFont = 56;
   static double smallFont = 32;
   static double verySmallFont = 18;
+
+  static String assetsPath = 'assets';
+  static String imagePath = assetsPath + '/images';
+  static String backgroundImagePath = imagePath + '/g4.bmp';
 }

@@ -20,6 +20,7 @@ class _BuildOnePlayerPuzzleWidgetState
     extends State<BuildOnePlayerPuzzleWidget> {
   LetterGrid _grid = new LetterGrid(blankGrid, 1);
   int _selectedIndex = -1;
+  int _step = 0;
 
   GlobalKey gridKey = GlobalKey();
   late RenderBox renderBox =
@@ -30,101 +31,147 @@ class _BuildOnePlayerPuzzleWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      Expanded(
-          flex: 1,
-          child: Stack(children: [
-            Visibility(
-                visible: showOptionOnStep(1),
-                child: Column(children: [
-                  buildTileTypeButton('blue-basic', TileType.basic),
-                  buildTileTypeButton('green-start', TileType.start),
-                  buildTileTypeButton('red-end', TileType.end),
-                ])),
-            Visibility(
-                visible: showOptionOnStep(2),
-                child: Column(
-                  children: [
-                    Row(children: [
-                      buildLetterButton('a'),
-                      buildLetterButton('b'),
-                      buildLetterButton('c'),
-                      buildLetterButton('d')
-                    ]),
-                    Row(children: [
-                      buildLetterButton('e'),
-                      buildLetterButton('f'),
-                      buildLetterButton('g'),
-                      buildLetterButton('h')
-                    ]),
-                    Row(children: [
-                      buildLetterButton('i'),
-                      buildLetterButton('j'),
-                      buildLetterButton('k'),
-                      buildLetterButton('l')
-                    ]),
-                    Row(children: [
-                      buildLetterButton('m'),
-                      buildLetterButton('n'),
-                      buildLetterButton('o'),
-                      buildLetterButton('p')
-                    ]),
-                    Row(children: [
-                      buildLetterButton('q'),
-                      buildLetterButton('r'),
-                      buildLetterButton('s'),
-                      buildLetterButton('t')
-                    ]),
-                    Row(children: [
-                      buildLetterButton('u'),
-                      buildLetterButton('v'),
-                      buildLetterButton('w'),
-                      buildLetterButton('x')
-                    ]),
-                    Row(children: [
-                      buildLetterButton('y'),
-                      buildLetterButton('z')
-                    ]),
-                  ],
-                )),
-            Visibility(
-                visible: showOptionOnStep(3),
-                child: Column(
-                  children: [
-                    buildChargesButton(1),
-                    buildChargesButton(2),
-                    buildChargesButton(3),
-                    buildChargesButton(4)
-                  ],
-                )),
-            Visibility(
-              visible: showOptionOnStep(4),
-              child: Column(children: [
-                buildObstacleButton(true),
-                buildObstacleButton(false)
-              ]),
-            )
-          ])),
-      Column(children: [
-        Listener(
-            key: gridKey,
-            onPointerDown: selectTile,
+    return Stack(children: [
+      Container(
+          decoration: BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage(Constants.backgroundImagePath),
+            fit: BoxFit.cover),
+      )),
+      Row(children: [
+        Expanded(
+            flex: 1,
             child: Column(children: [
-              for (var row in _grid.rows) ...[
-                Row(children: [
-                  for (var letterTile in row) ...[
-                    LetterTileWidget(
-                        letterTile: letterTile,
-                        sprayDirection: _grid.sprayDirection)
-                  ]
-                ])
-              ]
-            ]))
-      ]),
-      ElevatedButton(
-        onPressed: () => GoRouter.of(context).push('/'),
-        child: Text('Home'),
-      )
+              Row(children: [
+                ElevatedButton(
+                    onPressed: () => {
+                          setState(() => {_step = 1})
+                        },
+                    child: Text('@')),
+                ElevatedButton(
+                    onPressed: () => {
+                          setState(() => {_step = 2})
+                        },
+                    child: Text('A')),
+                ElevatedButton(
+                    onPressed: () => {
+                          setState(() => {_step = 3})
+                        },
+                    child: Text('.')),
+                ElevatedButton(
+                    onPressed: () => {
+                          setState(() => {_step = 4})
+                        },
+                    child: Text('(|)')),
+              ]),
+              SizedBox(height: 20),
+              Stack(children: [
+                Visibility(
+                    visible: showOptionOnStep(1),
+                    child: Column(children: [
+                      buildTileTypeButton('blue-basic', TileType.basic),
+                      buildTileTypeButton('green-start', TileType.start),
+                      buildTileTypeButton('red-end', TileType.end),
+                    ])),
+                Visibility(
+                    visible: showOptionOnStep(2),
+                    child: Column(
+                      children: [
+                        Row(children: [
+                          buildLetterButton('a'),
+                          buildLetterButton('b'),
+                          buildLetterButton('c'),
+                          buildLetterButton('d')
+                        ]),
+                        Row(children: [
+                          buildLetterButton('e'),
+                          buildLetterButton('f'),
+                          buildLetterButton('g'),
+                          buildLetterButton('h')
+                        ]),
+                        Row(children: [
+                          buildLetterButton('i'),
+                          buildLetterButton('j'),
+                          buildLetterButton('k'),
+                          buildLetterButton('l')
+                        ]),
+                        Row(children: [
+                          buildLetterButton('m'),
+                          buildLetterButton('n'),
+                          buildLetterButton('o'),
+                          buildLetterButton('p')
+                        ]),
+                        Row(children: [
+                          buildLetterButton('q'),
+                          buildLetterButton('r'),
+                          buildLetterButton('s'),
+                          buildLetterButton('t')
+                        ]),
+                        Row(children: [
+                          buildLetterButton('u'),
+                          buildLetterButton('v'),
+                          buildLetterButton('w'),
+                          buildLetterButton('x')
+                        ]),
+                        Row(children: [
+                          buildLetterButton('y'),
+                          buildLetterButton('z')
+                        ]),
+                      ],
+                    )),
+                Visibility(
+                    visible: showOptionOnStep(3),
+                    child: Column(
+                      children: [
+                        buildChargesButton(1),
+                        buildChargesButton(2),
+                        buildChargesButton(3),
+                        buildChargesButton(4)
+                      ],
+                    )),
+                Visibility(
+                  visible: showOptionOnStep(4),
+                  child: Column(children: [
+                    buildObstacleButton(true),
+                    buildObstacleButton(false)
+                  ]),
+                )
+              ])
+            ])),
+        Column(children: [
+          Listener(
+              key: gridKey,
+              onPointerDown: selectTile,
+              child: Column(children: [
+                for (var row in _grid.rows) ...[
+                  Row(children: [
+                    for (var letterTile in row) ...[
+                      LetterTileWidget(
+                          letterTile: letterTile,
+                          sprayDirection: _grid.sprayDirection)
+                    ]
+                  ])
+                ]
+              ]))
+        ]),
+        Column(children: [
+          SizedBox(height: 30),
+          ElevatedButton(
+            onPressed: () => {},
+            child: Text('Test'),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => log(_grid.encodedGridToString()),
+            child: Text('Log'),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => GoRouter.of(context).push('/'),
+            child: Text('Home'),
+          )
+        ])
+      ])
     ]);
   }
 
@@ -194,35 +241,12 @@ class _BuildOnePlayerPuzzleWidgetState
   }
 
   bool showOptionOnStep(int step) {
-    if (_selectedIndex < 0) {
-      return false;
-    }
-
-    LetterTile selectedTile = _grid.letterTiles[_selectedIndex];
-
-    bool typeSelected = selectedTile.tileType != TileType.empty;
-    bool letterSelected = selectedTile.letter != '';
-    bool chargesSelected = selectedTile.requiredCharges > 0;
-
-    int currentStep = 1;
-    if (chargesSelected) {
-      currentStep = 4;
-    } else if (letterSelected) {
-      currentStep = 3;
-    } else if (typeSelected) {
-      currentStep = 2;
-    }
-
-    return step == currentStep;
+    return step == _step;
   }
 
   Widget buildTileTypeButton(String path, TileType type) {
     return ElevatedButton(
-        onPressed: () => {
-              setState(() {
-                _grid.letterTiles[_selectedIndex].tileType = type;
-              })
-            },
+        onPressed: () => {setLetterTile(tileType: type)},
         child: Image.asset('assets/images/' + path + '.png',
             width: Constants.tileSize, height: Constants.tileSize));
   }
@@ -231,11 +255,7 @@ class _BuildOnePlayerPuzzleWidgetState
     return ElevatedButton(
         style:
             TextButton.styleFrom(fixedSize: Size.square(Constants.smallFont)),
-        onPressed: () => {
-              setState(() {
-                _grid.letterTiles[_selectedIndex].letter = letter;
-              })
-            },
+        onPressed: () => {setLetterTile(letter: letter)},
         child: Text(letter.toUpperCase(),
             style: TextStyle(fontSize: Constants.smallFont)));
   }
@@ -244,25 +264,43 @@ class _BuildOnePlayerPuzzleWidgetState
     return ElevatedButton(
         style:
             TextButton.styleFrom(fixedSize: Size.square(Constants.smallFont)),
-        onPressed: () => {
-              setState(() {
-                _grid.letterTiles[_selectedIndex].requiredCharges =
-                    numberCharges;
-              })
-            },
+        onPressed: () => {setLetterTile(requiredCharges: numberCharges)},
         child: Text(numberCharges.toString(),
             style: TextStyle(fontSize: Constants.smallFont)));
   }
 
   Widget buildObstacleButton(bool add) {
     return ElevatedButton(
-        onPressed: () => {
-              setState(() {
-                _grid.letterTiles[_selectedIndex].requiredObstacleCharges =
-                    add ? 1 : 0;
-              })
-            },
+        onPressed: () => {setLetterTile(requiredObstacleCharges: add ? 1 : 0)},
         child: Text(add ? 'Add Obstacle' : 'Remove Obstacle',
             style: TextStyle(fontSize: Constants.verySmallFont)));
+  }
+
+  void setLetterTile(
+      {TileType? tileType,
+      String? letter,
+      int? requiredCharges,
+      int? requiredObstacleCharges}) {
+    setState(() {
+      LetterTile letterTile = _grid.letterTiles[_selectedIndex];
+
+      TileType backupType = letterTile.tileType == TileType.empty
+          ? TileType.basic
+          : letterTile.tileType;
+      String backupLetter = letterTile.letter == '' ? 'a' : letterTile.letter;
+      int backupCharges =
+          letterTile.requiredCharges == 0 ? 2 : letterTile.requiredCharges;
+      int backupObstacleCharges = letterTile.requiredObstacleCharges == 0
+          ? 0
+          : letterTile.requiredObstacleCharges;
+
+      letterTile.tileType = tileType == null ? backupType : tileType;
+      letterTile.letter = letter == null ? backupLetter : letter;
+      letterTile.requiredCharges =
+          requiredCharges == null ? backupCharges : requiredCharges;
+      letterTile.requiredObstacleCharges = requiredObstacleCharges == null
+          ? backupObstacleCharges
+          : requiredObstacleCharges;
+    });
   }
 }
