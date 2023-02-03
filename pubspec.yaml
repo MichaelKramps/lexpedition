@@ -29,6 +29,7 @@ dependencies:
   google_mobile_ads: ^2.0.1  # Ads
   in_app_purchase: ^3.0.1  # In-app purchases
   firebase_database: ^10.0.9
+  firebase_auth: ^4.2.5
 
 dev_dependencies:
   flutter_test:
