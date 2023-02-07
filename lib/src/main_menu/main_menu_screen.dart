@@ -97,10 +97,6 @@ class MainMenuScreen extends StatelessWidget {
               onPressed: () => GoRouter.of(context).push('/settings'),
               child: const Text('Settings'),
             ),
-            ElevatedButton(
-              onPressed: () => FirebaseCrashlytics.instance.crash(),
-              child: const Text('Throw'),
-            ),
             _gap,
             Padding(
               padding: const EdgeInsets.only(top: 32),
