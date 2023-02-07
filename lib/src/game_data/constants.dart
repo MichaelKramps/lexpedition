@@ -1,5 +1,5 @@
 class Constants {
-  static double tileSize = 80;
+  static double tileSize = 60;
   static double tileMargin = tileSize * 0.025;
 
   static int tileOneStart = (tileMargin).ceil();
@@ -15,9 +15,9 @@ class Constants {
   static int tileSixStart = ((tileSize * 5) + (tileMargin * 11)).ceil();
   static int tileSixEnd = ((tileSize * 6) + (tileMargin * 12)).floor();
 
-  static double bigFont = 56;
-  static double smallFont = 32;
-  static double verySmallFont = 18;
+  static double bigFont = 42;
+  static double smallFont = 24;
+  static double verySmallFont = 14;
 
   static String assetsPath = 'assets';
   static String imagePath = assetsPath + '/images';

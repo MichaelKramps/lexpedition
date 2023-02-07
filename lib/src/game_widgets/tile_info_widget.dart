@@ -15,6 +15,7 @@ class TileInfoWidget extends StatelessWidget {
         Text(letter,
             style: TextStyle(
                 fontSize: Constants.bigFont,
+                height: 0.85,
                 color: determineTextColor(
                     letterTile.requiredCharges, letterTile.currentCharges))),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [

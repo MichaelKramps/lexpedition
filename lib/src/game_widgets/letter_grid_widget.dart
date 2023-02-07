@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
@@ -118,8 +116,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     ]);
   }
 
-  void updateGuess(int index, bool clickEvent) {
-    LetterTile letterTile = _grid.letterTiles[index];
+  void updateGuess(LetterTile letterTile, bool clickEvent) {
     //verify we are allowed to select this tile
     if (letterTile.clearOfObstacles() &&
         (_guessTiles.length == 0 ||
@@ -128,7 +125,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         letterTile.select();
         _guessTiles.add(letterTile);
       });
-    } else if (clickEvent && index == _guessTiles.last.index) {
+    } else if (clickEvent && letterTile == _guessTiles.last) {
       setState(() {
         letterTile.unselect();
         _guessTiles.removeLast();
@@ -219,9 +216,12 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     int shrinkClickableSpace = clickEvent ? 0 : 10;
     int selectedIndex =
         determineTileIndex(pointerx, pointery, shrinkClickableSpace);
-
+    
     if (selectedIndex > -1) {
-      updateGuess(selectedIndex, clickEvent);
+      LetterTile selectedTile = _grid.letterTiles[selectedIndex];
+      if (selectedTile.tileType != TileType.empty) {
+        updateGuess(selectedTile, clickEvent);
+      }
     }
   }
 

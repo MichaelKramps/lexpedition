@@ -3,9 +3,9 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
 import 'package:go_router/go_router.dart';
@@ -76,6 +76,8 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
   @override
   void initState() {
     super.initState();
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
     _startOfPlay = DateTime.now();
 

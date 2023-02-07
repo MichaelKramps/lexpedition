@@ -4,6 +4,7 @@
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lexpedition/src/player_progress/player_progress.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +16,21 @@ import '../settings/settings.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 
-class MainMenuScreen extends StatelessWidget {
+class MainMenuScreen extends StatefulWidget {
   const MainMenuScreen({super.key});
+
+  @override
+  State<MainMenuScreen> createState() => _MainMenuScreenState();
+}
+
+class _MainMenuScreenState extends State<MainMenuScreen> {
+  @override
+  void initState() {
+    super.initState();
+
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+  }
 
   @override
   Widget build(BuildContext context) {
