@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "519909098010",
+    "firebase_url": "https://lexpedition-9c482-default-rtdb.firebaseio.com",
+    "project_id": "lexpedition-9c482",
+    "storage_bucket": "lexpedition-9c482.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519909098010:android:e750394c7b61b57c8647a3",
+        "android_client_info": {
+          "package_name": "com.example.game_template"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "519909098010-qgiop3d1egvp2h7asc85ir0ock2n8bp2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.game_template",
+            "certificate_hash": "cdce22b93acc35b2c280eb2a40766cef0d762c52"
+          }
+        },
+        {
+          "client_id": "519909098010-4rk67k12eiuflsp8t48celugdl0m9r8k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtaJQitbLYrNyDbKbQQPWoVAFO1WNBmhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519909098010-4rk67k12eiuflsp8t48celugdl0m9r8k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "519909098010-qb67kjpgonk2rdvrdf7odl872ha7vulc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gameTemplate"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519909098010:android:4b7f467f802d5c088647a3",
+        "android_client_info": {
+          "package_name": "games.kinship.lexpedition"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "519909098010-4rk67k12eiuflsp8t48celugdl0m9r8k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtaJQitbLYrNyDbKbQQPWoVAFO1WNBmhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519909098010-4rk67k12eiuflsp8t48celugdl0m9r8k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "519909098010-qb67kjpgonk2rdvrdf7odl872ha7vulc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gameTemplate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

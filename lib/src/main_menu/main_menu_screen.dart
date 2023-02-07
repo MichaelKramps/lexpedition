@@ -2,6 +2,7 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/player_progress/player_progress.dart';
 import 'package:go_router/go_router.dart';
@@ -97,7 +98,7 @@ class MainMenuScreen extends StatelessWidget {
               child: const Text('Settings'),
             ),
             ElevatedButton(
-              onPressed: () => throw Exception(),
+              onPressed: () => FirebaseCrashlytics.instance.crash(),
               child: const Text('Throw'),
             ),
             _gap,
