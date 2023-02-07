@@ -1,5 +1,5 @@
-name: game_template
-description: A mobile game built in Flutter.
+name: lexpedition
+description: A mobile word making game built in Flutter.
 
 # Prevent accidental publishing to pub.dev.
 publish_to: 'none'

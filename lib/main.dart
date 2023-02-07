@@ -3,20 +3,20 @@
 // BSD-style license that can be found in the LICENSE file.
 
 // Uncomment the following lines when enabling Firebase Crashlytics
-// import 'dart:io';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'firebase_options.dart';
+import 'dart:io';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:game_template/src/build_puzzle/build_one_player_puzzle_widget.dart';
-import 'package:game_template/src/build_puzzle/build_puzzle_screen.dart';
-import 'package:game_template/src/build_puzzle/build_two_player_puzzle_widget.dart';
-import 'package:game_template/src/free_play/free_play.dart';
-import 'package:game_template/src/level_info/free_play_levels.dart';
-import 'package:game_template/src/level_info/tutorial_intros.dart';
+import 'package:lexpedition/src/build_puzzle/build_one_player_puzzle_widget.dart';
+import 'package:lexpedition/src/build_puzzle/build_puzzle_screen.dart';
+import 'package:lexpedition/src/build_puzzle/build_two_player_puzzle_widget.dart';
+import 'package:lexpedition/src/free_play/free_play.dart';
+import 'package:lexpedition/src/level_info/free_play_levels.dart';
+import 'package:lexpedition/src/level_info/tutorial_intros.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -50,17 +50,17 @@ Future<void> main() async {
   // See the 'Crashlytics' section of the main README.md file for details.
 
   FirebaseCrashlytics? crashlytics;
-  // if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-  //   try {
-  //     WidgetsFlutterBinding.ensureInitialized();
-  //     await Firebase.initializeApp(
-  //       options: DefaultFirebaseOptions.currentPlatform,
-  //     );
-  //     crashlytics = FirebaseCrashlytics.instance;
-  //   } catch (e) {
-  //     debugPrint("Firebase couldn't be initialized: $e");
-  //   }
-  // }
+   if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+     try {
+       WidgetsFlutterBinding.ensureInitialized();
+       await Firebase.initializeApp(
+         options: DefaultFirebaseOptions.currentPlatform,
+       );
+       crashlytics = FirebaseCrashlytics.instance;
+     } catch (e) {
+       debugPrint("Firebase couldn't be initialized: $e");
+     }
+   }
 
   await guardWithCrashlytics(
     guardedMain,

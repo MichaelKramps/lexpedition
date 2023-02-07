@@ -1,4 +1,4 @@
-package com.example.game_template
+package games.kinship.lexpedition
 
 import io.flutter.embedding.android.FlutterActivity
 

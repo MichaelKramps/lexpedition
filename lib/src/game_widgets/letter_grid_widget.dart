@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:game_template/src/game_data/constants.dart';
-import 'package:game_template/src/game_data/letter_grid.dart';
-import 'package:game_template/src/game_data/letter_tile.dart';
-import 'package:game_template/src/game_data/word_helper.dart';
-import 'package:game_template/src/game_widgets/letter_tile_widget.dart';
-import 'package:game_template/src/game_widgets/spray_direction_widget.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/letter_grid.dart';
+import 'package:lexpedition/src/game_data/letter_tile.dart';
+import 'package:lexpedition/src/game_data/word_helper.dart';
+import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
+import 'package:lexpedition/src/game_widgets/spray_direction_widget.dart';
 import 'package:go_router/go_router.dart';
 
 class LetterGridWidget extends StatefulWidget {

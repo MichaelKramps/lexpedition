@@ -1,4 +1,4 @@
-import 'package:game_template/src/game_data/levels.dart';
+import 'package:lexpedition/src/game_data/levels.dart';
 
 // Copyright 2022, the Flutter project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a

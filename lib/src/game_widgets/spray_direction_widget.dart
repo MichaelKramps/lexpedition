@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_template/src/game_data/letter_grid.dart';
+import 'package:lexpedition/src/game_data/letter_grid.dart';
 
 class SprayDirectionWidget extends StatelessWidget {
   final SprayDirection sprayDirection;

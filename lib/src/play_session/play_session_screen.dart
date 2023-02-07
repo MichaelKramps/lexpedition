@@ -6,8 +6,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:game_template/src/game_data/letter_grid.dart';
-import 'package:game_template/src/game_widgets/letter_grid_widget.dart';
+import 'package:lexpedition/src/game_data/letter_grid.dart';
+import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:game_template/src/game_data/constants.dart';
-import 'package:game_template/src/game_data/letter_tile.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/letter_tile.dart';
 
 class TileInfoWidget extends StatelessWidget {
   final LetterTile letterTile;

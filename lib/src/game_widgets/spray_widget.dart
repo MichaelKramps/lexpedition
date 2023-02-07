@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:game_template/src/game_data/constants.dart';
-import 'package:game_template/src/game_data/letter_grid.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/letter_grid.dart';
 
 class SprayWidget extends StatefulWidget {
   final SprayDirection sprayDirection;

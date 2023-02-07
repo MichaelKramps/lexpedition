@@ -1,4 +1,4 @@
-import 'package:game_template/src/game_data/levels.dart';
+import 'package:lexpedition/src/game_data/levels.dart';
 
 import '../game_data/letter_grid.dart';
 

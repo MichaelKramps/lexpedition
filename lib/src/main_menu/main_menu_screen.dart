@@ -3,7 +3,7 @@
 // BSD-style license that can be found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:game_template/src/player_progress/player_progress.dart';
+import 'package:lexpedition/src/player_progress/player_progress.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -95,6 +95,10 @@ class MainMenuScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () => GoRouter.of(context).push('/settings'),
               child: const Text('Settings'),
+            ),
+            ElevatedButton(
+              onPressed: () => throw Exception(),
+              child: const Text('Throw'),
             ),
             _gap,
             Padding(
