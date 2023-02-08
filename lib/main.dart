@@ -5,6 +5,9 @@
 // Uncomment the following lines when enabling Firebase Crashlytics
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lexpedition/src/party/join_party_screen.dart';
+import 'package:lexpedition/src/party/party_screen.dart';
+import 'package:lexpedition/src/party/start_party_screen.dart';
 import 'firebase_options.dart';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -234,17 +237,17 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 path: 'party',
                 builder: (context, state) =>
-                    const BuildPuzzleScreen(key: Key('party')),
+                    const PartyScreen(key: Key('party')),
                 routes: [
                   GoRoute(
                       path: 'join',
                       builder: (context, state) =>
-                          const BuildOnePlayerPuzzleWidget(
+                          const JoinPartyScreen(
                               key: Key('join party'))),
                   GoRoute(
                       path: 'start',
                       builder: (context, state) =>
-                          const BuildTwoPlayerPuzzleWidget(
+                          const StartPartyScreen(
                               key: Key('start party')))
                 ]),
           ]),
