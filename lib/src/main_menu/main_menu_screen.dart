@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lexpedition/src/player_progress/player_progress.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/tutorial/tutorial_levels.dart';
 import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';
@@ -35,52 +36,68 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
-    final gamesServicesController = context.watch<GamesServicesController?>();
     final settingsController = context.watch<SettingsController>();
     final audioController = context.watch<AudioController>();
     final playerProgress = context.watch<PlayerProgress>();
 
     return Scaffold(
       backgroundColor: palette.backgroundMain,
-      body: ResponsiveScreen(
-        mainAreaProminence: 0.45,
-        squarishMainArea: Center(
-          child: Transform.rotate(
-            angle: -0.1,
-            child: const Text(
-              'LEXPEDITION!',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontFamily: 'Permanent Marker',
-                fontSize: 55,
-                height: 1,
-              ),
-            ),
-          ),
-        ),
-        rectangularMenuArea: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Visibility(
-                visible: playerProgress.highestLevelReached >= 6,
-                child: ElevatedButton(
-                  onPressed: () {
-                    audioController.playSfx(SfxType.buttonTap);
-                    GoRouter.of(context).go('/freeplay');
-                  },
-                  child: const Text('Free Play'),
-                )),
-            _gap,
+              visible: playerProgress.highestLevelReached >= tutorialLevels.length,
+              child: ElevatedButton(
+                onPressed: () {
+                  audioController.playSfx(SfxType.buttonTap);
+                  GoRouter.of(context).go('/party');
+                },
+                child: const Text('2 player'),
+              )),
             Visibility(
-                visible: playerProgress.highestLevelReached >= 6,
-                child: ElevatedButton(
-                  onPressed: () {
-                    audioController.playSfx(SfxType.buttonTap);
-                    GoRouter.of(context).go('/buildpuzzle');
-                  },
-                  child: const Text('Puzzle Builder'),
-                )),
-            _gap,
+              visible: playerProgress.highestLevelReached >= tutorialLevels.length,
+              child: ElevatedButton(
+                onPressed: () {
+                  audioController.playSfx(SfxType.buttonTap);
+                  GoRouter.of(context).go('/lexpedition');
+                },
+                child: const Text('Lexpedition'),
+              )),
+            Visibility(
+              visible: playerProgress.highestLevelReached >= tutorialLevels.length,
+              child: ElevatedButton(
+                onPressed: () {
+                  audioController.playSfx(SfxType.buttonTap);
+                  GoRouter.of(context).go('/freeplay');
+                },
+                child: const Text('Free Play'),
+              )),
+            Visibility(
+              visible: playerProgress.highestLevelReached >= tutorialLevels.length,
+              child: ElevatedButton(
+                onPressed: () {
+                  audioController.playSfx(SfxType.buttonTap);
+                  GoRouter.of(context).go('/buildpuzzle');
+                },
+                child: const Text('Puzzle Builder'),
+              ))
+          ]),
+          Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Visibility(
+              visible: playerProgress.highestLevelReached >= tutorialLevels.length,
+              child: ElevatedButton(
+                onPressed: () {
+                  audioController.playSfx(SfxType.buttonTap);
+                  GoRouter.of(context).go('/leaderboards');
+                },
+                child: const Text('Leaderboards'),
+              )
+            ),
             ElevatedButton(
               onPressed: () {
                 audioController.playSfx(SfxType.buttonTap);
@@ -88,30 +105,10 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
               },
               child: const Text('Tutorial'),
             ),
-            _gap,
-            if (gamesServicesController != null) ...[
-              _hideUntilReady(
-                ready: gamesServicesController.signedIn,
-                child: ElevatedButton(
-                  onPressed: () => gamesServicesController.showAchievements(),
-                  child: const Text('Achievements'),
-                ),
-              ),
-              _gap,
-              _hideUntilReady(
-                ready: gamesServicesController.signedIn,
-                child: ElevatedButton(
-                  onPressed: () => gamesServicesController.showLeaderboard(),
-                  child: const Text('Leaderboard'),
-                ),
-              ),
-              _gap,
-            ],
             ElevatedButton(
               onPressed: () => GoRouter.of(context).push('/settings'),
               child: const Text('Settings'),
             ),
-            _gap,
             Padding(
               padding: const EdgeInsets.only(top: 32),
               child: ValueListenableBuilder<bool>(
@@ -123,13 +120,9 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                   );
                 },
               ),
-            ),
-            _gap,
-            const Text('Music by Mr Smith'),
-            _gap,
-          ],
-        ),
-      ),
+          )])
+        ],
+      )
     );
   }
 

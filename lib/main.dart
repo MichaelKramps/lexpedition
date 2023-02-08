@@ -231,6 +231,22 @@ class MyApp extends StatelessWidget {
                           const BuildTwoPlayerPuzzleWidget(
                               key: Key('build two player puzzle')))
                 ]),
+            GoRoute(
+                path: 'party',
+                builder: (context, state) =>
+                    const BuildPuzzleScreen(key: Key('party')),
+                routes: [
+                  GoRoute(
+                      path: 'join',
+                      builder: (context, state) =>
+                          const BuildOnePlayerPuzzleWidget(
+                              key: Key('join party'))),
+                  GoRoute(
+                      path: 'start',
+                      builder: (context, state) =>
+                          const BuildTwoPlayerPuzzleWidget(
+                              key: Key('start party')))
+                ]),
           ]),
     ],
   );
