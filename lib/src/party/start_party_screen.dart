@@ -1,8 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+
+import 'package:lexpedition/src/party/party_globals.dart' as globals;
 
 class StartPartyScreen extends StatefulWidget {
   const StartPartyScreen({super.key});
@@ -12,46 +13,49 @@ class StartPartyScreen extends StatefulWidget {
 }
 
 class _StartPartyScreenState extends State<StartPartyScreen> {
-  late String _shareCode = '';
-  late DatabaseReference? _database = null;
+  late String _partyCode = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                  onPressed: () => {
-                        setState(() {
-                          _shareCode = buildShareCode();
-                          _database = FirebaseDatabase.instance
-                              .ref('shareCode/' + _shareCode);
-                        })
-                      },
-                  child: Text('Get Code')),
-              SizedBox(width: 25),
-              Text(_shareCode, style: getTextStyle())
-            ],
-          ),
-          Text(
-              'You must give this share code to you partner. They will enter it on the "Join Party" page.',
-              style: getTextStyle())
-        ]
-      )
-    );
+          ElevatedButton(
+              onPressed: () {
+                String newPartyCode = buildPartyCode();
+                globals.updatePartyCode(
+                    partyCode: _partyCode, isPartyLeader: true);
+                setState(() {
+                  _partyCode = newPartyCode;
+                });
+              },
+              child: Text('Get Code')),
+          SizedBox(width: 25),
+          Text(_partyCode, style: getTextStyle())
+        ],
+      ),
+      Visibility(
+          visible: _partyCode.length > 0,
+          child: Column(children: [
+            Text(
+                'You must give this share code to you partner. They will enter it on the "Join Party" page.',
+                style: getTextStyle()),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [],
+            )
+          ]))
+    ]));
   }
 
   TextStyle getTextStyle() {
-    return TextStyle(
-        fontSize: Constants.smallFont, color: Colors.black);
+    return TextStyle(fontSize: Constants.smallFont, color: Colors.black);
   }
 
-  String buildShareCode() {
+  String buildPartyCode() {
     List<String> chars = [
       '0',
       '1',
@@ -91,13 +95,13 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
       'Z'
     ];
 
-    String shareCode = '';
+    String partyCode = '';
     Random random = new Random();
 
     for (int char = 0; char < 8; char++) {
-      shareCode += chars[random.nextInt(chars.length)];
+      partyCode += chars[random.nextInt(chars.length)];
     }
 
-    return shareCode;
+    return partyCode;
   }
 }
