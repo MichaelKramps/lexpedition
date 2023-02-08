@@ -44,7 +44,9 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
             image: AssetImage(Constants.backgroundImagePath),
             fit: BoxFit.cover),
       )),
-      Column(children: [
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           SprayDirectionWidget(
               sprayDirection: _grid.sprayDirection,

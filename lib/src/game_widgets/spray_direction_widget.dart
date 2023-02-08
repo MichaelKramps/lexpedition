@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 
 class SprayDirectionWidget extends StatelessWidget {
@@ -14,8 +15,8 @@ class SprayDirectionWidget extends StatelessWidget {
       onTap: () => {changeDirection()},
       child: Image.asset(
         determineImage(),
-        height: 60,
-        width: 60,
+        height: Constants.tileSize,
+        width: Constants.tileSize,
         semanticLabel: 'Spray Direction',
       ),
     );
