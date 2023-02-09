@@ -1,6 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:lexpedition/src/game_data/letter_grid.dart';
 
 class PartyDatabaseConnection {
+  bool isPartyLeader = false;
   DatabaseReference? databaseReference;
 
   static PartyDatabaseConnection connection =
@@ -11,10 +13,13 @@ class PartyDatabaseConnection {
   }
 
   PartyDatabaseConnection.nullConstructor() {
+    this.isPartyLeader = false;
     this.databaseReference = null;
   }
 
-  PartyDatabaseConnection.fromPartyCode(String partyCode) {
+  PartyDatabaseConnection.fromPartyCode(
+      {required String partyCode, required bool isPartyLeader}) {
+    this.isPartyLeader = isPartyLeader;
     this.databaseReference =
         FirebaseDatabase.instance.ref('partyCode/' + partyCode);
     connection = this;
@@ -27,12 +32,15 @@ class PartyDatabaseConnection {
     return false;
   }
 
-  void createNewParty() async {
+  void updateMyPuzzle(LetterGrid letterGrid) async {
     if (connectionExists()) {
-      await databaseReference?.set({
-        "letterGridA": ['a010'],
-        "letterGridB": null
-      });
+      if (isPartyLeader) {
+        await databaseReference
+          ?.set({"letterGridA": letterGrid.encodedTiles});
+      } else {
+        await databaseReference
+          ?.set({"letterGrid": letterGrid.encodedTiles});
+      }
     }
   }
 }

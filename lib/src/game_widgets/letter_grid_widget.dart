@@ -6,6 +6,7 @@ import 'package:lexpedition/src/game_data/word_helper.dart';
 import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
 import 'package:lexpedition/src/game_widgets/spray_direction_widget.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/party/party_db_connection.dart';
 
 class LetterGridWidget extends StatefulWidget {
   final LetterGrid letterGrid;
@@ -23,6 +24,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   late LetterGrid _grid = widget.letterGrid;
   List<LetterTile> _guessTiles = [];
   bool _showBadGuess = false;
+  PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
 
   GlobalKey gridKey = GlobalKey();
   late RenderBox renderBox =
@@ -30,6 +32,12 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   late Offset gridPosition = renderBox.localToGlobal(Offset.zero);
   late double _gridx = gridPosition.dx;
   late double _gridy = gridPosition.dy;
+
+  @override
+  void initState() {
+    super.initState();
+    partyDatabaseConnection.updateMyPuzzle(_grid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +52,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
             image: AssetImage(Constants.backgroundImagePath),
             fit: BoxFit.cover),
       )),
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           SprayDirectionWidget(
               sprayDirection: _grid.sprayDirection,
@@ -191,6 +197,8 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
           await Future<void>.delayed(const Duration(milliseconds: 200));
         }
       }
+
+      partyDatabaseConnection.updateMyPuzzle(_grid);
     } else {
       await showBadGuess();
     }
@@ -218,7 +226,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     int shrinkClickableSpace = clickEvent ? 0 : 10;
     int selectedIndex =
         determineTileIndex(pointerx, pointery, shrinkClickableSpace);
-    
+
     if (selectedIndex > -1) {
       LetterTile selectedTile = _grid.letterTiles[selectedIndex];
       if (selectedTile.tileType != TileType.empty) {
