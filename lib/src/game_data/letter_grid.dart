@@ -20,19 +20,8 @@ class LetterGrid {
     List<LetterTile> decodedLetterTiles = [];
 
     for (int index = 0; index < encodedTiles.length; index++) {
-      String? encodedTile = encodedTiles[index];
-      if (encodedTile != null) {
-        String letter = encodedTile[0];
-        TileType tileType = TileType.values[int.parse(encodedTile[1])];
-        int requiredCharges = int.parse(encodedTile[2]);
-        int requiredObstacleCharges = int.parse(encodedTile[3]);
-        final LetterTile thisDecodedLetterTile = LetterTile(
-            letter, tileType, requiredCharges, requiredObstacleCharges, index);
-
-        decodedLetterTiles.add(thisDecodedLetterTile);
-      } else {
-        decodedLetterTiles.add(LetterTile('', TileType.empty, 0, 0, index));
-      }
+      String? encodedTileString = encodedTiles[index];
+      decodedLetterTiles.add(LetterTile.fromEncodedString(encodedTileString, index));
     }
 
     return decodedLetterTiles;
@@ -65,22 +54,7 @@ class LetterGrid {
 
     for (int tileIndex = 0; tileIndex < letterTiles.length; tileIndex++) {
       LetterTile thisTile = letterTiles[tileIndex];
-      bool hasLetter = thisTile.letter != '';
-      bool hasType = thisTile.tileType != TileType.empty;
-
-      late String? thisTileEncoding;
-      if (hasLetter && hasType) {
-        thisTileEncoding = thisTile.letter; //letter encoding
-        thisTileEncoding +=
-            thisTile.tileType.index.toString(); //tile type encoding
-        thisTileEncoding +=
-            thisTile.requiredCharges.toString(); //charges encoding
-        thisTileEncoding +=
-            thisTile.requiredObstacleCharges.toString(); //obstacle encoding
-      } else {
-        thisTileEncoding = null;
-      }
-      reEncodedGrid.add(thisTileEncoding);
+      reEncodedGrid.add(thisTile.encodeTile());
     }
 
     return reEncodedGrid;

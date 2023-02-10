@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 class LetterTile {
-  late String letter;
+  String letter = '';
   late TileType tileType;
-  late int requiredCharges;
-  late int currentCharges;
-  late int requiredObstacleCharges;
-  late int currentObstacleCharges;
-  late int index = -1;
+  int requiredCharges = 0;
+  int currentCharges = 0;
+  int requiredObstacleCharges = 0;
+  int currentObstacleCharges = 0;
+  int index = -1;
   bool selected = false;
   bool sprayFrom = false;
 
@@ -20,6 +20,57 @@ class LetterTile {
     this.requiredObstacleCharges = requiredObstacleCharges;
     this.currentObstacleCharges = 0;
     this.index = index;
+  }
+
+  LetterTile.fromEncodedString(String? encodedString, int index) {
+    if (encodedString == null) {
+      this.tileType = TileType.empty;
+    } else {
+      if (encodedString.length == 4) {
+        //represents starting tile
+        this.letter = encodedString[0];
+        this.tileType = TileType.values[int.parse(encodedString[1])];
+        this.requiredCharges = int.parse(encodedString[2]);
+        this.requiredObstacleCharges = int.parse(encodedString[3]);
+      } else if (encodedString.length == 6) {
+        //represents tile during game
+        this.letter = encodedString[0];
+        this.tileType = TileType.values[int.parse(encodedString[1])];
+        this.requiredCharges = int.parse(encodedString[2]);
+        this.currentCharges = int.parse(encodedString[3]);
+        this.requiredObstacleCharges = int.parse(encodedString[4]);
+        this.currentObstacleCharges = int.parse(encodedString[5]);
+      } else {
+        this.tileType = TileType.empty;
+      }
+      this.index = index;
+    }
+  }
+
+  String? encodeTile() {
+    bool hasLetter = this.letter != '';
+    bool hasType = this.tileType != TileType.empty;
+
+    late String? encodedString;
+    if (hasLetter && hasType) {
+      encodedString = this.letter;
+      encodedString += this.tileType.index.toString();
+      encodedString += this.requiredCharges.toString();
+
+      if (this.currentCharges == 0 && this.currentObstacleCharges == 0) {
+        // tile has not yet been touched
+        encodedString += this.requiredObstacleCharges.toString();
+      } else {
+        // tile has been used during a game
+        encodedString += this.currentCharges.toString();
+        encodedString += this.requiredObstacleCharges.toString();
+        encodedString += this.currentObstacleCharges.toString();
+      }
+    } else {
+      return null;
+    }
+
+    return encodedString;
   }
 
   void addCharge() {

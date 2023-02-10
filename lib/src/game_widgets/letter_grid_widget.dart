@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
@@ -7,6 +9,7 @@ import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
 import 'package:lexpedition/src/game_widgets/spray_direction_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:logging/logging.dart';
 
 class LetterGridWidget extends StatefulWidget {
   final LetterGrid letterGrid;
@@ -129,6 +132,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     if (letterTile.clearOfObstacles() &&
         (_guessTiles.length == 0 ||
             _guessTiles.last.allowedToSelect(letterTile))) {
+      new Logger('me').info('running here');
       setState(() {
         letterTile.select();
         _guessTiles.add(letterTile);

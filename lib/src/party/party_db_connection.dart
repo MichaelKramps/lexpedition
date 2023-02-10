@@ -48,9 +48,9 @@ class PartyDatabaseConnection {
   void updateMyPuzzle(LetterGrid letterGrid) async {
     if (connectionExists()) {
       if (isPartyLeader) {
-        await databaseReference?.set({"letterGridA": letterGrid.encodedTiles});
+        await databaseReference?.set({"letterGridA": letterGrid.getReEncodedGrid()});
       } else {
-        await databaseReference?.set({"letterGrid": letterGrid.encodedTiles});
+        await databaseReference?.set({"letterGrid": letterGrid.getReEncodedGrid()});
       }
     }
   }
@@ -97,7 +97,7 @@ class PartyDatabaseConnection {
       int index = int.parse(snapshot.key ?? "-1");
       String value = snapshot.value as String;
 
-      if (index > 0) {
+      if (index >= 0) {
         encodedGrid[index] = value;
       }
     }
