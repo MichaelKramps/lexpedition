@@ -1,11 +1,8 @@
 import 'dart:math';
 
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
-
-import 'package:logging/logging.dart';
 
 class StartPartyScreen extends StatefulWidget {
   const StartPartyScreen({super.key});
@@ -26,9 +23,11 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 String newPartyCode = buildPartyCode();
-                PartyDatabaseConnection.fromPartyCode(partyCode: newPartyCode, isPartyLeader: true);
+                PartyDatabaseConnection partyConnection =
+                    await PartyDatabaseConnection.startParty(partyCode: newPartyCode);
+                partyConnection.createPartyEntry();
 
                 setState(() {
                   _partyCode = newPartyCode;
