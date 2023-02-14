@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 
@@ -26,7 +27,8 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
               onPressed: () async {
                 String newPartyCode = buildPartyCode();
                 PartyDatabaseConnection partyConnection =
-                    await PartyDatabaseConnection.startParty(partyCode: newPartyCode);
+                    await PartyDatabaseConnection.startParty(
+                        partyCode: newPartyCode);
                 partyConnection.createPartyEntry();
 
                 setState(() {
@@ -44,10 +46,11 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
             Text(
                 'You must give this share code to you partner. They will enter it on the "Join Party" page.',
                 style: getTextStyle()),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
-            )
+            ElevatedButton(
+                onPressed: () {
+                  GoRouter.of(context).push('/party');
+                },
+                child: Text('Back'))
           ]))
     ]));
   }
@@ -58,16 +61,6 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
 
   String buildPartyCode() {
     List<String> chars = [
-      '0',
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9',
       'A',
       'B',
       'C',
@@ -99,7 +92,7 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
     String partyCode = '';
     Random random = new Random();
 
-    for (int char = 0; char < 8; char++) {
+    for (int char = 0; char < 6; char++) {
       partyCode += chars[random.nextInt(chars.length)];
     }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
@@ -14,6 +15,7 @@ class JoinPartyScreen extends StatefulWidget {
 
 class _JoinPartyScreenState extends State<JoinPartyScreen> {
   bool _joined = false;
+  PartyDatabaseConnection? _partyConnection = null;
   final _textController = TextEditingController();
   LetterGrid _grid = LetterGrid(blankGrid, 1);
 
@@ -30,15 +32,24 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                     border: OutlineInputBorder(), labelText: "Party Code"))),
         ElevatedButton(
             onPressed: () async {
-              PartyDatabaseConnection partyConnection =
+              String partyCode = _textController.text.toUpperCase();
+              if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
+                _partyConnection =
                   await PartyDatabaseConnection.joinParty(
-                      partyCode: _textController.text);
-              setState(() {
-                _joined = true;
-              });
-              partyConnection.listenForPuzzle(updateGrid);
+                      partyCode: partyCode);
+                setState(() {
+                  _joined = true;
+                });
+                _partyConnection?.listenForPuzzle(updateGrid);
+              }
             },
-            child: Text('Join'))
+            child: Text('Join')),
+        ElevatedButton(
+            onPressed: () async {
+              _partyConnection?.leaveParty();
+              GoRouter.of(context).push('/');
+            },
+            child: Text('Leave'))
       ]),
       Visibility(
           visible: _joined,
