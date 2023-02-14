@@ -80,8 +80,12 @@ class PartyDatabaseConnection {
   }
 
   void leaveParty() async {
-    listener?.cancel();
-    this.takeOneFromParty(this.databaseReference);
+    if (this.isPartyLeader) {
+      this.databaseReference?.remove();
+    } else {
+      this.takeOneFromParty(this.databaseReference);
+      listener?.cancel();
+    }
     connection = PartyDatabaseConnection.nullConstructor();
     this.isPartyLeader = false;
     this.partyCode = '';

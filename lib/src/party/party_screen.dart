@@ -12,35 +12,33 @@ class PartyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Visibility(
-            visible: partyDatabaseConnection.partyCode != '',
-            child: Text('Current Party Code: ' + partyDatabaseConnection.partyCode)
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                  onPressed: () =>
-                      GoRouter.of(context).push('/party/join'),
-                  child: Text('Join Party')),
-              SizedBox(width: Constants.smallFont),
-              ElevatedButton(
-                  onPressed: () =>
-                      GoRouter.of(context).push('/party/start'),
-                  child: Text('Start Party')),
-              SizedBox(width: Constants.smallFont),
-              ElevatedButton(
-                  onPressed: () =>
-                      GoRouter.of(context).push('/'),
-                  child: Text('Back'))
-            ]
-          )
-        ]
-      )
-    );
+        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Visibility(
+          visible: partyDatabaseConnection.partyCode != '',
+          child:
+              Text('Current Party Code: ' + partyDatabaseConnection.partyCode)),
+      Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ElevatedButton(
+                onPressed: () => GoRouter.of(context).push('/party/join'),
+                child: Text('Join Party')),
+            SizedBox(width: Constants.smallFont),
+            ElevatedButton(
+                onPressed: () => GoRouter.of(context).push('/party/start'),
+                child: Text('Start Party')),
+            SizedBox(width: Constants.smallFont),
+            ElevatedButton(
+                onPressed: () {
+                  PartyDatabaseConnection().leaveParty();
+                },
+                child: Text('Leave Party')),
+            SizedBox(width: Constants.smallFont),
+            ElevatedButton(
+                onPressed: () => GoRouter.of(context).push('/'),
+                child: Text('Back'))
+          ])
+    ]));
   }
 }
