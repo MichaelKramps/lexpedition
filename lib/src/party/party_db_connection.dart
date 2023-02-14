@@ -44,7 +44,9 @@ class PartyDatabaseConnection {
     DatabaseReference reference =
         FirebaseDatabase.instance.ref('partyCode/' + code);
 
-    if (await PartyDatabaseConnection.getNumberJoined(reference) < 2) {
+    int numberJoined = await PartyDatabaseConnection.getNumberJoined(reference);
+
+    if (numberJoined >= 0 && numberJoined < 2) {
       return true;
     } else {
       return false;
@@ -53,8 +55,12 @@ class PartyDatabaseConnection {
 
   static Future<int> getNumberJoined(DatabaseReference reference) async {
     DataSnapshot snapshot = await reference.child('joined').get();
-    int numberJoined = snapshot.value as int;
-    return numberJoined;
+    try {
+      int numberJoined = snapshot.value as int;
+      return numberJoined;
+    } catch (e) {
+      return -1;
+    }
   }
 
   void addOneToParty(DatabaseReference? reference) async {

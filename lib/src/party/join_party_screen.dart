@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
@@ -34,14 +36,15 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
             onPressed: () async {
               String partyCode = _textController.text.toUpperCase();
               if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
-                _partyConnection =
-                  await PartyDatabaseConnection.joinParty(
-                      partyCode: partyCode);
+                Logger('').info('hey there kramps !!!!!!!!!!!!!!!!!');
+                _partyConnection = await PartyDatabaseConnection.joinParty(
+                    partyCode: partyCode);
                 setState(() {
                   _joined = true;
                 });
                 _partyConnection?.listenForPuzzle(updateGrid);
               }
+              Logger('').info('made it past +++++++++++++++');
             },
             child: Text('Join')),
         ElevatedButton(
