@@ -36,7 +36,6 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
             onPressed: () async {
               String partyCode = _textController.text.toUpperCase();
               if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
-                Logger('').info('hey there kramps !!!!!!!!!!!!!!!!!');
                 _partyConnection = await PartyDatabaseConnection.joinParty(
                     partyCode: partyCode);
                 setState(() {
@@ -44,7 +43,6 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                 });
                 _partyConnection?.listenForPuzzle(updateGrid);
               }
-              Logger('').info('made it past +++++++++++++++');
             },
             child: Text('Join')),
         ElevatedButton(

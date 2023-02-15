@@ -6,6 +6,7 @@
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lexpedition/src/party/join_party_screen.dart';
+import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/party/party_screen.dart';
 import 'package:lexpedition/src/party/start_party_screen.dart';
 import 'firebase_options.dart';
@@ -53,17 +54,17 @@ Future<void> main() async {
   // See the 'Crashlytics' section of the main README.md file for details.
 
   FirebaseCrashlytics? crashlytics;
-   if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
-     try {
-       WidgetsFlutterBinding.ensureInitialized();
-       await Firebase.initializeApp(
-         options: DefaultFirebaseOptions.currentPlatform,
-       );
-       crashlytics = FirebaseCrashlytics.instance;
-     } catch (e) {
-       debugPrint("Firebase couldn't be initialized: $e");
-     }
-   }
+  if (!kIsWeb && (Platform.isIOS || Platform.isAndroid)) {
+    try {
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      crashlytics = FirebaseCrashlytics.instance;
+    } catch (e) {
+      debugPrint("Firebase couldn't be initialized: $e");
+    }
+  }
 
   await guardWithCrashlytics(
     guardedMain,
@@ -242,13 +243,11 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                       path: 'join',
                       builder: (context, state) =>
-                          const JoinPartyScreen(
-                              key: Key('join party'))),
+                          const JoinPartyScreen(key: Key('join party'))),
                   GoRoute(
                       path: 'start',
                       builder: (context, state) =>
-                          const StartPartyScreen(
-                              key: Key('start party')))
+                          const StartPartyScreen(key: Key('start party')))
                 ]),
           ]),
     ],
