@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
 import '../ads/banner_ad_widget.dart';
-import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';

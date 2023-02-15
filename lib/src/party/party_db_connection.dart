@@ -93,7 +93,17 @@ class PartyDatabaseConnection {
   }
 
   void createPartyEntry() async {
-    await databaseReference?.set({'joined': 1});
+    await databaseReference?.set({'joined': 1, 'updated': getFormattedDate()});
+  }
+
+  String getFormattedDate() {
+    DateTime dateTime = DateTime.now();
+    String formattedDate = dateTime.year.toString() +
+        '/' +
+        dateTime.month.toString() +
+        '/' +
+        dateTime.day.toString();
+    return formattedDate;
   }
 
   bool connectionExists() {
@@ -107,10 +117,10 @@ class PartyDatabaseConnection {
     if (connectionExists()) {
       if (isPartyLeader) {
         await databaseReference
-            ?.update({"letterGridA": letterGrid.getReEncodedGrid()});
+            ?.update({"letterGridA": letterGrid.getReEncodedGrid(), 'updated': getFormattedDate()});
       } else {
         await databaseReference
-            ?.update({"letterGrid": letterGrid.getReEncodedGrid()});
+            ?.update({"letterGrid": letterGrid.getReEncodedGrid(), 'updated': getFormattedDate()});
       }
     }
   }

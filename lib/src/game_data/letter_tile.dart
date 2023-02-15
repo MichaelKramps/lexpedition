@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 class LetterTile {
   String letter = '';
   late TileType tileType;

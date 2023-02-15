@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 
 class ObstacleWidget extends StatelessWidget {

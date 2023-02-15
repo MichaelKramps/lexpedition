@@ -6,7 +6,6 @@
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lexpedition/src/party/join_party_screen.dart';
-import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/party/party_screen.dart';
 import 'package:lexpedition/src/party/start_party_screen.dart';
 import 'firebase_options.dart';
@@ -19,7 +18,6 @@ import 'package:lexpedition/src/build_puzzle/build_one_player_puzzle_widget.dart
 import 'package:lexpedition/src/build_puzzle/build_puzzle_screen.dart';
 import 'package:lexpedition/src/build_puzzle/build_two_player_puzzle_widget.dart';
 import 'package:lexpedition/src/free_play/free_play.dart';
-import 'package:lexpedition/src/level_info/free_play_levels.dart';
 import 'package:lexpedition/src/level_info/tutorial_intros.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart';

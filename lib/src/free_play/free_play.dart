@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
 import 'package:lexpedition/src/level_info/free_play_levels.dart';

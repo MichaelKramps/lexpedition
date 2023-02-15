@@ -1,12 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:logging/logging.dart';
 
 class JoinPartyScreen extends StatefulWidget {
   const JoinPartyScreen({super.key});
