@@ -8,6 +8,7 @@ import 'package:lexpedition/src/game_widgets/spray_direction_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:logging/logging.dart';
+import 'package:wakelock/wakelock.dart';
 
 class LetterGridWidget extends StatefulWidget {
   final LetterGrid letterGrid;
@@ -39,6 +40,13 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     super.initState();
     partyDatabaseConnection.updateMyPuzzle(_grid);
     WordHelper.isValidWord('preload');
+    Wakelock.enable();
+  }
+
+  @override
+  void dispose() {
+    Wakelock.disable();
+    super.dispose();
   }
 
   @override
@@ -131,7 +139,6 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     if (letterTile.clearOfObstacles() &&
         (_guessTiles.length == 0 ||
             _guessTiles.last.allowedToSelect(letterTile))) {
-      new Logger('me').info('running here');
       setState(() {
         letterTile.select();
         _guessTiles.add(letterTile);

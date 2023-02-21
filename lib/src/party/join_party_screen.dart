@@ -4,6 +4,7 @@ import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:wakelock/wakelock.dart';
 
 class JoinPartyScreen extends StatefulWidget {
   const JoinPartyScreen({super.key});
@@ -17,6 +18,19 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
   PartyDatabaseConnection? _partyConnection = null;
   final _textController = TextEditingController();
   LetterGrid _grid = LetterGrid(blankGrid, 1);
+
+  @override
+  void initState() {
+    super.initState();
+    Wakelock.enable();
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    Wakelock.disable();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +77,6 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
             ]
           ]))
     ]));
-  }
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
   }
 
   void updateGrid(LetterGrid letterGrid) {

@@ -30,6 +30,7 @@ dependencies:
   in_app_purchase: ^3.0.1  # In-app purchases
   firebase_database: ^10.0.9
   firebase_auth: ^4.2.5
+  wakelock: ^0.6.2
 
 dev_dependencies:
   flutter_test:
