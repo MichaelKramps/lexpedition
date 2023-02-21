@@ -38,6 +38,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
   void initState() {
     super.initState();
     partyDatabaseConnection.updateMyPuzzle(_grid);
+    WordHelper.isValidWord('preload');
   }
 
   @override
