@@ -16,12 +16,22 @@ class LetterGrid {
     this.par = par;
   }
 
+  LetterGrid.fromLiveDatabase(List<String?> letterTiles, List<String> guesses) {
+    assert(letterTiles.length == 24);
+    this.encodedTiles = letterTiles;
+    this.letterTiles = this.decodeLetterTiles(letterTiles);
+    this.rows = this.setRows(this.letterTiles);
+    this.par = 1;
+    this.guesses = guesses;
+  }
+
   List<LetterTile> decodeLetterTiles(List<String?> encodedTiles) {
     List<LetterTile> decodedLetterTiles = [];
 
     for (int index = 0; index < encodedTiles.length; index++) {
       String? encodedTileString = encodedTiles[index];
-      decodedLetterTiles.add(LetterTile.fromEncodedString(encodedTileString, index));
+      decodedLetterTiles
+          .add(LetterTile.fromEncodedString(encodedTileString, index));
     }
 
     return decodedLetterTiles;
@@ -58,6 +68,11 @@ class LetterGrid {
     }
 
     return reEncodedGrid;
+  }
+
+  String getGridStringForDatabase() {
+    List<String?> encodedGrid = getReEncodedGrid();
+    return encodedGrid.join(',');
   }
 
   String encodedGridToString() {

@@ -21,7 +21,7 @@ class LetterTile {
   }
 
   LetterTile.fromEncodedString(String? encodedString, int index) {
-    if (encodedString == null) {
+    if (encodedString == null || encodedString == 'null') {
       this.tileType = TileType.empty;
     } else {
       if (encodedString.length == 4) {

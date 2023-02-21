@@ -7,7 +7,6 @@ import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
 import 'package:lexpedition/src/game_widgets/spray_direction_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:logging/logging.dart';
 import 'package:wakelock/wakelock.dart';
 
 class LetterGridWidget extends StatefulWidget {

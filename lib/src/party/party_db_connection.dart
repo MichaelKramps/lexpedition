@@ -116,11 +116,21 @@ class PartyDatabaseConnection {
   void updateMyPuzzle(LetterGrid letterGrid) async {
     if (connectionExists()) {
       if (isPartyLeader) {
-        await databaseReference
-            ?.update({"letterGridA": letterGrid.getReEncodedGrid(), 'updated': getFormattedDate()});
+        await databaseReference?.update({
+          'letterGridA': {
+            'gridString': letterGrid.getGridStringForDatabase(),
+            'guesses': letterGrid.guesses.join(',')
+          },
+          'updated': getFormattedDate()
+        });
       } else {
-        await databaseReference
-            ?.update({"letterGrid": letterGrid.getReEncodedGrid(), 'updated': getFormattedDate()});
+        await databaseReference?.update({
+          'letterGrid': {
+            'gridString': letterGrid.getGridStringForDatabase(),
+            'guesses': letterGrid.guesses.join(',')
+          },
+          'updated': getFormattedDate()
+        });
       }
     }
   }
@@ -130,48 +140,9 @@ class PartyDatabaseConnection {
         ?.child('letterGridA')
         .onValue
         .listen((DatabaseEvent event) {
-      final data = event.snapshot.children;
-      callback(LetterGrid(createEncodedGrid(data), 6));
+      final String gridString = event.snapshot.child('gridString').value as String;
+      final String guesses = event.snapshot.child('guesses').value as String;
+      callback(LetterGrid.fromLiveDatabase(gridString.split(','), guesses.split(',')));
     });
-  }
-
-  List<String?> createEncodedGrid(Iterable<DataSnapshot> data) {
-    List<String?> encodedGrid = [
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-    ];
-
-    for (DataSnapshot snapshot in data) {
-      int index = int.parse(snapshot.key ?? "-1");
-      String value = snapshot.value as String;
-
-      if (index >= 0) {
-        encodedGrid[index] = value;
-      }
-    }
-
-    return encodedGrid;
   }
 }
