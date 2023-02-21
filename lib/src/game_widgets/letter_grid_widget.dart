@@ -167,7 +167,6 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     } else if (_grid.isNewGuess(getGuess()) &&
         WordHelper.isValidWord(getGuess())) {
       _grid.guesses.add(getGuess());
-      int numberFullyCharged = 0;
       setState(() {
         for (int tile = 0; tile < _guessTiles.length; tile++) {
           LetterTile thisTile = _guessTiles[tile];
@@ -181,9 +180,6 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
               qualifiesAsStartTile ||
               qualifiesAsEndTile) {
             thisTile.addCharge();
-            if (thisTile.currentCharges == thisTile.requiredCharges) {
-              numberFullyCharged += 1;
-            }
           }
         }
       });
@@ -191,7 +187,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       if (_grid.isFullyCharged()) {
         widget.playerWon(_grid.guesses.length, _grid.par);
       } else {
-        if (_guessTiles.length >= 5 || numberFullyCharged >= 3) {
+        if (_guessTiles.length >= 5) {
           await fireSpray(_guessTiles.last);
           if (_grid.isFullyCharged()) {
             widget.playerWon(_grid.guesses.length, _grid.par);

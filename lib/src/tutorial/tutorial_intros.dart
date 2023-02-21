@@ -71,14 +71,14 @@ class TutorialIntroWidget extends StatelessWidget {
 
     if (level == 1) {
       text =
-          'Use the letter tiles to make words. Words must be at least 3 letters long. Charge all the letter tiles to beat the level!';
+          'Use touching letter tiles to make words. Words must be at least 3 letters long. Charge all the letter tiles to beat the level!';
     } else if (level == 2) {
       text =
-          'To charge a letter tile, it may need to be used multiple times! The dots on the tile indicate the required number of uses.';
+          'To charge a letter tile, it may need to be used multiple times! The dots on the tile indicate the required number of uses!';
     } else if (level == 3) {
-      text = 'Green triangle tiles must be used at the beginning of a word!';
+      text = 'To charge Green triangle tiles, use them at the beginning of a word!';
     } else if (level == 4) {
-      text = 'Red pentagon tiles must be used at the end of a word!';
+      text = 'To charge Red pentagon tiles, use them at the end of a word!';
     } else if (level == 5) {
       text = 'Now try a level using all three types of tiles!';
     } else if (level == 6) {
@@ -92,9 +92,6 @@ class TutorialIntroWidget extends StatelessWidget {
             style: textStyle)
       ]);
     } else if (level == 7) {
-      text =
-          'You will also fire a magic blast when you charge 3+ tiles on a single word! Remember, a tile turns yellow when it charges.';
-    } else if (level == 8) {
       text = 'Clear obstacles from tiles using the magic blast!';
     }
 
