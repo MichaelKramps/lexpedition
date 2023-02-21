@@ -199,24 +199,20 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 path: 'freeplay',
                 builder: (context, state) => FreePlay(key: UniqueKey()),
-                routes: [
-                  GoRoute(
-                    path: 'won',
-                    pageBuilder: (context, state) {
+            ),
+            GoRoute(
+                    path: 'freeplaywon',
+                    builder: (context, state) {
                       final map = state.extra! as Map<String, dynamic>;
                       final score = map['score'] as Score;
 
-                      return buildMyTransition<void>(
-                        child: WinGameScreen(
-                          score: score,
-                          continueRoute: '/freeplay',
-                          key: const Key('freeplay win'),
-                        ),
-                        color: context.watch<Palette>().backgroundPlaySession,
+                      return WinGameScreen(
+                        score: score,
+                        continueRoute: '/freeplay',
+                        key: const Key('freeplay win'),
                       );
                     },
                   ),
-                ]),
             GoRoute(
                 path: 'buildpuzzle',
                 builder: (context, state) =>
