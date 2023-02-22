@@ -26,7 +26,7 @@ class PartyDatabaseConnection {
     this.isPartyLeader = true;
     this.partyCode = partyCode;
     this.databaseReference =
-        FirebaseDatabase.instance.ref('partyCode/' + partyCode);
+        FirebaseDatabase.instance.ref('party/' + partyCode);
     connection = this;
   }
 
@@ -34,15 +34,15 @@ class PartyDatabaseConnection {
     this.isPartyLeader = false;
     this.partyCode = partyCode;
     DatabaseReference reference =
-        FirebaseDatabase.instance.ref('partyCode/' + partyCode);
+        FirebaseDatabase.instance.ref('party/' + partyCode);
     this.databaseReference = reference;
     this.addOneToParty(reference);
     connection = this;
   }
 
-  static Future<bool> canJoinParty(String code) async {
+  static Future<bool> canJoinParty(String partyCode) async {
     DatabaseReference reference =
-        FirebaseDatabase.instance.ref('partyCode/' + code);
+        FirebaseDatabase.instance.ref('party/' + partyCode);
 
     int numberJoined = await PartyDatabaseConnection.getNumberJoined(reference);
 

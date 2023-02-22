@@ -4,6 +4,7 @@ import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
+import 'package:lexpedition/src/game_widgets/observer_letter_grid_widget.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -40,7 +41,7 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
           Expanded(
             child: ListView(
               children: [
-                SizedBox(height: 50),
+                SizedBox(height: 24),
                 for (var guess in _grid.guesses.reversed) ...[
                   Center(child:Text(guess, style: TextStyle(fontSize: Constants.smallFont)))
                 ]
@@ -77,17 +78,7 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
             ]),
             Visibility(
                 visible: _joined,
-                child: Column(children: [
-                  for (var row in _grid.rows) ...[
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      for (var letterTile in row) ...[
-                        LetterTileWidget(
-                            letterTile: letterTile,
-                            sprayDirection: _grid.sprayDirection)
-                      ]
-                    ])
-                  ]
-                ])
+                child: ObserverLetterGridWidget(letterGrid: _grid)
               )
             ]
           ),
