@@ -1,10 +1,12 @@
+import 'package:lexpedition/src/game_data/blast_direction.dart';
+
 import 'letter_tile.dart';
 
 class LetterGrid {
   late List<String?> encodedTiles;
   late List<LetterTile> letterTiles;
   late List<List<LetterTile>> rows;
-  SprayDirection sprayDirection = SprayDirection.vertical;
+  BlastDirection blastDirection = BlastDirection.vertical;
   List<String> guesses = [];
   late int par;
 
@@ -94,7 +96,7 @@ class LetterGrid {
   }
 
   void resetGrid() {
-    sprayDirection = SprayDirection.vertical;
+    blastDirection = BlastDirection.vertical;
     guesses = [];
     for (var tile in this.letterTiles) {
       tile.resetTile();
@@ -119,13 +121,11 @@ class LetterGrid {
     return !this.guesses.contains(guess);
   }
 
-  void changeSprayDirection() {
-    if (sprayDirection == SprayDirection.values.last) {
-      sprayDirection = SprayDirection.values.first;
+  void changeBlastDirection() {
+    if (blastDirection == BlastDirection.values.last) {
+      blastDirection = BlastDirection.values.first;
     } else {
-      sprayDirection = SprayDirection.values[sprayDirection.index + 1];
+      blastDirection = BlastDirection.values[blastDirection.index + 1];
     }
   }
 }
-
-enum SprayDirection { vertical, horizontal }

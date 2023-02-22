@@ -149,7 +149,7 @@ class _BuildOnePlayerPuzzleWidgetState
                     for (var letterTile in row) ...[
                       LetterTileWidget(
                           letterTile: letterTile,
-                          sprayDirection: _grid.sprayDirection)
+                          blastDirection: _grid.blastDirection)
                     ]
                   ])
                 ]

@@ -7,7 +7,7 @@ class LetterTile {
   int currentObstacleCharges = 0;
   int index = -1;
   bool selected = false;
-  bool sprayFrom = false;
+  bool blastFrom = false;
 
   LetterTile(String letter, TileType tileType, int requiredCharges,
       int requiredObstacleCharges, int index) {
@@ -106,8 +106,8 @@ class LetterTile {
     this.selected = false;
   }
 
-  void spray() {
-    this.sprayFrom = true;
+  void blast() {
+    this.blastFrom = true;
     if (this.clearOfObstacles()) {
       this.addCharge();
     }
@@ -115,8 +115,8 @@ class LetterTile {
     this.addObstacleCharge();
   }
 
-  void unspray() {
-    this.sprayFrom = false;
+  void unblast() {
+    this.blastFrom = false;
   }
 
   void addObstacleCharge() {

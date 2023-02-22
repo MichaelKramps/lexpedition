@@ -20,7 +20,7 @@ class _ObserverLetterGridWidgetState extends State<ObserverLetterGridWidget> {
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           for (var letterTile in row) ...[
             LetterTileWidget(
-                letterTile: letterTile, sprayDirection: widget.letterGrid.sprayDirection)
+                letterTile: letterTile, blastDirection: widget.letterGrid.blastDirection)
           ]
         ])
       ]

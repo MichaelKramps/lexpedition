@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 
 class PartyDatabaseConnection {
@@ -133,6 +134,10 @@ class PartyDatabaseConnection {
         });
       }
     }
+  }
+
+  void updateBlast(BlastDirection direction, int rowOrColumnIndex) {
+
   }
 
   void listenForPuzzle(Function(LetterGrid) callback) async {

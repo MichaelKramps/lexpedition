@@ -1,29 +1,27 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
-import 'package:lexpedition/src/game_data/letter_grid.dart';
 
-class SprayWidget extends StatefulWidget {
-  final SprayDirection sprayDirection;
-  final bool beginSprayAnimation;
+class BlastWidget extends StatefulWidget {
+  final BlastDirection blastDirection;
+  final bool beginBlastAnimation;
 
-  const SprayWidget(
+  const BlastWidget(
       {super.key,
-      required this.sprayDirection,
-      required this.beginSprayAnimation});
+      required this.blastDirection,
+      required this.beginBlastAnimation});
 
   @override
-  State<SprayWidget> createState() => _SprayWidgetState();
+  State<BlastWidget> createState() => _BlastWidgetState();
 }
 
-class _SprayWidgetState extends State<SprayWidget> {
+class _BlastWidgetState extends State<BlastWidget> {
   Offset _offset = Offset.zero;
 
   @override
   Widget build(BuildContext context) {
     return Visibility(
-        visible: widget.beginSprayAnimation,
+        visible: widget.beginBlastAnimation,
         maintainAnimation: false,
         child: Image.asset('assets/images/blast.png',
             height: Constants.tileSize, width: Constants.tileSize));

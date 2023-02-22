@@ -1,0 +1,1 @@
+enum BlastDirection { vertical, horizontal }

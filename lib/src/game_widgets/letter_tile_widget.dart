@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
-import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_widgets/obstacle_widget.dart';
-import 'package:lexpedition/src/game_widgets/spray_widget.dart';
+import 'package:lexpedition/src/game_widgets/blast_widget.dart';
 import 'package:lexpedition/src/game_widgets/tile_info_widget.dart';
 
 class LetterTileWidget extends StatelessWidget {
   final LetterTile letterTile;
-  final SprayDirection sprayDirection;
+  final BlastDirection blastDirection;
 
   const LetterTileWidget(
-      {super.key, required this.letterTile, required this.sprayDirection});
+      {super.key, required this.letterTile, required this.blastDirection});
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +33,9 @@ class LetterTileWidget extends StatelessWidget {
                 style: style,
                 child: TileInfoWidget(letterTile: letterTile))),
         ObstacleWidget(visible: !letterTile.clearOfObstacles()),
-        SprayWidget(
-            sprayDirection: sprayDirection,
-            beginSprayAnimation: letterTile.sprayFrom)
+        BlastWidget(
+            blastDirection: blastDirection,
+            beginBlastAnimation: letterTile.blastFrom)
       ]);
     } else {
       return Stack(children: [
@@ -44,9 +44,9 @@ class LetterTileWidget extends StatelessWidget {
             width: Constants.tileSize,
             height: Constants.tileSize,
             color: determineEmptyColor(letterTile)),
-        SprayWidget(
-            sprayDirection: sprayDirection,
-            beginSprayAnimation: letterTile.sprayFrom)
+        BlastWidget(
+            blastDirection: blastDirection,
+            beginBlastAnimation: letterTile.blastFrom)
       ]);
     }
   }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
 import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
-import 'package:lexpedition/src/game_widgets/spray_direction_widget.dart';
+import 'package:lexpedition/src/game_widgets/blast_direction_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:wakelock/wakelock.dart';
@@ -63,9 +64,9 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       )),
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          SprayDirectionWidget(
-              sprayDirection: _grid.sprayDirection,
-              changeDirection: updateSprayDirection),
+          BlastDirectionWidget(
+              blastDirection: _grid.blastDirection,
+              changeDirection: updateBlastDirection),
           Container(
               width: Constants.tileSize * 3.5,
               margin: EdgeInsets.all(Constants.tileMargin * 2),
@@ -100,7 +101,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
                     for (var letterTile in row) ...[
                       LetterTileWidget(
                           letterTile: letterTile,
-                          sprayDirection: _grid.sprayDirection)
+                          blastDirection: _grid.blastDirection)
                     ]
                   ])
                 ]
@@ -196,7 +197,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         widget.playerWon(_grid.guesses.length, _grid.par);
       } else {
         if (_guessTiles.length >= 5) {
-          await fireSpray(_guessTiles.last);
+          await fireBlast(_guessTiles.last);
           if (_grid.isFullyCharged()) {
             widget.playerWon(_grid.guesses.length, _grid.par);
           }
@@ -289,29 +290,29 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
     return (row * 6) + (column);
   }
 
-  void updateSprayDirection() {
+  void updateBlastDirection() {
     setState(() {
-      _grid.changeSprayDirection();
+      _grid.changeBlastDirection();
     });
   }
 
-  Future<void> fireSpray(LetterTile lastTile) async {
-    List<int> indexesToSpray = findSprayedIndexes(lastTile.index);
+  Future<void> fireBlast(LetterTile lastTile) async {
+    List<int> indexesToBlast = findBlastedIndexes(lastTile.index);
 
-    for (int index in indexesToSpray) {
+    for (int index in indexesToBlast) {
       LetterTile thisTile = _grid.letterTiles[index];
       setState(() {
-        thisTile.spray();
+        thisTile.blast();
       });
       Future<void>.delayed(const Duration(milliseconds: 350), (() {
         setState(() {
-          thisTile.unspray();
+          thisTile.unblast();
         });
       }));
     }
   }
 
-  List<int> findSprayedIndexes(int lastIndex) {
+  List<int> findBlastedIndexes(int lastIndex) {
     List<List<int>> rows = [
       [0, 1, 2, 3, 4, 5],
       [6, 7, 8, 9, 10, 11],
@@ -327,7 +328,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       [5, 11, 17, 23]
     ];
 
-    if (_grid.sprayDirection == SprayDirection.horizontal) {
+    if (_grid.blastDirection == BlastDirection.horizontal) {
       int whichRow = (lastIndex / 6).floor();
       return rows[whichRow];
     } else {
