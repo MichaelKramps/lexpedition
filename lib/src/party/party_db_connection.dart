@@ -126,7 +126,7 @@ class PartyDatabaseConnection {
         });
       } else {
         await databaseReference?.update({
-          'letterGrid': {
+          'letterGridB': {
             'gridString': letterGrid.getGridStringForDatabase(),
             'guesses': letterGrid.guesses.join(',')
           },
@@ -136,22 +136,26 @@ class PartyDatabaseConnection {
     }
   }
 
-  void updateBlast(BlastDirection direction, int rowOrColumnIndex) {
-
-  }
-
   void listenForPuzzle(Function(LetterGrid) callback) async {
+    String gridToListenFor = 'letterGridA';
+
+    if (isPartyLeader) {
+      gridToListenFor = 'letterGridB';
+    }
+
     this.listener = databaseReference
-        ?.child('letterGridA')
+        ?.child(gridToListenFor)
         .onValue
         .listen((DatabaseEvent event) {
-          try{
-            final String gridString = event.snapshot.child('gridString').value as String;
-            final String guesses = event.snapshot.child('guesses').value as String;
-            callback(LetterGrid.fromLiveDatabase(gridString.split(','), guesses.split(',')));
-          } catch (e) {
-            // not sure how to handle yet
-          }
+      try {
+        final String gridString =
+            event.snapshot.child('gridString').value as String;
+        final String guesses = event.snapshot.child('guesses').value as String;
+        callback(LetterGrid.fromLiveDatabase(
+            gridString.split(','), guesses.split(',')));
+      } catch (e) {
+        // not sure how to handle yet
+      }
     });
   }
 }

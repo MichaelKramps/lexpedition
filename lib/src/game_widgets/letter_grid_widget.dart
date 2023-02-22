@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
@@ -304,12 +305,18 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
       setState(() {
         thisTile.blast();
       });
-      Future<void>.delayed(const Duration(milliseconds: 350), (() {
+    }
+    partyDatabaseConnection.updateMyPuzzle(_grid);
+
+    Future<void>.delayed(const Duration(milliseconds: 350), () {
+      for (int index in indexesToBlast) {
+        LetterTile thisTile = _grid.letterTiles[index];
         setState(() {
           thisTile.unblast();
         });
-      }));
-    }
+      }
+      partyDatabaseConnection.updateMyPuzzle(_grid);
+    });
   }
 
   List<int> findBlastedIndexes(int lastIndex) {
@@ -330,10 +337,12 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
 
     if (_grid.blastDirection == BlastDirection.horizontal) {
       int whichRow = (lastIndex / 6).floor();
-      return rows[whichRow];
+      List<int> indexesToBlast = rows[whichRow];
+      return indexesToBlast;
     } else {
       int whichColumn = lastIndex % 6;
-      return columns[whichColumn];
+      List<int> indexesToBlast = columns[whichColumn];
+      return indexesToBlast;
     }
   }
 }

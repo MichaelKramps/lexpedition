@@ -30,29 +30,15 @@ class LetterTile {
         this.tileType = TileType.values[int.parse(encodedString[1])];
         this.requiredCharges = int.parse(encodedString[2]);
         this.requiredObstacleCharges = int.parse(encodedString[3]);
-      } else if (encodedString.length == 5) {
-        //represents starting tile
-        this.selected = encodedString[0] == '1' ? true : false;
-        this.letter = encodedString[1];
-        this.tileType = TileType.values[int.parse(encodedString[2])];
-        this.requiredCharges = int.parse(encodedString[3]);
-        this.requiredObstacleCharges = int.parse(encodedString[4]);
-      } else if (encodedString.length == 6) {
-        //represents tile during game
+      } else if (encodedString.length == 8) {
         this.letter = encodedString[0];
         this.tileType = TileType.values[int.parse(encodedString[1])];
         this.requiredCharges = int.parse(encodedString[2]);
         this.currentCharges = int.parse(encodedString[3]);
         this.requiredObstacleCharges = int.parse(encodedString[4]);
         this.currentObstacleCharges = int.parse(encodedString[5]);
-      } else if (encodedString.length == 7) {
-        this.selected = encodedString[0] == '1' ? true : false;
-        this.letter = encodedString[1];
-        this.tileType = TileType.values[int.parse(encodedString[2])];
-        this.requiredCharges = int.parse(encodedString[3]);
-        this.currentCharges = int.parse(encodedString[4]);
-        this.requiredObstacleCharges = int.parse(encodedString[5]);
-        this.currentObstacleCharges = int.parse(encodedString[6]);
+        this.selected = encodedString[6] == '1' ? true : false;
+        this.blastFrom = encodedString[7] == '1' ? true : false;
       } else {
         this.tileType = TileType.empty;
       }
@@ -66,23 +52,14 @@ class LetterTile {
 
     late String? encodedString;
     if (hasLetter && hasType) {
-      encodedString = '';
-      if (this.selected) {
-        encodedString += '1';
-      }
-      encodedString += this.letter;
+      encodedString = this.letter;
       encodedString += this.tileType.index.toString();
       encodedString += this.requiredCharges.toString();
-
-      if (this.currentCharges == 0 && this.currentObstacleCharges == 0) {
-        // tile has not yet been touched
-        encodedString += this.requiredObstacleCharges.toString();
-      } else {
-        // tile has been used during a game
-        encodedString += this.currentCharges.toString();
-        encodedString += this.requiredObstacleCharges.toString();
-        encodedString += this.currentObstacleCharges.toString();
-      }
+      encodedString += this.currentCharges.toString();
+      encodedString += this.requiredObstacleCharges.toString();
+      encodedString += this.currentObstacleCharges.toString();
+      encodedString += this.selected ? "1" : "0";
+      encodedString += this.blastFrom ? "1" : "0";
     } else {
       return null;
     }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
-import 'package:lexpedition/src/game_data/letter_grid.dart';
 
 class BlastDirectionWidget extends StatelessWidget {
   final BlastDirection blastDirection;
