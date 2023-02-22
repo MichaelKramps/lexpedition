@@ -5,6 +5,8 @@
 // Uncomment the following lines when enabling Firebase Crashlytics
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lexpedition/src/game_widgets/single_player_puzzle.dart';
+import 'package:lexpedition/src/game_widgets/two_player_puzzle.dart';
 import 'package:lexpedition/src/party/join_party_screen.dart';
 import 'package:lexpedition/src/party/party_screen.dart';
 import 'package:lexpedition/src/party/start_party_screen.dart';
@@ -199,6 +201,16 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 path: 'freeplay',
                 builder: (context, state) => FreePlay(key: UniqueKey()),
+                routes: [
+                  GoRoute(
+                    path: 'oneplayer',
+                    builder: (context, state) => SinglePlayerPuzzle(key: UniqueKey()),
+                  ),
+                  GoRoute(
+                    path: 'twoplayer',
+                    builder: (context, state) => TwoPlayerPuzzle(key: UniqueKey()),
+                  )
+                ]
             ),
             GoRoute(
                     path: 'freeplaywon',

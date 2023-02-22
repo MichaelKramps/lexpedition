@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 
 class PartyDatabaseConnection {
@@ -39,6 +38,13 @@ class PartyDatabaseConnection {
     this.databaseReference = reference;
     this.addOneToParty(reference);
     connection = this;
+  }
+
+  bool isNull() {
+    if (this.databaseReference == null) {
+      return true;
+    }
+    return false;
   }
 
   static Future<bool> canJoinParty(String partyCode) async {
@@ -114,6 +120,16 @@ class PartyDatabaseConnection {
     return false;
   }
 
+  void loadPuzzleForPlayerTwo(List<String?> gridCodeList) async {
+    if (connectionExists()) {
+      if (isPartyLeader) {
+        await databaseReference?.update({
+          'letterGridA': {'letterGridB': gridCodeList.join(',')}
+        });
+      }
+    }
+  }
+
   void updateMyPuzzle(LetterGrid letterGrid) async {
     if (connectionExists()) {
       if (isPartyLeader) {
@@ -136,23 +152,30 @@ class PartyDatabaseConnection {
     }
   }
 
-  void listenForPuzzle(Function(LetterGrid) callback) async {
-    String gridToListenFor = 'letterGridA';
-
-    if (isPartyLeader) {
-      gridToListenFor = 'letterGridB';
-    }
+  void listenForPuzzle(
+      Function({LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid})
+          callback) async {
+    String gridToListenFor = isPartyLeader ? 'letterGridB' : 'letterGridA';
 
     this.listener = databaseReference
         ?.child(gridToListenFor)
         .onValue
         .listen((DatabaseEvent event) {
       try {
-        final String gridString =
+        final String theirGridString =
             event.snapshot.child('gridString').value as String;
         final String guesses = event.snapshot.child('guesses').value as String;
-        callback(LetterGrid.fromLiveDatabase(
-            gridString.split(','), guesses.split(',')));
+        final String? myGridString =
+            event.snapshot.child('letterGridB').value as String?;
+        
+        final LetterGrid theirLetterGrid = LetterGrid.fromLiveDatabase(
+                theirGridString.split(','), guesses.split(','));
+        final LetterGrid? myLetterGrid =
+            myGridString == null ? null : LetterGrid.fromLiveDatabase(myGridString.split(','), []);
+
+        callback(
+            theirLetterGrid: theirLetterGrid,
+            myLetterGrid: myLetterGrid);
       } catch (e) {
         // not sure how to handle yet
       }

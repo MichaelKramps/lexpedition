@@ -1,17 +1,31 @@
-import 'dart:math';
-
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:lexpedition/src/game_data/levels.dart';
-import 'package:lexpedition/src/level_info/free_play_levels.dart';
-import 'package:lexpedition/src/play_session/play_session_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class FreePlay extends StatelessWidget {
   const FreePlay({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Level level =
-        freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
-    return new PlaySessionScreen(level, '/freeplaywon');
+    //Level level =
+    //    freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
+    //return new PlaySessionScreen(level, '/freeplaywon');
+    return Scaffold(body: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            GoRouter.of(context).push('/freeplay/oneplayer');
+          },
+          child: Text('One Player')
+        ),
+        ElevatedButton(
+          onPressed: () {
+            GoRouter.of(context).push('/freeplay/twoplayer');
+          },
+          child: Text('Two Player')
+        )
+      ],
+    ));
   }
 }
