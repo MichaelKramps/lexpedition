@@ -148,6 +148,7 @@ class _LetterGridWidgetState extends State<LetterGridWidget> {
         _guessTiles.removeLast();
       });
     }
+    partyDatabaseConnection.updateMyPuzzle(_grid);
   }
 
   String getGuess() {

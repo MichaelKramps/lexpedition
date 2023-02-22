@@ -140,9 +140,13 @@ class PartyDatabaseConnection {
         ?.child('letterGridA')
         .onValue
         .listen((DatabaseEvent event) {
-      final String gridString = event.snapshot.child('gridString').value as String;
-      final String guesses = event.snapshot.child('guesses').value as String;
-      callback(LetterGrid.fromLiveDatabase(gridString.split(','), guesses.split(',')));
+          try{
+            final String gridString = event.snapshot.child('gridString').value as String;
+            final String guesses = event.snapshot.child('guesses').value as String;
+            callback(LetterGrid.fromLiveDatabase(gridString.split(','), guesses.split(',')));
+          } catch (e) {
+            // not sure how to handle yet
+          }
     });
   }
 }

@@ -30,6 +30,13 @@ class LetterTile {
         this.tileType = TileType.values[int.parse(encodedString[1])];
         this.requiredCharges = int.parse(encodedString[2]);
         this.requiredObstacleCharges = int.parse(encodedString[3]);
+      } else if (encodedString.length == 5) {
+        //represents starting tile
+        this.selected = encodedString[0] == '1' ? true : false;
+        this.letter = encodedString[1];
+        this.tileType = TileType.values[int.parse(encodedString[2])];
+        this.requiredCharges = int.parse(encodedString[3]);
+        this.requiredObstacleCharges = int.parse(encodedString[4]);
       } else if (encodedString.length == 6) {
         //represents tile during game
         this.letter = encodedString[0];
@@ -38,6 +45,14 @@ class LetterTile {
         this.currentCharges = int.parse(encodedString[3]);
         this.requiredObstacleCharges = int.parse(encodedString[4]);
         this.currentObstacleCharges = int.parse(encodedString[5]);
+      } else if (encodedString.length == 7) {
+        this.selected = encodedString[0] == '1' ? true : false;
+        this.letter = encodedString[1];
+        this.tileType = TileType.values[int.parse(encodedString[2])];
+        this.requiredCharges = int.parse(encodedString[3]);
+        this.currentCharges = int.parse(encodedString[4]);
+        this.requiredObstacleCharges = int.parse(encodedString[5]);
+        this.currentObstacleCharges = int.parse(encodedString[6]);
       } else {
         this.tileType = TileType.empty;
       }
@@ -51,7 +66,11 @@ class LetterTile {
 
     late String? encodedString;
     if (hasLetter && hasType) {
-      encodedString = this.letter;
+      encodedString = '';
+      if (this.selected) {
+        encodedString += '1';
+      }
+      encodedString += this.letter;
       encodedString += this.tileType.index.toString();
       encodedString += this.requiredCharges.toString();
 
