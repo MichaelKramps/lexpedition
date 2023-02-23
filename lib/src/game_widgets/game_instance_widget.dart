@@ -4,20 +4,26 @@ import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
+import 'package:lexpedition/src/game_widgets/game_column.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_actions_widget.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
+import 'package:lexpedition/src/game_widgets/single_player_right_column_widget.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:wakelock/wakelock.dart';
 
 class GameInstanceWidget extends StatefulWidget {
   final LetterGrid letterGrid;
-  Widget leftColumn;
-  Widget rightColumn;
+  final GameColumn leftColumn;
+  final GameColumn rightColumn;
 
   final Function(int, int) playerWon;
 
   GameInstanceWidget(
-      {super.key, required this.letterGrid, required this.playerWon, required this.leftColumn, required this.rightColumn});
+      {super.key,
+      required this.letterGrid,
+      required this.playerWon,
+      required this.leftColumn,
+      required this.rightColumn});
 
   @override
   State<GameInstanceWidget> createState() => _GameInstanceWidgetState();
@@ -56,7 +62,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
             gameInstanceWidgetState: this, showBadGuess: _showBadGuess);
 
     return Row(children: [
-      Expanded(child: widget.leftColumn),
+      Expanded(child: determineColumn(widget.leftColumn)),
       Column(children: [
         LetterGridActionsWidget(
             gameInstanceWidgetStateManager: gameInstanceWidgetStateManager),
@@ -68,8 +74,19 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
                 {handleMouseEvent(event.position.dx, event.position.dy, false)},
             child: LetterGridWidget(letterGrid: _grid))
       ]),
-      Expanded(child: widget.rightColumn)
+      Expanded(child: determineColumn(widget.rightColumn))
     ]);
+  }
+
+  Widget determineColumn(GameColumn gameColumn) {
+    GameInstanceWidgetStateManager gameInstanceWidgetStateManager = GameInstanceWidgetStateManager(
+            gameInstanceWidgetState: this, showBadGuess: _showBadGuess);
+    switch (gameColumn) {
+      case GameColumn.singlePlayerRightColumn:
+        return SinglePlayerRightColumnWidget(gameInstanceWidgetStateManager: gameInstanceWidgetStateManager);
+      default:
+        return Container();
+    }
   }
 
   void updateGuess(LetterTile letterTile, bool clickEvent) {
@@ -309,5 +326,9 @@ class GameInstanceWidgetStateManager {
 
   void clearGuess() {
     gameInstanceWidgetState.clearGuess();
+  }
+
+  void resetPuzzle() {
+    gameInstanceWidgetState.resetPuzzle();
   }
 }

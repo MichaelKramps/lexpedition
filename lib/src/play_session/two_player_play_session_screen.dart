@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
+import 'package:lexpedition/src/game_widgets/game_column.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
 
@@ -25,11 +26,26 @@ class _TwoPlayerPlaySessionScreenState
       return GameInstanceWidget(
           letterGrid: widget.myLetterGrid as LetterGrid,
           playerWon: (x, y) => {},
-          leftColumn: Container(),
-          rightColumn: Container());
+          leftColumn: GameColumn.blankColumn,
+          rightColumn: GameColumn.blankColumn);
     } else {
-      return LetterGridWidget(
-          letterGrid: widget.theirLetterGrid as LetterGrid);
+      return LetterGridWidget(letterGrid: widget.theirLetterGrid as LetterGrid);
     }
+  }
+
+  void toggleScreen() {
+    setState(() {
+      _showingMyGrid = _showingMyGrid ? false : true;
+    });
+  }
+}
+
+class TwoPlayerPlaySessionStateManager {
+  _TwoPlayerPlaySessionScreenState twoPlayerState;
+
+  TwoPlayerPlaySessionStateManager({required this.twoPlayerState});
+
+  void toggleScreen() {
+    twoPlayerState.toggleScreen();
   }
 }
