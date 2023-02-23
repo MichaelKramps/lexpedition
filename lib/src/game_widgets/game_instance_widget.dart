@@ -8,22 +8,25 @@ import 'package:lexpedition/src/game_widgets/game_column.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_actions_widget.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
 import 'package:lexpedition/src/game_widgets/single_player_right_column_widget.dart';
+import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:wakelock/wakelock.dart';
 
 class GameInstanceWidget extends StatefulWidget {
   final LetterGrid letterGrid;
   final GameColumn leftColumn;
   final GameColumn rightColumn;
-
   final Function(int, int) playerWon;
+  final TwoPlayerPlaySessionStateManager? twoPlayerPlaySessionStateManager;
 
   GameInstanceWidget(
       {super.key,
       required this.letterGrid,
       required this.playerWon,
       required this.leftColumn,
-      required this.rightColumn});
+      required this.rightColumn,
+      this.twoPlayerPlaySessionStateManager});
 
   @override
   State<GameInstanceWidget> createState() => _GameInstanceWidgetState();
@@ -79,11 +82,20 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   }
 
   Widget determineColumn(GameColumn gameColumn) {
-    GameInstanceWidgetStateManager gameInstanceWidgetStateManager = GameInstanceWidgetStateManager(
+    GameInstanceWidgetStateManager gameInstanceWidgetStateManager =
+        GameInstanceWidgetStateManager(
             gameInstanceWidgetState: this, showBadGuess: _showBadGuess);
+
     switch (gameColumn) {
       case GameColumn.singlePlayerRightColumn:
-        return SinglePlayerRightColumnWidget(gameInstanceWidgetStateManager: gameInstanceWidgetStateManager);
+        return SinglePlayerRightColumnWidget(
+            gameInstanceWidgetStateManager: gameInstanceWidgetStateManager);
+      case GameColumn.twoPlayerRightColumn:
+        return TwoPlayerRightColumnWidget(
+            gameInstanceWidgetStateManager: gameInstanceWidgetStateManager,
+            twoPlayerPlaySessionStateManager:
+                widget.twoPlayerPlaySessionStateManager
+                    as TwoPlayerPlaySessionStateManager);
       default:
         return Container();
     }
