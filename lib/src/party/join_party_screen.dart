@@ -3,6 +3,7 @@ import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
+import 'package:logging/logging.dart';
 import 'package:wakelock/wakelock.dart';
 
 class JoinPartyScreen extends StatefulWidget {
@@ -18,7 +19,6 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
   final _textController = TextEditingController();
   LetterGrid? _myGrid = null;
   LetterGrid _theirGrid = LetterGrid(blankGrid, 1);
-  
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Visibility(
+      Visibility(
           visible: !_joined,
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             SizedBox(
@@ -45,32 +45,38 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                 child: TextField(
                     controller: _textController,
                     decoration: InputDecoration(
-                        border: OutlineInputBorder(), labelText: "Party Code"))),
+                        border: OutlineInputBorder(),
+                        labelText: "Party Code"))),
             ElevatedButton(
-              onPressed: () async {
-                String partyCode = _textController.text.toUpperCase();
-                if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
-                  _partyConnection = await PartyDatabaseConnection.joinParty(
-                      partyCode: partyCode);
-                  setState(() {
-                    _joined = true;
-                  });
-                  _partyConnection?.listenForPuzzle(updateGrid);
-                }
-              },
-              child: Text('Join')
-            )
-          ]
-        )),
-        Visibility(
-            visible: _joined,
-            child: TwoPlayerPlaySessionScreen(myLetterGrid: _myGrid, theirLetterGrid: _theirGrid,))
-      ]));
+                onPressed: () async {
+                  String partyCode = _textController.text.toUpperCase();
+                  if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
+                    _partyConnection = await PartyDatabaseConnection.joinParty(
+                        partyCode: partyCode);
+                    setState(() {
+                      _joined = true;
+                    });
+                    _partyConnection?.listenForPuzzle(updateGrid);
+                  }
+                },
+                child: Text('Join'))
+          ])),
+      Visibility(
+          visible: _joined,
+          child: TwoPlayerPlaySessionScreen(
+            myLetterGrid: _myGrid,
+            theirLetterGrid: _theirGrid,
+          ))
+    ]));
   }
 
-  void updateGrid({LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid}) {
+  void updateGrid(
+      {LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid}) {
+    new Logger('updategrid').info(myLetterGrid.toString());
     setState(() {
-      _myGrid = myLetterGrid;
+      if (myLetterGrid != null) {
+        _myGrid = myLetterGrid;
+      }
       _theirGrid = theirLetterGrid;
     });
   }

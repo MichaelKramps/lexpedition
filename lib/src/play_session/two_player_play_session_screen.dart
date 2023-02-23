@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_letter_grid_widget.dart';
+import 'package:logging/logging.dart';
 
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
   final LetterGrid? myLetterGrid;

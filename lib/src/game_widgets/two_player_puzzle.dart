@@ -25,7 +25,7 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
     Level levelB =
         freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
 
-    partyDatabaseConnection.loadPuzzleForPlayerTwo(levelB.gridCode);
+    partyDatabaseConnection.loadPuzzleForPlayers(gridCodeListA: levelA.gridCode, gridCodeListB: levelB.gridCode);
 
     TwoPlayerPlaySessionScreen twoPlayerScreen = new TwoPlayerPlaySessionScreen(
         myLetterGrid: LetterGrid(levelA.gridCode, levelA.difficulty),

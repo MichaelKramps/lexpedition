@@ -120,11 +120,15 @@ class PartyDatabaseConnection {
     return false;
   }
 
-  void loadPuzzleForPlayerTwo(List<String?> gridCodeList) async {
+  void loadPuzzleForPlayers({required List<String?> gridCodeListA, List<String?>? gridCodeListB}) async {
     if (connectionExists()) {
       if (isPartyLeader) {
         await databaseReference?.update({
-          'letterGridA': {'letterGridB': gridCodeList.join(',')}
+          'letterGridA': {
+            'gridString': gridCodeListA.join(','),
+            'guesses': '',
+            'letterGridB': gridCodeListB?.join(',')
+          }
         });
       }
     }
@@ -167,15 +171,14 @@ class PartyDatabaseConnection {
         final String guesses = event.snapshot.child('guesses').value as String;
         final String? myGridString =
             event.snapshot.child('letterGridB').value as String?;
-        
-        final LetterGrid theirLetterGrid = LetterGrid.fromLiveDatabase(
-                theirGridString.split(','), guesses.split(','));
-        final LetterGrid? myLetterGrid =
-            myGridString == null ? null : LetterGrid.fromLiveDatabase(myGridString.split(','), []);
 
-        callback(
-            theirLetterGrid: theirLetterGrid,
-            myLetterGrid: myLetterGrid);
+        final LetterGrid theirLetterGrid = LetterGrid.fromLiveDatabase(
+            theirGridString.split(','), guesses.split(','));
+        final LetterGrid? myLetterGrid = myGridString == null
+            ? null
+            : LetterGrid.fromLiveDatabase(myGridString.split(','), []);
+
+        callback(theirLetterGrid: theirLetterGrid, myLetterGrid: myLetterGrid);
       } catch (e) {
         // not sure how to handle yet
       }
