@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
-import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
+import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
@@ -53,7 +53,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         backgroundColor: palette.backgroundPlaySession,
         body: Stack(
           children: [
-            LetterGridWidget(
+            GameInstanceWidget(
                 letterGrid: new LetterGrid(
                     widget.level.gridCode, widget.level.difficulty),
                 playerWon: _playerWon),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
+import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
-import 'package:lexpedition/src/game_widgets/observer_letter_grid_widget.dart';
 
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
   final LetterGrid? myLetterGrid;
@@ -23,11 +23,11 @@ class _TwoPlayerPlaySessionScreenState
   @override
   Widget build(BuildContext context) {
     if (widget.myLetterGrid != null && _showingMyGrid) {
-      return LetterGridWidget(
+      return GameInstanceWidget(
           letterGrid: widget.myLetterGrid as LetterGrid,
           playerWon: (x, y) => {});
     } else {
-      return ObserverLetterGridWidget(
+      return LetterGridWidget(
           letterGrid: widget.theirLetterGrid as LetterGrid);
     }
   }
