@@ -56,7 +56,7 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                     setState(() {
                       _joined = true;
                     });
-                    _partyConnection?.listenForPuzzle(updateGrid);
+                    _partyConnection?.listenForPuzzle(updateGrids);
                   }
                 },
                 child: Text('Join'))
@@ -70,9 +70,8 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
     ]));
   }
 
-  void updateGrid(
+  void updateGrids(
       {LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid}) {
-    new Logger('updategrid').info(myLetterGrid.toString());
     setState(() {
       if (myLetterGrid != null) {
         _myGrid = myLetterGrid;

@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
 import 'package:lexpedition/src/level_info/free_play_levels.dart';
@@ -16,21 +15,52 @@ class TwoPlayerPuzzle extends StatefulWidget {
 }
 
 class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
-  @override
-  Widget build(BuildContext context) {
-    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
+  LetterGrid? _theirUpdatedLetterGrid = null;
+  LetterGrid? _myUpdatedLetterGrid = null;
 
+  @override
+  void initState() {
+    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
     Level levelA =
         freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
     Level levelB =
         freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
 
-    partyDatabaseConnection.loadPuzzleForPlayers(gridCodeListA: levelA.gridCode, gridCodeListB: levelB.gridCode);
+    partyDatabaseConnection.loadPuzzleForPlayers(
+        gridCodeListA: levelA.gridCode, gridCodeListB: levelB.gridCode);
 
+    setState(() {
+      _myUpdatedLetterGrid = LetterGrid(levelA.gridCode, 1);
+      _theirUpdatedLetterGrid = LetterGrid(levelB.gridCode, 1);
+    });
+
+    partyDatabaseConnection.listenForPuzzle(updateGrids);
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     TwoPlayerPlaySessionScreen twoPlayerScreen = new TwoPlayerPlaySessionScreen(
-        myLetterGrid: LetterGrid(levelA.gridCode, levelA.difficulty),
-        theirLetterGrid: LetterGrid(levelB.gridCode, levelB.difficulty));
+        myLetterGrid: _myUpdatedLetterGrid,
+        theirLetterGrid: _theirUpdatedLetterGrid);
 
     return Scaffold(body: twoPlayerScreen);
+  }
+
+  LetterGrid determineTheirLetterGrid() {
+    if (_theirUpdatedLetterGrid != null) {
+      return _theirUpdatedLetterGrid as LetterGrid;
+    }
+    Level levelB =
+        freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
+    return LetterGrid(levelB.gridCode, 1);
+  }
+
+  void updateGrids(
+      {LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid}) {
+    setState(() {
+      _theirUpdatedLetterGrid = theirLetterGrid;
+    });
   }
 }
