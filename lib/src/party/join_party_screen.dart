@@ -3,7 +3,6 @@ import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
-import 'package:logging/logging.dart';
 import 'package:wakelock/wakelock.dart';
 
 class JoinPartyScreen extends StatefulWidget {

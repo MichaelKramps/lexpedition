@@ -4,21 +4,20 @@ import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
-import 'package:lexpedition/src/game_widgets/game_background.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_actions_widget.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
-import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:wakelock/wakelock.dart';
 
 class GameInstanceWidget extends StatefulWidget {
   final LetterGrid letterGrid;
+  Widget leftColumn;
+  Widget rightColumn;
 
   final Function(int, int) playerWon;
 
-  const GameInstanceWidget(
-      {super.key, required this.letterGrid, required this.playerWon});
+  GameInstanceWidget(
+      {super.key, required this.letterGrid, required this.playerWon, required this.leftColumn, required this.rightColumn});
 
   @override
   State<GameInstanceWidget> createState() => _GameInstanceWidgetState();
@@ -56,49 +55,20 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
         GameInstanceWidgetStateManager(
             gameInstanceWidgetState: this, showBadGuess: _showBadGuess);
 
-    return Stack(children: [
-      GameBackground(),
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+    return Row(children: [
+      Expanded(child: widget.leftColumn),
+      Column(children: [
         LetterGridActionsWidget(
             gameInstanceWidgetStateManager: gameInstanceWidgetStateManager),
-        Row(children: [
-          Spacer(),
-          Listener(
-              key: gridKey,
-              onPointerDown: (event) => {
-                    handleMouseEvent(event.position.dx, event.position.dy, true)
-                  },
-              onPointerMove: (event) => {
-                    handleMouseEvent(
-                        event.position.dx, event.position.dy, false)
-                  },
-              child: LetterGridWidget(letterGrid: _grid)
-          ),
-          Expanded(
-              flex: 1,
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                Text(_grid.guesses.length.toString(),
-                    style: TextStyle(fontSize: 45, color: Colors.black)),
-                InkResponse(
-                  onTap: () => GoRouter.of(context).push('/settings'),
-                  child: Image.asset(
-                    'assets/images/settings.png',
-                    semanticLabel: 'Settings',
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: () => resetPuzzle(),
-                  child: const Text('Restart'),
-                ),
-                SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: () => GoRouter.of(context).go('/'),
-                  child: const Text('Home'),
-                )
-              ]))
-        ])
-      ])
+        Listener(
+            key: gridKey,
+            onPointerDown: (event) =>
+                {handleMouseEvent(event.position.dx, event.position.dy, true)},
+            onPointerMove: (event) =>
+                {handleMouseEvent(event.position.dx, event.position.dy, false)},
+            child: LetterGridWidget(letterGrid: _grid))
+      ]),
+      Expanded(child: widget.rightColumn)
     ]);
   }
 

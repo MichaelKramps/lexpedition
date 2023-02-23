@@ -56,7 +56,10 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
             GameInstanceWidget(
                 letterGrid: new LetterGrid(
                     widget.level.gridCode, widget.level.difficulty),
-                playerWon: _playerWon),
+                playerWon: _playerWon,
+                leftColumn: Container(),
+                rightColumn: Container()
+            ),
             SizedBox.expand(
               child: Visibility(
                 visible: _duringCelebration,
