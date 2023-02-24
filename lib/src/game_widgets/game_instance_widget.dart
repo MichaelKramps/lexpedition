@@ -13,6 +13,7 @@ import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart'
 import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
+import 'package:logging/logging.dart';
 import 'package:wakelock/wakelock.dart';
 
 class GameInstanceWidget extends StatefulWidget {
@@ -193,9 +194,14 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
 
   bool isLevelWon(
       LetterGrid primaryLetterGrid, LetterGrid? secondaryLetterGrid) {
+    Logger logger = new Logger('isLevelWon');
     if (secondaryLetterGrid == null) {
+      logger.info('no secondary grid info');
       return primaryLetterGrid.isFullyCharged();
     } else {
+      logger.info('secondary grid');
+      logger.info(primaryLetterGrid.isFullyCharged());
+      logger.info(secondaryLetterGrid.isFullyCharged());
       return primaryLetterGrid.isFullyCharged() &&
           secondaryLetterGrid.isFullyCharged();
     }

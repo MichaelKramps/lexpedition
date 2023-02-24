@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
@@ -37,10 +38,6 @@ class OnePlayerPlaySessionScreen extends StatefulWidget {
 class _OnePlayerPlaySessionScreenState
     extends State<OnePlayerPlaySessionScreen> {
   static final _log = Logger('PlaySessionScreen');
-
-  static const _celebrationDuration = Duration(milliseconds: 2000);
-
-  static const _preCelebrationDuration = Duration(milliseconds: 500);
 
   bool _duringCelebration = false;
 
@@ -107,7 +104,7 @@ class _OnePlayerPlaySessionScreenState
     playerProgress.setLevelReached(widget.level.number);
 
     // Let the player see the game just after winning for a bit.
-    await Future<void>.delayed(_preCelebrationDuration);
+    await Future<void>.delayed(Constants.preCelebrationDuration);
     if (!mounted) return;
 
     setState(() {
@@ -132,7 +129,7 @@ class _OnePlayerPlaySessionScreenState
     //}
 
     /// Give the player some time to see the celebration animation.
-    await Future<void>.delayed(_celebrationDuration);
+    await Future<void>.delayed(Constants.celebrationDuration);
     if (!mounted) return;
 
     GoRouter.of(context).go(widget.winRoute, extra: {'score': score});
