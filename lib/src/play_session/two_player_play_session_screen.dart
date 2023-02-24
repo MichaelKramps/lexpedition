@@ -9,9 +9,7 @@ import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
 import 'package:lexpedition/src/games_services/score.dart';
-import 'package:lexpedition/src/player_progress/player_progress.dart';
 import 'package:lexpedition/src/style/confetti.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
