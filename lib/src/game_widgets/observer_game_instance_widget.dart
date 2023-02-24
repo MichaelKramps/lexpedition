@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
-import 'package:lexpedition/src/game_widgets/game_column.dart';
+import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
@@ -32,6 +32,9 @@ class ObserverGameInstanceWidget extends StatelessWidget {
   Widget determineColumn(GameColumn gameColumn) {
     switch (gameColumn) {
       case GameColumn.twoPlayerRightColumn:
+        return TwoPlayerRightColumnWidget(
+            twoPlayerPlaySessionStateManager: twoPlayerPlaySessionStateManager);
+      case GameColumn.twoPlayerLeftColumn:
         return TwoPlayerRightColumnWidget(
             twoPlayerPlaySessionStateManager: twoPlayerPlaySessionStateManager);
       default:

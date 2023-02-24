@@ -7,7 +7,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
-import 'package:lexpedition/src/game_widgets/game_column.dart';
+import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_widgets/single_player_right_column_widget.dart';
