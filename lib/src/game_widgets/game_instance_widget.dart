@@ -7,8 +7,8 @@ import 'package:lexpedition/src/game_data/word_helper.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_actions_widget.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
-import 'package:lexpedition/src/game_widgets/single_player_left_column_widget.dart';
-import 'package:lexpedition/src/game_widgets/single_player_right_column_widget.dart';
+import 'package:lexpedition/src/game_widgets/one_player_left_column_widget.dart';
+import 'package:lexpedition/src/game_widgets/one_player_right_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
@@ -89,11 +89,11 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
             gameInstanceWidgetState: this, showBadGuess: _showBadGuess);
 
     switch (gameColumn) {
-      case GameColumn.singlePlayerRightColumn:
-        return SinglePlayerRightColumnWidget(
+      case GameColumn.onePlayerRightColumn:
+        return OnePlayerRightColumnWidget(
             gameInstanceWidgetStateManager: gameInstanceWidgetStateManager);
-      case GameColumn.singlePlayerLeftColumn:
-        return SinglePlayerLeftColumnWidget(
+      case GameColumn.onePlayerLeftColumn:
+        return OnePlayerLeftColumnWidget(
             gameInstanceWidgetStateManager: gameInstanceWidgetStateManager);
       case GameColumn.twoPlayerRightColumn:
         return TwoPlayerRightColumnWidget(
@@ -105,7 +105,8 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
         return TwoPlayerLeftColumnWidget(
             gameInstanceWidgetStateManager: gameInstanceWidgetStateManager,
             twoPlayerPlaySessionStateManager:
-                widget.twoPlayerPlaySessionStateManager as TwoPlayerPlaySessionStateManager);
+                widget.twoPlayerPlaySessionStateManager
+                    as TwoPlayerPlaySessionStateManager);
       default:
         return Container();
     }
@@ -170,7 +171,8 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
         }
       });
       // check for win condition
-      if (_grid.isFullyCharged()) {
+      if (isLevelWon(_grid,
+          widget.twoPlayerPlaySessionStateManager?.getTheirLetterGrid())) {
         widget.playerWon(_grid.guesses.length, _grid.par);
       } else {
         if (_guessTiles.length >= 5) {
@@ -187,6 +189,16 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
       await showBadGuess();
     }
     clearGuess();
+  }
+
+  bool isLevelWon(
+      LetterGrid primaryLetterGrid, LetterGrid? secondaryLetterGrid) {
+    if (secondaryLetterGrid == null) {
+      return primaryLetterGrid.isFullyCharged();
+    } else {
+      return primaryLetterGrid.isFullyCharged() &&
+          secondaryLetterGrid.isFullyCharged();
+    }
   }
 
   Future<void> showBadGuess() async {

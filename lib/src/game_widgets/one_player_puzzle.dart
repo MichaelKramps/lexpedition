@@ -4,10 +4,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
 import 'package:lexpedition/src/level_info/free_play_levels.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:lexpedition/src/play_session/play_session_screen.dart';
+import 'package:lexpedition/src/play_session/one_player_play_session_screen.dart';
 
-class SinglePlayerPuzzle extends StatelessWidget {
-  const SinglePlayerPuzzle({super.key});
+class OnePlayerPuzzle extends StatelessWidget {
+  const OnePlayerPuzzle({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +18,6 @@ class SinglePlayerPuzzle extends StatelessWidget {
 
     partyDatabaseConnection.loadPuzzleForPlayers(gridCodeListA: level.gridCode);
 
-    return new PlaySessionScreen(level, '/freeplaywon');
+    return new OnePlayerPlaySessionScreen(level, '/freeplaywon');
   }
 }

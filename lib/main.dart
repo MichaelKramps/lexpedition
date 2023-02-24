@@ -5,7 +5,7 @@
 // Uncomment the following lines when enabling Firebase Crashlytics
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:lexpedition/src/game_widgets/single_player_puzzle.dart';
+import 'package:lexpedition/src/game_widgets/one_player_puzzle.dart';
 import 'package:lexpedition/src/game_widgets/two_player_puzzle.dart';
 import 'package:lexpedition/src/party/join_party_screen.dart';
 import 'package:lexpedition/src/party/party_screen.dart';
@@ -35,7 +35,7 @@ import 'src/in_app_purchase/in_app_purchase.dart';
 import 'src/tutorial/tutorial_screen.dart';
 import 'src/tutorial/tutorial_levels.dart';
 import 'src/main_menu/main_menu_screen.dart';
-import 'src/play_session/play_session_screen.dart';
+import 'src/play_session/one_player_play_session_screen.dart';
 import 'src/player_progress/persistence/local_storage_player_progress_persistence.dart';
 import 'src/player_progress/persistence/player_progress_persistence.dart';
 import 'src/player_progress/player_progress.dart';
@@ -167,7 +167,7 @@ class MyApp extends StatelessWidget {
                       final level = tutorialLevels
                           .singleWhere((e) => e.number == levelNumber);
                       return buildMyTransition<void>(
-                        child: PlaySessionScreen(
+                        child: OnePlayerPlaySessionScreen(
                           level,
                           '/tutorial/won',
                           key: const Key('play session'),
@@ -204,27 +204,28 @@ class MyApp extends StatelessWidget {
                 routes: [
                   GoRoute(
                     path: 'oneplayer',
-                    builder: (context, state) => SinglePlayerPuzzle(key: UniqueKey()),
+                    builder: (context, state) =>
+                        OnePlayerPuzzle(key: UniqueKey()),
                   ),
                   GoRoute(
                     path: 'twoplayer',
-                    builder: (context, state) => TwoPlayerPuzzle(key: UniqueKey()),
+                    builder: (context, state) =>
+                        TwoPlayerPuzzle(key: UniqueKey()),
                   )
-                ]
-            ),
+                ]),
             GoRoute(
-                    path: 'freeplaywon',
-                    builder: (context, state) {
-                      final map = state.extra! as Map<String, dynamic>;
-                      final score = map['score'] as Score;
+              path: 'freeplaywon',
+              builder: (context, state) {
+                final map = state.extra! as Map<String, dynamic>;
+                final score = map['score'] as Score;
 
-                      return WinGameScreen(
-                        score: score,
-                        continueRoute: '/freeplay',
-                        key: const Key('freeplay win'),
-                      );
-                    },
-                  ),
+                return WinGameScreen(
+                  score: score,
+                  continueRoute: '/freeplay',
+                  key: const Key('freeplay win'),
+                );
+              },
+            ),
             GoRoute(
                 path: 'buildpuzzle',
                 builder: (context, state) =>

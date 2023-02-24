@@ -1,6 +1,6 @@
 enum GameColumn {
-  singlePlayerLeftColumn,
-  singlePlayerRightColumn,
+  onePlayerLeftColumn,
+  onePlayerRightColumn,
   twoPlayerLeftColumn,
   twoPlayerRightColumn,
   blankColumn

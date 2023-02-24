@@ -28,13 +28,15 @@ class _TwoPlayerPlaySessionScreenState
           playerWon: (x, y) => {},
           leftColumn: GameColumn.blankColumn,
           rightColumn: GameColumn.twoPlayerRightColumn,
-          twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(twoPlayerState: this));
+          twoPlayerPlaySessionStateManager:
+              TwoPlayerPlaySessionStateManager(twoPlayerState: this));
     } else {
       return ObserverGameInstanceWidget(
-        letterGrid: widget.theirLetterGrid as LetterGrid, 
-        twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(twoPlayerState: this),
-        leftColumn: GameColumn.blankColumn,
-        rightColumn: GameColumn.twoPlayerRightColumn);
+          letterGrid: widget.theirLetterGrid as LetterGrid,
+          twoPlayerPlaySessionStateManager:
+              TwoPlayerPlaySessionStateManager(twoPlayerState: this),
+          leftColumn: GameColumn.blankColumn,
+          rightColumn: GameColumn.twoPlayerRightColumn);
     }
   }
 
@@ -47,10 +49,16 @@ class _TwoPlayerPlaySessionScreenState
 
 class TwoPlayerPlaySessionStateManager {
   _TwoPlayerPlaySessionScreenState twoPlayerState;
+  LetterGrid? theirLetterGrid;
 
-  TwoPlayerPlaySessionStateManager({required this.twoPlayerState});
+  TwoPlayerPlaySessionStateManager(
+      {required this.twoPlayerState, this.theirLetterGrid});
 
   void toggleScreen() {
     twoPlayerState.toggleScreen();
+  }
+
+  LetterGrid? getTheirLetterGrid() {
+    return theirLetterGrid;
   }
 }

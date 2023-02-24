@@ -10,7 +10,6 @@ import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lexpedition/src/game_widgets/single_player_right_column_widget.dart';
 import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 
@@ -24,17 +23,19 @@ import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
 import '../style/palette.dart';
 
-class PlaySessionScreen extends StatefulWidget {
+class OnePlayerPlaySessionScreen extends StatefulWidget {
   final Level level;
   final String winRoute;
 
-  const PlaySessionScreen(this.level, this.winRoute, {super.key});
+  const OnePlayerPlaySessionScreen(this.level, this.winRoute, {super.key});
 
   @override
-  State<PlaySessionScreen> createState() => _PlaySessionScreenState();
+  State<OnePlayerPlaySessionScreen> createState() =>
+      _OnePlayerPlaySessionScreenState();
 }
 
-class _PlaySessionScreenState extends State<PlaySessionScreen> {
+class _OnePlayerPlaySessionScreenState
+    extends State<OnePlayerPlaySessionScreen> {
   static final _log = Logger('PlaySessionScreen');
 
   static const _celebrationDuration = Duration(milliseconds: 2000);
@@ -56,11 +57,11 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
         body: Stack(
           children: [
             GameInstanceWidget(
-                letterGrid: new LetterGrid(
-                    widget.level.gridCode, widget.level.difficulty),
-                playerWon: _playerWon,
-                leftColumn: GameColumn.blankColumn,
-                rightColumn: GameColumn.singlePlayerRightColumn,
+              letterGrid: new LetterGrid(
+                  widget.level.gridCode, widget.level.difficulty),
+              playerWon: _playerWon,
+              leftColumn: GameColumn.blankColumn,
+              rightColumn: GameColumn.onePlayerRightColumn,
             ),
             SizedBox.expand(
               child: Visibility(

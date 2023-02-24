@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 
-class SinglePlayerRightColumnWidget extends StatelessWidget {
+class OnePlayerRightColumnWidget extends StatelessWidget {
   final GameInstanceWidgetStateManager gameInstanceWidgetStateManager;
 
-  SinglePlayerRightColumnWidget({super.key, required this.gameInstanceWidgetStateManager});
+  OnePlayerRightColumnWidget(
+      {super.key, required this.gameInstanceWidgetStateManager});
 
   @override
   Widget build(BuildContext context) {
