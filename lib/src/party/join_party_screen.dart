@@ -17,7 +17,7 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
   PartyDatabaseConnection? _partyConnection = null;
   final _textController = TextEditingController();
   LetterGrid? _myGrid = null;
-  LetterGrid _theirGrid = LetterGrid(blankGrid, 1);
+  LetterGrid? _theirGrid = null;
 
   @override
   void initState() {

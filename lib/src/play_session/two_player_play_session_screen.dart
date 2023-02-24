@@ -10,6 +10,7 @@ import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
 import 'package:lexpedition/src/games_services/score.dart';
 import 'package:lexpedition/src/style/confetti.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
@@ -28,6 +29,7 @@ class _TwoPlayerPlaySessionScreenState
     extends State<TwoPlayerPlaySessionScreen> {
   bool _showingMyGrid = true;
   bool _duringCelebration = false;
+  bool _playerHasWon = false;
   late DateTime _startOfPlay;
 
   @override
@@ -41,6 +43,9 @@ class _TwoPlayerPlaySessionScreenState
 
   @override
   Widget build(BuildContext context) {
+    if (!_playerHasWon) {
+      checkForWin();
+    }
     return IgnorePointer(ignoring: _duringCelebration, child: determineStack());
   }
 
@@ -70,13 +75,44 @@ class _TwoPlayerPlaySessionScreenState
           rightColumn: GameColumn.twoPlayerRightColumn,
           twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(
               twoPlayerState: this, theirLetterGrid: widget.theirLetterGrid));
-    } else {
+    } else if (widget.theirLetterGrid != null) {
       return ObserverGameInstanceWidget(
-          letterGrid: widget.theirLetterGrid as LetterGrid,
           twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(
               twoPlayerState: this, theirLetterGrid: widget.theirLetterGrid),
           leftColumn: GameColumn.blankColumn,
           rightColumn: GameColumn.twoPlayerRightColumn);
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [Text('Waiting for your partner to start a game...')],
+      );
+    }
+  }
+
+  void checkForWin() {
+    new Logger('checking for win').info('checking');
+    if (widget.myLetterGrid != null && widget.theirLetterGrid != null) {
+      //two player game
+      LetterGrid myGrid = widget.myLetterGrid as LetterGrid;
+      LetterGrid theirGrid = widget.theirLetterGrid as LetterGrid;
+      if (myGrid.isFullyCharged() && theirGrid.isFullyCharged()) {
+        int numberGuesses = myGrid.guesses.length + theirGrid.guesses.length;
+        _playerWon(numberGuesses, 1);
+      }
+    } else {
+      //one player game with observer
+      if (widget.myLetterGrid != null) {
+        LetterGrid myGrid = widget.myLetterGrid as LetterGrid;
+        if (myGrid.isFullyCharged()) {
+          _playerWon(myGrid.guesses.length, 1);
+        }
+      } else if (widget.theirLetterGrid != null) {
+        LetterGrid theirGrid = widget.theirLetterGrid as LetterGrid;
+        if (theirGrid.isFullyCharged()) {
+          _playerWon(theirGrid.guesses.length, 1);
+        }
+      }
     }
   }
 
@@ -98,6 +134,7 @@ class _TwoPlayerPlaySessionScreenState
     if (!mounted) return;
 
     setState(() {
+      _playerHasWon = true;
       _duringCelebration = true;
     });
 
@@ -119,10 +156,10 @@ class _TwoPlayerPlaySessionScreenState
     //}
 
     /// Give the player some time to see the celebration animation.
-    await Future<void>.delayed(Constants.celebrationDuration);
+    await Future<void>.delayed(Constants.celebrationDuration, () {
+      GoRouter.of(context).go('/freeplay/twoplayer', extra: {'score': score});
+    });
     if (!mounted) return;
-
-    GoRouter.of(context).go('/freeplay/twoplayer', extra: {'score': score});
   }
 }
 

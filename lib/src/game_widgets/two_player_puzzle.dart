@@ -48,15 +48,6 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
     return Scaffold(body: twoPlayerScreen);
   }
 
-  LetterGrid determineTheirLetterGrid() {
-    if (_theirUpdatedLetterGrid != null) {
-      return _theirUpdatedLetterGrid as LetterGrid;
-    }
-    Level levelB =
-        freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
-    return LetterGrid(levelB.gridCode, 1);
-  }
-
   void updateGrids(
       {LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid}) {
     setState(() {
