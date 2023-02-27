@@ -59,7 +59,7 @@ class _PlaySessionScreenState extends State<PlaySessionScreen> {
                 letterGrid: new LetterGrid(
                     widget.level.gridCode, widget.level.difficulty),
                 playerWon: _playerWon,
-                leftColumn: GameColumn.blankColumn,
+                leftColumn: GameColumn.singlePlayerLeftColumn,
                 rightColumn: GameColumn.singlePlayerRightColumn,
             ),
             SizedBox.expand(
