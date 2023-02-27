@@ -120,7 +120,9 @@ class PartyDatabaseConnection {
     return false;
   }
 
-  void loadPuzzleForPlayers({required List<String?> gridCodeListA, List<String?>? gridCodeListB}) async {
+  void loadPuzzleForPlayers(
+      {required List<String?> gridCodeListA,
+      List<String?>? gridCodeListB}) async {
     if (connectionExists()) {
       if (isPartyLeader) {
         await databaseReference?.update({
@@ -128,6 +130,10 @@ class PartyDatabaseConnection {
             'gridString': gridCodeListA.join(','),
             'guesses': '',
             'letterGridB': gridCodeListB?.join(',')
+          },
+          'letterGridB': {
+            'gridString': gridCodeListB?.join(','),
+            'guesses': ''
           }
         });
       }

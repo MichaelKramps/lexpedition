@@ -225,6 +225,34 @@ class MyApp extends StatelessWidget {
                   key: const Key('freeplay win'),
                 );
               },
+              routes: [
+                GoRoute(
+                  path: 'leader',
+                  builder: (context, state) {
+                    final map = state.extra! as Map<String, dynamic>;
+                    final score = map['score'] as Score;
+
+                    return WinGameScreen(
+                      score: score,
+                      continueRoute: '/freeplay',
+                      key: const Key('freeplay win'),
+                    );
+                  }
+                ),
+                GoRoute(
+                  path: 'joiner',
+                  builder: (context, state) {
+                    final map = state.extra! as Map<String, dynamic>;
+                    final score = map['score'] as Score;
+
+                    return WinGameScreen(
+                      score: score,
+                      continueRoute: '/party/join',
+                      key: const Key('freeplay win'),
+                    );
+                  }
+                )
+              ]
             ),
             GoRoute(
                 path: 'buildpuzzle',

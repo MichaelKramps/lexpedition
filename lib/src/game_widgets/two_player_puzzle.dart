@@ -32,10 +32,9 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
       partyDatabaseConnection.loadPuzzleForPlayers(
           gridCodeListA: levelA.gridCode, gridCodeListB: levelB.gridCode);
 
-      setState(() {
-        _myUpdatedLetterGrid = LetterGrid(levelA.gridCode, 1);
-        _theirUpdatedLetterGrid = LetterGrid(levelB.gridCode, 1);
-      });
+      updateGrids(
+          theirLetterGrid: LetterGrid.fromLiveDatabase(levelB.gridCode, []),
+          myLetterGrid: LetterGrid.fromLiveDatabase(levelA.gridCode, []));
     }
 
     partyDatabaseConnection.listenForPuzzle(updateGrids);

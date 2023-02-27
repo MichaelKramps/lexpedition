@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
-import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_widgets/two_player_puzzle.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:wakelock/wakelock.dart';
 
 class JoinPartyScreen extends StatefulWidget {
@@ -14,11 +11,8 @@ class JoinPartyScreen extends StatefulWidget {
 }
 
 class _JoinPartyScreenState extends State<JoinPartyScreen> {
-  bool _joined = false;
-  PartyDatabaseConnection? _partyConnection = null;
+  bool _joined = PartyDatabaseConnection().listener != null;
   final _textController = TextEditingController();
-  LetterGrid? _myGrid = null;
-  LetterGrid? _theirGrid = null;
 
   @override
   void initState() {
@@ -54,27 +48,14 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                   onPressed: () async {
                     String partyCode = _textController.text.toUpperCase();
                     if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
-                      _partyConnection =
-                          await PartyDatabaseConnection.joinParty(
-                              partyCode: partyCode);
+                      await PartyDatabaseConnection.joinParty(partyCode: partyCode);
                       setState(() {
                         _joined = true;
                       });
-                      _partyConnection?.listenForPuzzle(updateGrids);
                     }
                   },
                   child: Text('Join'))
             ]));
     }
-  }
-
-  void updateGrids(
-      {LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid}) {
-    setState(() {
-      if (myLetterGrid != null) {
-        _myGrid = myLetterGrid;
-      }
-      _theirGrid = theirLetterGrid;
-    });
   }
 }

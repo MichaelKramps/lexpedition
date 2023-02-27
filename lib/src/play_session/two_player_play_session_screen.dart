@@ -10,7 +10,6 @@ import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
 import 'package:lexpedition/src/games_services/score.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:lexpedition/src/style/confetti.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
@@ -154,8 +153,11 @@ class _TwoPlayerPlaySessionScreenState
     /// Give the player some time to see the celebration animation.
     await Future<void>.delayed(Constants.celebrationDuration, () {
       if (PartyDatabaseConnection().isPartyLeader) {
-        GoRouter.of(context).go('/freeplay/twoplayer', extra: {'score': score});
+        GoRouter.of(context).go('/freeplaywon/leader', extra: {'score': score});
+      } else {
+        GoRouter.of(context).go('/freeplaywon/joiner', extra: {'score': score});
       }
+      
     });
     if (!mounted) return;
   }
