@@ -13,7 +13,7 @@ class OnePlayerPuzzle extends StatelessWidget {
   Widget build(BuildContext context) {
     PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
 
-    Level level =
+    GameLevel level =
         freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
 
     partyDatabaseConnection.loadPuzzleForPlayers(gridCodeListA: level.gridCode);

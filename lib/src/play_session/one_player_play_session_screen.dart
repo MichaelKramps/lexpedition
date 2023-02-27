@@ -25,7 +25,7 @@ import '../style/confetti.dart';
 import '../style/palette.dart';
 
 class OnePlayerPlaySessionScreen extends StatefulWidget {
-  final Level level;
+  final GameLevel level;
   final String winRoute;
 
   const OnePlayerPlaySessionScreen(this.level, this.winRoute, {super.key});

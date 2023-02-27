@@ -9,6 +9,7 @@ import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
 import 'package:lexpedition/src/games_services/score.dart';
+import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/style/confetti.dart';
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
@@ -50,19 +51,14 @@ class _TwoPlayerPlaySessionScreenState
   }
 
   Widget determineStack() {
+    Logger logger = new Logger('tppss');
+    logger.info('building TwoPlayerPlaySessionScreen');
+    logger.info(widget.myLetterGrid);
+    logger.info(widget.theirLetterGrid);
     if (!_duringCelebration) {
       return determineVisibleGrid();
     } else {
-      return Stack(
-        children: [
-          determineVisibleGrid(),
-          SizedBox.expand(
-            child: IgnorePointer(
-              child: Confetti(),
-            ),
-          ),
-        ],
-      );
+      return determineVisibleGrid();
     }
   }
 
@@ -82,7 +78,7 @@ class _TwoPlayerPlaySessionScreenState
           leftColumn: GameColumn.blankColumn,
           rightColumn: GameColumn.twoPlayerRightColumn);
     } else {
-      return Row(
+      return Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [Text('Waiting for your partner to start a game...')],
@@ -157,7 +153,9 @@ class _TwoPlayerPlaySessionScreenState
 
     /// Give the player some time to see the celebration animation.
     await Future<void>.delayed(Constants.celebrationDuration, () {
-      GoRouter.of(context).go('/freeplay/twoplayer', extra: {'score': score});
+      if (PartyDatabaseConnection().isPartyLeader) {
+        GoRouter.of(context).go('/freeplay/twoplayer', extra: {'score': score});
+      }
     });
     if (!mounted) return;
   }

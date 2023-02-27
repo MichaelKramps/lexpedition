@@ -1,16 +1,16 @@
-class Level {
+class GameLevel {
   final int difficulty;
 
   final List<String?> gridCode;
 
-  const Level({required this.difficulty, required this.gridCode});
+  const GameLevel({required this.difficulty, required this.gridCode});
 
   int get number {
     return 10;
   }
 }
 
-class TutorialLevel extends Level {
+class TutorialLevel extends GameLevel {
   String name;
 
   int number;

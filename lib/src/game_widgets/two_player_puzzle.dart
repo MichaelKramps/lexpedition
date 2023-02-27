@@ -6,6 +6,7 @@ import 'package:lexpedition/src/game_data/levels.dart';
 import 'package:lexpedition/src/level_info/free_play_levels.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
+import 'package:logging/logging.dart';
 
 class TwoPlayerPuzzle extends StatefulWidget {
   const TwoPlayerPuzzle({super.key});
@@ -21,18 +22,21 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
   @override
   void initState() {
     PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
-    Level levelA =
-        freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
-    Level levelB =
-        freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
 
-    partyDatabaseConnection.loadPuzzleForPlayers(
-        gridCodeListA: levelA.gridCode, gridCodeListB: levelB.gridCode);
+    if (partyDatabaseConnection.isPartyLeader) {
+      GameLevel levelA =
+          freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
+      GameLevel levelB =
+          freePlayLevels.elementAt(Random().nextInt(freePlayLevels.length));
 
-    setState(() {
-      _myUpdatedLetterGrid = LetterGrid(levelA.gridCode, 1);
-      _theirUpdatedLetterGrid = LetterGrid(levelB.gridCode, 1);
-    });
+      partyDatabaseConnection.loadPuzzleForPlayers(
+          gridCodeListA: levelA.gridCode, gridCodeListB: levelB.gridCode);
+
+      setState(() {
+        _myUpdatedLetterGrid = LetterGrid(levelA.gridCode, 1);
+        _theirUpdatedLetterGrid = LetterGrid(levelB.gridCode, 1);
+      });
+    }
 
     partyDatabaseConnection.listenForPuzzle(updateGrids);
 
@@ -41,6 +45,7 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
 
   @override
   Widget build(BuildContext context) {
+    new Logger('tpp').info('building TwoPlayerPuzzle');
     TwoPlayerPlaySessionScreen twoPlayerScreen = new TwoPlayerPlaySessionScreen(
         myLetterGrid: _myUpdatedLetterGrid,
         theirLetterGrid: _theirUpdatedLetterGrid);
@@ -51,6 +56,9 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
   void updateGrids(
       {LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid}) {
     setState(() {
+      if (myLetterGrid != null) {
+        _myUpdatedLetterGrid = myLetterGrid;
+      }
       _theirUpdatedLetterGrid = theirLetterGrid;
     });
   }

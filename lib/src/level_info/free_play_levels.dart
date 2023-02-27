@@ -5,7 +5,7 @@ import 'package:lexpedition/src/game_data/levels.dart';
 // BSD-style license that can be found in the LICENSE file.
 
 var freePlayLevels = [
-  Level(difficulty: 5, gridCode: [
+  GameLevel(difficulty: 5, gridCode: [
     't020',
     'c020',
     null,
@@ -31,7 +31,7 @@ var freePlayLevels = [
     null,
     null
   ]),
-  Level(difficulty: 6, gridCode: [
+  GameLevel(difficulty: 6, gridCode: [
     't020',
     'c020',
     null,
@@ -57,7 +57,7 @@ var freePlayLevels = [
     'e010',
     't010'
   ]),
-  Level(difficulty: 6, gridCode: [
+  GameLevel(difficulty: 6, gridCode: [
     null,
     'a010',
     'r010',
@@ -83,7 +83,7 @@ var freePlayLevels = [
     'z221',
     'n240'
   ]),
-  Level(difficulty: 8, gridCode: [
+  GameLevel(difficulty: 8, gridCode: [
     'h120',
     'i020',
     'r020',
@@ -109,7 +109,7 @@ var freePlayLevels = [
     'b020',
     's211'
   ]),
-  Level(difficulty: 6, gridCode: [
+  GameLevel(difficulty: 6, gridCode: [
     null,
     'p110',
     'u020',
@@ -135,7 +135,7 @@ var freePlayLevels = [
     null,
     null
   ]),
-  Level(difficulty: 6, gridCode: [
+  GameLevel(difficulty: 6, gridCode: [
     null,
     null,
     'h010',
@@ -161,7 +161,7 @@ var freePlayLevels = [
     null,
     null
   ]),
-  Level(difficulty: 4, gridCode: [
+  GameLevel(difficulty: 4, gridCode: [
     null,
     null,
     null,
@@ -187,7 +187,7 @@ var freePlayLevels = [
     null,
     null
   ]),
-  Level(difficulty: 8, gridCode: [
+  GameLevel(difficulty: 8, gridCode: [
     null,
     'p010',
     null,
@@ -213,7 +213,7 @@ var freePlayLevels = [
     'p010',
     null
   ]),
-  Level(difficulty: 12, gridCode: [
+  GameLevel(difficulty: 12, gridCode: [
     'a020',
     'p020',
     'e020',
@@ -239,7 +239,7 @@ var freePlayLevels = [
     's020',
     'f020'
   ]),
-  Level(difficulty: 8, gridCode: [
+  GameLevel(difficulty: 8, gridCode: [
     'l020',
     'l020',
     null,
@@ -265,7 +265,7 @@ var freePlayLevels = [
     'k030',
     's120'
   ]),
-  Level(difficulty: 6, gridCode: [
+  GameLevel(difficulty: 6, gridCode: [
     'd220',
     'e020',
     't020',
@@ -291,7 +291,7 @@ var freePlayLevels = [
     null,
     'e011'
   ]),
-  Level(difficulty: 9, gridCode: [
+  GameLevel(difficulty: 9, gridCode: [
     null,
     null,
     'i020',
@@ -317,7 +317,7 @@ var freePlayLevels = [
     null,
     'm011'
   ]),
-  Level(difficulty: 10, gridCode: [
+  GameLevel(difficulty: 10, gridCode: [
     null,
     'k020',
     'y010',
@@ -343,7 +343,7 @@ var freePlayLevels = [
     'e020',
     null
   ]),
-  Level(difficulty: 6, gridCode: [
+  GameLevel(difficulty: 6, gridCode: [
     null,
     null,
     'm120',
@@ -369,7 +369,7 @@ var freePlayLevels = [
     null,
     null
   ]),
-  Level(difficulty: 12, gridCode: [
+  GameLevel(difficulty: 12, gridCode: [
     null,
     's040',
     'l020',
@@ -395,7 +395,7 @@ var freePlayLevels = [
     's040',
     null
   ]),
-  Level(difficulty: 7, gridCode: [
+  GameLevel(difficulty: 7, gridCode: [
     null,
     null,
     'f020',
@@ -421,7 +421,7 @@ var freePlayLevels = [
     null,
     null
   ]),
-  Level(difficulty: 6, gridCode: [
+  GameLevel(difficulty: 6, gridCode: [
     's020',
     't020',
     'l031',
@@ -447,7 +447,7 @@ var freePlayLevels = [
     null,
     'x210'
   ]),
-  Level(difficulty: 8, gridCode: [
+  GameLevel(difficulty: 8, gridCode: [
     null,
     null,
     'r020',
@@ -473,7 +473,7 @@ var freePlayLevels = [
     null,
     null
   ]),
-  Level(difficulty: 6, gridCode: [
+  GameLevel(difficulty: 6, gridCode: [
     null,
     'p140',
     'r040',
@@ -499,7 +499,7 @@ var freePlayLevels = [
     null,
     null
   ]),
-  Level(difficulty: 6, gridCode: [
+  GameLevel(difficulty: 6, gridCode: [
     null,
     'e040',
     'r040',
@@ -525,7 +525,7 @@ var freePlayLevels = [
     null,
     null
   ]),
-  Level(difficulty: 12, gridCode: [
+  GameLevel(difficulty: 12, gridCode: [
     'f130',
     'i030',
     'l030',
@@ -551,7 +551,7 @@ var freePlayLevels = [
     's030',
     'r130'
   ]),
-  Level(difficulty: 4, gridCode: [
+  GameLevel(difficulty: 4, gridCode: [
     'e020',
     'a020',
     'o020',
@@ -577,7 +577,7 @@ var freePlayLevels = [
     null,
     null
   ]),
-  Level(difficulty: 7, gridCode: [
+  GameLevel(difficulty: 7, gridCode: [
     null,
     'r020',
     'd020',
@@ -603,7 +603,7 @@ var freePlayLevels = [
     null,
     null,
   ]),
-  Level(difficulty: 8, gridCode: [
+  GameLevel(difficulty: 8, gridCode: [
     null,
     't020',
     'o020',
@@ -629,7 +629,7 @@ var freePlayLevels = [
     null,
     null,
   ]),
-  Level(difficulty: 8, gridCode: [
+  GameLevel(difficulty: 8, gridCode: [
     null,
     't220',
     'r020',
@@ -655,7 +655,7 @@ var freePlayLevels = [
     't120',
     null,
   ]),
-  Level(difficulty: 6, gridCode: [
+  GameLevel(difficulty: 6, gridCode: [
     null,
     'b020',
     's220',
@@ -681,7 +681,7 @@ var freePlayLevels = [
     null,
     null,
   ]),
-  Level(difficulty: 8, gridCode: [
+  GameLevel(difficulty: 8, gridCode: [
     null,
     null,
     'm030',

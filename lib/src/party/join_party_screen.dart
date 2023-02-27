@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
+import 'package:lexpedition/src/game_widgets/two_player_puzzle.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:wakelock/wakelock.dart';
@@ -34,39 +35,37 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Visibility(
-          visible: !_joined,
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            SizedBox(
-                width: 300,
-                child: TextField(
-                    controller: _textController,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Party Code"))),
-            ElevatedButton(
-                onPressed: () async {
-                  String partyCode = _textController.text.toUpperCase();
-                  if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
-                    _partyConnection = await PartyDatabaseConnection.joinParty(
-                        partyCode: partyCode);
-                    setState(() {
-                      _joined = true;
-                    });
-                    _partyConnection?.listenForPuzzle(updateGrids);
-                  }
-                },
-                child: Text('Join'))
-          ])),
-      Visibility(
-          visible: _joined,
-          child: TwoPlayerPlaySessionScreen(
-            myLetterGrid: _myGrid,
-            theirLetterGrid: _theirGrid,
-          ))
-    ]));
+    if (_joined) {
+      return TwoPlayerPuzzle();
+    } else {
+      return Scaffold(
+          body: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center, 
+            children: [
+              SizedBox(
+                  width: 300,
+                  child: TextField(
+                      controller: _textController,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Party Code"))),
+              ElevatedButton(
+                  onPressed: () async {
+                    String partyCode = _textController.text.toUpperCase();
+                    if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
+                      _partyConnection =
+                          await PartyDatabaseConnection.joinParty(
+                              partyCode: partyCode);
+                      setState(() {
+                        _joined = true;
+                      });
+                      _partyConnection?.listenForPuzzle(updateGrids);
+                    }
+                  },
+                  child: Text('Join'))
+            ]));
+    }
   }
 
   void updateGrids(
