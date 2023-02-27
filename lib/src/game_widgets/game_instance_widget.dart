@@ -63,7 +63,6 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    new Logger('giw').info('building GameInstanceWidget');
     GameInstanceWidgetStateManager gameInstanceWidgetStateManager =
         GameInstanceWidgetStateManager(
             gameInstanceWidgetState: this, showBadGuess: _showBadGuess);

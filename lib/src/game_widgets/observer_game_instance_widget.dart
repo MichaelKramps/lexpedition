@@ -19,7 +19,6 @@ class ObserverGameInstanceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    new Logger('ogiw').info('building ObserverGameInstanceWidget');
     return Row(
       children: [
         Expanded(child: determineColumn(leftColumn)),
