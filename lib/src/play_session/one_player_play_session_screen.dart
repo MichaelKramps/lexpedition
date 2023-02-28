@@ -11,7 +11,6 @@ import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logging/logging.dart' hide Level;
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
@@ -37,8 +36,6 @@ class OnePlayerPlaySessionScreen extends StatefulWidget {
 
 class _OnePlayerPlaySessionScreenState
     extends State<OnePlayerPlaySessionScreen> {
-  static final _log = Logger('PlaySessionScreen');
-
   bool _duringCelebration = false;
 
   late DateTime _startOfPlay;

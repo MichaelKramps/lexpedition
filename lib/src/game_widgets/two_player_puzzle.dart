@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/audio/audio_controller.dart';
 import 'package:lexpedition/src/audio/sounds.dart';
-import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
@@ -12,7 +11,6 @@ import 'package:lexpedition/src/games_services/score.dart';
 import 'package:lexpedition/src/level_info/free_play_levels.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayerPuzzle extends StatefulWidget {
@@ -73,7 +71,11 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
       }
       _theirUpdatedLetterGrid = theirLetterGrid;
     });
-    // this ridiculous check is necessary to allow the observing player to 
+    checkForWinAtCorrectTime();
+  }
+
+  void checkForWinAtCorrectTime() {
+    // this check is necessary to allow the observing player to
     // click through the win screen before the party leader
     if (!_initialLoad) {
       if (checkForWin()) {
@@ -81,6 +83,8 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
       }
     } else {
       if (checkForWin()) {
+        // means we're still getting the completed grids 
+        // from the previous puzzle
         setState(() {
           _myUpdatedLetterGrid = null;
           _theirUpdatedLetterGrid = null;
