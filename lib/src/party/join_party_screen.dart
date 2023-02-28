@@ -35,10 +35,11 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
     } else {
       return Scaffold(
           body: SizedBox.expand(
-              child: Column(children: [
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
                       width: 300,
