@@ -26,6 +26,7 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
   LetterGrid? _theirUpdatedLetterGrid = null;
   LetterGrid? _myUpdatedLetterGrid = null;
   bool _initialLoad = true;
+  bool _justBlasted = false;
 
   late DateTime _startOfPlay;
 
@@ -67,13 +68,12 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
 
   void updateGrids(
       {LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid}) {
-    List<int> indexesToBlast = getIndexesToBlast(theirLetterGrid);
     setState(() {
       if (myLetterGrid != null) {
         _myUpdatedLetterGrid = myLetterGrid;
       } else {
         _myUpdatedLetterGrid =
-            updateGridWithBlast(_myUpdatedLetterGrid, indexesToBlast);
+            updateGridWithBlast(_myUpdatedLetterGrid, theirLetterGrid);
       }
       _theirUpdatedLetterGrid = theirLetterGrid;
     });
@@ -94,7 +94,8 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
   }
 
   LetterGrid? updateGridWithBlast(
-      LetterGrid? letterGrid, List<int> indexesToBlast) {
+      LetterGrid? letterGrid, LetterGrid theirLetterGrid) {
+    List<int> indexesToBlast = getIndexesToBlast(theirLetterGrid);
     if (letterGrid == null) {
       return null;
     } else if (indexesToBlast.length <= 0) {
@@ -102,6 +103,10 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
       LetterGrid updatedGrid = letterGrid;
       for (LetterTile letterTile in updatedGrid.letterTiles) {
         letterTile.unblast();
+      }
+      if (_justBlasted) {
+        PartyDatabaseConnection().updateMyPuzzle(updatedGrid);
+        _justBlasted = false;
       }
       return updatedGrid;
     } else {
@@ -112,6 +117,8 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
           letterGrid.letterTiles[index].blast();
         }
       }
+      //already inside setstate call
+      _justBlasted = true;
       return updatedGrid;
     }
   }
