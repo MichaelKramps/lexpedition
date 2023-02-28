@@ -12,6 +12,7 @@ class JoinPartyScreen extends StatefulWidget {
 
 class _JoinPartyScreenState extends State<JoinPartyScreen> {
   bool _joined = PartyDatabaseConnection().listener != null;
+  bool _error = false;
   final _textController = TextEditingController();
 
   @override
@@ -33,29 +34,45 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
       return TwoPlayerPuzzle();
     } else {
       return Scaffold(
-          body: SizedBox.expand(child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center, 
-            children: [
-              SizedBox(
-                  width: 300,
-                  child: TextField(
-                      controller: _textController,
-                      decoration: InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: "Party Code"))),
-              ElevatedButton(
-                  onPressed: () async {
-                    String partyCode = _textController.text.toUpperCase();
-                    if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
-                      await PartyDatabaseConnection.joinParty(partyCode: partyCode);
-                      setState(() {
-                        _joined = true;
-                      });
-                    }
-                  },
-                  child: Text('Join'))
-            ])
+          body: SizedBox.expand(
+              child: Column(children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 300,
+                      child: TextField(
+                          controller: _textController,
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: "Party Code"))),
+                    ElevatedButton(
+                      onPressed: () async {
+                        String partyCode = _textController.text.toUpperCase();
+                        if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
+                          await PartyDatabaseConnection.joinParty(
+                              partyCode: partyCode);
+                          setState(() {
+                            _joined = true;
+                            _error = false;
+                          });
+                        } else {
+                          setState(() {
+                            _error = true;
+                          });
+                        }
+                      },
+                      child: Text('Join')
+                    )
+                  ]
+                ),
+              Visibility(
+                visible: _error,
+                child: Text('Failed to join a party, please check your code and try again.')
+              )
+            ]
+          )
         )
       );
     }
