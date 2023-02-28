@@ -11,6 +11,7 @@ class LetterGridWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         for (var row in letterGrid.rows) ...[
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
