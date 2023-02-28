@@ -1,6 +1,6 @@
 class LetterTile {
   String letter = '';
-  late TileType tileType;
+  TileType tileType = TileType.empty;
   int requiredCharges = 0;
   int currentCharges = 0;
   int requiredObstacleCharges = 0;
@@ -46,23 +46,18 @@ class LetterTile {
     }
   }
 
-  String? encodeTile() {
-    bool hasLetter = this.letter != '';
-    bool hasType = this.tileType != TileType.empty;
+  String encodeTile() {
+    late String encodedString;
 
-    late String? encodedString;
-    if (hasLetter && hasType) {
-      encodedString = this.letter;
-      encodedString += this.tileType.index.toString();
-      encodedString += this.requiredCharges.toString();
-      encodedString += this.currentCharges.toString();
-      encodedString += this.requiredObstacleCharges.toString();
-      encodedString += this.currentObstacleCharges.toString();
-      encodedString += this.selected ? "1" : "0";
-      encodedString += this.blastFrom ? "1" : "0";
-    } else {
-      return null;
-    }
+    encodedString = this.letter != '' ? this.letter : 'x';
+    encodedString += this.tileType.index.toString();
+    encodedString += this.requiredCharges.toString();
+    encodedString += this.currentCharges.toString();
+    encodedString += this.requiredObstacleCharges.toString();
+    encodedString += this.currentObstacleCharges.toString();
+    encodedString += this.selected ? "1" : "0";
+    encodedString += this.blastFrom ? "1" : "0";
+
 
     return encodedString;
   }
