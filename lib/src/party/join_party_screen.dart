@@ -33,7 +33,7 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
       return TwoPlayerPuzzle();
     } else {
       return Scaffold(
-          body: Row(
+          body: SizedBox.expand(child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center, 
             children: [
@@ -55,7 +55,9 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                     }
                   },
                   child: Text('Join'))
-            ]));
+            ])
+        )
+      );
     }
   }
 }

@@ -59,10 +59,12 @@ class _TwoPlayerPlaySessionScreenState
           leftColumn: GameColumn.blankColumn,
           rightColumn: GameColumn.twoPlayerRightColumn);
     } else {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [Text('Waiting for your partner to start a game...')],
+      return SizedBox.expand(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [Text('Waiting for your partner to start a game...')],
+        )
       );
     }
   }
