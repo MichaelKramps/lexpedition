@@ -6,11 +6,13 @@ import 'package:lexpedition/src/audio/audio_controller.dart';
 import 'package:lexpedition/src/audio/sounds.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
+import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
 import 'package:lexpedition/src/games_services/score.dart';
 import 'package:lexpedition/src/level_info/free_play_levels.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayerPuzzle extends StatefulWidget {
@@ -65,13 +67,53 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
 
   void updateGrids(
       {LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid}) {
+    List<int> indexesToBlast = getIndexesToBlast(theirLetterGrid);
     setState(() {
       if (myLetterGrid != null) {
         _myUpdatedLetterGrid = myLetterGrid;
+      } else {
+        _myUpdatedLetterGrid =
+            updateGridWithBlast(_myUpdatedLetterGrid, indexesToBlast);
       }
       _theirUpdatedLetterGrid = theirLetterGrid;
     });
     checkForWinAtCorrectTime();
+  }
+
+  List<int> getIndexesToBlast(LetterGrid theirLetterGrid) {
+    List<int> indexesToBlast = [];
+    Logger logger = new Logger('indexesToBlast');
+    for (int index = 0; index < theirLetterGrid.letterTiles.length; index++) {
+      LetterTile thisTile = theirLetterGrid.letterTiles[index];
+      if (thisTile.blastFrom) {
+        indexesToBlast.add(index);
+      }
+    }
+    logger.info(indexesToBlast.join(','));
+    return indexesToBlast;
+  }
+
+  LetterGrid? updateGridWithBlast(
+      LetterGrid? letterGrid, List<int> indexesToBlast) {
+    if (letterGrid == null) {
+      return null;
+    } else if (indexesToBlast.length <= 0) {
+      // need to ensure grid is not blasting
+      LetterGrid updatedGrid = letterGrid;
+      for (LetterTile letterTile in updatedGrid.letterTiles) {
+        letterTile.unblast();
+      }
+      return updatedGrid;
+    } else {
+      // there is an actual blast to process
+      LetterGrid updatedGrid = letterGrid;
+      for (int index = 0; index < letterGrid.letterTiles.length; index++) {
+        if (indexesToBlast.contains(index)) {
+          letterGrid.letterTiles[index].blast();
+        }
+      }
+      return updatedGrid;
+    }
   }
 
   void checkForWinAtCorrectTime() {
@@ -83,7 +125,7 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
       }
     } else {
       if (checkForWin()) {
-        // means we're still getting the completed grids 
+        // means we're still getting the completed grids
         // from the previous puzzle
         setState(() {
           _myUpdatedLetterGrid = null;
