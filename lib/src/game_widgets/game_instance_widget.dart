@@ -178,7 +178,8 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
       } else {
         if (_guessTiles.length >= 5) {
           await fireBlast(_guessTiles.last);
-          if (_grid.isFullyCharged()) {
+          if (isLevelWon(_grid,
+          widget.twoPlayerPlaySessionStateManager?.getTheirLetterGrid())) {
             widget.playerWon(_grid.guesses.length, _grid.par);
           }
           await Future<void>.delayed(const Duration(milliseconds: 200));
