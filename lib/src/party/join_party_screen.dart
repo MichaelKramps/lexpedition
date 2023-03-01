@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lexpedition/src/game_widgets/two_player_puzzle.dart';
+import 'package:lexpedition/src/play_session/two_player_puzzle_loader.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -31,51 +31,44 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
   @override
   Widget build(BuildContext context) {
     if (_joined) {
-      return TwoPlayerPuzzle();
+      return TwoPlayerPuzzleLoader();
     } else {
       return Scaffold(
           body: SizedBox.expand(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 300,
-                      child: TextField(
-                          controller: _textController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "Party Code"))),
-                    ElevatedButton(
-                      onPressed: () async {
-                        String partyCode = _textController.text.toUpperCase();
-                        if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
-                          await PartyDatabaseConnection.joinParty(
-                              partyCode: partyCode);
-                          setState(() {
-                            _joined = true;
-                            _error = false;
-                          });
-                        } else {
-                          setState(() {
-                            _error = true;
-                          });
-                        }
-                      },
-                      child: Text('Join')
-                    )
-                  ]
-                ),
-              Visibility(
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              SizedBox(
+                  width: 300,
+                  child: TextField(
+                      controller: _textController,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: "Party Code"))),
+              ElevatedButton(
+                  onPressed: () async {
+                    String partyCode = _textController.text.toUpperCase();
+                    if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
+                      await PartyDatabaseConnection.joinParty(
+                          partyCode: partyCode);
+                      setState(() {
+                        _joined = true;
+                        _error = false;
+                      });
+                    } else {
+                      setState(() {
+                        _error = true;
+                      });
+                    }
+                  },
+                  child: Text('Join'))
+            ]),
+            Visibility(
                 visible: _error,
-                child: Text('Failed to join a party, please check your code and try again.')
-              )
-            ]
-          )
-        )
-      );
+                child: Text(
+                    'Failed to join a party, please check your code and try again.'))
+          ])));
     }
   }
 }

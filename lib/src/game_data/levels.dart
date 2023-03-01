@@ -1,13 +1,23 @@
+import 'package:lexpedition/src/game_data/letter_grid.dart';
+
 class GameLevel {
   final int difficulty;
   final int? puzzleId;
   final List<String?> gridCode;
+  late LetterGrid letterGrid;
   final int? attempts;
   final int? attemptsFinished;
   final double? averageGuesses;
 
-  const GameLevel(
-      {required this.difficulty, required this.gridCode, this.puzzleId, this.attempts, this.attemptsFinished, this.averageGuesses});
+  GameLevel(
+      {required this.difficulty,
+      required this.gridCode,
+      this.puzzleId,
+      this.attempts,
+      this.attemptsFinished,
+      this.averageGuesses}) {
+    this.letterGrid = new LetterGrid(gridCode, difficulty);
+  }
 
   int get number {
     return 10;

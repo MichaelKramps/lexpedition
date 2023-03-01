@@ -3,6 +3,7 @@ import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
+import 'package:lexpedition/src/game_data/levels.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_actions_widget.dart';
@@ -17,7 +18,7 @@ import 'package:logging/logging.dart';
 import 'package:wakelock/wakelock.dart';
 
 class GameInstanceWidget extends StatefulWidget {
-  final LetterGrid letterGrid;
+  final GameLevel gameLevel;
   final GameColumn leftColumn;
   final GameColumn rightColumn;
   final Function(int) playerWon;
@@ -25,7 +26,7 @@ class GameInstanceWidget extends StatefulWidget {
 
   GameInstanceWidget(
       {super.key,
-      required this.letterGrid,
+      required this.gameLevel,
       required this.playerWon,
       required this.leftColumn,
       required this.rightColumn,
@@ -36,7 +37,7 @@ class GameInstanceWidget extends StatefulWidget {
 }
 
 class _GameInstanceWidgetState extends State<GameInstanceWidget> {
-  late LetterGrid _grid = widget.letterGrid;
+  late LetterGrid _grid = widget.gameLevel.letterGrid;
   List<LetterTile> _guessTiles = [];
   bool _showBadGuess = false;
   PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
@@ -179,7 +180,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
         if (_guessTiles.length >= 5) {
           await fireBlast(_guessTiles.last);
           if (isLevelWon(_grid,
-          widget.twoPlayerPlaySessionStateManager?.getTheirLetterGrid())) {
+              widget.twoPlayerPlaySessionStateManager?.getTheirLetterGrid())) {
             widget.playerWon(_grid.guesses.length);
           }
           await Future<void>.delayed(const Duration(milliseconds: 200));
@@ -348,6 +349,10 @@ class GameInstanceWidgetStateManager {
 
   GameInstanceWidgetStateManager(
       {required this.gameInstanceWidgetState, required this.showBadGuess});
+
+  GameLevel getGameLevel() {
+    return gameInstanceWidgetState.widget.gameLevel;
+  }
 
   LetterGrid getGrid() {
     return gameInstanceWidgetState._grid;

@@ -18,7 +18,9 @@ class LevelDatabaseConnection {
       num par = puzzleEntry.child('averageGuesses').value as num;
       String puzzleIdString = puzzleEntry.key as String;
       gameLevel = GameLevel(
-          difficulty: par.toDouble().round(), gridCode: gridString.split(','), puzzleId: int.parse(puzzleIdString));
+          difficulty: par.toDouble().round(),
+          gridCode: gridString.split(','),
+          puzzleId: int.parse(puzzleIdString));
     });
     return gameLevel;
   }
@@ -57,17 +59,37 @@ class LevelDatabaseConnection {
     }
   }
 
-  static Future<GameLevel?> getOnePlayerLevelFromId(int puzzleId) async {
+  static Future<void> logOnePlayerUnfinishedPuzzleResults(
+      int puzzleId) async {
+    GameLevel? level =
+        await LevelDatabaseConnection.getOnePlayerLevelFromId(puzzleId);
 
-    DataSnapshot snapshot =  await FirebaseDatabase.instance.ref('onePlayerPuzzles/' + puzzleId.toString()).get();
+    bool levelCanBeUpdated = level != null && level.attempts != null;
+    if (levelCanBeUpdated) {
+      int oldAttempts = level.attempts != null ? level.attempts as int : 0;
+      int newAttempts = oldAttempts + 1;
+
+      GameLevel updatedGameLevel = GameLevel(
+          difficulty: level.difficulty,
+          gridCode: level.gridCode,
+          attempts: newAttempts);
+
+      LevelDatabaseConnection.setOnePlayerLevelFromId(
+          puzzleId, updatedGameLevel);
+    }
+  }
+
+  static Future<GameLevel?> getOnePlayerLevelFromId(int puzzleId) async {
+    DataSnapshot snapshot = await FirebaseDatabase.instance
+        .ref('onePlayerPuzzles/' + puzzleId.toString())
+        .get();
 
     String gridString = snapshot.child('gridCode').value as String;
     num par = snapshot.child('averageGuesses').value as num;
     int attempts = snapshot.child('attempts').value as int;
     int attemptsFinished = snapshot.child('attemptsFinished').value as int;
-    num averageGuesses =
-        snapshot.child('averageGuesses').value as num;
-    
+    num averageGuesses = snapshot.child('averageGuesses').value as num;
+
     GameLevel gameLevel = GameLevel(
         difficulty: par.toDouble().round(),
         gridCode: gridString.split(','),
@@ -75,18 +97,27 @@ class LevelDatabaseConnection {
         attempts: attempts,
         attemptsFinished: attemptsFinished,
         averageGuesses: averageGuesses.toDouble());
-    
+
     return gameLevel;
   }
 
   static Future<void> setOnePlayerLevelFromId(
       int puzzleId, GameLevel gameLevel) async {
+    late var updateToMake;
+
+    if (gameLevel.attemptsFinished != null &&
+        gameLevel.averageGuesses != null) {
+      updateToMake = {
+        "attempts": gameLevel.attempts,
+        "attemptsFinished": gameLevel.attemptsFinished,
+        "averageGuesses": gameLevel.averageGuesses
+      };
+    } else {
+      updateToMake = {"attempts": gameLevel.attempts};
+    }
+
     FirebaseDatabase.instance
         .ref('onePlayerPuzzles/' + puzzleId.toString())
-        .update({
-          "attempts": gameLevel.attempts,
-          "attemptsFinished": gameLevel.attemptsFinished,
-          "averageGuesses": gameLevel.averageGuesses
-        });
+        .update(updateToMake);
   }
 }

@@ -6,7 +6,7 @@
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lexpedition/src/play_session/one_player_puzzle_loader.dart';
-import 'package:lexpedition/src/game_widgets/two_player_puzzle.dart';
+import 'package:lexpedition/src/play_session/two_player_puzzle_loader.dart';
 import 'package:lexpedition/src/party/join_party_screen.dart';
 import 'package:lexpedition/src/party/party_screen.dart';
 import 'package:lexpedition/src/party/start_party_screen.dart';
@@ -210,7 +210,7 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                     path: 'twoplayer',
                     builder: (context, state) =>
-                        TwoPlayerPuzzle(key: UniqueKey()),
+                        TwoPlayerPuzzleLoader(key: UniqueKey()),
                   )
                 ]),
             GoRoute(

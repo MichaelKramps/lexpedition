@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
+import 'package:lexpedition/src/game_data/levels.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
 
@@ -46,7 +47,7 @@ class _TwoPlayerPlaySessionScreenState
   Widget determineVisibleGrid() {
     if (widget.myLetterGrid != null && _showingMyGrid) {
       return GameInstanceWidget(
-          letterGrid: widget.myLetterGrid as LetterGrid,
+          gameLevel: GameLevel(difficulty: widget.myLetterGrid?.par as int, gridCode: widget.myLetterGrid?.encodedTiles as List<String?>),
           playerWon: widget.playerWon,
           leftColumn: GameColumn.blankColumn,
           rightColumn: GameColumn.twoPlayerRightColumn,

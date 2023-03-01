@@ -15,14 +15,14 @@ import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart
 import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
-class TwoPlayerPuzzle extends StatefulWidget {
-  const TwoPlayerPuzzle({super.key});
+class TwoPlayerPuzzleLoader extends StatefulWidget {
+  const TwoPlayerPuzzleLoader({super.key});
 
   @override
-  State<TwoPlayerPuzzle> createState() => _TwoPlayerPuzzleState();
+  State<TwoPlayerPuzzleLoader> createState() => _TwoPlayerPuzzleLoaderState();
 }
 
-class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
+class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
   LetterGrid? _theirUpdatedLetterGrid = null;
   LetterGrid? _myUpdatedLetterGrid = null;
   bool _initialLoad = true;

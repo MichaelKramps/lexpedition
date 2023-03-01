@@ -53,8 +53,7 @@ class _OnePlayerPlaySessionScreenState
         body: Stack(
           children: [
             GameInstanceWidget(
-              letterGrid: new LetterGrid(
-                  widget.level.gridCode, widget.level.difficulty),
+              gameLevel: widget.level,
               playerWon: _playerWon,
               leftColumn: GameColumn.blankColumn,
               rightColumn: GameColumn.onePlayerRightColumn,
