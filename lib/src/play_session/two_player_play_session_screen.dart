@@ -8,7 +8,7 @@ import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart'
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
   final LetterGrid? myLetterGrid;
   final LetterGrid? theirLetterGrid;
-  final Function(int, int) playerWon;
+  final Function(int) playerWon;
 
   const TwoPlayerPlaySessionScreen(
       {super.key, required this.myLetterGrid, required this.theirLetterGrid, required this.playerWon});

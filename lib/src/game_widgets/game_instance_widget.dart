@@ -20,7 +20,7 @@ class GameInstanceWidget extends StatefulWidget {
   final LetterGrid letterGrid;
   final GameColumn leftColumn;
   final GameColumn rightColumn;
-  final Function(int, int) playerWon;
+  final Function(int) playerWon;
   final TwoPlayerPlaySessionStateManager? twoPlayerPlaySessionStateManager;
 
   GameInstanceWidget(
@@ -174,13 +174,13 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
       // check for win condition
       if (isLevelWon(_grid,
           widget.twoPlayerPlaySessionStateManager?.getTheirLetterGrid())) {
-        widget.playerWon(_grid.guesses.length, _grid.par);
+        widget.playerWon(_grid.guesses.length);
       } else {
         if (_guessTiles.length >= 5) {
           await fireBlast(_guessTiles.last);
           if (isLevelWon(_grid,
           widget.twoPlayerPlaySessionStateManager?.getTheirLetterGrid())) {
-            widget.playerWon(_grid.guesses.length, _grid.par);
+            widget.playerWon(_grid.guesses.length);
           }
           await Future<void>.delayed(const Duration(milliseconds: 200));
         }

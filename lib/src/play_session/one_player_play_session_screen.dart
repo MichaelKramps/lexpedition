@@ -11,6 +11,8 @@ import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/level_info/level_db_connection.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
@@ -90,12 +92,18 @@ class _OnePlayerPlaySessionScreenState
     }
   }
 
-  Future<void> _playerWon(int guesses, int par) async {
+  Future<void> _playerWon(int guesses) async {
     final score = Score(
       guesses,
       widget.level.difficulty,
       DateTime.now().difference(_startOfPlay),
     );
+
+    new Logger('idcheck').info(widget.level.puzzleId);
+    if (widget.level.puzzleId != null) {
+      LevelDatabaseConnection.logOnePlayerFinishedPuzzleResults(
+          widget.level.puzzleId as int, guesses);
+    }
 
     final playerProgress = context.read<PlayerProgress>();
     playerProgress.setLevelReached(widget.level.number);

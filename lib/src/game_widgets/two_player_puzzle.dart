@@ -128,7 +128,7 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
     // click through the win screen before the party leader
     if (!_initialLoad) {
       if (checkForWin()) {
-        _playerWon(1, 1);
+        _playerWon(1);
       }
     } else {
       if (checkForWin()) {
@@ -172,7 +172,7 @@ class _TwoPlayerPuzzleState extends State<TwoPlayerPuzzle> {
     return false;
   }
 
-  Future<void> _playerWon(int guesses, int par) async {
+  Future<void> _playerWon(int guesses) async {
     final score = Score(
       guesses,
       10,
