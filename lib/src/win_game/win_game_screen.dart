@@ -56,7 +56,7 @@ class WinGameScreen extends StatelessWidget {
             Center(
               child: Text(
                 'Guesses: ${score.guesses}\n'
-                'Par: ${score.difficulty}\n'
+                'Par: ' + (score.difficulty == 0 ? 'unknown' : score.difficulty.toString()) + '\n'
                 'Time: ${score.formattedTime}',
                 style: const TextStyle(
                     fontFamily: 'Permanent Marker', fontSize: 20),

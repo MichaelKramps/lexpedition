@@ -1,26 +1,95 @@
+import 'dart:math';
+
 import 'package:firebase_database/firebase_database.dart';
-import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
 
 class LevelDatabaseConnection {
   static Future<GameLevel> getOnePlayerPuzzle() async {
-    GameLevel gameLevel = GameLevel(difficulty: 0, gridCode: blankGrid);
+    late GameLevel? possibleGameLevel;
+
+    int puzzleType = new Random().nextInt(4);
+
+    switch (puzzleType) {
+      case 0:
+        possibleGameLevel =
+            await LevelDatabaseConnection.getNewOnePlayerPuzzle();
+        break;
+      case 1:
+        possibleGameLevel =
+            await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(0, 5);
+        break;
+      case 1:
+        possibleGameLevel =
+            await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(5, 10);
+        break;
+      case 1:
+        possibleGameLevel =
+            await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(
+                10, 100);
+        break;
+      default:
+        possibleGameLevel =
+            await LevelDatabaseConnection.getNewOnePlayerPuzzle();
+        break;
+    }
+
+    if (possibleGameLevel != null) {
+      return possibleGameLevel;
+    } else {
+      return LevelDatabaseConnection.getOnePlayerPuzzle();
+    }
+  }
+
+  static Future<GameLevel?> getNewOnePlayerPuzzle() async {
+    GameLevel? gameLevel = null;
+    int numberToFetch = 10;
 
     await FirebaseDatabase.instance
         .ref('onePlayerPuzzles')
         .orderByChild('attempts')
         .startAt(0)
-        .limitToFirst(1)
+        .limitToFirst(numberToFetch)
         .once(DatabaseEventType.value)
         .then((value) {
-      DataSnapshot puzzleEntry = value.snapshot.children.first;
-      String gridString = puzzleEntry.child('gridCode').value as String;
-      num par = puzzleEntry.child('averageGuesses').value as num;
-      String puzzleIdString = puzzleEntry.key as String;
-      gameLevel = GameLevel(
-          difficulty: par.toDouble().round(),
-          gridCode: gridString.split(','),
-          puzzleId: int.parse(puzzleIdString));
+      if (value.snapshot.children.length > 0) {
+        DataSnapshot puzzleEntry = value.snapshot.children
+            .elementAt(new Random().nextInt(numberToFetch));
+        String gridString = puzzleEntry.child('gridCode').value as String;
+        num par = puzzleEntry.child('averageGuesses').value as num;
+        String puzzleIdString = puzzleEntry.key as String;
+        gameLevel = GameLevel(
+            difficulty: par.toDouble().round(),
+            gridCode: gridString.split(','),
+            puzzleId: int.parse(puzzleIdString));
+      }
+    });
+    return gameLevel;
+  }
+
+  static Future<GameLevel?> getOnePlayerPuzzleInGuessRange(
+      int bottomRange, int topRange) async {
+    GameLevel? gameLevel = null;
+    int numberToFetch = 10;
+
+    await FirebaseDatabase.instance
+        .ref('onePlayerPuzzles')
+        .orderByChild('averageGuesses')
+        .startAt(bottomRange)
+        .endAt(topRange)
+        .limitToFirst(numberToFetch)
+        .once(DatabaseEventType.value)
+        .then((value) {
+      if (value.snapshot.children.length > 0) {
+        DataSnapshot puzzleEntry = value.snapshot.children
+            .elementAt(new Random().nextInt(numberToFetch));
+        String gridString = puzzleEntry.child('gridCode').value as String;
+        num par = puzzleEntry.child('averageGuesses').value as num;
+        String puzzleIdString = puzzleEntry.key as String;
+        gameLevel = GameLevel(
+            difficulty: par.toDouble().round(),
+            gridCode: gridString.split(','),
+            puzzleId: int.parse(puzzleIdString));
+      }
     });
     return gameLevel;
   }
@@ -59,8 +128,7 @@ class LevelDatabaseConnection {
     }
   }
 
-  static Future<void> logOnePlayerUnfinishedPuzzleResults(
-      int puzzleId) async {
+  static Future<void> logOnePlayerUnfinishedPuzzleResults(int puzzleId) async {
     GameLevel? level =
         await LevelDatabaseConnection.getOnePlayerLevelFromId(puzzleId);
 
