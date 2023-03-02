@@ -2,12 +2,15 @@ import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
+import 'package:logging/logging.dart';
 
 class LevelDatabaseConnection {
   static Future<GameLevel> getOnePlayerPuzzle() async {
     late GameLevel? possibleGameLevel;
 
     int puzzleType = new Random().nextInt(4);
+
+    new Logger('picking level').info(puzzleType);
 
     switch (puzzleType) {
       case 0:
@@ -16,13 +19,13 @@ class LevelDatabaseConnection {
         break;
       case 1:
         possibleGameLevel =
-            await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(0, 5);
+            await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(0, 7);
         break;
-      case 1:
+      case 2:
         possibleGameLevel =
             await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(5, 10);
         break;
-      case 1:
+      case 3:
         possibleGameLevel =
             await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(
                 10, 100);
@@ -53,7 +56,7 @@ class LevelDatabaseConnection {
         .then((value) {
       if (value.snapshot.children.length > 0) {
         DataSnapshot puzzleEntry = value.snapshot.children
-            .elementAt(new Random().nextInt(numberToFetch));
+            .elementAt(new Random().nextInt(value.snapshot.children.length));
         String gridString = puzzleEntry.child('gridCode').value as String;
         num par = puzzleEntry.child('averageGuesses').value as num;
         String puzzleIdString = puzzleEntry.key as String;
@@ -81,7 +84,7 @@ class LevelDatabaseConnection {
         .then((value) {
       if (value.snapshot.children.length > 0) {
         DataSnapshot puzzleEntry = value.snapshot.children
-            .elementAt(new Random().nextInt(numberToFetch));
+            .elementAt(new Random().nextInt(value.snapshot.children.length));
         String gridString = puzzleEntry.child('gridCode').value as String;
         num par = puzzleEntry.child('averageGuesses').value as num;
         String puzzleIdString = puzzleEntry.key as String;
@@ -187,5 +190,43 @@ class LevelDatabaseConnection {
     FirebaseDatabase.instance
         .ref('onePlayerPuzzles/' + puzzleId.toString())
         .update(updateToMake);
+  }
+
+  static Future<void> createOnePlayerLevel(
+      String encodedGridString, String author) async {
+    int nextLevelId = await getNextOnePlayerLevelId();
+
+    new Logger('levedb').info(nextLevelId);
+
+    if (nextLevelId > 0) {
+      FirebaseDatabase.instance
+          .ref('onePlayerPuzzles/' + nextLevelId.toString())
+          .set({
+        'attempts': 0,
+        'attemptsFinished': 0,
+        'author': author,
+        'averageGuesses': 0,
+        'gridCode': encodedGridString
+      });
+    }
+  }
+
+  static Future<int> getNextOnePlayerLevelId() async {
+    String nextLevelId = '-1';
+
+    await FirebaseDatabase.instance
+        .ref('onePlayerPuzzles')
+        .orderByKey()
+        .limitToLast(1)
+        .once(DatabaseEventType.value)
+        .then((value) {
+      if (value.snapshot.children.length > 0) {
+        DataSnapshot puzzleEntry = value.snapshot.children.last;
+        String puzzleIdString = puzzleEntry.key as String;
+        nextLevelId = puzzleIdString;
+      }
+    });
+
+    return int.parse(nextLevelId) + 1;
   }
 }

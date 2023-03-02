@@ -7,6 +7,7 @@ import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/level_info/level_db_connection.dart';
 
 class BuildOnePlayerPuzzleWidget extends StatefulWidget {
   const BuildOnePlayerPuzzleWidget({super.key});
@@ -163,8 +164,8 @@ class _BuildOnePlayerPuzzleWidgetState
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () => log(_grid.encodedGridToString()),
-            child: Text('Log'),
+            onPressed: () => LevelDatabaseConnection.createOnePlayerLevel(_grid.encodedGridToString(), 'michael@kinship.games'),
+            child: Text('Save'),
           ),
           SizedBox(height: 20),
           ElevatedButton(

@@ -79,20 +79,18 @@ class LetterGrid {
 
   String encodedGridToString() {
     encodedTiles = getReEncodedGrid();
-    String gridString = '[\n';
+    String gridString = '';
 
     for (String? encodedTile in encodedTiles) {
       if (encodedTile == null) {
         gridString += 'null,';
       } else {
-        gridString += '\'';
         gridString += encodedTile;
-        gridString += '\',';
+        gridString += ',';
       }
     }
 
-    gridString += '\n]';
-    return gridString;
+    return gridString.substring(0, gridString.length - 1);
   }
 
   void resetGrid() {
