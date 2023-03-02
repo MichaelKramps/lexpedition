@@ -4,6 +4,7 @@ class GameLevel {
   final int difficulty;
   final int? puzzleId;
   final List<String?> gridCode;
+  final List<String?>? gridCodeB;
   late LetterGrid letterGrid;
   final int? attempts;
   final int? attemptsFinished;
@@ -12,6 +13,7 @@ class GameLevel {
   GameLevel(
       {required this.difficulty,
       required this.gridCode,
+      this.gridCodeB,
       this.puzzleId,
       this.attempts,
       this.attemptsFinished,

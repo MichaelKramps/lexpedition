@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/audio/audio_controller.dart';
 import 'package:lexpedition/src/audio/sounds.dart';
-import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
 import 'package:lexpedition/src/games_services/score.dart';
+import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:logging/logging.dart';
@@ -32,21 +32,7 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
 
   @override
   void initState() {
-    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
-
-    if (partyDatabaseConnection.isPartyLeader) {
-      GameLevel levelA = GameLevel(difficulty: 0, gridCode: blankGrid);
-      GameLevel levelB = GameLevel(difficulty: 0, gridCode: blankGrid);
-
-      partyDatabaseConnection.loadPuzzleForPlayers(
-          gridCodeListA: levelA.gridCode, gridCodeListB: levelB.gridCode);
-
-      updateGrids(
-          theirLetterGrid: LetterGrid.fromLiveDatabase(levelB.gridCode, []),
-          myLetterGrid: LetterGrid.fromLiveDatabase(levelA.gridCode, []));
-    }
-
-    partyDatabaseConnection.listenForPuzzle(updateGrids);
+    loadPuzzle();
 
     _startOfPlay = DateTime.now();
 
@@ -62,6 +48,23 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
     );
 
     return Scaffold(body: twoPlayerScreen);
+  }
+
+  Future<void> loadPuzzle() async {
+    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
+    if (partyDatabaseConnection.isPartyLeader) {
+      GameLevel level = await LevelDatabaseConnection.getTwoPlayerPuzzle();
+
+      partyDatabaseConnection.loadPuzzleForPlayers(
+          gridCodeListA: level.gridCode, gridCodeListB: level.gridCodeB);
+
+      updateGrids(
+          theirLetterGrid:
+              LetterGrid.fromLiveDatabase(level.gridCodeB as List<String?>, []),
+          myLetterGrid: LetterGrid.fromLiveDatabase(level.gridCode, []));
+    }
+
+    partyDatabaseConnection.listenForPuzzle(updateGrids);
   }
 
   void updateGrids(
@@ -117,6 +120,7 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
       }
       //already inside setstate call
       _justBlasted = true;
+      new Logger('blast').info(updatedGrid.encodedGridToString());
       return updatedGrid;
     }
   }
