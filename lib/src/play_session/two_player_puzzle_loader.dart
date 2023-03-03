@@ -65,6 +65,7 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
       {LetterGrid? myLetterGrid,
       required LetterGrid theirLetterGrid,
       int? blastIndex}) {
+    new Logger('name').info('updating');
     if (myLetterGrid != null) {
       //should always mean player is getting a new puzzle
       setState(() {
