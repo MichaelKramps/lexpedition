@@ -7,15 +7,11 @@ import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
 
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
-  final LetterGrid? myLetterGrid;
-  final LetterGrid? theirLetterGrid;
+  final GameLevel gameLevel;
   final Function(int) playerWon;
 
   const TwoPlayerPlaySessionScreen(
-      {super.key,
-      required this.myLetterGrid,
-      required this.theirLetterGrid,
-      required this.playerWon});
+      {super.key, required this.gameLevel, required this.playerWon});
 
   @override
   State<TwoPlayerPlaySessionScreen> createState() =>
@@ -26,7 +22,6 @@ class _TwoPlayerPlaySessionScreenState
     extends State<TwoPlayerPlaySessionScreen> {
   bool _showingMyGrid = true;
   bool _duringCelebration = false;
-  late LetterGrid? _theirLetterGrid = widget.theirLetterGrid;
 
   @override
   void initState() {
@@ -49,42 +44,28 @@ class _TwoPlayerPlaySessionScreenState
   }
 
   Widget determineVisibleGrid() {
-    if (widget.myLetterGrid != null && _showingMyGrid) {
-      return GameInstanceWidget(
-          gameLevel: GameLevel(
-              difficulty: widget.myLetterGrid?.par as int,
-              gridCode: widget.myLetterGrid?.encodedTiles as List<String?>),
-          playerWon: widget.playerWon,
-          leftColumn: GameColumn.blankColumn,
-          rightColumn: GameColumn.twoPlayerRightColumn,
-          twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(
-              twoPlayerState: this, theirLetterGrid: widget.theirLetterGrid));
-    } else if (widget.theirLetterGrid != null) {
-      return ObserverGameInstanceWidget(
-          twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(
-              twoPlayerState: this, theirLetterGrid: widget.theirLetterGrid),
-          leftColumn: GameColumn.blankColumn,
-          rightColumn: GameColumn.twoPlayerRightColumn);
-    } else {
+    if (widget.gameLevel.isBlankLevel()) {
       return SizedBox.expand(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [Text('Waiting for your partner to start a game...')],
       ));
+    } else if (widget.gameLevel.getMyLetterGrid() != null && _showingMyGrid) {
+      return GameInstanceWidget(
+          gameLevel: widget.gameLevel,
+          playerWon: widget.playerWon,
+          leftColumn: GameColumn.blankColumn,
+          rightColumn: GameColumn.twoPlayerRightColumn,
+          twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(
+              twoPlayerState: this, theirLetterGrid: widget.gameLevel.getTheirLetterGrid()));
+    } else {
+      return ObserverGameInstanceWidget(
+          twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(
+              twoPlayerState: this, theirLetterGrid: widget.gameLevel.getTheirLetterGrid()),
+          leftColumn: GameColumn.blankColumn,
+          rightColumn: GameColumn.twoPlayerRightColumn);
     }
-  }
-
-  void blastTheirGridFromIndex(int index) {
-    setState(() {
-      _theirLetterGrid?.blastFromIndex(index);
-    });
-  }
-
-  void unblastTheirGrid() {
-    setState(() {
-      _theirLetterGrid?.unblast();
-    });
   }
 
   void toggleScreen() {
@@ -107,13 +88,5 @@ class TwoPlayerPlaySessionStateManager {
 
   LetterGrid? getTheirLetterGrid() {
     return theirLetterGrid;
-  }
-
-  void blastTheirGridFromIndex(int index) {
-    twoPlayerState.blastTheirGridFromIndex(index);
-  }
-
-  void unblastTheirGrid() {
-    twoPlayerState.unblastTheirGrid();
   }
 }

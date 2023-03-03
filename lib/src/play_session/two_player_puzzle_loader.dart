@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/audio/audio_controller.dart';
@@ -22,16 +20,13 @@ class TwoPlayerPuzzleLoader extends StatefulWidget {
 }
 
 class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
-  LetterGrid? _theirUpdatedLetterGrid = null;
-  LetterGrid? _myUpdatedLetterGrid = null;
+  late GameLevel _gameLevel = GameLevel.blankLevel();
   bool _initialLoad = true;
 
   late DateTime _startOfPlay;
 
   @override
   void initState() {
-    loadPuzzle();
-
     _startOfPlay = DateTime.now();
 
     super.initState();
@@ -39,16 +34,18 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
 
   @override
   Widget build(BuildContext context) {
+    if (_initialLoad) {
+      loadLevel();
+    }
     TwoPlayerPlaySessionScreen twoPlayerScreen = new TwoPlayerPlaySessionScreen(
-      myLetterGrid: _myUpdatedLetterGrid,
-      theirLetterGrid: _theirUpdatedLetterGrid,
+      gameLevel: _gameLevel,
       playerWon: _playerWon,
     );
 
     return Scaffold(body: twoPlayerScreen);
   }
 
-  Future<void> loadPuzzle() async {
+  Future<void> loadLevel() async {
     PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
     if (partyDatabaseConnection.isPartyLeader) {
       GameLevel level = await LevelDatabaseConnection.getTwoPlayerPuzzle();
@@ -56,47 +53,37 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
       partyDatabaseConnection.loadPuzzleForPlayers(
           gridCodeListA: level.gridCode, gridCodeListB: level.gridCodeB);
 
-      updateGrids(
-          theirLetterGrid: LetterGrid.fromLiveDatabase(
-              letterTiles: level.gridCodeB as List<String?>, guesses: []),
-          myLetterGrid: LetterGrid.fromLiveDatabase(
-              letterTiles: level.gridCode, guesses: []));
+      setState(() {
+        _gameLevel = level;
+      });
     }
 
-    partyDatabaseConnection.listenForPuzzle(updateGrids);
+    partyDatabaseConnection.listenForPuzzle(updateLevel);
   }
 
-  void updateGrids(
+  void updateLevel(
       {LetterGrid? myLetterGrid,
       required LetterGrid theirLetterGrid,
       int? blastIndex}) {
-    Logger logger = new Logger('update');
-    logger.info('updatingGrids');
-    logger.info(myLetterGrid);
-    logger.info(theirLetterGrid);
     if (myLetterGrid != null) {
       //should always mean player is getting a new puzzle
       setState(() {
-        _myUpdatedLetterGrid = myLetterGrid;
-        _theirUpdatedLetterGrid = theirLetterGrid;
+        _gameLevel.setMyLetterGrid(myLetterGrid);
       });
     } else if (blastIndex != null) {
       //need to blast my puzzle based on partner's blast index
       setState(() {
-        _myUpdatedLetterGrid?.blastFromIndex(blastIndex);
-        _theirUpdatedLetterGrid = theirLetterGrid;
+        _gameLevel.getMyLetterGrid()?.blastFromIndex(blastIndex);
       });
       Future<void>.delayed(Constants.blastDuration, () {
         setState(() {
-          _myUpdatedLetterGrid?.unblast();
+          _gameLevel.getMyLetterGrid()?.unblast();
         });
       });
-    } else {
-      //always listening for update to partner's grid
-      setState(() {
-        _theirUpdatedLetterGrid = theirLetterGrid;
-      });
     }
+    setState(() {
+      _gameLevel.setTheirLetterGrid(theirLetterGrid);
+    });
 
     checkForWinAtCorrectTime();
   }
@@ -106,48 +93,17 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
     // click through the win screen before the party leader
     if (!_initialLoad) {
       if (checkForWin()) {
-        _playerWon(1);
+        _playerWon(99);
       }
     } else {
-      if (checkForWin()) {
-        // means we're still getting the completed grids
-        // from the previous puzzle
-        setState(() {
-          _myUpdatedLetterGrid = null;
-          _theirUpdatedLetterGrid = null;
-          _initialLoad = false;
-        });
-      } else {
-        setState(() {
-          _initialLoad = false;
-        });
-      }
+      setState(() {
+        _initialLoad = false;
+      });
     }
   }
 
   bool checkForWin() {
-    if (_myUpdatedLetterGrid != null && _theirUpdatedLetterGrid != null) {
-      //two player game
-      LetterGrid myGrid = _myUpdatedLetterGrid as LetterGrid;
-      LetterGrid theirGrid = _theirUpdatedLetterGrid as LetterGrid;
-      if (myGrid.isFullyCharged() && theirGrid.isFullyCharged()) {
-        return true;
-      }
-    } else {
-      //one player game with observer
-      if (_myUpdatedLetterGrid != null) {
-        LetterGrid myGrid = _myUpdatedLetterGrid as LetterGrid;
-        if (myGrid.isFullyCharged()) {
-          return true;
-        }
-      } else if (_theirUpdatedLetterGrid != null) {
-        LetterGrid theirGrid = _theirUpdatedLetterGrid as LetterGrid;
-        if (theirGrid.isFullyCharged()) {
-          return true;
-        }
-      }
-    }
-    return false;
+    return _gameLevel.levelFullyCharged();
   }
 
   Future<void> _playerWon(int guesses) async {

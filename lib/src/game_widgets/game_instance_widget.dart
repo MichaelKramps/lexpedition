@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
@@ -14,7 +13,6 @@ import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart'
 import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
-import 'package:logging/logging.dart';
 import 'package:wakelock/wakelock.dart';
 
 class GameInstanceWidget extends StatefulWidget {
@@ -291,8 +289,6 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   Future<void> fireBlast(LetterTile lastTile) async {
     setState(() {
       _grid.blastFromIndex(lastTile.index);
-      widget.twoPlayerPlaySessionStateManager
-          ?.blastTheirGridFromIndex(lastTile.index);
     });
 
     partyDatabaseConnection.updateMyPuzzle(
@@ -301,7 +297,6 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
     Future<void>.delayed(Constants.blastDuration, () {
       setState(() {
         _grid.unblast();
-        widget.twoPlayerPlaySessionStateManager?.unblastTheirGrid();
       });
       partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);
     });
