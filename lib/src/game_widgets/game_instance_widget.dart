@@ -196,14 +196,9 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
 
   bool isLevelWon(
       LetterGrid primaryLetterGrid, LetterGrid? secondaryLetterGrid) {
-    Logger logger = new Logger('isLevelWon');
     if (secondaryLetterGrid == null) {
-      logger.info('no secondary grid info');
       return primaryLetterGrid.isFullyCharged();
     } else {
-      logger.info('secondary grid');
-      logger.info(primaryLetterGrid.isFullyCharged());
-      logger.info(secondaryLetterGrid.isFullyCharged());
       return primaryLetterGrid.isFullyCharged() &&
           secondaryLetterGrid.isFullyCharged();
     }
@@ -294,52 +289,18 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   }
 
   Future<void> fireBlast(LetterTile lastTile) async {
-    List<int> indexesToBlast = findBlastedIndexes(lastTile.index);
+    setState(() {
+      _grid.blastFromIndex(lastTile.index);
+    });
 
-    for (int index in indexesToBlast) {
-      LetterTile thisTile = _grid.letterTiles[index];
-      setState(() {
-        thisTile.blast();
-      });
-    }
     partyDatabaseConnection.updateMyPuzzle(_grid);
 
     Future<void>.delayed(const Duration(milliseconds: 350), () {
-      for (int index in indexesToBlast) {
-        LetterTile thisTile = _grid.letterTiles[index];
-        setState(() {
-          thisTile.unblast();
-        });
-      }
+      setState(() {
+        _grid.unblast();
+      });
       partyDatabaseConnection.updateMyPuzzle(_grid);
     });
-  }
-
-  List<int> findBlastedIndexes(int lastIndex) {
-    List<List<int>> rows = [
-      [0, 1, 2, 3, 4, 5],
-      [6, 7, 8, 9, 10, 11],
-      [12, 13, 14, 15, 16, 17],
-      [18, 19, 20, 21, 22, 23]
-    ];
-    List<List<int>> columns = [
-      [0, 6, 12, 18],
-      [1, 7, 13, 19],
-      [2, 8, 14, 20],
-      [3, 9, 15, 21],
-      [4, 10, 16, 22],
-      [5, 11, 17, 23]
-    ];
-
-    if (_grid.blastDirection == BlastDirection.horizontal) {
-      int whichRow = (lastIndex / 6).floor();
-      List<int> indexesToBlast = rows[whichRow];
-      return indexesToBlast;
-    } else {
-      int whichColumn = lastIndex % 6;
-      List<int> indexesToBlast = columns[whichColumn];
-      return indexesToBlast;
-    }
   }
 }
 

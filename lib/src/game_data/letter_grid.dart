@@ -126,4 +126,49 @@ class LetterGrid {
       blastDirection = BlastDirection.values[blastDirection.index + 1];
     }
   }
+
+  void blastFromIndex(int index) {
+    assert(index >= 0 && index < 24);
+    late List<int> indexesToBlast;
+
+    List<List<int>> rows = [
+      [0, 1, 2, 3, 4, 5],
+      [6, 7, 8, 9, 10, 11],
+      [12, 13, 14, 15, 16, 17],
+      [18, 19, 20, 21, 22, 23]
+    ];
+
+    List<List<int>> columns = [
+      [0, 6, 12, 18],
+      [1, 7, 13, 19],
+      [2, 8, 14, 20],
+      [3, 9, 15, 21],
+      [4, 10, 16, 22],
+      [5, 11, 17, 23]
+    ];
+
+    if (blastDirection == BlastDirection.horizontal) {
+      for (List<int> row in rows) {
+        if (row.contains(index)) {
+          indexesToBlast = row;
+        }
+      }
+    } else {
+      for (List<int> column in columns) {
+        if (column.contains(index)) {
+          indexesToBlast = column;
+        }
+      }
+    }
+
+    for (int index in indexesToBlast) {
+      letterTiles[index].blast();
+    }
+  }
+
+  void unblast() {
+    for (LetterTile letterTile in letterTiles) {
+      letterTile.unblast();
+    }
+  }
 }
