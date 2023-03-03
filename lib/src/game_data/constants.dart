@@ -25,4 +25,6 @@ class Constants {
 
   static const celebrationDuration = Duration(milliseconds: 2000);
   static const preCelebrationDuration = Duration(milliseconds: 500);
+
+  static const Duration blastDuration = Duration(milliseconds: 350);
 }

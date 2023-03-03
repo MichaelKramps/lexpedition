@@ -12,7 +12,10 @@ class TwoPlayerPlaySessionScreen extends StatefulWidget {
   final Function(int) playerWon;
 
   const TwoPlayerPlaySessionScreen(
-      {super.key, required this.myLetterGrid, required this.theirLetterGrid, required this.playerWon});
+      {super.key,
+      required this.myLetterGrid,
+      required this.theirLetterGrid,
+      required this.playerWon});
 
   @override
   State<TwoPlayerPlaySessionScreen> createState() =>
@@ -23,6 +26,7 @@ class _TwoPlayerPlaySessionScreenState
     extends State<TwoPlayerPlaySessionScreen> {
   bool _showingMyGrid = true;
   bool _duringCelebration = false;
+  late LetterGrid? _theirLetterGrid = widget.theirLetterGrid;
 
   @override
   void initState() {
@@ -47,7 +51,9 @@ class _TwoPlayerPlaySessionScreenState
   Widget determineVisibleGrid() {
     if (widget.myLetterGrid != null && _showingMyGrid) {
       return GameInstanceWidget(
-          gameLevel: GameLevel(difficulty: widget.myLetterGrid?.par as int, gridCode: widget.myLetterGrid?.encodedTiles as List<String?>),
+          gameLevel: GameLevel(
+              difficulty: widget.myLetterGrid?.par as int,
+              gridCode: widget.myLetterGrid?.encodedTiles as List<String?>),
           playerWon: widget.playerWon,
           leftColumn: GameColumn.blankColumn,
           rightColumn: GameColumn.twoPlayerRightColumn,
@@ -61,13 +67,24 @@ class _TwoPlayerPlaySessionScreenState
           rightColumn: GameColumn.twoPlayerRightColumn);
     } else {
       return SizedBox.expand(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [Text('Waiting for your partner to start a game...')],
-        )
-      );
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [Text('Waiting for your partner to start a game...')],
+      ));
     }
+  }
+
+  void blastTheirGridFromIndex(int index) {
+    setState(() {
+      _theirLetterGrid?.blastFromIndex(index);
+    });
+  }
+
+  void unblastTheirGrid() {
+    setState(() {
+      _theirLetterGrid?.unblast();
+    });
   }
 
   void toggleScreen() {
@@ -90,5 +107,13 @@ class TwoPlayerPlaySessionStateManager {
 
   LetterGrid? getTheirLetterGrid() {
     return theirLetterGrid;
+  }
+
+  void blastTheirGridFromIndex(int index) {
+    twoPlayerState.blastTheirGridFromIndex(index);
+  }
+
+  void unblastTheirGrid() {
+    twoPlayerState.unblastTheirGrid();
   }
 }

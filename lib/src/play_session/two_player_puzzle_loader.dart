@@ -6,7 +6,6 @@ import 'package:lexpedition/src/audio/audio_controller.dart';
 import 'package:lexpedition/src/audio/sounds.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
-import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
 import 'package:lexpedition/src/games_services/score.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
@@ -26,7 +25,6 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
   LetterGrid? _theirUpdatedLetterGrid = null;
   LetterGrid? _myUpdatedLetterGrid = null;
   bool _initialLoad = true;
-  bool _justBlasted = false;
 
   late DateTime _startOfPlay;
 
@@ -59,70 +57,48 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
           gridCodeListA: level.gridCode, gridCodeListB: level.gridCodeB);
 
       updateGrids(
-          theirLetterGrid:
-              LetterGrid.fromLiveDatabase(level.gridCodeB as List<String?>, []),
-          myLetterGrid: LetterGrid.fromLiveDatabase(level.gridCode, []));
+          theirLetterGrid: LetterGrid.fromLiveDatabase(
+              letterTiles: level.gridCodeB as List<String?>, guesses: []),
+          myLetterGrid: LetterGrid.fromLiveDatabase(
+              letterTiles: level.gridCode, guesses: []));
     }
 
     partyDatabaseConnection.listenForPuzzle(updateGrids);
   }
 
   void updateGrids(
-      {LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid}) {
-    setState(() {
-      if (myLetterGrid != null) {
+      {LetterGrid? myLetterGrid,
+      required LetterGrid theirLetterGrid,
+      int? blastIndex}) {
+    Logger logger = new Logger('update');
+    logger.info('updatingGrids');
+    logger.info(myLetterGrid);
+    logger.info(theirLetterGrid);
+    if (myLetterGrid != null) {
+      //should always mean player is getting a new puzzle
+      setState(() {
         _myUpdatedLetterGrid = myLetterGrid;
-      } else {
-        _myUpdatedLetterGrid =
-            updateGridWithBlast(_myUpdatedLetterGrid, theirLetterGrid);
-      }
-      _theirUpdatedLetterGrid = theirLetterGrid;
-    });
-    checkForWinAtCorrectTime();
-  }
-
-  List<int> getIndexesToBlast(LetterGrid theirLetterGrid) {
-    List<int> indexesToBlast = [];
-    Logger logger = new Logger('indexesToBlast');
-    for (int index = 0; index < theirLetterGrid.letterTiles.length; index++) {
-      LetterTile thisTile = theirLetterGrid.letterTiles[index];
-      if (thisTile.blastFrom) {
-        indexesToBlast.add(index);
-      }
-    }
-    logger.info(indexesToBlast.join(','));
-    return indexesToBlast;
-  }
-
-  LetterGrid? updateGridWithBlast(
-      LetterGrid? letterGrid, LetterGrid theirLetterGrid) {
-    List<int> indexesToBlast = getIndexesToBlast(theirLetterGrid);
-    if (letterGrid == null) {
-      return null;
-    } else if (indexesToBlast.length <= 0) {
-      // need to ensure grid is not blasting
-      LetterGrid updatedGrid = letterGrid;
-      for (LetterTile letterTile in updatedGrid.letterTiles) {
-        letterTile.unblast();
-      }
-      if (_justBlasted) {
-        PartyDatabaseConnection().updateMyPuzzle(updatedGrid);
-        _justBlasted = false;
-      }
-      return updatedGrid;
+        _theirUpdatedLetterGrid = theirLetterGrid;
+      });
+    } else if (blastIndex != null) {
+      //need to blast my puzzle based on partner's blast index
+      setState(() {
+        _myUpdatedLetterGrid?.blastFromIndex(blastIndex);
+        _theirUpdatedLetterGrid = theirLetterGrid;
+      });
+      Future<void>.delayed(Constants.blastDuration, () {
+        setState(() {
+          _myUpdatedLetterGrid?.unblast();
+        });
+      });
     } else {
-      // there is an actual blast to process
-      LetterGrid updatedGrid = letterGrid;
-      for (int index = 0; index < letterGrid.letterTiles.length; index++) {
-        if (indexesToBlast.contains(index)) {
-          letterGrid.letterTiles[index].blast();
-        }
-      }
-      //already inside setstate call
-      _justBlasted = true;
-      new Logger('blast').info(updatedGrid.encodedGridToString());
-      return updatedGrid;
+      //always listening for update to partner's grid
+      setState(() {
+        _theirUpdatedLetterGrid = theirLetterGrid;
+      });
     }
+
+    checkForWinAtCorrectTime();
   }
 
   void checkForWinAtCorrectTime() {

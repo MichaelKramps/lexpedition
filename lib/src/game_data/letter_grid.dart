@@ -18,13 +18,19 @@ class LetterGrid {
     this.par = par;
   }
 
-  LetterGrid.fromLiveDatabase(List<String?> letterTiles, List<String> guesses) {
+  LetterGrid.fromLiveDatabase(
+      {required List<String?> letterTiles,
+      required List<String> guesses,
+      BlastDirection? blastDirection}) {
     assert(letterTiles.length == 24);
     this.encodedTiles = letterTiles;
     this.letterTiles = this.decodeLetterTiles(letterTiles);
     this.rows = this.setRows(this.letterTiles);
     this.par = 1;
     this.guesses = guesses;
+    if (blastDirection != null) {
+      this.blastDirection = blastDirection;
+    }
   }
 
   List<LetterTile> decodeLetterTiles(List<String?> encodedTiles) {

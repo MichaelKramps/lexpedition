@@ -129,7 +129,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
         _guessTiles.removeLast();
       });
     }
-    partyDatabaseConnection.updateMyPuzzle(_grid);
+    partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);
   }
 
   String getCurrentGuess() {
@@ -187,7 +187,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
         }
       }
 
-      partyDatabaseConnection.updateMyPuzzle(_grid);
+      partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);
     } else {
       await showBadGuess();
     }
@@ -291,15 +291,19 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   Future<void> fireBlast(LetterTile lastTile) async {
     setState(() {
       _grid.blastFromIndex(lastTile.index);
+      widget.twoPlayerPlaySessionStateManager
+          ?.blastTheirGridFromIndex(lastTile.index);
     });
 
-    partyDatabaseConnection.updateMyPuzzle(_grid);
+    partyDatabaseConnection.updateMyPuzzle(
+        letterGrid: _grid, blastIndex: lastTile.index);
 
-    Future<void>.delayed(const Duration(milliseconds: 350), () {
+    Future<void>.delayed(Constants.blastDuration, () {
       setState(() {
         _grid.unblast();
+        widget.twoPlayerPlaySessionStateManager?.unblastTheirGrid();
       });
-      partyDatabaseConnection.updateMyPuzzle(_grid);
+      partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);
     });
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
+import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 
 class PartyDatabaseConnection {
@@ -131,22 +132,21 @@ class PartyDatabaseConnection {
             'guesses': '',
             'letterGridB': gridCodeListB?.join(',')
           },
-          'letterGridB': {
-            'gridString': gridCodeListB?.join(','),
-            'guesses': ''
-          }
+          'letterGridB': {'gridString': gridCodeListB?.join(','), 'guesses': ''}
         });
       }
     }
   }
 
-  void updateMyPuzzle(LetterGrid letterGrid) async {
+  void updateMyPuzzle({required LetterGrid letterGrid, int? blastIndex}) async {
     if (connectionExists()) {
       if (isPartyLeader) {
         await databaseReference?.update({
           'letterGridA': {
             'gridString': letterGrid.getGridStringForDatabase(),
-            'guesses': letterGrid.guesses.join(',')
+            'guesses': letterGrid.guesses.join(','),
+            'blastIndex': blastIndex,
+            'blastDirection': letterGrid.blastDirection.index
           },
           'updated': getFormattedDate()
         });
@@ -154,7 +154,9 @@ class PartyDatabaseConnection {
         await databaseReference?.update({
           'letterGridB': {
             'gridString': letterGrid.getGridStringForDatabase(),
-            'guesses': letterGrid.guesses.join(',')
+            'guesses': letterGrid.guesses.join(','),
+            'blastIndex': blastIndex,
+            'blastDirection': letterGrid.blastDirection.index
           },
           'updated': getFormattedDate()
         });
@@ -163,7 +165,10 @@ class PartyDatabaseConnection {
   }
 
   void listenForPuzzle(
-      Function({LetterGrid? myLetterGrid, required LetterGrid theirLetterGrid})
+      Function(
+              {LetterGrid? myLetterGrid,
+              required LetterGrid theirLetterGrid,
+              int? blastIndex})
           callback) async {
     String gridToListenFor = isPartyLeader ? 'letterGridB' : 'letterGridA';
 
@@ -175,19 +180,40 @@ class PartyDatabaseConnection {
         final String theirGridString =
             event.snapshot.child('gridString').value as String;
         final String guesses = event.snapshot.child('guesses').value as String;
-        final String? myGridString =
+
+        String? myGridString = null;
+        try {
+          myGridString =
             event.snapshot.child('letterGridB').value as String?;
+        } catch (e) {}
+        
+        int? blastIndex = null;
+        try {
+          blastIndex = event.snapshot.child('blastIndex') as int?;
+        } catch (e) {}
+
+        int? blastDirectionIndex = null;
+        try {
+          blastDirectionIndex = event.snapshot.child('blastDirection') as int?;
+        } catch (e) {}
+
+        final BlastDirection? blastDirection =
+            determineBlastDirection(blastDirectionIndex);
 
         final LetterGrid theirLetterGrid = LetterGrid.fromLiveDatabase(
-            theirGridString.split(','), guesses.split(','));
+            letterTiles: theirGridString.split(','),
+            guesses: guesses.split(','),
+            blastDirection: blastDirection);
         final LetterGrid? myLetterGrid = myGridString == null
             ? null
-            : LetterGrid.fromLiveDatabase(myGridString.split(','), []);
+            : LetterGrid.fromLiveDatabase(
+                letterTiles: myGridString.split(','), guesses: []);
 
-        callback(theirLetterGrid: theirLetterGrid, myLetterGrid: myLetterGrid);
-      } catch (e) {
-        // not sure how to handle yet
-      }
+        callback(
+            theirLetterGrid: theirLetterGrid,
+            myLetterGrid: myLetterGrid,
+            blastIndex: blastIndex);
+      } catch (e) {}
     });
   }
 }
