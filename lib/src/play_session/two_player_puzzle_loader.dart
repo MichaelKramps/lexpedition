@@ -20,7 +20,7 @@ class TwoPlayerPuzzleLoader extends StatefulWidget {
 }
 
 class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
-  late GameLevel _gameLevel = GameLevel.blankLevel();
+  GameLevel _gameLevel = GameLevel.blankLevel();
   bool _initialLoad = true;
 
   late DateTime _startOfPlay;
@@ -65,7 +65,6 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
       {LetterGrid? myLetterGrid,
       required LetterGrid theirLetterGrid,
       int? blastIndex}) {
-    new Logger('name').info('updating');
     if (myLetterGrid != null) {
       //should always mean player is getting a new puzzle
       setState(() {

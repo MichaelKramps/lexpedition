@@ -5,7 +5,7 @@ import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 
 class PartyDatabaseConnection {
-  bool isPartyLeader = false;
+  bool isPartyLeader = true;
   String partyCode = '';
   DatabaseReference? databaseReference;
   StreamSubscription? listener;
@@ -18,7 +18,7 @@ class PartyDatabaseConnection {
   }
 
   PartyDatabaseConnection.nullConstructor() {
-    this.isPartyLeader = false;
+    this.isPartyLeader = true;
     this.partyCode = '';
     this.databaseReference = null;
   }

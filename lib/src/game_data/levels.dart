@@ -1,6 +1,8 @@
 import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
+import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:logging/logging.dart';
 
 class GameLevel {
   final int difficulty;
@@ -70,8 +72,8 @@ class GameLevel {
   }
 
   bool isBlankLevel() {
-    for (String? tileCode in gridCode) {
-      if (tileCode != null) {
+    for (LetterTile letterTile in letterGrid.letterTiles) {
+      if (letterTile.tileType != TileType.empty) {
         return false;
       }
     }

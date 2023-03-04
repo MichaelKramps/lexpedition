@@ -35,10 +35,10 @@ class GameInstanceWidget extends StatefulWidget {
 }
 
 class _GameInstanceWidgetState extends State<GameInstanceWidget> {
-  late LetterGrid _grid = widget.gameLevel.letterGrid;
+  PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
+  late LetterGrid _grid = widget.gameLevel.getMyLetterGrid() as LetterGrid;
   List<LetterTile> _guessTiles = [];
   bool _showBadGuess = false;
-  PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
 
   GlobalKey gridKey = GlobalKey();
   late RenderBox renderBox =

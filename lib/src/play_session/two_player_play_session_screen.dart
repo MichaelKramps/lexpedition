@@ -5,6 +5,7 @@ import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
+import 'package:logging/logging.dart';
 
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
   final GameLevel gameLevel;
@@ -58,11 +59,13 @@ class _TwoPlayerPlaySessionScreenState
           leftColumn: GameColumn.blankColumn,
           rightColumn: GameColumn.twoPlayerRightColumn,
           twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(
-              twoPlayerState: this, theirLetterGrid: widget.gameLevel.getTheirLetterGrid()));
+              twoPlayerState: this,
+              theirLetterGrid: widget.gameLevel.getTheirLetterGrid()));
     } else {
       return ObserverGameInstanceWidget(
           twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(
-              twoPlayerState: this, theirLetterGrid: widget.gameLevel.getTheirLetterGrid()),
+              twoPlayerState: this,
+              theirLetterGrid: widget.gameLevel.getTheirLetterGrid()),
           leftColumn: GameColumn.blankColumn,
           rightColumn: GameColumn.twoPlayerRightColumn);
     }
