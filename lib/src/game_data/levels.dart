@@ -2,7 +2,6 @@ import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:logging/logging.dart';
 
 class GameLevel {
   final int difficulty;
@@ -28,6 +27,8 @@ class GameLevel {
     this.letterGrid = new LetterGrid(gridCode, difficulty);
     if (gridCodeB != null) {
       this.letterGridB = new LetterGrid(gridCodeB as List<String?>, difficulty);
+    } else {
+      this.letterGridB = null;
     }
   }
 

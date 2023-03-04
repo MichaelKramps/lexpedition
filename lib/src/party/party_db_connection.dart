@@ -5,7 +5,7 @@ import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 
 class PartyDatabaseConnection {
-  bool isPartyLeader = true;
+  bool isPartyLeader = false;
   String partyCode = '';
   DatabaseReference? databaseReference;
   StreamSubscription? listener;
@@ -18,7 +18,7 @@ class PartyDatabaseConnection {
   }
 
   PartyDatabaseConnection.nullConstructor() {
-    this.isPartyLeader = true;
+    this.isPartyLeader = false;
     this.partyCode = '';
     this.databaseReference = null;
   }
@@ -177,42 +177,42 @@ class PartyDatabaseConnection {
         .onValue
         .listen((DatabaseEvent event) {
       try {
-        final String theirGridString =
-            event.snapshot.child('gridString').value as String;
-        final String guesses = event.snapshot.child('guesses').value as String;
+      final String theirGridString =
+          event.snapshot.child('gridString').value as String;
+      final String guesses = event.snapshot.child('guesses').value as String;
 
-        String? myGridString = null;
-        try {
-          myGridString =
-            event.snapshot.child('letterGridB').value as String?;
-        } catch (e) {}
-        
-        int? blastIndex = null;
-        try {
-          blastIndex = event.snapshot.child('blastIndex') as int?;
-        } catch (e) {}
+      String? myGridString = null;
+      try {
+        myGridString =
+          event.snapshot.child('letterGridB').value as String?;
+      } catch (e) {}
+      
+      int? blastIndex = null;
+      try {
+        blastIndex = event.snapshot.child('blastIndex') as int?;
+      } catch (e) {}
 
-        int? blastDirectionIndex = null;
-        try {
-          blastDirectionIndex = event.snapshot.child('blastDirection') as int?;
-        } catch (e) {}
+      int? blastDirectionIndex = null;
+      try {
+        blastDirectionIndex = event.snapshot.child('blastDirection') as int?;
+      } catch (e) {}
 
-        final BlastDirection? blastDirection =
-            determineBlastDirection(blastDirectionIndex);
+      final BlastDirection? blastDirection =
+          determineBlastDirection(blastDirectionIndex);
 
-        final LetterGrid theirLetterGrid = LetterGrid.fromLiveDatabase(
-            letterTiles: theirGridString.split(','),
-            guesses: guesses.split(','),
-            blastDirection: blastDirection);
-        final LetterGrid? myLetterGrid = myGridString == null
-            ? null
-            : LetterGrid.fromLiveDatabase(
-                letterTiles: myGridString.split(','), guesses: []);
+      final LetterGrid theirLetterGrid = LetterGrid.fromLiveDatabase(
+          letterTiles: theirGridString.split(','),
+          guesses: guesses.split(','),
+          blastDirection: blastDirection);
+      final LetterGrid? myLetterGrid = myGridString == null
+          ? null
+          : LetterGrid.fromLiveDatabase(
+              letterTiles: myGridString.split(','), guesses: []);
 
-        callback(
-            theirLetterGrid: theirLetterGrid,
-            myLetterGrid: myLetterGrid,
-            blastIndex: blastIndex);
+      callback(
+          theirLetterGrid: theirLetterGrid,
+          myLetterGrid: myLetterGrid,
+          blastIndex: blastIndex);
       } catch (e) {}
     });
   }

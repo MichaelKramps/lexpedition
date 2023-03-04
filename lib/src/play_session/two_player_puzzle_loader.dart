@@ -65,6 +65,7 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
       {LetterGrid? myLetterGrid,
       required LetterGrid theirLetterGrid,
       int? blastIndex}) {
+    new Logger('updating').info(blastIndex);
     if (myLetterGrid != null) {
       //should always mean player is getting a new puzzle
       setState(() {
@@ -72,6 +73,7 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
       });
     } else if (blastIndex != null) {
       //need to blast my puzzle based on partner's blast index
+      new Logger('blasting').info(blastIndex);
       setState(() {
         _gameLevel.getMyLetterGrid()?.blastFromIndex(blastIndex);
       });
