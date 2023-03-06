@@ -9,6 +9,7 @@ import 'package:lexpedition/src/games_services/score.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayerPuzzleLoader extends StatefulWidget {
@@ -45,6 +46,7 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
   }
 
   Future<void> loadLevel() async {
+    new Logger('loading').info('loading level');
     PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
     if (partyDatabaseConnection.isPartyLeader) {
       GameLevel level = await LevelDatabaseConnection.getTwoPlayerPuzzle();
@@ -58,6 +60,9 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
     }
 
     partyDatabaseConnection.listenForPuzzle(updateLevel);
+    setState(() {
+      _initialLoad = false;
+    });
   }
 
   void updateLevel(
@@ -79,6 +84,8 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
         setState(() {
           _gameLevel.getMyLetterGrid()?.unblast();
         });
+        PartyDatabaseConnection()
+          .updateMyPuzzle(letterGrid: _gameLevel.getMyLetterGrid() as LetterGrid);
       });
     }
     setState(() {
@@ -107,8 +114,13 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
   }
 
   Future<void> _playerWon(int guesses) async {
+    int numberGuesses = _gameLevel.letterGrid.guesses.length;
+    if (_gameLevel.letterGridB != null) {
+      LetterGrid gridB = _gameLevel.letterGridB as LetterGrid;
+      numberGuesses += gridB.guesses.length;
+    }
     final score = Score(
-      guesses,
+      numberGuesses,
       10,
       DateTime.now().difference(_startOfPlay),
     );
