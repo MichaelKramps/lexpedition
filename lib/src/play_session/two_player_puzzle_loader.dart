@@ -132,7 +132,7 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
     }
     final score = Score(
       numberGuesses,
-      10,
+      _gameLevel.difficulty,
       DateTime.now().difference(_startOfPlay),
     );
 
