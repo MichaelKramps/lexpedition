@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
-import 'package:logging/logging.dart';
 
 class PartyDatabaseConnection {
   bool isPartyLeader = false;
@@ -139,6 +138,16 @@ class PartyDatabaseConnection {
     }
   }
 
+  void clearLevels() async {
+    if (connectionExists()) {
+      if (isPartyLeader) {
+        await FirebaseDatabase.instance
+            .ref('party/' + partyCode + '/letterGridA')
+            .remove();
+      }
+    }
+  }
+
   void updateMyPuzzle({required LetterGrid letterGrid, int? blastIndex}) async {
     if (connectionExists()) {
       if (isPartyLeader) {
@@ -178,41 +187,42 @@ class PartyDatabaseConnection {
         .onValue
         .listen((DatabaseEvent event) {
       try {
-      final String theirGridString =
-          event.snapshot.child('gridString').value as String;
-      final String guesses = event.snapshot.child('guesses').value as String;
+        final String theirGridString =
+            event.snapshot.child('gridString').value as String;
+        final String guesses = event.snapshot.child('guesses').value as String;
 
-      String? myGridString = null;
-      try {
-        myGridString = event.snapshot.child('letterGridB').value as String?;
-      } catch (e) {}
+        String? myGridString = null;
+        try {
+          myGridString = event.snapshot.child('letterGridB').value as String?;
+        } catch (e) {}
 
-      num? blastIndex = null;
-      try {
-      blastIndex = event.snapshot.child('blastIndex').value as num?;
-      } catch (e) {}
+        num? blastIndex = null;
+        try {
+          blastIndex = event.snapshot.child('blastIndex').value as num?;
+        } catch (e) {}
 
-      num? blastDirectionIndex = null;
-      try {
-        blastDirectionIndex = event.snapshot.child('blastDirection').value as num?;
-      } catch (e) {}
+        num? blastDirectionIndex = null;
+        try {
+          blastDirectionIndex =
+              event.snapshot.child('blastDirection').value as num?;
+        } catch (e) {}
 
-      final BlastDirection? blastDirection =
-          determineBlastDirection(blastDirectionIndex);
+        final BlastDirection? blastDirection =
+            determineBlastDirection(blastDirectionIndex);
 
-      final LetterGrid theirLetterGrid = LetterGrid.fromLiveDatabase(
-          letterTiles: theirGridString.split(','),
-          guesses: guesses.split(','),
-          blastDirection: blastDirection);
-      final LetterGrid? myLetterGrid = myGridString == null
-          ? null
-          : LetterGrid.fromLiveDatabase(
-              letterTiles: myGridString.split(','), guesses: []);
+        final LetterGrid theirLetterGrid = LetterGrid.fromLiveDatabase(
+            letterTiles: theirGridString.split(','),
+            guesses: guesses.split(','),
+            blastDirection: blastDirection);
+        final LetterGrid? myLetterGrid = myGridString == null
+            ? null
+            : LetterGrid.fromLiveDatabase(
+                letterTiles: myGridString.split(','), guesses: []);
 
-      callback(
-          theirLetterGrid: theirLetterGrid,
-          myLetterGrid: myLetterGrid,
-          blastIndex: blastIndex);
+        callback(
+            theirLetterGrid: theirLetterGrid,
+            myLetterGrid: myLetterGrid,
+            blastIndex: blastIndex);
       } catch (e) {}
     });
   }

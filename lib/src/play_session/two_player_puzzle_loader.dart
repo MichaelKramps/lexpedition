@@ -22,6 +22,8 @@ class TwoPlayerPuzzleLoader extends StatefulWidget {
 class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
   GameLevel _gameLevel = GameLevel.blankLevel();
   bool _initialLoad = true;
+  bool _playerHasWon = false;
+  PartyDatabaseConnection _partyDatabaseConnection = PartyDatabaseConnection();
 
   late DateTime _startOfPlay;
 
@@ -46,12 +48,15 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
   }
 
   Future<void> loadLevel() async {
-    new Logger('loading').info('loading level');
-    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
-    if (partyDatabaseConnection.isPartyLeader) {
+    setState(() {
+      _playerHasWon = false;
+      _initialLoad = false;
+      _gameLevel = GameLevel.blankLevel();
+    });
+    if (_partyDatabaseConnection.isPartyLeader) {
       GameLevel level = await LevelDatabaseConnection.getTwoPlayerPuzzle();
 
-      partyDatabaseConnection.loadPuzzleForPlayers(
+      _partyDatabaseConnection.loadPuzzleForPlayers(
           gridCodeListA: level.gridCode, gridCodeListB: level.gridCodeB);
 
       setState(() {
@@ -59,10 +64,7 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
       });
     }
 
-    partyDatabaseConnection.listenForPuzzle(updateLevel);
-    setState(() {
-      _initialLoad = false;
-    });
+    _partyDatabaseConnection.listenForPuzzle(updateLevel);
   }
 
   void updateLevel(
@@ -84,22 +86,25 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
         setState(() {
           _gameLevel.getMyLetterGrid()?.unblast();
         });
-        PartyDatabaseConnection()
-          .updateMyPuzzle(letterGrid: _gameLevel.getMyLetterGrid() as LetterGrid);
+        _partyDatabaseConnection.updateMyPuzzle(
+            letterGrid: _gameLevel.getMyLetterGrid() as LetterGrid);
       });
     }
     setState(() {
       _gameLevel.setTheirLetterGrid(theirLetterGrid);
     });
 
-    checkForWinAtCorrectTime();
+    if (!_playerHasWon) {
+      checkForWinAtCorrectTime();
+    }
   }
 
   void checkForWinAtCorrectTime() {
-    // this check is necessary to allow the observing player to
-    // click through the win screen before the party leader
     if (!_initialLoad) {
-      if (checkForWin()) {
+      if (checkForWin() && !_gameLevel.isBlankLevel()) {
+        setState(() {
+          _playerHasWon = true;
+        });
         _playerWon(99);
       }
     } else {
@@ -114,6 +119,9 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
   }
 
   Future<void> _playerWon(int guesses) async {
+    // to prevent completed levels from being reloaded
+    _partyDatabaseConnection.clearLevels();
+
     int numberGuesses = _gameLevel.letterGrid.guesses.length;
     if (_gameLevel.letterGridB != null) {
       LetterGrid gridB = _gameLevel.letterGridB as LetterGrid;
@@ -147,13 +155,13 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
     //}
 
     /// Give the player some time to see the celebration animation.
+    if (!mounted) return;
     await Future<void>.delayed(Constants.celebrationDuration, () {
-      if (PartyDatabaseConnection().isPartyLeader) {
+      if (_partyDatabaseConnection.isPartyLeader) {
         GoRouter.of(context).go('/freeplaywon/leader', extra: {'score': score});
       } else {
         GoRouter.of(context).go('/freeplaywon/joiner', extra: {'score': score});
       }
     });
-    if (!mounted) return;
   }
 }

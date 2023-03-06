@@ -5,7 +5,7 @@ import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
-import 'package:logging/logging.dart';
+import 'package:lexpedition/src/party/party_db_connection.dart';
 
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
   final GameLevel gameLevel;
@@ -46,11 +46,14 @@ class _TwoPlayerPlaySessionScreenState
 
   Widget determineVisibleGrid() {
     if (widget.gameLevel.isBlankLevel()) {
+      String waitingText = PartyDatabaseConnection().isPartyLeader
+          ? 'Loading puzzle...'
+          : 'Waiting for your partner to start a game...';
       return SizedBox.expand(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [Text('Waiting for your partner to start a game...')],
+        children: [Text(waitingText)],
       ));
     } else if (widget.gameLevel.getMyLetterGrid() != null && _showingMyGrid) {
       return GameInstanceWidget(
