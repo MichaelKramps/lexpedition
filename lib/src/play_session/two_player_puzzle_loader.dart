@@ -120,7 +120,10 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
 
   Future<void> _playerWon(int guesses) async {
     // to prevent completed levels from being reloaded
-    _partyDatabaseConnection.clearLevels();
+    Future<void>.delayed(Constants.clearPuzzlesDuration, () {
+      _partyDatabaseConnection.clearLevels();
+    });
+    
 
     int numberGuesses = _gameLevel.letterGrid.guesses.length;
     if (_gameLevel.letterGridB != null) {

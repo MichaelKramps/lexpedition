@@ -27,4 +27,5 @@ class Constants {
   static const preCelebrationDuration = Duration(milliseconds: 500);
 
   static const Duration blastDuration = Duration(milliseconds: 350);
+  static const Duration clearPuzzlesDuration = Duration(milliseconds: 400);
 }
