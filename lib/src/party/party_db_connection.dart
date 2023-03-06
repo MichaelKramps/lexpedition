@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
+import 'package:logging/logging.dart';
 
 class PartyDatabaseConnection {
   bool isPartyLeader = false;
@@ -168,7 +169,7 @@ class PartyDatabaseConnection {
       Function(
               {LetterGrid? myLetterGrid,
               required LetterGrid theirLetterGrid,
-              int? blastIndex})
+              num? blastIndex})
           callback) async {
     String gridToListenFor = isPartyLeader ? 'letterGridB' : 'letterGridA';
 
@@ -183,18 +184,17 @@ class PartyDatabaseConnection {
 
       String? myGridString = null;
       try {
-        myGridString =
-          event.snapshot.child('letterGridB').value as String?;
-      } catch (e) {}
-      
-      int? blastIndex = null;
-      try {
-        blastIndex = event.snapshot.child('blastIndex') as int?;
+        myGridString = event.snapshot.child('letterGridB').value as String?;
       } catch (e) {}
 
-      int? blastDirectionIndex = null;
+      num? blastIndex = null;
       try {
-        blastDirectionIndex = event.snapshot.child('blastDirection') as int?;
+      blastIndex = event.snapshot.child('blastIndex').value as num?;
+      } catch (e) {}
+
+      num? blastDirectionIndex = null;
+      try {
+        blastDirectionIndex = event.snapshot.child('blastDirection').value as num?;
       } catch (e) {}
 
       final BlastDirection? blastDirection =

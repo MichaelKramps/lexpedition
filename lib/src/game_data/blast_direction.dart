@@ -1,6 +1,6 @@
 enum BlastDirection { vertical, horizontal }
 
-BlastDirection? determineBlastDirection(int? index) {
+BlastDirection? determineBlastDirection(num? index) {
   if (index == null) {
     return null;
   } else if (index == 0) {

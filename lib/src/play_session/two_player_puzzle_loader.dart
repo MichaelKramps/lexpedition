@@ -9,7 +9,6 @@ import 'package:lexpedition/src/games_services/score.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayerPuzzleLoader extends StatefulWidget {
@@ -64,8 +63,7 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
   void updateLevel(
       {LetterGrid? myLetterGrid,
       required LetterGrid theirLetterGrid,
-      int? blastIndex}) {
-    new Logger('updating').info(blastIndex);
+      num? blastIndex}) {
     if (myLetterGrid != null) {
       //should always mean player is getting a new puzzle
       setState(() {
@@ -73,9 +71,9 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
       });
     } else if (blastIndex != null) {
       //need to blast my puzzle based on partner's blast index
-      new Logger('blasting').info(blastIndex);
       setState(() {
-        _gameLevel.getMyLetterGrid()?.blastFromIndex(blastIndex);
+        int blastIntIndex = blastIndex.toInt();
+        _gameLevel.getMyLetterGrid()?.blastFromIndex(blastIntIndex);
       });
       Future<void>.delayed(Constants.blastDuration, () {
         setState(() {
