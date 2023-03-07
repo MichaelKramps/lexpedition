@@ -284,6 +284,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
     setState(() {
       _grid.changeBlastDirection();
     });
+    partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);
   }
 
   Future<void> fireBlast(LetterTile lastTile) async {
