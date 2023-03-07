@@ -141,6 +141,11 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
       DateTime.now().difference(_startOfPlay),
     );
 
+    if (_gameLevel.puzzleId != null) {
+      LevelDatabaseConnection.logTwoPlayerFinishedPuzzleResults(
+          _gameLevel.puzzleId as int, numberGuesses);
+    }
+
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(Constants.preCelebrationDuration);
     if (!mounted) return;
