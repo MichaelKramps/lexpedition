@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
+import 'package:lexpedition/src/game_data/levels.dart';
 
 class PartyDatabaseConnection {
   bool isPartyLeader = false;
@@ -121,18 +122,17 @@ class PartyDatabaseConnection {
     return false;
   }
 
-  void loadPuzzleForPlayers(
-      {required List<String?> gridCodeListA,
-      List<String?>? gridCodeListB}) async {
+  void loadPuzzleForPlayers({required GameLevel level}) async {
     if (connectionExists()) {
       if (isPartyLeader) {
         await databaseReference?.update({
           'letterGridA': {
-            'gridString': gridCodeListA.join(','),
+            'gridString': level.gridCode.join(','),
             'guesses': '',
-            'letterGridB': gridCodeListB?.join(',')
+            'difficulty': level.difficulty,
+            'letterGridB': level.gridCodeB?.join(',')
           },
-          'letterGridB': {'gridString': gridCodeListB?.join(','), 'guesses': ''}
+          'letterGridB': {'gridString': level.gridCodeB?.join(','), 'guesses': ''}
         });
       }
     }
@@ -178,7 +178,8 @@ class PartyDatabaseConnection {
       Function(
               {LetterGrid? myLetterGrid,
               required LetterGrid theirLetterGrid,
-              num? blastIndex})
+              num? blastIndex,
+              num? difficulty})
           callback) async {
     String gridToListenFor = isPartyLeader ? 'letterGridB' : 'letterGridA';
 
@@ -199,6 +200,11 @@ class PartyDatabaseConnection {
         num? blastIndex = null;
         try {
           blastIndex = event.snapshot.child('blastIndex').value as num?;
+        } catch (e) {}
+
+        num? difficulty = null;
+        try {
+          difficulty = event.snapshot.child('difficulty').value as num?;
         } catch (e) {}
 
         num? blastDirectionIndex = null;
@@ -222,7 +228,8 @@ class PartyDatabaseConnection {
         callback(
             theirLetterGrid: theirLetterGrid,
             myLetterGrid: myLetterGrid,
-            blastIndex: blastIndex);
+            blastIndex: blastIndex,
+            difficulty: difficulty);
       } catch (e) {}
     });
   }

@@ -56,8 +56,7 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
     if (_partyDatabaseConnection.isPartyLeader) {
       GameLevel level = await LevelDatabaseConnection.getTwoPlayerPuzzle();
 
-      _partyDatabaseConnection.loadPuzzleForPlayers(
-          gridCodeListA: level.gridCode, gridCodeListB: level.gridCodeB);
+      _partyDatabaseConnection.loadPuzzleForPlayers(level: level);
 
       setState(() {
         _gameLevel = level;
@@ -70,13 +69,15 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
   void updateLevel(
       {LetterGrid? myLetterGrid,
       required LetterGrid theirLetterGrid,
-      num? blastIndex}) {
+      num? blastIndex,
+      num? difficulty}) {
+    new Logger('updating').info(difficulty);
     if (myLetterGrid != null) {
       //should always mean player is getting a new puzzle
       setState(() {
         _gameLevel.setMyLetterGrid(myLetterGrid);
       });
-    } else if (blastIndex != null) {
+    } else if (blastIndex != null && _gameLevel.getMyLetterGrid() != null) {
       //need to blast my puzzle based on partner's blast index
       setState(() {
         int blastIntIndex = blastIndex.toInt();
@@ -90,9 +91,18 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
             letterGrid: _gameLevel.getMyLetterGrid() as LetterGrid);
       });
     }
-    setState(() {
-      _gameLevel.setTheirLetterGrid(theirLetterGrid);
-    });
+    if (difficulty != null) {
+      new Logger('diff').info('setting difficulty');
+      setState(() {
+        _gameLevel.difficulty = difficulty.toInt();
+        _gameLevel.setTheirLetterGrid(theirLetterGrid);
+      });
+    } else {
+      setState(() {
+        new Logger('diff2').info('not setting difficulty');
+        _gameLevel.setTheirLetterGrid(theirLetterGrid);
+      });
+    }
 
     if (!_playerHasWon) {
       checkForWinAtCorrectTime();
@@ -123,7 +133,6 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
     Future<void>.delayed(Constants.clearPuzzlesDuration, () {
       _partyDatabaseConnection.clearLevels();
     });
-    
 
     int numberGuesses = _gameLevel.letterGrid.guesses.length;
     if (_gameLevel.letterGridB != null) {

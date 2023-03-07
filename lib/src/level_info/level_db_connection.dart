@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:lexpedition/src/game_data/levels.dart';
-import 'package:logging/logging.dart';
 
 class LevelDatabaseConnection {
   static Future<GameLevel> getOnePlayerPuzzle() async {
@@ -411,7 +410,7 @@ class LevelDatabaseConnection {
         'author': author,
         'averageGuesses': 0,
         'gridCodeA': encodedGridStringA,
-        'gridCodeA': encodedGridStringB
+        'gridCodeB': encodedGridStringB
       });
     }
   }

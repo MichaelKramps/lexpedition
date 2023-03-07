@@ -4,7 +4,7 @@ import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 
 class GameLevel {
-  final int difficulty;
+  late int difficulty;
   final int? puzzleId;
   final List<String?> gridCode;
   final List<String?>? gridCodeB;

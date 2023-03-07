@@ -28,7 +28,7 @@ class _OnePlayerPuzzleLoaderState extends State<OnePlayerPuzzleLoader> {
     GameLevel level = await LevelDatabaseConnection.getOnePlayerPuzzle();
 
     PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
-    partyDatabaseConnection.loadPuzzleForPlayers(gridCodeListA: level.gridCode);
+    partyDatabaseConnection.loadPuzzleForPlayers(level: level);
 
     setState(() {
       _loadedLevel = level;
