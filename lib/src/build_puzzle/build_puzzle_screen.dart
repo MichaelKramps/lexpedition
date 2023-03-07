@@ -6,7 +6,8 @@ class BuildPuzzleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Scaffold(
+      body: SizedBox.expand(child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -18,6 +19,8 @@ class BuildPuzzleScreen extends StatelessWidget {
               onPressed: () =>
                   GoRouter.of(context).push('/buildpuzzle/2player'),
               child: Text('2 Players'))
-        ]);
+        ]
+      ))
+    );
   }
 }
