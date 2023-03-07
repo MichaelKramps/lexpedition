@@ -399,7 +399,7 @@ class LevelDatabaseConnection {
 
   static Future<void> createTwoPlayerLevel(
       String encodedGridStringA, String encodedGridStringB, String author) async {
-    int nextLevelId = await getNextOnePlayerLevelId();
+    int nextLevelId = await getNextTwoPlayerLevelId();
 
     if (nextLevelId > 0) {
       FirebaseDatabase.instance
