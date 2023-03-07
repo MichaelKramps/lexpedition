@@ -9,7 +9,6 @@ import 'package:lexpedition/src/games_services/score.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayerPuzzleLoader extends StatefulWidget {
@@ -71,7 +70,6 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
       required LetterGrid theirLetterGrid,
       num? blastIndex,
       num? difficulty}) {
-    new Logger('updating').info(difficulty);
     if (myLetterGrid != null) {
       //should always mean player is getting a new puzzle
       setState(() {
@@ -92,14 +90,12 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
       });
     }
     if (difficulty != null) {
-      new Logger('diff').info('setting difficulty');
       setState(() {
         _gameLevel.difficulty = difficulty.toInt();
         _gameLevel.setTheirLetterGrid(theirLetterGrid);
       });
     } else {
       setState(() {
-        new Logger('diff2').info('not setting difficulty');
         _gameLevel.setTheirLetterGrid(theirLetterGrid);
       });
     }
