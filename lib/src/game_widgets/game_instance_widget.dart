@@ -134,7 +134,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
     } else if (clickEvent && letterTile == _grid.currentGuess.last) {
       setState(() {
         letterTile.unselect();
-        _grid.currentGuess.removeLast();
+        _grid.removeLastInCurrentGuess();
       });
     }
     partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);

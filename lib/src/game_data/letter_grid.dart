@@ -164,10 +164,25 @@ class LetterGrid {
 
   void removeLastInCurrentGuess() {
     this.currentGuess.removeLast();
+    attemptToPrimeForBlast();
   }
 
   void updateCurrentGuess(LetterTile letterTile) {
     this.currentGuess.add(letterTile);
+    clearPrimedForBlast();
+    attemptToPrimeForBlast();
+  }
+
+  void clearPrimedForBlast() {
+    for (LetterTile tile in this.currentGuess) {
+      tile.unprimeForBlast();
+    }
+  }
+
+  void attemptToPrimeForBlast() {
+    if (currentGuess.length >= 5) {
+      this.currentGuess.last.primeForBlast();
+    }
   }
 
   void chargeTilesFromGuess() {
@@ -243,6 +258,7 @@ class LetterGrid {
   void unblast() {
     for (LetterTile letterTile in letterTiles) {
       letterTile.unblast();
+      letterTile.unprimeForBlast();
     }
   }
 

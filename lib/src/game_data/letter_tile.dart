@@ -7,6 +7,7 @@ class LetterTile {
   int currentObstacleCharges = 0;
   int index = -1;
   bool selected = false;
+  bool primedForBlast = false;
   bool blastFrom = false;
 
   LetterTile(String letter, TileType tileType, int requiredCharges,
@@ -30,7 +31,7 @@ class LetterTile {
         this.tileType = TileType.values[int.parse(encodedString[1])];
         this.requiredCharges = int.parse(encodedString[2]);
         this.requiredObstacleCharges = int.parse(encodedString[3]);
-      } else if (encodedString.length == 8) {
+      } else if (encodedString.length >= 8) {
         this.letter = encodedString[0];
         this.tileType = TileType.values[int.parse(encodedString[1])];
         this.requiredCharges = int.parse(encodedString[2]);
@@ -39,6 +40,11 @@ class LetterTile {
         this.currentObstacleCharges = int.parse(encodedString[5]);
         this.selected = encodedString[6] == '1' ? true : false;
         this.blastFrom = encodedString[7] == '1' ? true : false;
+        try {
+          this.primedForBlast = encodedString[8] == '1' ? true : false;
+        } catch (e) {
+          this.primedForBlast = false;
+        }
       } else {
         this.tileType = TileType.empty;
       }
@@ -55,9 +61,9 @@ class LetterTile {
     encodedString += this.currentCharges.toString();
     encodedString += this.requiredObstacleCharges.toString();
     encodedString += this.currentObstacleCharges.toString();
-    encodedString += this.selected ? "1" : "0";
-    encodedString += this.blastFrom ? "1" : "0";
-
+    encodedString += this.selected ? '1' : '0';
+    encodedString += this.blastFrom ? '1' : '0';
+    encodedString += this.primedForBlast ? '1' : '0';
 
     return encodedString;
   }
@@ -76,6 +82,14 @@ class LetterTile {
 
   void unselect() {
     this.selected = false;
+  }
+
+  void primeForBlast() {
+    this.primedForBlast = true;
+  }
+
+  void unprimeForBlast() {
+    this.primedForBlast = false;
   }
 
   void blast() {
