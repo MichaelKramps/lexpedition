@@ -52,10 +52,10 @@ class _OnePlayerPlaySessionScreenState
         body: Stack(
           children: [
             GameInstanceWidget(
-              gameLevel: widget.level,
-              playerWon: _playerWon,
-              leftColumn: GameColumn.blankColumn,
-              rightColumn: GameColumn.onePlayerRightColumn,
+                gameLevel: widget.level,
+                playerWon: _playerWon,
+                leftColumn: GameColumn.onePlayerLeftColumn,
+                rightColumn: GameColumn.onePlayerRightColumn,
             ),
             SizedBox.expand(
               child: Visibility(
