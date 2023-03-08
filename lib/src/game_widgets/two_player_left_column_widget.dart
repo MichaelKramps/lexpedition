@@ -4,6 +4,7 @@ import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
+import 'package:logging/logging.dart';
 
 class TwoPlayerLeftColumnWidget extends StatelessWidget {
   final GameInstanceWidgetStateManager? gameInstanceWidgetStateManager;
@@ -61,7 +62,7 @@ class TwoPlayerLeftColumnWidget extends StatelessWidget {
       allGuesses.addAll(theirGrid.guesses);
     }
 
-    allGuesses.sort((a, b) => a.timeSubmitted.compareTo(b.timeSubmitted));
+    allGuesses.sort((a, b) => b.timeSubmitted.compareTo(a.timeSubmitted));
     return allGuesses;
   }
 }

@@ -66,9 +66,25 @@ class GameLevel {
 
   void setTheirLetterGrid(LetterGrid newLetterGrid) {
     if (partyDatabaseConnection.isPartyLeader) {
-      letterGridB = newLetterGrid;
+      if (letterGridB != null) {
+        letterGridB?.encodedTiles = newLetterGrid.encodedTiles;
+        letterGridB?.blastDirection = newLetterGrid.blastDirection;
+        letterGridB?.letterTiles = newLetterGrid.letterTiles;
+        letterGridB?.rows = newLetterGrid.rows;
+        letterGridB?.currentGuess = newLetterGrid.currentGuess;
+        letterGridB?.par = newLetterGrid.par;
+        letterGridB?.updateGuessesFromLetterGrid(newLetterGrid);
+      } else {
+        letterGridB = newLetterGrid;
+      }
     } else {
-      letterGrid = newLetterGrid;
+      letterGrid.encodedTiles = newLetterGrid.encodedTiles;
+      letterGrid.blastDirection = newLetterGrid.blastDirection;
+      letterGrid.letterTiles = newLetterGrid.letterTiles;
+      letterGrid.rows = newLetterGrid.rows;
+      letterGrid.currentGuess = newLetterGrid.currentGuess;
+      letterGrid.par = newLetterGrid.par;
+      letterGrid.updateGuessesFromLetterGrid(newLetterGrid);
     }
   }
 

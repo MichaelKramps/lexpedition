@@ -163,8 +163,8 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
       await showBadGuess();
     } else if (_grid.isNewGuess(getCurrentGuess()) &&
         WordHelper.isValidWord(getCurrentGuess())) {
-      _grid.addGuess(getCurrentGuess());
       setState(() {
+        _grid.addGuess(getCurrentGuess());
         _grid.chargeTilesFromGuess();
       });
       // check for win condition

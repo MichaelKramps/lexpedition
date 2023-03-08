@@ -99,6 +99,23 @@ class LetterGrid {
     }
   }
 
+  void updateGuessesFromLetterGrid(LetterGrid newLetterGrid) {
+    for (AcceptedGuess acceptedGuess in newLetterGrid.guesses) {
+      if (guessIsNew(acceptedGuess)) {
+        guesses.add(acceptedGuess);
+      }
+    }
+  }
+
+  bool guessIsNew(AcceptedGuess acceptedGuess) {
+    for (AcceptedGuess guess in guesses) {
+      if (guess.guess.toLowerCase() == acceptedGuess.guess.toLowerCase()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   String createGuessesForDatabase() {
     List<String> guessStrings = [];
     for (AcceptedGuess guess in guesses) {
