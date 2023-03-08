@@ -5,6 +5,7 @@ import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/blast_direction_widget.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
+import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 
@@ -54,7 +55,7 @@ class ObserverGameInstanceWidget extends StatelessWidget {
         return TwoPlayerRightColumnWidget(
             twoPlayerPlaySessionStateManager: twoPlayerPlaySessionStateManager);
       case GameColumn.twoPlayerLeftColumn:
-        return TwoPlayerRightColumnWidget(
+        return TwoPlayerLeftColumnWidget(
             twoPlayerPlaySessionStateManager: twoPlayerPlaySessionStateManager);
       default:
         return Container();

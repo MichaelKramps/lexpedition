@@ -1,3 +1,4 @@
+import 'package:lexpedition/src/game_data/accepted_guess.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 
 import 'letter_tile.dart';
@@ -8,7 +9,7 @@ class LetterGrid {
   late List<List<LetterTile>> rows;
   BlastDirection blastDirection = BlastDirection.vertical;
   List<LetterTile> currentGuess = [];
-  List<String> guesses = [];
+  List<AcceptedGuess> guesses = [];
   late int par;
 
   LetterGrid(List<String?> letterTiles, int par) {
@@ -28,7 +29,7 @@ class LetterGrid {
     this.letterTiles = this.decodeLetterTiles(letterTiles);
     this.rows = this.setRows(this.letterTiles);
     this.par = 1;
-    this.guesses = guesses;
+    setGuessesFromDatabase(guesses);
     if (blastDirection != null) {
       this.blastDirection = blastDirection;
     }
@@ -82,6 +83,28 @@ class LetterGrid {
   String getGridStringForDatabase() {
     List<String?> encodedGrid = getReEncodedGrid();
     return encodedGrid.join(',');
+  }
+
+  void setGuessesFromDatabase(List<String> guessesFromDatabase) {
+    for (String dbGuess in guessesFromDatabase) {
+      bool alreadyExists = false;
+      for (AcceptedGuess acceptedGuess in guesses) {
+        if (acceptedGuess.matchesGuess(dbGuess)) {
+          alreadyExists = true;
+        }
+      }
+      if (!alreadyExists) {
+        guesses.add(AcceptedGuess(guess: dbGuess, fromMe: false));
+      }
+    }
+  }
+
+  String createGuessesForDatabase() {
+    List<String> guessStrings = [];
+    for (AcceptedGuess guess in guesses) {
+      guessStrings.add(guess.guess);
+    }
+    return guessStrings.join(',');
   }
 
   String encodedGridToString() {
@@ -139,16 +162,14 @@ class LetterGrid {
           thisTile.tileType == TileType.start && thisTile == currentGuess[0];
       bool qualifiesAsEndTile = thisTile.tileType == TileType.end &&
           thisTile == currentGuess[currentGuess.length - 1];
-      if (qualifiesAsBasicTile ||
-          qualifiesAsStartTile ||
-          qualifiesAsEndTile) {
+      if (qualifiesAsBasicTile || qualifiesAsStartTile || qualifiesAsEndTile) {
         thisTile.addCharge();
       }
     }
   }
 
   void addGuess(String guess) {
-    this.guesses.add(guess);
+    this.guesses.add(AcceptedGuess(guess: guess));
   }
 
   bool isNewGuess(String guess) {

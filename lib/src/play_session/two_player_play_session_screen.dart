@@ -59,40 +59,42 @@ class _TwoPlayerPlaySessionScreenState
       return GameInstanceWidget(
           gameLevel: widget.gameLevel,
           playerWon: widget.playerWon,
-          leftColumn: GameColumn.blankColumn,
+          leftColumn: GameColumn.twoPlayerLeftColumn,
           rightColumn: GameColumn.twoPlayerRightColumn,
           twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(
-              twoPlayerState: this,
-              theirLetterGrid: widget.gameLevel.getTheirLetterGrid()));
+              twoPlayerState: this, gameLevel: widget.gameLevel));
     } else {
       return ObserverGameInstanceWidget(
           twoPlayerPlaySessionStateManager: TwoPlayerPlaySessionStateManager(
-              twoPlayerState: this,
-              theirLetterGrid: widget.gameLevel.getTheirLetterGrid()),
-          leftColumn: GameColumn.blankColumn,
+              twoPlayerState: this, gameLevel: widget.gameLevel),
+          leftColumn: GameColumn.twoPlayerLeftColumn,
           rightColumn: GameColumn.twoPlayerRightColumn);
     }
   }
 
   void toggleScreen() {
     setState(() {
-      _showingMyGrid = _showingMyGrid ? false : true;
+      _showingMyGrid = !_showingMyGrid;
     });
   }
 }
 
 class TwoPlayerPlaySessionStateManager {
   _TwoPlayerPlaySessionScreenState twoPlayerState;
-  LetterGrid? theirLetterGrid;
+  GameLevel gameLevel;
 
   TwoPlayerPlaySessionStateManager(
-      {required this.twoPlayerState, this.theirLetterGrid});
+      {required this.twoPlayerState, required this.gameLevel});
 
   void toggleScreen() {
     twoPlayerState.toggleScreen();
   }
 
   LetterGrid? getTheirLetterGrid() {
-    return theirLetterGrid;
+    return gameLevel.getTheirLetterGrid();
+  }
+
+  LetterGrid? getMyLetterGrid() {
+    return gameLevel.getMyLetterGrid();
   }
 }

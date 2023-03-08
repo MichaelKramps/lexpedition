@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lexpedition/src/game_data/accepted_guess.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 
@@ -15,8 +16,8 @@ class OnePlayerLeftColumnWidget extends StatelessWidget {
       children:[
         Text(gameInstanceWidgetStateManager.getGrid().guesses.length.toString() + ' Guesses',
         style: TextStyle(fontSize: Constants.smallFont)),
-        for (String guess in gameInstanceWidgetStateManager.getGrid().guesses.reversed) ...[
-          Text(guess, style: TextStyle(fontSize: Constants.smallFont))
+        for (AcceptedGuess guess in gameInstanceWidgetStateManager.getGrid().guesses.reversed) ...[
+          Text(guess.guess, style: TextStyle(fontSize: Constants.smallFont))
         ]
       ]
     );

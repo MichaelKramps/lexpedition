@@ -154,7 +154,7 @@ class PartyDatabaseConnection {
         await databaseReference?.update({
           'letterGridA': {
             'gridString': letterGrid.getGridStringForDatabase(),
-            'guesses': letterGrid.guesses.join(','),
+            'guesses': letterGrid.createGuessesForDatabase(),
             'blastIndex': blastIndex,
             'blastDirection': letterGrid.blastDirection.index
           },
@@ -164,7 +164,7 @@ class PartyDatabaseConnection {
         await databaseReference?.update({
           'letterGridB': {
             'gridString': letterGrid.getGridStringForDatabase(),
-            'guesses': letterGrid.guesses.join(','),
+            'guesses': letterGrid.createGuessesForDatabase(),
             'blastIndex': blastIndex,
             'blastDirection': letterGrid.blastDirection.index
           },
