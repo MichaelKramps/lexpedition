@@ -171,10 +171,16 @@ class _BuildTwoPlayerPuzzleWidgetState
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () => LevelDatabaseConnection.createTwoPlayerLevel(
-                _grid.encodedGridToString(),
-                _gridB.encodedGridToString(),
-                'michael@kinship.games'),
+            onPressed: () {
+              setState(() {
+                _grid.unselectAll();
+                _gridB.unselectAll();
+              });
+              LevelDatabaseConnection.createTwoPlayerLevel(
+                  _grid.encodedGridToString(),
+                  _gridB.encodedGridToString(),
+                  'michael@kinship.games');
+            },
             child: Text('Save'),
           ),
           SizedBox(height: 20),

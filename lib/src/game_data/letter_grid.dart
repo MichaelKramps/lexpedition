@@ -177,4 +177,10 @@ class LetterGrid {
       letterTile.unblast();
     }
   }
+
+  void unselectAll() {
+    for (LetterTile letterTile in letterTiles) {
+      letterTile.unselect();
+    }
+  }
 }

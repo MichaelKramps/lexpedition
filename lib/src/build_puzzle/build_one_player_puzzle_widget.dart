@@ -164,7 +164,12 @@ class _BuildOnePlayerPuzzleWidgetState
           ),
           SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () => LevelDatabaseConnection.createOnePlayerLevel(_grid.encodedGridToString(), 'michael@kinship.games'),
+            onPressed: () {
+              setState(() {
+                _grid.unselectAll();
+              });
+              LevelDatabaseConnection.createOnePlayerLevel(_grid.encodedGridToString(), 'michael@kinship.games');
+            },
             child: Text('Save'),
           ),
           SizedBox(height: 20),
