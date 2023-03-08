@@ -7,6 +7,7 @@ class LetterGrid {
   late List<LetterTile> letterTiles;
   late List<List<LetterTile>> rows;
   BlastDirection blastDirection = BlastDirection.vertical;
+  List<LetterTile> currentGuess = [];
   List<String> guesses = [];
   late int par;
 
@@ -115,6 +116,35 @@ class LetterGrid {
     }
 
     return true;
+  }
+
+  void clearCurrentGuess() {
+    this.currentGuess = [];
+  }
+
+  void removeLastInCurrentGuess() {
+    this.currentGuess.removeLast();
+  }
+
+  void updateCurrentGuess(LetterTile letterTile) {
+    this.currentGuess.add(letterTile);
+  }
+
+  void chargeTilesFromGuess() {
+    for (int tile = 0; tile < currentGuess.length; tile++) {
+      LetterTile thisTile = currentGuess[tile];
+      thisTile.selected = false;
+      bool qualifiesAsBasicTile = thisTile.tileType == TileType.basic;
+      bool qualifiesAsStartTile =
+          thisTile.tileType == TileType.start && thisTile == currentGuess[0];
+      bool qualifiesAsEndTile = thisTile.tileType == TileType.end &&
+          thisTile == currentGuess[currentGuess.length - 1];
+      if (qualifiesAsBasicTile ||
+          qualifiesAsStartTile ||
+          qualifiesAsEndTile) {
+        thisTile.addCharge();
+      }
+    }
   }
 
   void addGuess(String guess) {
