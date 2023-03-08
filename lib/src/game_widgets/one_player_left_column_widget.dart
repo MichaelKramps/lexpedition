@@ -10,10 +10,15 @@ class OnePlayerLeftColumnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(mainAxisAlignment: MainAxisAlignment.start, children:[
-      for (String guess in gameInstanceWidgetStateManager.getGrid().guesses.reversed) ...[
-        Text(guess, style: TextStyle(fontSize: Constants.smallFont),)
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start, 
+      children:[
+        Text(gameInstanceWidgetStateManager.getGrid().guesses.length.toString() + ' Guesses',
+        style: TextStyle(fontSize: Constants.smallFont)),
+        for (String guess in gameInstanceWidgetStateManager.getGrid().guesses.reversed) ...[
+          Text(guess, style: TextStyle(fontSize: Constants.smallFont))
+        ]
       ]
-    ]);
+    );
   }
 }

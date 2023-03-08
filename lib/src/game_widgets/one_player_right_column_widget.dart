@@ -12,8 +12,6 @@ class OnePlayerRightColumnWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-      Text(gameInstanceWidgetStateManager.getGrid().guesses.length.toString(),
-          style: TextStyle(fontSize: 45, color: Colors.black)),
       InkResponse(
         onTap: () => GoRouter.of(context).push('/settings'),
         child: Image.asset(
