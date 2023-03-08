@@ -66,21 +66,31 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
         GameInstanceWidgetStateManager(
             gameInstanceWidgetState: this, showBadGuess: _showBadGuess);
 
-    return Row(children: [
-      Expanded(child: determineColumn(widget.leftColumn)),
-      Column(children: [
-        LetterGridActionsWidget(
-            gameInstanceWidgetStateManager: gameInstanceWidgetStateManager),
-        Listener(
-            key: gridKey,
-            onPointerDown: (event) =>
-                {handleMouseEvent(event.position.dx, event.position.dy, true)},
-            onPointerMove: (event) =>
-                {handleMouseEvent(event.position.dx, event.position.dy, false)},
-            child: LetterGridWidget(letterGrid: _grid))
-      ]),
-      Expanded(child: determineColumn(widget.rightColumn))
-    ]);
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(Constants.backgroundImagePath),
+              fit: BoxFit.cover),
+        )),
+        Row(children: [
+          Expanded(child: determineColumn(widget.leftColumn)),
+          Column(children: [
+            LetterGridActionsWidget(
+                gameInstanceWidgetStateManager: gameInstanceWidgetStateManager),
+            Listener(
+                key: gridKey,
+                onPointerDown: (event) =>
+                    {handleMouseEvent(event.position.dx, event.position.dy, true)},
+                onPointerMove: (event) =>
+                    {handleMouseEvent(event.position.dx, event.position.dy, false)},
+                child: LetterGridWidget(letterGrid: _grid))
+          ]),
+          Expanded(child: determineColumn(widget.rightColumn))
+        ])
+      ]
+    );
   }
 
   Widget determineColumn(GameColumn gameColumn) {
