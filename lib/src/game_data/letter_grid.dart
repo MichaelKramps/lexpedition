@@ -160,6 +160,7 @@ class LetterGrid {
 
   void clearCurrentGuess() {
     this.currentGuess = [];
+    clearPrimedForBlast();
   }
 
   void removeLastInCurrentGuess() {
@@ -174,7 +175,7 @@ class LetterGrid {
   }
 
   void clearPrimedForBlast() {
-    for (LetterTile tile in this.currentGuess) {
+    for (LetterTile tile in this.letterTiles) {
       tile.unprimeForBlast();
     }
   }
@@ -183,6 +184,10 @@ class LetterGrid {
     if (currentGuess.length >= 5) {
       this.currentGuess.last.primeForBlast();
     }
+  }
+
+  void primeForBlastFromIndex(int index) {
+    this.letterTiles[index].primeForBlast();
   }
 
   void chargeTilesFromGuess() {

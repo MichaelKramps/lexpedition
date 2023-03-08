@@ -154,8 +154,10 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
       _grid.clearCurrentGuess();
       for (LetterTile tile in _grid.letterTiles) {
         tile.unselect();
+        tile.unprimeForBlast();
       }
     });
+    partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);
   }
 
   void submitGuess() async {

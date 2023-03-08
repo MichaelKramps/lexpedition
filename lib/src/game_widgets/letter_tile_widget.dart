@@ -43,7 +43,11 @@ class LetterTileWidget extends StatelessWidget {
             margin: EdgeInsets.all(Constants.tileMargin),
             width: Constants.tileSize,
             height: Constants.tileSize,
-            color: determineEmptyColor(letterTile)),
+            decoration: BoxDecoration(
+              border: determineEmptyBorder(letterTile),
+              color: determineEmptyColor(letterTile)
+            )
+        ),
         BlastWidget(
             blastDirection: blastDirection,
             beginBlastAnimation: letterTile.blastFrom)
@@ -86,6 +90,17 @@ class LetterTileWidget extends StatelessWidget {
       return BorderSide(width: 2, color: Colors.orange);
     } else {
       return BorderSide(width: 0, color: Colors.transparent);
+    }
+  }
+
+  Border determineEmptyBorder(LetterTile letterTile) {
+    if (letterTile.primedForBlast) {
+      return Border.all(
+          color: Color.fromARGB(255, 63, 181, 150),
+          width: 3,
+          style: BorderStyle.solid);
+    } else {
+      return Border();
     }
   }
 
