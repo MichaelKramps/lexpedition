@@ -21,20 +21,14 @@ class PartyScreen extends StatelessWidget {
           children: [
             ElevatedButton(
                 onPressed: () => GoRouter.of(context).push('/party/join'),
-                child: Text('Join Party')),
+                child: Text('Enter Code')),
             SizedBox(width: Constants.smallFont),
             ElevatedButton(
                 onPressed: () => GoRouter.of(context).push('/party/start'),
-                child: Text('Start Party')),
+                child: Text('Invite Friend')),
             SizedBox(width: Constants.smallFont),
             ElevatedButton(
-                onPressed: () {
-                  PartyDatabaseConnection().leaveParty();
-                },
-                child: Text('Leave Party')),
-            SizedBox(width: Constants.smallFont),
-            ElevatedButton(
-                onPressed: () => GoRouter.of(context).push('/'),
+                onPressed: () => GoRouter.of(context).pop(),
                 child: Text('Back'))
           ])
     ]));

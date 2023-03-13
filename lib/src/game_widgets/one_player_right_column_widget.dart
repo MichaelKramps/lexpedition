@@ -30,7 +30,7 @@ class OnePlayerRightColumnWidget extends StatelessWidget {
       ElevatedButton(
         onPressed: () {
           logPuzzleQuit();
-          GoRouter.of(context).go('/');
+          GoRouter.of(context).push('/');
         },
         child: const Text('Home'),
       )

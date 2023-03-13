@@ -171,9 +171,9 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
     if (!mounted) return;
     await Future<void>.delayed(Constants.celebrationDuration, () {
       if (_partyDatabaseConnection.isPartyLeader) {
-        GoRouter.of(context).go('/freeplaywon/leader', extra: {'score': score});
+        GoRouter.of(context).push('/freeplaywon/leader', extra: {'score': score});
       } else {
-        GoRouter.of(context).go('/freeplaywon/joiner', extra: {'score': score});
+        GoRouter.of(context).push('/freeplaywon/joiner', extra: {'score': score});
       }
     });
   }

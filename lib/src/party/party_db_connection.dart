@@ -93,8 +93,8 @@ class PartyDatabaseConnection {
       this.databaseReference?.remove();
     } else {
       this.takeOneFromParty(this.databaseReference);
-      listener?.cancel();
     }
+    listener?.cancel();
     connection = PartyDatabaseConnection.nullConstructor();
     this.isPartyLeader = false;
     this.partyCode = '';
@@ -132,7 +132,10 @@ class PartyDatabaseConnection {
             'difficulty': level.difficulty,
             'letterGridB': level.gridCodeB?.join(',')
           },
-          'letterGridB': {'gridString': level.gridCodeB?.join(','), 'guesses': ''}
+          'letterGridB': {
+            'gridString': level.gridCodeB?.join(','),
+            'guesses': ''
+          }
         });
       }
     }

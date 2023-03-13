@@ -66,7 +66,7 @@ class WinGameScreen extends StatelessWidget {
         ),
         rectangularMenuArea: ElevatedButton(
           onPressed: () {
-            GoRouter.of(context).go(continueRoute);
+            GoRouter.of(context).push(continueRoute);
           },
           child: const Text('Continue'),
         ),

@@ -5,6 +5,7 @@
 // Uncomment the following lines when enabling Firebase Crashlytics
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lexpedition/src/main_menu/more_menu.dart';
 import 'package:lexpedition/src/play_session/one_player_puzzle_loader.dart';
 import 'package:lexpedition/src/play_session/two_player_puzzle_loader.dart';
 import 'package:lexpedition/src/party/join_party_screen.dart';
@@ -197,6 +198,11 @@ class MyApp extends StatelessWidget {
               path: 'settings',
               builder: (context, state) =>
                   const SettingsScreen(key: Key('settings')),
+            ),
+            GoRoute(
+              path: 'moremenu',
+              builder: (context, state) =>
+                  const MoreMenu(key: Key('moremenu')),
             ),
             GoRoute(
                 path: 'freeplay',

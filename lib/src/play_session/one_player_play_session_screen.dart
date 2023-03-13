@@ -138,6 +138,6 @@ class _OnePlayerPlaySessionScreenState
     await Future<void>.delayed(Constants.celebrationDuration);
     if (!mounted) return;
 
-    GoRouter.of(context).go(widget.winRoute, extra: {'score': score});
+    GoRouter.of(context).push(widget.winRoute, extra: {'score': score});
   }
 }

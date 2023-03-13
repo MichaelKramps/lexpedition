@@ -48,7 +48,7 @@ class TutorialScreen extends StatelessWidget {
                         final audioController = context.read<AudioController>();
                         audioController.playSfx(SfxType.buttonTap);
 
-                        GoRouter.of(context).go(
+                        GoRouter.of(context).push(
                             '/tutorial/intro/${level.number}/${level.difficulty}');
                       },
                       leading: Text(level.number.toString()),
@@ -61,7 +61,7 @@ class TutorialScreen extends StatelessWidget {
         ),
         rectangularMenuArea: ElevatedButton(
           onPressed: () {
-            GoRouter.of(context).go('/');
+            GoRouter.of(context).push('/');
           },
           child: const Text('Back'),
         ),

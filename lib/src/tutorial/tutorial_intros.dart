@@ -56,7 +56,7 @@ class TutorialIntroWidget extends StatelessWidget {
         ),
         rectangularMenuArea: ElevatedButton(
           onPressed: () {
-            GoRouter.of(context).go('/tutorial/session/' + level.toString());
+            GoRouter.of(context).push('/tutorial/session/' + level.toString());
           },
           child: const Text('Play'),
         ),
