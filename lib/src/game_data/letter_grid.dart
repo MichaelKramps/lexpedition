@@ -93,7 +93,7 @@ class LetterGrid {
           alreadyExists = true;
         }
       }
-      if (!alreadyExists) {
+      if (!alreadyExists && dbGuess != "") {
         guesses.add(AcceptedGuess(guess: dbGuess, fromMe: false));
       }
     }
