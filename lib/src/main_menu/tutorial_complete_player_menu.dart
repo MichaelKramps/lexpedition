@@ -8,34 +8,36 @@ class TutorialCompletePlayerMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.expand(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          determinePartyButton(context),
-          SizedBox(width: Constants.smallFont),
-          ElevatedButton(
-            onPressed: () {
-              GoRouter.of(context).push('/lexpedition');
-            },
-            child: const Text('Lexpedition'),
-          ),
-          SizedBox(width: Constants.smallFont),
-          ElevatedButton(
-            onPressed: () {
-              GoRouter.of(context).push('/freeplay');
-            },
-            child: const Text('Free Play'),
-          ),
-          SizedBox(width: Constants.smallFont),
-          ElevatedButton(
-            onPressed: () {
-              GoRouter.of(context).push('/moremenu');
-            },
-            child: const Text('More...'),
-          )
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        determinePartyButton(context),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                GoRouter.of(context).push('/lexpedition');
+              },
+              child: const Text('Lexpedition'),
+            ),
+            SizedBox(width: Constants.smallFont),
+            ElevatedButton(
+              onPressed: () {
+                GoRouter.of(context).push('/freeplay');
+              },
+              child: const Text('Free Play'),
+            ),
+            SizedBox(width: Constants.smallFont),
+            ElevatedButton(
+              onPressed: () {
+                GoRouter.of(context).push('/moremenu');
+              },
+              child: const Text('More...'),
+            )
+          ],
+        )
+      ]
     );
   }
 
@@ -43,15 +45,20 @@ class TutorialCompletePlayerMenu extends StatelessWidget {
     PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
 
     if (partyDatabaseConnection.isNull()) {
+      final ButtonStyle buttonStyle = TextButton.styleFrom(
+        backgroundColor: Colors.amber);
+
       return ElevatedButton(
         onPressed: () {
           GoRouter.of(context).push('/party');
         },
+        style: buttonStyle,
         child: const Text('Play with a Friend'),
       );
     } else {
       return ElevatedButton(
         onPressed: () {
+          //TODO: ask if they really want to leave the party
           partyDatabaseConnection.leaveParty();
         },
         child: const Text('Play Solo'),
