@@ -13,8 +13,8 @@ class GameLevel {
   late LetterGrid? letterGridB;
   final int attempts;
   final int attemptsFinished;
-  final int bestAttempt;
-  final double averageGuesses;
+  int bestAttempt;
+  double averageGuesses;
   final PartyDatabaseConnection partyDatabaseConnection =
       PartyDatabaseConnection();
 

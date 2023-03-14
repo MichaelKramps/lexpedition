@@ -68,8 +68,10 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
   void updateLevel(
       {LetterGrid? myLetterGrid,
       required LetterGrid theirLetterGrid,
-      num? blastIndex,
-      num? difficulty}) {
+      int? blastIndex,
+      int? difficulty,
+      double? averageGuesses,
+      int? bestAttempt}) {
     if (myLetterGrid != null) {
       //should always mean player is getting a new puzzle
       setState(() {
@@ -78,8 +80,7 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
     } else if (blastIndex != null && _gameLevel.getMyLetterGrid() != null) {
       //need to blast my puzzle based on partner's blast index
       setState(() {
-        int blastIntIndex = blastIndex.toInt();
-        _gameLevel.getMyLetterGrid()?.blastFromIndex(blastIntIndex);
+        _gameLevel.getMyLetterGrid()?.blastFromIndex(blastIndex);
       });
       Future<void>.delayed(Constants.blastDuration, () {
         setState(() {
@@ -89,9 +90,11 @@ class _TwoPlayerPuzzleLoaderState extends State<TwoPlayerPuzzleLoader> {
             letterGrid: _gameLevel.getMyLetterGrid() as LetterGrid);
       });
     }
-    if (difficulty != null) {
+    if (difficulty != null && averageGuesses != null && bestAttempt != null) {
       setState(() {
-        _gameLevel.difficulty = difficulty.toInt();
+        _gameLevel.difficulty = difficulty;
+        _gameLevel.averageGuesses = averageGuesses;
+        _gameLevel.bestAttempt = bestAttempt;
         _gameLevel.setTheirLetterGrid(theirLetterGrid);
       });
     } else {

@@ -130,6 +130,8 @@ class PartyDatabaseConnection {
             'gridString': level.gridCode.join(','),
             'guesses': '',
             'difficulty': level.difficulty,
+            'averageGuesses': level.averageGuesses,
+            'bestAttempt': level.bestAttempt,
             'letterGridB': level.gridCodeB?.join(',')
           },
           'letterGridB': {
@@ -181,8 +183,10 @@ class PartyDatabaseConnection {
       Function(
               {LetterGrid? myLetterGrid,
               required LetterGrid theirLetterGrid,
-              num? blastIndex,
-              num? difficulty})
+              int? blastIndex,
+              int? difficulty,
+              double? averageGuesses,
+              int? bestAttempt})
           callback) async {
     String gridToListenFor = isPartyLeader ? 'letterGridB' : 'letterGridA';
 
@@ -210,6 +214,16 @@ class PartyDatabaseConnection {
           difficulty = event.snapshot.child('difficulty').value as num?;
         } catch (e) {}
 
+        num? averageGuesses = null;
+        try {
+          averageGuesses = event.snapshot.child('averageGuesses').value as num?;
+        } catch (e) {}
+
+        num? bestAttempt = null;
+        try {
+          bestAttempt = event.snapshot.child('bestAttempt').value as num?;
+        } catch (e) {}
+
         num? blastDirectionIndex = null;
         try {
           blastDirectionIndex =
@@ -231,8 +245,10 @@ class PartyDatabaseConnection {
         callback(
             theirLetterGrid: theirLetterGrid,
             myLetterGrid: myLetterGrid,
-            blastIndex: blastIndex,
-            difficulty: difficulty);
+            blastIndex: blastIndex?.toInt(),
+            difficulty: difficulty?.toInt(),
+            averageGuesses: averageGuesses?.toDouble(),
+            bestAttempt: bestAttempt?.toInt());
       } catch (e) {}
     });
   }
