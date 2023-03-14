@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
-import 'package:lexpedition/src/game_data/levels.dart';
+import 'package:lexpedition/src/game_data/game_level.dart';
 
 class PartyDatabaseConnection {
   bool isPartyLeader = true;

@@ -19,7 +19,7 @@ import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
-import '../game_data/levels.dart';
+import '../game_data/game_level.dart';
 import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
 import '../style/palette.dart';

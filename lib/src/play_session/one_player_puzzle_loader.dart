@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:lexpedition/src/game_data/levels.dart';
+import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/play_session/one_player_play_session_screen.dart';

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:lexpedition/src/game_data/levels.dart';
+import 'package:lexpedition/src/game_data/game_level.dart';
 
 class LevelDatabaseConnection {
   static Future<GameLevel> getOnePlayerPuzzle() async {
