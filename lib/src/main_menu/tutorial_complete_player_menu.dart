@@ -3,14 +3,23 @@ import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 
-class TutorialCompletePlayerMenu extends StatelessWidget {
+class TutorialCompletePlayerMenu extends StatefulWidget {
   const TutorialCompletePlayerMenu({super.key});
 
   @override
+  State<TutorialCompletePlayerMenu> createState() =>
+      _TutorialCompletePlayerMenuState();
+}
+
+class _TutorialCompletePlayerMenuState
+    extends State<TutorialCompletePlayerMenu> {
+  bool _areYouSure = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
+    return Stack(children: [
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        checkToDisplayPartyCode(),
         determinePartyButton(context),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -37,16 +46,49 @@ class TutorialCompletePlayerMenu extends StatelessWidget {
             )
           ],
         )
-      ]
-    );
+      ]),
+      Visibility(
+          visible: _areYouSure,
+          child: Container(
+              alignment: Alignment.center,
+              color: Colors.amber,
+              child: SizedBox.fromSize(
+                  size: Size(360, 180),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          "Are you sure you want to disconnect from your partner?"),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                PartyDatabaseConnection().leaveParty();
+                                setState(() {
+                                  _areYouSure = false;
+                                });
+                              },
+                              child: Text("Yes")),
+                          ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _areYouSure = false;
+                                });
+                              },
+                              child: Text("No"))
+                        ],
+                      )
+                    ],
+                  ))))
+    ]);
   }
 
   Widget determinePartyButton(BuildContext context) {
     PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
 
     if (partyDatabaseConnection.isNull()) {
-      final ButtonStyle buttonStyle = TextButton.styleFrom(
-        backgroundColor: Colors.amber);
+      final ButtonStyle buttonStyle =
+          TextButton.styleFrom(backgroundColor: Colors.amber);
 
       return ElevatedButton(
         onPressed: () {
@@ -58,11 +100,22 @@ class TutorialCompletePlayerMenu extends StatelessWidget {
     } else {
       return ElevatedButton(
         onPressed: () {
-          //TODO: ask if they really want to leave the party
-          partyDatabaseConnection.leaveParty();
+          setState(() {
+            _areYouSure = true;
+          });
         },
         child: const Text('Play Solo'),
       );
+    }
+  }
+
+  Widget checkToDisplayPartyCode() {
+    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
+    if (partyDatabaseConnection.isNull() ||
+        !partyDatabaseConnection.isPartyLeader) {
+      return SizedBox();
+    } else {
+      return Text("Your partner code is " + partyDatabaseConnection.partyCode);
     }
   }
 }

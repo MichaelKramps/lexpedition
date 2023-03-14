@@ -48,7 +48,7 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                 style: getTextStyle()),
             ElevatedButton(
                 onPressed: () {
-                  GoRouter.of(context).push('/party');
+                  GoRouter.of(context).pop();
                 },
                 child: Text('Back'))
           ]))

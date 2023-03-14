@@ -14,7 +14,7 @@ class PartyScreen extends StatelessWidget {
       Visibility(
           visible: partyDatabaseConnection.partyCode != '',
           child:
-              Text('Current Party Code: ' + partyDatabaseConnection.partyCode)),
+              Text('Your partner code is ' + partyDatabaseConnection.partyCode)),
       Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
