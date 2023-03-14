@@ -3,6 +3,7 @@ import 'package:lexpedition/src/game_data/accepted_guess.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
+import 'package:lexpedition/src/game_widgets/guesses_info_widget.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:logging/logging.dart';
 
@@ -18,8 +19,11 @@ class TwoPlayerLeftColumnWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-      Text(getTotalNumberGuesses() + ' Guesses',
-          style: TextStyle(fontSize: Constants.smallFont)),
+      GuessesInformationWidget(
+        currentGuesses: getTotalNumberGuesses(),
+        averageGuesses: twoPlayerPlaySessionStateManager.getGameLevel().averageGuesses,
+        bestAttempt: twoPlayerPlaySessionStateManager.getGameLevel().bestAttempt,
+      ),
       for (AcceptedGuess guess in getAllGuessesInOrder()) ...[
         Text(guess.guess.toUpperCase(),
             style: TextStyle(
@@ -29,7 +33,7 @@ class TwoPlayerLeftColumnWidget extends StatelessWidget {
     ]);
   }
 
-  String getTotalNumberGuesses() {
+  int getTotalNumberGuesses() {
     int numberGuesses = 0;
 
     if (twoPlayerPlaySessionStateManager.getTheirLetterGrid() != null) {
@@ -44,7 +48,7 @@ class TwoPlayerLeftColumnWidget extends StatelessWidget {
       numberGuesses += myGrid.guesses.length;
     }
 
-    return numberGuesses.toString();
+    return numberGuesses;
   }
 
   List<AcceptedGuess> getAllGuessesInOrder() {

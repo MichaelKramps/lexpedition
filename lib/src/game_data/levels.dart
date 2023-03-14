@@ -11,9 +11,10 @@ class GameLevel {
   final List<String?>? gridCodeB;
   late LetterGrid letterGrid;
   late LetterGrid? letterGridB;
-  final int? attempts;
-  final int? attemptsFinished;
-  final double? averageGuesses;
+  final int attempts;
+  final int attemptsFinished;
+  final int bestAttempt;
+  final double averageGuesses;
   final PartyDatabaseConnection partyDatabaseConnection =
       PartyDatabaseConnection();
 
@@ -22,9 +23,10 @@ class GameLevel {
       required this.gridCode,
       this.gridCodeB,
       this.puzzleId,
-      this.attempts,
-      this.attemptsFinished,
-      this.averageGuesses}) {
+      this.attempts = 0,
+      this.attemptsFinished = 0,
+      this.averageGuesses = 100,
+      this.bestAttempt = 100}) {
     this.letterGrid = new LetterGrid(gridCode, difficulty);
     if (gridCodeB != null) {
       this.letterGridB = new LetterGrid(gridCodeB as List<String?>, difficulty);

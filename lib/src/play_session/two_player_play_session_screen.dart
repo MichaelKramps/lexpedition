@@ -97,4 +97,8 @@ class TwoPlayerPlaySessionStateManager {
   LetterGrid? getMyLetterGrid() {
     return gameLevel.getMyLetterGrid();
   }
+
+  GameLevel getGameLevel() {
+    return gameLevel;
+  }
 }
