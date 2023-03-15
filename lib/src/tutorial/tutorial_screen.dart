@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';
@@ -21,51 +22,56 @@ class TutorialScreen extends StatelessWidget {
     final palette = context.watch<Palette>();
     final playerProgress = context.watch<PlayerProgress>();
 
-    return Scaffold(
-      backgroundColor: palette.backgroundLevelSelection,
-      body: ResponsiveScreen(
-        squarishMainArea: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Center(
-                child: Text(
-                  'Tutorial Levels',
-                  style:
-                      TextStyle(fontFamily: 'Permanent Marker', fontSize: 30),
+    return Consumer<GameState>(builder: (context, gameState, child) {
+      return Scaffold(
+        backgroundColor: palette.backgroundLevelSelection,
+        body: ResponsiveScreen(
+          squarishMainArea: Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Center(
+                  child: Text(
+                    'Tutorial Levels',
+                    style:
+                        TextStyle(fontFamily: 'Permanent Marker', fontSize: 30),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 50),
-            Expanded(
-              child: ListView(
-                children: [
-                  for (final level in tutorialLevels)
-                    ListTile(
-                      enabled: playerProgress.highestLevelReached >=
-                          level.tutorialNumber - 1,
-                      onTap: () {
-                        final audioController = context.read<AudioController>();
-                        audioController.playSfx(SfxType.buttonTap);
+              const SizedBox(height: 50),
+              Expanded(
+                child: ListView(
+                  children: [
+                    for (final level in tutorialLevels)
+                      ListTile(
+                        enabled: playerProgress.highestLevelReached >=
+                            level.tutorialNumber - 1,
+                        onTap: () {
+                          final audioController =
+                              context.read<AudioController>();
+                          audioController.playSfx(SfxType.buttonTap);
 
-                        GoRouter.of(context).push(
-                            '/tutorial/intro/${level.tutorialNumber}');
-                      },
-                      leading: Text(level.tutorialNumber.toString()),
-                      title: Text('${level.name}'),
-                    )
-                ],
+                          gameState.loadOnePlayerPuzzle(tutorialNumber: level.tutorialNumber);
+
+                          GoRouter.of(context)
+                              .push('/tutorial/intro/${level.tutorialNumber}');
+                        },
+                        leading: Text(level.tutorialNumber.toString()),
+                        title: Text('${level.name}'),
+                      )
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
+          rectangularMenuArea: ElevatedButton(
+            onPressed: () {
+              GoRouter.of(context).pop();
+            },
+            child: const Text('Back'),
+          ),
         ),
-        rectangularMenuArea: ElevatedButton(
-          onPressed: () {
-            GoRouter.of(context).pop();
-          },
-          child: const Text('Back'),
-        ),
-      ),
-    );
+      );
+    });
   }
 }

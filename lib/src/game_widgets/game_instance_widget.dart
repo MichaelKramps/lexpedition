@@ -10,18 +10,17 @@ import 'package:lexpedition/src/game_widgets/one_player_left_column_widget.dart'
 import 'package:lexpedition/src/game_widgets/one_player_right_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
+import 'package:logging/logging.dart';
 import 'package:wakelock/wakelock.dart';
 
 class GameInstanceWidget extends StatefulWidget {
   final GameState gameState;
   final GameColumn leftColumn;
   final GameColumn rightColumn;
-  final Function(int) playerWon;
 
   GameInstanceWidget(
       {super.key,
       required this.gameState,
-      required this.playerWon,
       required this.leftColumn,
       required this.rightColumn});
 
@@ -66,11 +65,11 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
           Listener(
               key: gridKey,
               onPointerDown: (event) => {
-                    handleMouseEvent(event.position.dx, event.position.dy, false)
+                    handleMouseEvent(
+                        event.position.dx, event.position.dy, false)
                   },
               onPointerMove: (event) => {
-                    handleMouseEvent(
-                        event.position.dx, event.position.dy, true)
+                    handleMouseEvent(event.position.dx, event.position.dy, true)
                   },
               child: LetterGridWidget(letterGrid: widget.gameState.getMyGrid()))
         ]),
@@ -105,6 +104,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   }
 
   void handleMouseEvent(double pointerx, double pointery, bool isSlideEvent) {
+    new Logger('game instance widget').info('handling mouse event');
     int shrinkClickableSpace = isSlideEvent ? 10 : 0;
     int selectedIndex =
         determineTileIndex(pointerx, pointery, shrinkClickableSpace);

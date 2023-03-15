@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
+import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
@@ -25,10 +27,11 @@ import '../style/confetti.dart';
 import '../style/palette.dart';
 
 class OnePlayerPlaySessionScreen extends StatefulWidget {
-  final GameState gameState;
+  final GameLevel gameLevel;
   final String winRoute;
 
-  const OnePlayerPlaySessionScreen({required this.gameState, required this.winRoute, super.key});
+  const OnePlayerPlaySessionScreen(
+      {required this.gameLevel, required this.winRoute, super.key});
 
   @override
   State<OnePlayerPlaySessionScreen> createState() =>
@@ -43,34 +46,36 @@ class _OnePlayerPlaySessionScreenState
 
   @override
   Widget build(BuildContext context) {
+    new Logger('oneplayerplaysession').info('building');
     final palette = context.watch<Palette>();
 
-    return IgnorePointer(
-      ignoring: _duringCelebration,
-      child: Scaffold(
-        backgroundColor: palette.backgroundPlaySession,
-        body: Stack(
-          children: [
-            GameInstanceWidget(
-                gameState: widget.gameState,
-                playerWon: _playerWon,
+    return Consumer<GameState>(builder:(context, gameState, child) {
+      return IgnorePointer(
+        ignoring: _duringCelebration,
+        child: Scaffold(
+          backgroundColor: palette.backgroundPlaySession,
+          body: Stack(
+            children: [
+              GameInstanceWidget(
+                gameState: gameState,
                 leftColumn: GameColumn.onePlayerLeftColumn,
                 rightColumn: GameColumn.onePlayerRightColumn,
-            ),
-            SizedBox.expand(
-              child: Visibility(
-                visible: _duringCelebration,
-                child: IgnorePointer(
-                  child: Confetti(
-                    isStopped: !_duringCelebration,
+              ),
+              SizedBox.expand(
+                child: Visibility(
+                  visible: _duringCelebration,
+                  child: IgnorePointer(
+                    child: Confetti(
+                      isStopped: !_duringCelebration,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
+            ],
+          ),
+        )
+      );
+    });
   }
 
   @override
@@ -90,24 +95,24 @@ class _OnePlayerPlaySessionScreenState
     }
   }
 
-  Future<void> _playerWon(int guesses) async {
+  Future<void> _playerWon(GameState gameState) async {
     Future<void>.delayed(Constants.clearPuzzlesDuration, () {
       PartyDatabaseConnection().clearLevels();
     });
 
     final score = Score(
-      guesses,
-      widget.gameState.level.averageGuesses.round(),
+      gameState.guessList.length,
+      gameState.level.averageGuesses.round(),
       DateTime.now().difference(_startOfPlay),
     );
 
-    if (widget.gameState.level.puzzleId != null) {
+    if (gameState.level.puzzleId != null) {
       LevelDatabaseConnection.logOnePlayerFinishedPuzzleResults(
-          widget.gameState.level.puzzleId as int, guesses);
+          gameState.level.puzzleId as int, gameState.guessList.length);
     }
 
     final playerProgress = context.read<PlayerProgress>();
-    playerProgress.setLevelReached(widget.gameState.level.tutorialNumber);
+    playerProgress.setLevelReached(gameState.level.tutorialNumber);
 
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(Constants.preCelebrationDuration);

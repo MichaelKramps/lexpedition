@@ -5,6 +5,8 @@
 // Uncomment the following lines when enabling Firebase Crashlytics
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
+import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/main_menu/more_menu.dart';
@@ -168,10 +170,8 @@ class MyApp extends StatelessWidget {
                       final levelNumber = int.parse(state.params['level']!);
                       final level = tutorialLevels
                           .singleWhere((e) => e.tutorialNumber == levelNumber);
-                      return Consumer<GameState>(
-                            builder: (context, gameState, child) {
-                          return OnePlayerPlaySessionScreen(gameState: GameState(level: level), winRoute: '/tutorial/won');
-                        });
+                  
+                      return OnePlayerPlaySessionScreen(gameLevel: level, winRoute: '/tutorial/won');
                     },
                   ),
                   GoRoute(
@@ -209,7 +209,7 @@ class MyApp extends StatelessWidget {
                       builder: (context, state) {
                         return Consumer<GameState>(
                             builder: (context, gameState, child) {
-                          return OnePlayerPlaySessionScreen(gameState: gameState, winRoute: '/freeplaywon');
+                          return OnePlayerPlaySessionScreen(gameLevel: GameLevel(gridCode: blankGrid), winRoute: '/freeplaywon');
                         });
                       }),
                   GoRoute(

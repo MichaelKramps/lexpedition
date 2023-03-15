@@ -66,7 +66,6 @@ class _TwoPlayerPlaySessionScreenState
     } else if (widget.gameState.getMyGrid() != null && _showingMyGrid) {
       return GameInstanceWidget(
           gameState: widget.gameState,
-          playerWon: _playerWon,
           leftColumn: GameColumn.twoPlayerLeftColumn,
           rightColumn: GameColumn.twoPlayerRightColumn);
     } else {

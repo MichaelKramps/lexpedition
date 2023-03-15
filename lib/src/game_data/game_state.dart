@@ -6,7 +6,10 @@ import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
+import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:lexpedition/src/tutorial/tutorial_levels.dart';
+import 'package:logging/logging.dart';
 
 class GameState extends ChangeNotifier {
   GameLevel level = GameLevel(gridCode: blankGrid);
@@ -17,6 +20,7 @@ class GameState extends ChangeNotifier {
   bool levelCompleted = false;
   bool showBadGuess = false;
   bool viewingMyScreen = true;
+  Logger _logger = new Logger('game state');
 
   GameState({required this.level}) {
     primaryLetterGrid = level.letterGrid;
@@ -28,7 +32,25 @@ class GameState extends ChangeNotifier {
 
   GameState.emptyState() {}
 
+  void loadOnePlayerPuzzle({int? tutorialNumber, int? databaseId}) async {
+    _logger.info('loading a new puzzle');
+    if (tutorialNumber != null) {
+      GameLevel level = tutorialLevels[tutorialNumber];
+      primaryLetterGrid = level.letterGrid;
+    } else if (databaseId != null) {
+      //get the specific level in the database
+    } else {
+      GameLevel? level = await LevelDatabaseConnection.getNewOnePlayerPuzzle();
+      if (level != null) {
+        primaryLetterGrid = level.letterGrid;
+      }
+    }
+    notifyAllPlayers();
+  }
+
   void notifyAllPlayers() {
+    _logger.info('notifyAllPlayers()');
+    _logger.info(getCurrentGuess());
     PartyDatabaseConnection().updateMyPuzzle(letterGrid: getMyGrid());
     notifyListeners();
   }
@@ -63,12 +85,10 @@ class GameState extends ChangeNotifier {
   }
 
   void resetPuzzle() {
-    if (level?.letterGrid != null) {
-      primaryLetterGrid = level?.letterGrid as LetterGrid;
-    }
+    primaryLetterGrid = level.letterGrid;
 
-    if (level?.letterGridB != null) {
-      secondaryLetterGrid = level?.letterGridB as LetterGrid;
+    if (level.letterGridB != null) {
+      secondaryLetterGrid = level.letterGridB as LetterGrid;
     }
 
     currentGuess = [];
@@ -198,6 +218,7 @@ class GameState extends ChangeNotifier {
   }
 
   void clickTileAtIndex(int clickedTileIndex, bool isSlideEvent) {
+    _logger.info('clickTileAtIndex(' + clickedTileIndex.toString() + ')');
     LetterTile clickedTile = getMyGrid().letterTiles[clickedTileIndex];
     if (clickedTile.tileType != TileType.empty) {
       updateGuess(clickedTile, isSlideEvent);
