@@ -20,6 +20,35 @@ class LetterGrid {
     this.par = par;
   }
 
+  factory LetterGrid.blankGrid() {
+    return LetterGrid([
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ], 0);
+  }
+
   LetterGrid.fromLiveDatabase(
       {required List<String?> letterTiles,
       required List<String> guesses,

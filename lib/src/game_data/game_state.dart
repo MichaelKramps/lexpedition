@@ -6,6 +6,7 @@ class GameState extends ChangeNotifier {
   LetterGrid primaryLetterGrid;
   LetterGrid? secondaryLetterGrid;
   List<AcceptedGuess> guessList = [];
+  bool levelCompleted = false;
 
   GameState({required this.primaryLetterGrid, this.secondaryLetterGrid});
 }
