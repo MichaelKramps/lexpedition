@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/accepted_guess.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
-import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/guesses_info_widget.dart';
 
 class OnePlayerLeftColumnWidget extends StatelessWidget {
-  final GameInstanceWidgetStateManager gameInstanceWidgetStateManager;
+  final GameState gameState;
 
   const OnePlayerLeftColumnWidget(
-      {super.key, required this.gameInstanceWidgetStateManager});
+      {super.key, required this.gameState});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +16,10 @@ class OnePlayerLeftColumnWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start, 
       children:[
         GuessesInformationWidget(
-          currentGuesses: gameInstanceWidgetStateManager.getGrid().guesses.length,
-          averageGuesses: gameInstanceWidgetStateManager.getGameLevel().averageGuesses,
-          bestAttempt: gameInstanceWidgetStateManager.getGameLevel().bestAttempt,),
-        for (AcceptedGuess guess in gameInstanceWidgetStateManager.getGrid().guesses.reversed) ...[
+          currentGuesses: gameState.guessList.length,
+          averageGuesses: gameState.level.averageGuesses.round(),
+          bestAttempt: gameState.level.bestAttempt,),
+        for (AcceptedGuess guess in gameState.guessList.reversed) ...[
           Text(guess.guess, style: TextStyle(fontSize: Constants.smallFont))
         ]
       ]

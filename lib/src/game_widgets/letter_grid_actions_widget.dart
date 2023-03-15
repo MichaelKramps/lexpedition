@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/blast_direction_widget.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 
 class LetterGridActionsWidget extends StatelessWidget {
-  final GameInstanceWidgetStateManager gameInstanceWidgetStateManager;
+  final GameState gameState;
 
-  const LetterGridActionsWidget(
-      {super.key, required this.gameInstanceWidgetStateManager});
+  const LetterGridActionsWidget({super.key, required this.gameState});
 
   @override
   Widget build(BuildContext context) {
@@ -16,29 +16,26 @@ class LetterGridActionsWidget extends StatelessWidget {
         side: BorderSide(width: 0, color: Colors.transparent));
 
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      BlastDirectionWidget(
-          blastDirection:
-              gameInstanceWidgetStateManager.getGrid().blastDirection,
-          changeDirection: gameInstanceWidgetStateManager.toggleBlastDirection),
+      BlastDirectionWidget(gameState: gameState),
       Container(
           width: Constants.tileSize * 3.5,
           margin: EdgeInsets.all(Constants.tileMargin * 2),
-          child: Text(gameInstanceWidgetStateManager.getCurrentGuess(),
+          child: Text(gameState.getCurrentGuess(),
               style: TextStyle(
                   fontSize: Constants.tileSize * 0.4,
                   backgroundColor: Colors.white.withOpacity(0.3),
-                  color: gameInstanceWidgetStateManager.showBadGuess
+                  color: gameState.showBadGuess
                       ? Colors.red
                       : Colors.black))),
       Container(
           margin: EdgeInsets.all(Constants.tileMargin * 2),
           child: ElevatedButton(
               style: buttonStyle,
-              onPressed: gameInstanceWidgetStateManager.submitGuess,
+              onPressed: () => gameState.submitGuess(),
               child: Text('Submit'))),
       ElevatedButton(
           style: buttonStyle,
-          onPressed: gameInstanceWidgetStateManager.clearGuess,
+          onPressed: () => gameState.clearGuess(),
           child: Text('Clear')),
     ]);
   }

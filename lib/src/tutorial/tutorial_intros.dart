@@ -14,10 +14,9 @@ import '../style/responsive_screen.dart';
 
 class TutorialIntroWidget extends StatelessWidget {
   final int level;
-  final int par;
 
   const TutorialIntroWidget(
-      {super.key, required this.level, required this.par});
+      {super.key, required this.level});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +43,7 @@ class TutorialIntroWidget extends StatelessWidget {
             gap,
             Center(
               child: Text(
-                'Level ' + level.toString() + ' -> Par ' + par.toString(),
+                'Level ' + level.toString(),
                 style: TextStyle(fontFamily: 'Permanent Marker', fontSize: 50),
               ),
             ),

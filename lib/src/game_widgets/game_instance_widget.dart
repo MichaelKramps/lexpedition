@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
-import 'package:lexpedition/src/game_data/letter_tile.dart';
-import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_actions_widget.dart';
@@ -11,34 +10,26 @@ import 'package:lexpedition/src/game_widgets/one_player_left_column_widget.dart'
 import 'package:lexpedition/src/game_widgets/one_player_right_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
-import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:wakelock/wakelock.dart';
 
 class GameInstanceWidget extends StatefulWidget {
-  final GameLevel gameLevel;
+  final GameState gameState;
   final GameColumn leftColumn;
   final GameColumn rightColumn;
   final Function(int) playerWon;
-  final TwoPlayerPlaySessionStateManager? twoPlayerPlaySessionStateManager;
 
   GameInstanceWidget(
       {super.key,
-      required this.gameLevel,
+      required this.gameState,
       required this.playerWon,
       required this.leftColumn,
-      required this.rightColumn,
-      this.twoPlayerPlaySessionStateManager});
+      required this.rightColumn});
 
   @override
   State<GameInstanceWidget> createState() => _GameInstanceWidgetState();
 }
 
 class _GameInstanceWidgetState extends State<GameInstanceWidget> {
-  PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
-  late LetterGrid _grid = widget.gameLevel.getMyLetterGrid() as LetterGrid;
-  bool _showBadGuess = false;
-
   GlobalKey gridKey = GlobalKey();
   late RenderBox renderBox =
       gridKey.currentContext?.findRenderObject() as RenderBox;
@@ -61,10 +52,6 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
 
   @override
   Widget build(BuildContext context) {
-    GameInstanceWidgetStateManager gameInstanceWidgetStateManager =
-        GameInstanceWidgetStateManager(
-            gameInstanceWidgetState: this, showBadGuess: _showBadGuess);
-
     return Stack(children: [
       Container(
           decoration: BoxDecoration(
@@ -75,18 +62,17 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
       Row(children: [
         Expanded(child: determineColumn(widget.leftColumn)),
         Column(children: [
-          LetterGridActionsWidget(
-              gameInstanceWidgetStateManager: gameInstanceWidgetStateManager),
+          LetterGridActionsWidget(gameState: widget.gameState),
           Listener(
               key: gridKey,
               onPointerDown: (event) => {
-                    handleMouseEvent(event.position.dx, event.position.dy, true)
+                    handleMouseEvent(event.position.dx, event.position.dy, false)
                   },
               onPointerMove: (event) => {
                     handleMouseEvent(
-                        event.position.dx, event.position.dy, false)
+                        event.position.dx, event.position.dy, true)
                   },
-              child: LetterGridWidget(letterGrid: _grid))
+              child: LetterGridWidget(letterGrid: widget.gameState.getMyGrid()))
         ]),
         Expanded(child: determineColumn(widget.rightColumn))
       ])
@@ -94,101 +80,18 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   }
 
   Widget determineColumn(GameColumn gameColumn) {
-    GameInstanceWidgetStateManager gameInstanceWidgetStateManager =
-        GameInstanceWidgetStateManager(
-            gameInstanceWidgetState: this, showBadGuess: _showBadGuess);
-
     switch (gameColumn) {
       case GameColumn.onePlayerRightColumn:
-        return OnePlayerRightColumnWidget(
-            gameInstanceWidgetStateManager: gameInstanceWidgetStateManager);
+        return OnePlayerRightColumnWidget(gameState: widget.gameState);
       case GameColumn.onePlayerLeftColumn:
-        return OnePlayerLeftColumnWidget(
-            gameInstanceWidgetStateManager: gameInstanceWidgetStateManager);
+        return OnePlayerLeftColumnWidget(gameState: widget.gameState);
       case GameColumn.twoPlayerRightColumn:
-        return TwoPlayerRightColumnWidget(
-            gameInstanceWidgetStateManager: gameInstanceWidgetStateManager,
-            twoPlayerPlaySessionStateManager:
-                widget.twoPlayerPlaySessionStateManager
-                    as TwoPlayerPlaySessionStateManager);
+        return TwoPlayerRightColumnWidget(gameState: widget.gameState);
       case GameColumn.twoPlayerLeftColumn:
-        return TwoPlayerLeftColumnWidget(
-            gameInstanceWidgetStateManager: gameInstanceWidgetStateManager,
-            twoPlayerPlaySessionStateManager:
-                widget.twoPlayerPlaySessionStateManager
-                    as TwoPlayerPlaySessionStateManager);
+        return TwoPlayerLeftColumnWidget(gameState: widget.gameState);
       default:
         return Container();
     }
-  }
-
-  void updateGuess(LetterTile letterTile, bool clickEvent) {
-    //verify we are allowed to select this tile
-    if (letterTile.clearOfObstacles() &&
-        (_grid.currentGuess.length == 0 ||
-            _grid.currentGuess.last.allowedToSelect(letterTile))) {
-      setState(() {
-        letterTile.select();
-        _grid.updateCurrentGuess(letterTile);
-      });
-    } else if (clickEvent && letterTile == _grid.currentGuess.last) {
-      setState(() {
-        letterTile.unselect();
-        _grid.removeLastInCurrentGuess();
-      });
-    }
-    partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);
-  }
-
-  String getCurrentGuess() {
-    String guess = '';
-    for (LetterTile tile in _grid.currentGuess) {
-      guess += tile.letter;
-    }
-
-    return guess.toUpperCase();
-  }
-
-  void clearGuess() {
-    setState(() {
-      _grid.clearCurrentGuess();
-      for (LetterTile tile in _grid.letterTiles) {
-        tile.unselect();
-        tile.unprimeForBlast();
-      }
-    });
-    partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);
-  }
-
-  void submitGuess() async {
-    if (_grid.currentGuess.length < 3) {
-      await showBadGuess();
-    } else if (_grid.isNewGuess(getCurrentGuess()) &&
-        WordHelper.isValidWord(getCurrentGuess())) {
-      setState(() {
-        _grid.addGuess(getCurrentGuess());
-        _grid.chargeTilesFromGuess();
-      });
-      // check for win condition
-      if (isLevelWon(_grid,
-          widget.twoPlayerPlaySessionStateManager?.getTheirLetterGrid())) {
-        widget.playerWon(_grid.guesses.length);
-      } else {
-        if (_grid.currentGuess.length >= 5) {
-          await fireBlast(_grid.currentGuess.last);
-          if (isLevelWon(_grid,
-              widget.twoPlayerPlaySessionStateManager?.getTheirLetterGrid())) {
-            widget.playerWon(_grid.guesses.length);
-          }
-          await Future<void>.delayed(const Duration(milliseconds: 200));
-        }
-      }
-
-      partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);
-    } else {
-      await showBadGuess();
-    }
-    clearGuess();
   }
 
   bool isLevelWon(
@@ -201,33 +104,13 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
     }
   }
 
-  Future<void> showBadGuess() async {
-    setState(() {
-      _showBadGuess = true;
-    });
-    await Future<void>.delayed(const Duration(milliseconds: 1000));
-    setState(() {
-      _showBadGuess = false;
-    });
-  }
-
-  void resetPuzzle() {
-    setState(() {
-      _grid.resetGrid();
-      _grid.clearCurrentGuess();
-    });
-  }
-
-  void handleMouseEvent(double pointerx, double pointery, bool clickEvent) {
-    int shrinkClickableSpace = clickEvent ? 0 : 10;
+  void handleMouseEvent(double pointerx, double pointery, bool isSlideEvent) {
+    int shrinkClickableSpace = isSlideEvent ? 10 : 0;
     int selectedIndex =
         determineTileIndex(pointerx, pointery, shrinkClickableSpace);
 
     if (selectedIndex > -1) {
-      LetterTile selectedTile = _grid.letterTiles[selectedIndex];
-      if (selectedTile.tileType != TileType.empty) {
-        updateGuess(selectedTile, clickEvent);
-      }
+      widget.gameState.clickTileAtIndex(selectedIndex, isSlideEvent);
     }
   }
 
@@ -277,64 +160,5 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
     }
 
     return (row * 6) + (column);
-  }
-
-  void toggleBlastDirection() {
-    setState(() {
-      _grid.changeBlastDirection();
-    });
-    partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);
-  }
-
-  Future<void> fireBlast(LetterTile lastTile) async {
-    setState(() {
-      _grid.blastFromIndex(lastTile.index);
-    });
-
-    partyDatabaseConnection.updateMyPuzzle(
-        letterGrid: _grid, blastIndex: lastTile.index);
-
-    Future<void>.delayed(Constants.blastDuration, () {
-      setState(() {
-        _grid.unblast();
-      });
-      partyDatabaseConnection.updateMyPuzzle(letterGrid: _grid);
-    });
-  }
-}
-
-class GameInstanceWidgetStateManager {
-  _GameInstanceWidgetState gameInstanceWidgetState;
-  bool showBadGuess;
-
-  GameInstanceWidgetStateManager(
-      {required this.gameInstanceWidgetState, required this.showBadGuess});
-
-  GameLevel getGameLevel() {
-    return gameInstanceWidgetState.widget.gameLevel;
-  }
-
-  LetterGrid getGrid() {
-    return gameInstanceWidgetState._grid;
-  }
-
-  void toggleBlastDirection() {
-    gameInstanceWidgetState.toggleBlastDirection();
-  }
-
-  String getCurrentGuess() {
-    return gameInstanceWidgetState.getCurrentGuess();
-  }
-
-  void submitGuess() {
-    gameInstanceWidgetState.submitGuess();
-  }
-
-  void clearGuess() {
-    gameInstanceWidgetState.clearGuess();
-  }
-
-  void resetPuzzle() {
-    gameInstanceWidgetState.resetPuzzle();
   }
 }

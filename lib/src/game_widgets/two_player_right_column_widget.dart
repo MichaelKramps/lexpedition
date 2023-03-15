@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
-import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 
 class TwoPlayerRightColumnWidget extends StatelessWidget {
-  final GameInstanceWidgetStateManager? gameInstanceWidgetStateManager;
-  final TwoPlayerPlaySessionStateManager twoPlayerPlaySessionStateManager;
+  final GameState gameState;
 
   const TwoPlayerRightColumnWidget(
-      {super.key, this.gameInstanceWidgetStateManager, required this.twoPlayerPlaySessionStateManager});
+      {super.key, required this.gameState});
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(onPressed: () => twoPlayerPlaySessionStateManager.toggleScreen(), child: Text('Switch'));
+    return ElevatedButton(onPressed: () => gameState.toggleVisibleScreen(), child: Text('Switch'));
   }
 }

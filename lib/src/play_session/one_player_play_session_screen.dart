@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
@@ -19,16 +20,15 @@ import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
-import '../game_data/game_level.dart';
 import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
 import '../style/palette.dart';
 
 class OnePlayerPlaySessionScreen extends StatefulWidget {
-  final GameLevel level;
+  final GameState gameState;
   final String winRoute;
 
-  const OnePlayerPlaySessionScreen(this.level, this.winRoute, {super.key});
+  const OnePlayerPlaySessionScreen({required this.gameState, required this.winRoute, super.key});
 
   @override
   State<OnePlayerPlaySessionScreen> createState() =>
@@ -52,7 +52,7 @@ class _OnePlayerPlaySessionScreenState
         body: Stack(
           children: [
             GameInstanceWidget(
-                gameLevel: widget.level,
+                gameState: widget.gameState,
                 playerWon: _playerWon,
                 leftColumn: GameColumn.onePlayerLeftColumn,
                 rightColumn: GameColumn.onePlayerRightColumn,
@@ -97,17 +97,17 @@ class _OnePlayerPlaySessionScreenState
 
     final score = Score(
       guesses,
-      widget.level.difficulty,
+      widget.gameState.level.averageGuesses.round(),
       DateTime.now().difference(_startOfPlay),
     );
 
-    if (widget.level.puzzleId != null) {
+    if (widget.gameState.level.puzzleId != null) {
       LevelDatabaseConnection.logOnePlayerFinishedPuzzleResults(
-          widget.level.puzzleId as int, guesses);
+          widget.gameState.level.puzzleId as int, guesses);
     }
 
     final playerProgress = context.read<PlayerProgress>();
-    playerProgress.setLevelReached(widget.level.number);
+    playerProgress.setLevelReached(widget.gameState.level.tutorialNumber);
 
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(Constants.preCelebrationDuration);

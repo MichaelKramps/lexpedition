@@ -28,4 +28,7 @@ class Constants {
 
   static const Duration blastDuration = Duration(milliseconds: 350);
   static const Duration clearPuzzlesDuration = Duration(milliseconds: 400);
+  static const Duration showBadGuessDuration = Duration(milliseconds: 1000);
+
+  static const int guessLengthToActivateBlast = 5;
 }

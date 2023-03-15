@@ -10,14 +10,12 @@ class LetterGrid {
   BlastDirection blastDirection = BlastDirection.vertical;
   List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guesses = [];
-  late int par;
 
-  LetterGrid(List<String?> letterTiles, int par) {
+  LetterGrid(List<String?> letterTiles) {
     assert(letterTiles.length == 24);
     this.encodedTiles = letterTiles;
     this.letterTiles = this.decodeLetterTiles(letterTiles);
     this.rows = this.setRows(this.letterTiles);
-    this.par = par;
   }
 
   factory LetterGrid.blankGrid() {
@@ -46,7 +44,7 @@ class LetterGrid {
       null,
       null,
       null
-    ], 0);
+    ]);
   }
 
   LetterGrid.fromLiveDatabase(
@@ -57,7 +55,6 @@ class LetterGrid {
     this.encodedTiles = letterTiles;
     this.letterTiles = this.decodeLetterTiles(letterTiles);
     this.rows = this.setRows(this.letterTiles);
-    this.par = 1;
     setGuessesFromDatabase(guesses);
     if (blastDirection != null) {
       this.blastDirection = blastDirection;

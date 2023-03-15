@@ -43,15 +43,15 @@ class TutorialScreen extends StatelessWidget {
                   for (final level in tutorialLevels)
                     ListTile(
                       enabled: playerProgress.highestLevelReached >=
-                          level.number - 1,
+                          level.tutorialNumber - 1,
                       onTap: () {
                         final audioController = context.read<AudioController>();
                         audioController.playSfx(SfxType.buttonTap);
 
                         GoRouter.of(context).push(
-                            '/tutorial/intro/${level.number}/${level.difficulty}');
+                            '/tutorial/intro/${level.tutorialNumber}');
                       },
-                      leading: Text(level.number.toString()),
+                      leading: Text(level.tutorialNumber.toString()),
                       title: Text('${level.name}'),
                     )
                 ],

@@ -152,31 +152,26 @@ class MyApp extends StatelessWidget {
                     ),
                 routes: [
                   GoRoute(
-                    path: 'intro/:level/:par',
+                    path: 'intro/:level',
                     pageBuilder: (context, state) {
                       final levelNumber = int.parse(state.params['level']!);
-                      final par = int.parse(state.params['par']!);
                       return buildMyTransition<void>(
                         child:
-                            TutorialIntroWidget(level: levelNumber, par: par),
+                            TutorialIntroWidget(level: levelNumber),
                         color: context.watch<Palette>().backgroundPlaySession,
                       );
                     },
                   ),
                   GoRoute(
                     path: 'session/:level',
-                    pageBuilder: (context, state) {
+                    builder: (context, state) {
                       final levelNumber = int.parse(state.params['level']!);
                       final level = tutorialLevels
-                          .singleWhere((e) => e.number == levelNumber);
-                      return buildMyTransition<void>(
-                        child: OnePlayerPlaySessionScreen(
-                          level,
-                          '/tutorial/won',
-                          key: const Key('play session'),
-                        ),
-                        color: context.watch<Palette>().backgroundPlaySession,
-                      );
+                          .singleWhere((e) => e.tutorialNumber == levelNumber);
+                      return Consumer<GameState>(
+                            builder: (context, gameState, child) {
+                          return OnePlayerPlaySessionScreen(gameState: GameState(level: level), winRoute: '/tutorial/won');
+                        });
                     },
                   ),
                   GoRoute(
@@ -203,18 +198,20 @@ class MyApp extends StatelessWidget {
             ),
             GoRoute(
               path: 'moremenu',
-              builder: (context, state) =>
-                  const MoreMenu(key: Key('moremenu')),
+              builder: (context, state) => const MoreMenu(key: Key('moremenu')),
             ),
             GoRoute(
                 path: 'freeplay',
                 builder: (context, state) => FreePlay(key: UniqueKey()),
                 routes: [
                   GoRoute(
-                    path: 'oneplayer',
-                    builder: (context, state) =>
-                        OnePlayerPuzzleLoader(key: UniqueKey()),
-                  ),
+                      path: 'oneplayer',
+                      builder: (context, state) {
+                        return Consumer<GameState>(
+                            builder: (context, gameState, child) {
+                          return OnePlayerPlaySessionScreen(gameState: gameState, winRoute: '/freeplaywon');
+                        });
+                      }),
                   GoRoute(
                     path: 'twoplayer',
                     builder: (context, state) =>
@@ -325,7 +322,7 @@ class MyApp extends StatelessWidget {
             },
           ),
           ChangeNotifierProvider(create: (context) {
-            return GameState(primaryLetterGrid: LetterGrid.blankGrid());
+            return GameState.emptyState();
           }),
           Provider<GamesServicesController?>.value(
               value: gamesServicesController),

@@ -129,7 +129,6 @@ class PartyDatabaseConnection {
           'letterGridA': {
             'gridString': level.gridCode.join(','),
             'guesses': '',
-            'difficulty': level.difficulty,
             'averageGuesses': level.averageGuesses,
             'bestAttempt': level.bestAttempt,
             'letterGridB': level.gridCodeB?.join(',')

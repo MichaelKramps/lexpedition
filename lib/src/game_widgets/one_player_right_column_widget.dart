@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 
 class OnePlayerRightColumnWidget extends StatelessWidget {
-  final GameInstanceWidgetStateManager gameInstanceWidgetStateManager;
+  final GameState gameState;
 
   OnePlayerRightColumnWidget(
-      {super.key, required this.gameInstanceWidgetStateManager});
+      {super.key, required this.gameState});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class OnePlayerRightColumnWidget extends StatelessWidget {
       ),
       ElevatedButton(
         onPressed: () {
-          gameInstanceWidgetStateManager.resetPuzzle();
+          gameState.resetPuzzle();
           logPuzzleQuit();
         },
         child: const Text('Restart'),
@@ -38,9 +38,9 @@ class OnePlayerRightColumnWidget extends StatelessWidget {
   }
 
   void logPuzzleQuit() {
-    if (gameInstanceWidgetStateManager.getGameLevel().puzzleId != null) {
+    if (gameState.level?.puzzleId != null) {
       LevelDatabaseConnection.logOnePlayerUnfinishedPuzzleResults(
-          gameInstanceWidgetStateManager.getGameLevel().puzzleId as int);
+          gameState.level?.puzzleId as int);
     }
   }
 }

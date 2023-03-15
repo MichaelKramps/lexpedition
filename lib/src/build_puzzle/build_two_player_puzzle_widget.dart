@@ -17,8 +17,8 @@ class BuildTwoPlayerPuzzleWidget extends StatefulWidget {
 
 class _BuildTwoPlayerPuzzleWidgetState
     extends State<BuildTwoPlayerPuzzleWidget> {
-  LetterGrid _grid = new LetterGrid(blankGrid, 0);
-  LetterGrid _gridB = new LetterGrid(blankGrid, 0);
+  LetterGrid _grid = new LetterGrid(blankGrid);
+  LetterGrid _gridB = new LetterGrid(blankGrid);
   bool _selectedGrid = true;
   int _selectedIndex = -1;
   int _step = 0;
@@ -187,8 +187,8 @@ class _BuildTwoPlayerPuzzleWidgetState
           ElevatedButton(
             onPressed: () => {
               setState(() {
-                _grid = new LetterGrid(blankGrid, 0);
-                _gridB = new LetterGrid(blankGrid, 0);
+                _grid = new LetterGrid(blankGrid);
+                _gridB = new LetterGrid(blankGrid);
               })
             },
             child: Text('Clear'),

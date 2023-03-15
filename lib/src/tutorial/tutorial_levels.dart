@@ -5,7 +5,7 @@ import 'package:lexpedition/src/game_data/game_level.dart';
 // BSD-style license that can be found in the LICENSE file.
 
 var tutorialLevels = [
-  TutorialLevel(name: 'Basic Tile', number: 1, difficulty: 1, gridCode: [
+  GameLevel(name: "Basic Tile", tutorialNumber: 1, gridCode: [
     null,
     null,
     null,
@@ -31,7 +31,7 @@ var tutorialLevels = [
     null,
     null
   ]),
-  TutorialLevel(name: 'Multiple Charges', number: 2, difficulty: 3, gridCode: [
+  GameLevel(name: "Multiple Charges", tutorialNumber: 2, gridCode: [
     null,
     null,
     null,
@@ -57,11 +57,7 @@ var tutorialLevels = [
     null,
     null
   ]),
-  TutorialLevel(
-    name: 'Start Tile',
-    number: 3,
-    difficulty: 2,
-    gridCode: [
+  GameLevel(name: "Start Tile", tutorialNumber: 3, gridCode: [
       null,
       null,
       null,
@@ -88,7 +84,7 @@ var tutorialLevels = [
       null
     ],
   ),
-  TutorialLevel(name: 'End Tile', number: 4, difficulty: 2, gridCode: [
+  GameLevel(name: "End Tile", tutorialNumber: 4, gridCode: [
     null,
     null,
     null,
@@ -114,7 +110,7 @@ var tutorialLevels = [
     null,
     null
   ]),
-  TutorialLevel(name: 'All 3 Tile Types', number: 5, difficulty: 4, gridCode: [
+  GameLevel(name: "All 3 Tile Types", tutorialNumber: 5, gridCode: [
     null,
     'e210',
     't220',
@@ -140,7 +136,7 @@ var tutorialLevels = [
     null,
     null
   ]),
-  TutorialLevel(name: 'Magic Blast #1', number: 6, difficulty: 2, gridCode: [
+  GameLevel(name: "Magic Blast", tutorialNumber: 6, gridCode: [
     't110',
     'r010',
     'e010',
@@ -166,7 +162,7 @@ var tutorialLevels = [
     't210',
     null
   ]),
-  TutorialLevel(name: 'Obstacles', number: 7, difficulty: 2, gridCode: [
+  GameLevel(name: "Obstacles", tutorialNumber: 7, gridCode: [
     null,
     null,
     null,
@@ -193,3 +189,4 @@ var tutorialLevels = [
     null
   ])
 ];
+

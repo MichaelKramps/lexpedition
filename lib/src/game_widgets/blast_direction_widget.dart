@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 
 class BlastDirectionWidget extends StatelessWidget {
-  final BlastDirection blastDirection;
-  final Function changeDirection;
+  final GameState gameState;
 
-  const BlastDirectionWidget(
-      {super.key, required this.blastDirection, required this.changeDirection});
+  const BlastDirectionWidget({super.key, required this.gameState});
 
   @override
   Widget build(BuildContext context) {
     return InkResponse(
-      onTap: () => {changeDirection()},
+      onTap: () => {gameState.changeBlastDirection()},
       child: Image.asset(
         determineImage(),
         height: Constants.tileSize,
@@ -25,7 +24,7 @@ class BlastDirectionWidget extends StatelessWidget {
   String determineImage() {
     String path = 'assets/images/';
 
-    switch (blastDirection) {
+    switch (gameState.getMyGrid().blastDirection) {
       case (BlastDirection.horizontal):
         path += 'staveright';
         break;

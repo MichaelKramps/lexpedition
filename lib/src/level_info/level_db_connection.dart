@@ -95,7 +95,6 @@ class LevelDatabaseConnection {
         int best = puzzleEntry.child('bestAttempt').value as int;
         String puzzleIdString = puzzleEntry.key as String;
         gameLevel = GameLevel(
-            difficulty: par.toDouble().round(),
             averageGuesses: par.toDouble(),
             gridCode: gridString.split(','),
             puzzleId: int.parse(puzzleIdString),
@@ -125,7 +124,6 @@ class LevelDatabaseConnection {
         int best = puzzleEntry.child('bestAttempt').value as int;
         String puzzleIdString = puzzleEntry.key as String;
         gameLevel = GameLevel(
-            difficulty: par.toDouble().round(),
             averageGuesses: par.toDouble(),
             gridCode: gridStringA.split(','),
             gridCodeB: gridStringB.split(','),
@@ -157,7 +155,6 @@ class LevelDatabaseConnection {
         int best = puzzleEntry.child('bestAttempt').value as int;
         String puzzleIdString = puzzleEntry.key as String;
         gameLevel = GameLevel(
-            difficulty: par.toDouble().round(),
             averageGuesses: par.toDouble(),
             gridCode: gridString.split(','),
             puzzleId: int.parse(puzzleIdString),
@@ -189,7 +186,6 @@ class LevelDatabaseConnection {
         int best = puzzleEntry.child('bestAttempt').value as int;
         String puzzleIdString = puzzleEntry.key as String;
         gameLevel = GameLevel(
-            difficulty: par.toDouble().round(),
             averageGuesses: par.toDouble(),
             gridCode: gridStringA.split(','),
             gridCodeB: gridStringB.split(','),
@@ -217,7 +213,6 @@ class LevelDatabaseConnection {
               newAttemptsFinished;
 
       GameLevel updatedGameLevel = GameLevel(
-          difficulty: level.difficulty,
           gridCode: level.gridCode,
           attempts: newAttempts,
           attemptsFinished: newAttemptsFinished,
@@ -245,7 +240,6 @@ class LevelDatabaseConnection {
               newAttemptsFinished;
 
       GameLevel updatedGameLevel = GameLevel(
-          difficulty: level.difficulty,
           gridCode: level.gridCode,
           attempts: newAttempts,
           attemptsFinished: newAttemptsFinished,
@@ -266,7 +260,6 @@ class LevelDatabaseConnection {
       int newAttempts = level.attempts + 1;
 
       GameLevel updatedGameLevel = GameLevel(
-          difficulty: level.difficulty,
           gridCode: level.gridCode,
           attempts: newAttempts);
 
@@ -284,7 +277,6 @@ class LevelDatabaseConnection {
       int newAttempts = level.attempts + 1;
 
       GameLevel updatedGameLevel = GameLevel(
-          difficulty: level.difficulty,
           gridCode: level.gridCode,
           attempts: newAttempts);
 
@@ -306,7 +298,6 @@ class LevelDatabaseConnection {
     num averageGuesses = snapshot.child('averageGuesses').value as num;
 
     GameLevel gameLevel = GameLevel(
-        difficulty: par.toDouble().round(),
         gridCode: gridString.split(','),
         puzzleId: puzzleId,
         attempts: attempts,
@@ -331,7 +322,6 @@ class LevelDatabaseConnection {
     num averageGuesses = snapshot.child('averageGuesses').value as num;
 
     GameLevel gameLevel = GameLevel(
-        difficulty: par.toDouble().round(),
         gridCode: gridStringA.split(','),
         gridCodeB: gridStringB.split(','),
         puzzleId: puzzleId,

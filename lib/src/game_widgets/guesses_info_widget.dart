@@ -3,7 +3,7 @@ import 'package:lexpedition/src/game_data/constants.dart';
 
 class GuessesInformationWidget extends StatefulWidget {
   final int currentGuesses;
-  final double averageGuesses;
+  final int averageGuesses;
   final int bestAttempt;
 
   const GuessesInformationWidget(

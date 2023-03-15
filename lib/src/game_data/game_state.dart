@@ -1,12 +1,221 @@
 import 'package:flutter/material.dart';
+import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/accepted_guess.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
+import 'package:lexpedition/src/game_data/letter_tile.dart';
+import 'package:lexpedition/src/game_data/word_helper.dart';
+import 'package:lexpedition/src/party/party_db_connection.dart';
 
 class GameState extends ChangeNotifier {
-  LetterGrid primaryLetterGrid;
+  GameLevel level = GameLevel(gridCode: blankGrid);
+  LetterGrid primaryLetterGrid = LetterGrid.blankGrid();
   LetterGrid? secondaryLetterGrid;
+  List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guessList = [];
   bool levelCompleted = false;
+  bool showBadGuess = false;
+  bool viewingMyScreen = true;
 
-  GameState({required this.primaryLetterGrid, this.secondaryLetterGrid});
+  GameState({required this.level}) {
+    primaryLetterGrid = level.letterGrid;
+
+    if (level.letterGridB != null) {
+      secondaryLetterGrid = level.letterGridB as LetterGrid;
+    }
+  }
+
+  GameState.emptyState() {}
+
+  void notifyAllPlayers() {
+    PartyDatabaseConnection().updateMyPuzzle(letterGrid: getMyGrid());
+    notifyListeners();
+  }
+
+  bool isBlankGame() {
+    for (LetterTile tile in primaryLetterGrid.letterTiles) {
+      if (tile.tileType != TileType.empty) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool isLevelWon() {
+    // level is not won if it is blank
+    if (isBlankGame()) {
+      return false;
+    }
+
+    if (secondaryLetterGrid != null) {
+      LetterGrid secondaryGrid = secondaryLetterGrid as LetterGrid;
+      return primaryLetterGrid.isFullyCharged() &&
+          secondaryGrid.isFullyCharged();
+    } else {
+      return primaryLetterGrid.isFullyCharged();
+    }
+  }
+
+  void clearGame() {
+    primaryLetterGrid = LetterGrid.blankGrid();
+    notifyAllPlayers();
+  }
+
+  void resetPuzzle() {
+    if (level?.letterGrid != null) {
+      primaryLetterGrid = level?.letterGrid as LetterGrid;
+    }
+
+    if (level?.letterGridB != null) {
+      secondaryLetterGrid = level?.letterGridB as LetterGrid;
+    }
+
+    currentGuess = [];
+    guessList = [];
+    levelCompleted = false;
+    showBadGuess = false;
+  }
+
+  LetterGrid getMyGrid() {
+    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
+    if (partyDatabaseConnection.isPartyLeader) {
+      return primaryLetterGrid;
+    } else {
+      return secondaryLetterGrid as LetterGrid;
+    }
+  }
+
+  LetterGrid? getTheirGrid() {
+    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
+    if (partyDatabaseConnection.isPartyLeader) {
+      return secondaryLetterGrid;
+    } else {
+      return primaryLetterGrid;
+    }
+  }
+
+  String getCurrentGuess() {
+    String currentGuessString = '';
+    for (LetterTile tile in currentGuess) {
+      currentGuessString += tile.letter.toUpperCase();
+    }
+    return currentGuessString;
+  }
+
+  void clearGuess() {
+    currentGuess = [];
+    for (LetterTile tile in getMyGrid().letterTiles) {
+      tile.unselect();
+      tile.unprimeForBlast();
+    }
+    notifyAllPlayers();
+  }
+
+  void updateGuess(LetterTile letterTile, bool isSlideEvent) {
+    //verify we are allowed to select this tile
+    if (letterTile.clearOfObstacles() &&
+        (currentGuess.length == 0 ||
+            currentGuess.last.allowedToSelect(letterTile))) {
+      //select this tile and update the current guess
+      letterTile.select();
+      currentGuess.add(letterTile);
+    } else if (!isSlideEvent && letterTile == currentGuess.last) {
+      // unselect tile
+      letterTile.unselect();
+      currentGuess.removeLast();
+    }
+    notifyAllPlayers();
+  }
+
+  bool currentGuessIsValid() {
+    //return false if word has already been guessed
+    for (AcceptedGuess previousGuess in guessList) {
+      if (previousGuess.guess.toUpperCase() == getCurrentGuess()) {
+        return false;
+      }
+    }
+
+    //return true only if guess is a valid word
+    return WordHelper.isValidWord(getCurrentGuess());
+  }
+
+  chargeTilesFromGuess() {
+    for (LetterTile tile in currentGuess) {
+      tile.addCharge();
+    }
+  }
+
+  void handleAcceptedGuess() {
+    guessList.add(AcceptedGuess(guess: getCurrentGuess()));
+    chargeTilesFromGuess();
+    // check for win condition
+    if (isLevelWon()) {
+      levelCompleted = true;
+    } else if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
+      //clearGuess() at end of this method will fire notifyAllPlayers
+      //before blastTiles() unblasts the tiles
+      blastTiles();
+    }
+    //notifyAllPlayers() is called here
+    clearGuess();
+  }
+
+  void blastTiles() async {
+    getMyGrid().blastFromIndex(currentGuess.last.index);
+    if (isLevelWon()) {
+      levelCompleted = true;
+    }
+
+    //before this future returns,
+    //notifyAllPlayers() should call from somewhere else
+    await Future<void>.delayed(Constants.blastDuration);
+    getMyGrid().unblast();
+
+    // notify again after unblasting
+    notifyAllPlayers();
+  }
+
+  void flipBadGuess() async {
+    showBadGuess = true;
+
+    //notifyAllPlayers should be called elsewhere
+    //before this future completes
+    await Future<void>.delayed(Constants.showBadGuessDuration);
+
+    showBadGuess = false;
+    notifyAllPlayers();
+  }
+
+  void submitGuess() {
+    if (currentGuess.length < 3 || !currentGuessIsValid()) {
+      flipBadGuess();
+      //notifyAllPlayers is called inside clearGuess()
+      clearGuess();
+    } else {
+      handleAcceptedGuess();
+    }
+  }
+
+  void clickTileAtIndex(int clickedTileIndex, bool isSlideEvent) {
+    LetterTile clickedTile = getMyGrid().letterTiles[clickedTileIndex];
+    if (clickedTile.tileType != TileType.empty) {
+      updateGuess(clickedTile, isSlideEvent);
+    }
+  }
+
+  void changeBlastDirection() {
+    getMyGrid().changeBlastDirection();
+    notifyAllPlayers();
+  }
+
+  List<AcceptedGuess> getAllGuessesInOrder() {
+    guessList.sort((a, b) => b.timeSubmitted.compareTo(a.timeSubmitted));
+    return guessList;
+  }
+
+  void toggleVisibleScreen() {
+    viewingMyScreen = !viewingMyScreen;
+    notifyAllPlayers();
+  }
 }

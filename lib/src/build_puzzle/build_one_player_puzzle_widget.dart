@@ -19,7 +19,7 @@ class BuildOnePlayerPuzzleWidget extends StatefulWidget {
 
 class _BuildOnePlayerPuzzleWidgetState
     extends State<BuildOnePlayerPuzzleWidget> {
-  LetterGrid _grid = new LetterGrid(blankGrid, 1);
+  LetterGrid _grid = new LetterGrid(blankGrid);
   int _selectedIndex = -1;
   int _step = 0;
 
@@ -175,7 +175,7 @@ class _BuildOnePlayerPuzzleWidgetState
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: () => {
-              setState(() => {_grid = new LetterGrid(blankGrid, 2)})
+              setState(() => {_grid = new LetterGrid(blankGrid)})
             },
             child: Text('Clear'),
           ),

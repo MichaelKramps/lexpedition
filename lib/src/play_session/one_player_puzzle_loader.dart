@@ -16,12 +16,7 @@ class _OnePlayerPuzzleLoaderState extends State<OnePlayerPuzzleLoader> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loadedLevel != null) {
-      return new OnePlayerPlaySessionScreen(_loadedLevel as GameLevel, '/freeplaywon');
-    } else {
-      loadOnePlayerPuzzle();
-      return Container();
-    }
+    return Container();
   }
 
   Future<void> loadOnePlayerPuzzle() async {
