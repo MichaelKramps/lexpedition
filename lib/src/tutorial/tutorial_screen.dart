@@ -66,7 +66,7 @@ class TutorialScreen extends StatelessWidget {
           ),
           rectangularMenuArea: ElevatedButton(
             onPressed: () {
-              GoRouter.of(context).pop();
+              GoRouter.of(context).push('/');
             },
             child: const Text('Back'),
           ),

@@ -23,9 +23,7 @@ class LetterGridActionsWidget extends StatelessWidget {
               style: TextStyle(
                   fontSize: Constants.tileSize * 0.4,
                   backgroundColor: Colors.white.withOpacity(0.3),
-                  color: gameState.showBadGuess
-                      ? Colors.red
-                      : Colors.black))),
+                  color: gameState.showBadGuess ? Colors.red : Colors.black))),
       Container(
           margin: EdgeInsets.all(Constants.tileMargin * 2),
           child: ElevatedButton(
@@ -34,7 +32,7 @@ class LetterGridActionsWidget extends StatelessWidget {
               child: Text('Submit'))),
       ElevatedButton(
           style: buttonStyle,
-          onPressed: () => gameState.clearGuess(),
+          onPressed: () => gameState.clearGuessAndNotify(),
           child: Text('Clear')),
     ]);
   }

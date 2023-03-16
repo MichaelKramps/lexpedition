@@ -127,7 +127,7 @@ class GameState extends ChangeNotifier {
     return currentGuessString;
   }
 
-  void clearGuess() {
+  void clearGuessAndNotify() {
     currentGuess = [];
     for (LetterTile tile in getMyGrid().letterTiles) {
       tile.unselect();
@@ -136,18 +136,31 @@ class GameState extends ChangeNotifier {
     notifyAllPlayers();
   }
 
-  void updateGuess(LetterTile letterTile, bool isSlideEvent) {
+  void updateGuessAndNotify(LetterTile letterTile, bool isSlideEvent) {
     //verify we are allowed to select this tile
     if (letterTile.clearOfObstacles() &&
         (currentGuess.length == 0 ||
             currentGuess.last.allowedToSelect(letterTile))) {
-      //select this tile and update the current guess
+      //select this tile and add to current guess
       letterTile.select();
       currentGuess.add(letterTile);
+      //if this tile could fire a magic blast, prime for blast
+      if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
+        letterTile.primeForBlast();
+      }
+      //if tile another tile was primed for blast, unprime it
+      if (currentGuess.length >= Constants.guessLengthToActivateBlast + 1) {
+        currentGuess[currentGuess.length - 2].unprimeForBlast();
+      }
     } else if (!isSlideEvent && letterTile == currentGuess.last) {
-      // unselect tile
+      // unselect tile, unprime it and remove from current guess
       letterTile.unselect();
+      letterTile.unprimeForBlast();
       currentGuess.removeLast();
+      //if another tile should be primed for blast, prime it
+      if (currentGuess.length >= 5) {
+        currentGuess[currentGuess.length - 1].primeForBlast();
+      }
     }
     notifyAllPlayers();
   }
@@ -189,7 +202,7 @@ class GameState extends ChangeNotifier {
       blastTiles();
     }
     //notifyAllPlayers() is called here
-    clearGuess();
+    clearGuessAndNotify();
   }
 
   void blastTiles() async {
@@ -209,20 +222,19 @@ class GameState extends ChangeNotifier {
 
   void flipBadGuess() async {
     showBadGuess = true;
+    notifyAllPlayers();
 
     //notifyAllPlayers should be called elsewhere
     //before this future completes
     await Future<void>.delayed(Constants.showBadGuessDuration);
 
     showBadGuess = false;
-    notifyAllPlayers();
+    clearGuessAndNotify();
   }
 
   void submitGuess() {
     if (currentGuess.length < 3 || !currentGuessIsValid()) {
       flipBadGuess();
-      //notifyAllPlayers is called inside clearGuess()
-      clearGuess();
     } else {
       handleAcceptedGuess();
     }
@@ -232,7 +244,7 @@ class GameState extends ChangeNotifier {
     _logger.info('clickTileAtIndex(' + clickedTileIndex.toString() + ')');
     LetterTile clickedTile = getMyGrid().letterTiles[clickedTileIndex];
     if (clickedTile.tileType != TileType.empty) {
-      updateGuess(clickedTile, isSlideEvent);
+      updateGuessAndNotify(clickedTile, isSlideEvent);
     }
   }
 
