@@ -1,5 +1,6 @@
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
+import 'package:logging/logging.dart';
 
 class GameLevel {
   final String? name;
@@ -30,6 +31,19 @@ class GameLevel {
     } else {
       this.letterGridB = null;
     }
+  }
+
+  factory GameLevel.copy(GameLevel levelToCopy) {
+    return GameLevel(
+        gridCode: levelToCopy.gridCode,
+        gridCodeB: levelToCopy.gridCodeB,
+        name: levelToCopy.name,
+        puzzleId: levelToCopy.puzzleId,
+        tutorialNumber: levelToCopy.tutorialNumber,
+        attempts: levelToCopy.attempts,
+        attemptsFinished: levelToCopy.attemptsFinished,
+        averageGuesses: levelToCopy.averageGuesses,
+        bestAttempt: levelToCopy.bestAttempt);
   }
 
   bool isBlankLevel() {

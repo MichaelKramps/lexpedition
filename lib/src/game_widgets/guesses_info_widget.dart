@@ -31,7 +31,7 @@ class _GuessesInformationWidgetState extends State<GuessesInformationWidget> {
       return Column(
         children: [
           Text('Mine: ' + widget.currentGuesses.toString(), style: textStyle),
-          Text('Average: ' + widget.averageGuesses.toStringAsFixed(2), style: textStyle),
+          Text('Average: ' + widget.averageGuesses.toString(), style: textStyle),
           Text('Best: ' + widget.bestAttempt.toString(), style: textStyle),
           ElevatedButton(
               onPressed: () {

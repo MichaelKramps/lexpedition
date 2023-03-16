@@ -36,14 +36,17 @@ class GameState extends ChangeNotifier {
     _logger.info('loading a new puzzle');
     resetPuzzle();
     if (tutorialNumber != null) {
-      GameLevel level = tutorialLevels[tutorialNumber];
-      primaryLetterGrid = level.letterGrid;
+      GameLevel tutorialLevel = GameLevel.copy(tutorialLevels[tutorialNumber]);
+      level = tutorialLevel;
+      primaryLetterGrid = tutorialLevel.letterGrid;
     } else if (databaseId != null) {
       //get the specific level in the database
     } else {
-      GameLevel? level = await LevelDatabaseConnection.getNewOnePlayerPuzzle();
-      if (level != null) {
-        primaryLetterGrid = level.letterGrid;
+      GameLevel? newLevel =
+          await LevelDatabaseConnection.getNewOnePlayerPuzzle();
+      if (newLevel != null) {
+        level = newLevel;
+        primaryLetterGrid = newLevel.letterGrid;
       }
     }
     notifyAllPlayers();
