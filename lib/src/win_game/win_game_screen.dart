@@ -4,23 +4,21 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
 import '../ads/banner_ad_widget.dart';
-import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
 
 class WinGameScreen extends StatelessWidget {
-  final Score score;
   final String continueRoute;
 
   const WinGameScreen({
     super.key,
     required this.continueRoute,
-    required this.score,
   });
 
   @override
@@ -32,45 +30,48 @@ class WinGameScreen extends StatelessWidget {
 
     const gap = SizedBox(height: 10);
 
-    return Scaffold(
-      backgroundColor: palette.backgroundPlaySession,
-      body: ResponsiveScreen(
-        squarishMainArea: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            if (adsControllerAvailable && !adsRemoved) ...[
-              const Expanded(
-                child: Center(
-                  child: BannerAdWidget(),
+    return Consumer<GameState>(builder: (context, gameState, child) {
+      return Scaffold(
+        backgroundColor: palette.backgroundPlaySession,
+        body: ResponsiveScreen(
+          squarishMainArea: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              if (adsControllerAvailable && !adsRemoved) ...[
+                const Expanded(
+                  child: Center(
+                    child: BannerAdWidget(),
+                  ),
+                ),
+              ],
+              gap,
+              const Center(
+                child: Text(
+                  'You won!',
+                  style:
+                      TextStyle(fontFamily: 'Permanent Marker', fontSize: 50),
+                ),
+              ),
+              gap,
+              Center(
+                child: Text(
+                  'Average Score: ${gameState.level.averageGuesses.round()}\n'
+                  'Best Score: ${gameState.level.bestAttempt}\n'
+                  'My Score: ${gameState.guessList.length}',
+                  style: const TextStyle(
+                      fontFamily: 'Permanent Marker', fontSize: 20),
                 ),
               ),
             ],
-            gap,
-            const Center(
-              child: Text(
-                'You won!',
-                style: TextStyle(fontFamily: 'Permanent Marker', fontSize: 50),
-              ),
-            ),
-            gap,
-            Center(
-              child: Text(
-                'Guesses: ${score.guesses}\n'
-                'Par: ' + (score.difficulty == 0 ? 'unknown' : score.difficulty.toString()) + '\n'
-                'Time: ${score.formattedTime}',
-                style: const TextStyle(
-                    fontFamily: 'Permanent Marker', fontSize: 20),
-              ),
-            ),
-          ],
+          ),
+          rectangularMenuArea: ElevatedButton(
+            onPressed: () {
+              GoRouter.of(context).push(continueRoute);
+            },
+            child: const Text('Continue'),
+          ),
         ),
-        rectangularMenuArea: ElevatedButton(
-          onPressed: () {
-            GoRouter.of(context).push(continueRoute);
-          },
-          child: const Text('Continue'),
-        ),
-      ),
-    );
+      );
+    });
   }
 }

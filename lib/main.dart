@@ -33,7 +33,6 @@ import 'src/app_lifecycle/app_lifecycle.dart';
 import 'src/audio/audio_controller.dart';
 import 'src/crashlytics/crashlytics.dart';
 import 'src/games_services/games_services.dart';
-import 'src/games_services/score.dart';
 import 'src/in_app_purchase/in_app_purchase.dart';
 import 'src/tutorial/tutorial_screen.dart';
 import 'src/tutorial/tutorial_levels.dart';
@@ -156,8 +155,7 @@ class MyApp extends StatelessWidget {
                     pageBuilder: (context, state) {
                       final levelNumber = int.parse(state.params['level']!);
                       return buildMyTransition<void>(
-                        child:
-                            TutorialIntroWidget(level: levelNumber),
+                        child: TutorialIntroWidget(level: levelNumber),
                         color: context.watch<Palette>().backgroundPlaySession,
                       );
                     },
@@ -168,23 +166,17 @@ class MyApp extends StatelessWidget {
                       final levelNumber = int.parse(state.params['level']!);
                       final level = tutorialLevels
                           .singleWhere((e) => e.tutorialNumber == levelNumber);
-                  
-                      return OnePlayerPlaySessionScreen(gameLevel: level, winRoute: '/tutorial/won');
+
+                      return OnePlayerPlaySessionScreen(
+                          gameLevel: level, winRoute: '/tutorial/won');
                     },
                   ),
                   GoRoute(
                     path: 'won',
-                    pageBuilder: (context, state) {
-                      final map = state.extra! as Map<String, dynamic>;
-                      final score = map['score'] as Score;
-
-                      return buildMyTransition<void>(
-                        child: WinGameScreen(
-                          score: score,
-                          continueRoute: '/tutorial',
-                          key: const Key('tutorial win'),
-                        ),
-                        color: context.watch<Palette>().backgroundPlaySession,
+                    builder: (context, state) {
+                      return WinGameScreen(
+                        continueRoute: '/tutorial',
+                        key: const Key('tutorial win'),
                       );
                     },
                   )
@@ -207,7 +199,9 @@ class MyApp extends StatelessWidget {
                       builder: (context, state) {
                         return Consumer<GameState>(
                             builder: (context, gameState, child) {
-                          return OnePlayerPlaySessionScreen(gameLevel: GameLevel(gridCode: blankGrid), winRoute: '/freeplaywon');
+                          return OnePlayerPlaySessionScreen(
+                              gameLevel: GameLevel(gridCode: blankGrid),
+                              winRoute: '/freeplaywon');
                         });
                       }),
                   GoRoute(
@@ -219,11 +213,8 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 path: 'freeplaywon',
                 builder: (context, state) {
-                  final map = state.extra! as Map<String, dynamic>;
-                  final score = map['score'] as Score;
 
                   return WinGameScreen(
-                    score: score,
                     continueRoute: '/freeplay',
                     key: const Key('freeplay win'),
                   );
@@ -232,11 +223,8 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                       path: 'leader',
                       builder: (context, state) {
-                        final map = state.extra! as Map<String, dynamic>;
-                        final score = map['score'] as Score;
 
                         return WinGameScreen(
-                          score: score,
                           continueRoute: '/freeplay',
                           key: const Key('freeplay win'),
                         );
@@ -244,11 +232,8 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                       path: 'joiner',
                       builder: (context, state) {
-                        final map = state.extra! as Map<String, dynamic>;
-                        final score = map['score'] as Score;
 
                         return WinGameScreen(
-                          score: score,
                           continueRoute: '/party/join',
                           key: const Key('freeplay win'),
                         );

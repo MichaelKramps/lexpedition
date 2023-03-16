@@ -20,7 +20,6 @@ import 'package:provider/provider.dart';
 import '../ads/ads_controller.dart';
 import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
-import '../games_services/score.dart';
 import '../in_app_purchase/in_app_purchase.dart';
 import '../player_progress/player_progress.dart';
 import '../style/confetti.dart';
@@ -103,12 +102,6 @@ class _OnePlayerPlaySessionScreenState
       PartyDatabaseConnection().clearLevels();
     });
 
-    final score = Score(
-      gameState.guessList.length,
-      gameState.level.averageGuesses.round(),
-      DateTime.now().difference(_startOfPlay),
-    );
-
     if (gameState.level.puzzleId != null) {
       LevelDatabaseConnection.logOnePlayerFinishedPuzzleResults(
           gameState.level.puzzleId as int, gameState.guessList.length);
@@ -146,6 +139,6 @@ class _OnePlayerPlaySessionScreenState
     await Future<void>.delayed(Constants.celebrationDuration);
     if (!mounted) return;
 
-    GoRouter.of(context).push(widget.winRoute, extra: {'score': score});
+    GoRouter.of(context).push(widget.winRoute);
   }
 }

@@ -8,7 +8,6 @@ import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
-import 'package:lexpedition/src/games_services/score.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:provider/provider.dart';
@@ -88,16 +87,9 @@ class _TwoPlayerPlaySessionScreenState
       PartyDatabaseConnection().clearLevels();
     });
 
-    int numberGuesses = widget.gameState.guessList.length;
-    final score = Score(
-      numberGuesses,
-      widget.gameState.level.averageGuesses.round(),
-      DateTime.now().difference(_startOfPlay)
-    );
-
     if (widget.gameState.level.puzzleId != null) {
       LevelDatabaseConnection.logTwoPlayerFinishedPuzzleResults(
-          widget.gameState.level.puzzleId as int, numberGuesses);
+          widget.gameState.level.puzzleId as int, widget.gameState.guessList.length);
     }
 
     // Let the player see the game just after winning for a bit.
@@ -125,9 +117,9 @@ class _TwoPlayerPlaySessionScreenState
     if (!mounted) return;
     await Future<void>.delayed(Constants.celebrationDuration, () {
       if (PartyDatabaseConnection().isPartyLeader) {
-        GoRouter.of(context).push('/freeplaywon/leader', extra: {'score': score});
+        GoRouter.of(context).push('/freeplaywon/leader');
       } else {
-        GoRouter.of(context).push('/freeplaywon/joiner', extra: {'score': score});
+        GoRouter.of(context).push('/freeplaywon/joiner');
       }
     });
   }

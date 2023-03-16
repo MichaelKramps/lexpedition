@@ -7,8 +7,6 @@ import 'dart:async';
 import 'package:games_services/games_services.dart' as gs;
 import 'package:logging/logging.dart';
 
-import 'score.dart';
-
 /// Allows awarding achievements and leaderboard scores,
 /// and also showing the platforms' UI overlays for achievements
 /// and leaderboards.
@@ -95,7 +93,7 @@ class GamesServicesController {
   }
 
   /// Submits [score] to the leaderboard.
-  Future<void> submitLeaderboardScore(Score score) async {
+  /* Future<void> submitLeaderboardScore(Score score) async {
     if (!await signedIn) {
       _log.warning('Trying to submit leaderboard when not logged in.');
       return;
@@ -115,5 +113,5 @@ class GamesServicesController {
     } catch (e) {
       _log.severe('Cannot submit leaderboard score: $e');
     }
-  }
+  } */
 }
