@@ -1,6 +1,5 @@
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
-import 'package:logging/logging.dart';
 
 class GameLevel {
   final String? name;
@@ -63,6 +62,14 @@ class GameLevel {
       return letterGrid.isFullyCharged() && gridB.isFullyCharged();
     } else {
       return letterGrid.isFullyCharged();
+    }
+  }
+
+  String getName() {
+    if (name == null) {
+      return "Secret Level";
+    } else {
+      return name as String;
     }
   }
 }

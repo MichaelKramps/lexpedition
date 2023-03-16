@@ -152,12 +152,9 @@ class MyApp extends StatelessWidget {
                 routes: [
                   GoRoute(
                     path: 'intro/:level',
-                    pageBuilder: (context, state) {
+                    builder: (context, state) {
                       final levelNumber = int.parse(state.params['level']!);
-                      return buildMyTransition<void>(
-                        child: TutorialIntroWidget(level: levelNumber),
-                        color: context.watch<Palette>().backgroundPlaySession,
-                      );
+                      return TutorialIntroWidget(levelNumber: levelNumber);
                     },
                   ),
                   GoRoute(
@@ -213,7 +210,6 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 path: 'freeplaywon',
                 builder: (context, state) {
-
                   return WinGameScreen(
                     continueRoute: '/freeplay',
                     key: const Key('freeplay win'),
@@ -223,7 +219,6 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                       path: 'leader',
                       builder: (context, state) {
-
                         return WinGameScreen(
                           continueRoute: '/freeplay',
                           key: const Key('freeplay win'),
@@ -232,7 +227,6 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                       path: 'joiner',
                       builder: (context, state) {
-
                         return WinGameScreen(
                           continueRoute: '/party/join',
                           key: const Key('freeplay win'),
