@@ -34,6 +34,7 @@ class GameState extends ChangeNotifier {
 
   void loadOnePlayerPuzzle({int? tutorialNumber, int? databaseId}) async {
     _logger.info('loading a new puzzle');
+    resetPuzzle();
     if (tutorialNumber != null) {
       GameLevel level = tutorialLevels[tutorialNumber];
       primaryLetterGrid = level.letterGrid;
@@ -79,8 +80,8 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  void clearGame() {
-    primaryLetterGrid = LetterGrid.blankGrid();
+  void levelComplete() {
+    levelCompleted = false;
     notifyAllPlayers();
   }
 
@@ -161,8 +162,15 @@ class GameState extends ChangeNotifier {
   }
 
   chargeTilesFromGuess() {
-    for (LetterTile tile in currentGuess) {
-      tile.addCharge();
+    for (int index = 0; index < currentGuess.length; index++) {
+      LetterTile thisTile = currentGuess[index];
+      if (index == 0) {
+        thisTile.addPositionalCharge(TileType.start);
+      } else if (index == currentGuess.length - 1) {
+        thisTile.addPositionalCharge(TileType.end);
+      } else {
+        thisTile.addPositionalCharge(TileType.basic);
+      }
     }
   }
 

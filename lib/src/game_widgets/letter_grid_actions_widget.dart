@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/blast_direction_widget.dart';
-import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 
 class LetterGridActionsWidget extends StatelessWidget {
   final GameState gameState;

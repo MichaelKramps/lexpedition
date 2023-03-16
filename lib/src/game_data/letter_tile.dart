@@ -72,6 +72,12 @@ class LetterTile {
     this.currentCharges += 1;
   }
 
+  void addPositionalCharge(TileType positionInGuess) {
+    if (tileType == TileType.basic || positionInGuess == tileType) {
+      addCharge();
+    }
+  }
+
   void removeCharge() {
     this.currentCharges -= 1;
   }

@@ -51,7 +51,7 @@ class TutorialScreen extends StatelessWidget {
                               context.read<AudioController>();
                           audioController.playSfx(SfxType.buttonTap);
 
-                          gameState.loadOnePlayerPuzzle(tutorialNumber: level.tutorialNumber);
+                          gameState.loadOnePlayerPuzzle(tutorialNumber: level.tutorialNumber - 1);
 
                           GoRouter.of(context)
                               .push('/tutorial/intro/${level.tutorialNumber}');

@@ -291,7 +291,6 @@ class LevelDatabaseConnection {
         .get();
 
     String gridString = snapshot.child('gridCode').value as String;
-    num par = snapshot.child('averageGuesses').value as num;
     int attempts = snapshot.child('attempts').value as int;
     int attemptsFinished = snapshot.child('attemptsFinished').value as int;
     int bestAttempt = snapshot.child('bestAttempt').value as int;
@@ -315,7 +314,6 @@ class LevelDatabaseConnection {
 
     String gridStringA = snapshot.child('gridCodeA').value as String;
     String gridStringB = snapshot.child('gridCodeB').value as String;
-    num par = snapshot.child('averageGuesses').value as num;
     int attempts = snapshot.child('attempts').value as int;
     int attemptsFinished = snapshot.child('attemptsFinished').value as int;
     int bestAttempt = snapshot.child('bestAttempt').value as int;
@@ -337,17 +335,12 @@ class LevelDatabaseConnection {
       int puzzleId, GameLevel gameLevel) async {
     late var updateToMake;
 
-    if (gameLevel.attemptsFinished != null &&
-        gameLevel.averageGuesses != null) {
-      updateToMake = {
-        "attempts": gameLevel.attempts,
-        "attemptsFinished": gameLevel.attemptsFinished,
-        "averageGuesses": gameLevel.averageGuesses,
-        "bestAttempt": gameLevel.bestAttempt
-      };
-    } else {
-      updateToMake = {"attempts": gameLevel.attempts};
-    }
+    updateToMake = {
+      "attempts": gameLevel.attempts,
+      "attemptsFinished": gameLevel.attemptsFinished,
+      "averageGuesses": gameLevel.averageGuesses,
+      "bestAttempt": gameLevel.bestAttempt
+    };
 
     FirebaseDatabase.instance
         .ref('onePlayerPuzzles/' + puzzleId.toString())
@@ -358,17 +351,12 @@ class LevelDatabaseConnection {
       int puzzleId, GameLevel gameLevel) async {
     late var updateToMake;
 
-    if (gameLevel.attemptsFinished != null &&
-        gameLevel.averageGuesses != null) {
-      updateToMake = {
-        "attempts": gameLevel.attempts,
-        "attemptsFinished": gameLevel.attemptsFinished,
-        "averageGuesses": gameLevel.averageGuesses,
-        "bestAttempt": gameLevel.bestAttempt
-      };
-    } else {
-      updateToMake = {"attempts": gameLevel.attempts};
-    }
+    updateToMake = {
+      "attempts": gameLevel.attempts,
+      "attemptsFinished": gameLevel.attemptsFinished,
+      "averageGuesses": gameLevel.averageGuesses,
+      "bestAttempt": gameLevel.bestAttempt
+    };
 
     FirebaseDatabase.instance
         .ref('twoPlayerPuzzles/' + puzzleId.toString())

@@ -49,32 +49,34 @@ class _OnePlayerPlaySessionScreenState
     new Logger('oneplayerplaysession').info('building');
     final palette = context.watch<Palette>();
 
-    return Consumer<GameState>(builder:(context, gameState, child) {
+    return Consumer<GameState>(builder: (context, gameState, child) {
+      if (gameState.levelCompleted) {
+        _playerWon(gameState);
+      }
       return IgnorePointer(
-        ignoring: _duringCelebration,
-        child: Scaffold(
-          backgroundColor: palette.backgroundPlaySession,
-          body: Stack(
-            children: [
-              GameInstanceWidget(
-                gameState: gameState,
-                leftColumn: GameColumn.onePlayerLeftColumn,
-                rightColumn: GameColumn.onePlayerRightColumn,
-              ),
-              SizedBox.expand(
-                child: Visibility(
-                  visible: _duringCelebration,
-                  child: IgnorePointer(
-                    child: Confetti(
-                      isStopped: !_duringCelebration,
+          ignoring: _duringCelebration,
+          child: Scaffold(
+            backgroundColor: palette.backgroundPlaySession,
+            body: Stack(
+              children: [
+                GameInstanceWidget(
+                  gameState: gameState,
+                  leftColumn: GameColumn.onePlayerLeftColumn,
+                  rightColumn: GameColumn.onePlayerRightColumn,
+                ),
+                SizedBox.expand(
+                  child: Visibility(
+                    visible: _duringCelebration,
+                    child: IgnorePointer(
+                      child: Confetti(
+                        isStopped: !_duringCelebration,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        )
-      );
+              ],
+            ),
+          ));
     });
   }
 
@@ -96,6 +98,7 @@ class _OnePlayerPlaySessionScreenState
   }
 
   Future<void> _playerWon(GameState gameState) async {
+    gameState.levelComplete();
     Future<void>.delayed(Constants.clearPuzzlesDuration, () {
       PartyDatabaseConnection().clearLevels();
     });

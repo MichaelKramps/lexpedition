@@ -38,9 +38,9 @@ class OnePlayerRightColumnWidget extends StatelessWidget {
   }
 
   void logPuzzleQuit() {
-    if (gameState.level?.puzzleId != null) {
+    if (gameState.level.puzzleId != null) {
       LevelDatabaseConnection.logOnePlayerUnfinishedPuzzleResults(
-          gameState.level?.puzzleId as int);
+          gameState.level.puzzleId as int);
     }
   }
 }
