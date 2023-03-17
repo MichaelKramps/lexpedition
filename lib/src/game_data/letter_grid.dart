@@ -115,7 +115,7 @@ class LetterGrid {
     for (String dbGuess in guessesFromDatabase) {
       bool alreadyExists = false;
       for (AcceptedGuess acceptedGuess in guesses) {
-        if (acceptedGuess.matchesGuess(dbGuess)) {
+        if (acceptedGuess.matchesGuess(AcceptedGuess(guess: dbGuess))) {
           alreadyExists = true;
         }
       }

@@ -5,7 +5,7 @@ class AcceptedGuess {
 
   AcceptedGuess({required this.guess, this.fromMe = true}) {}
 
-  bool matchesGuess(String guessToCheck) {
-    return guessToCheck.toLowerCase() == guess.toLowerCase();
+  bool matchesGuess(AcceptedGuess guessToCheck) {
+    return guessToCheck.guess.toLowerCase() == guess.toLowerCase();
   }
 }

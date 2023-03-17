@@ -116,6 +116,8 @@ class GameState extends ChangeNotifier {
       setMyGridFromTheirs(theirLetterGrid);
     }
 
+    addNewGuessesFromPartner(theirLetterGrid);
+
     if (isLevelWon()) {
       levelCompleted = true;
     }
@@ -203,6 +205,20 @@ class GameState extends ChangeNotifier {
         } else {
           myTile.unprimeForBlast();
         }
+      }
+    }
+  }
+
+  void addNewGuessesFromPartner(LetterGrid theirGrid) {
+    for (AcceptedGuess theirGuess in theirGrid.guesses) {
+      bool foundString = false;
+      for (AcceptedGuess currentGuess in guessList) {
+        if (currentGuess.matchesGuess(theirGuess)) {
+          foundString = true;
+        }
+      }
+      if (!foundString) {
+        guessList.add(theirGuess);
       }
     }
   }
@@ -300,6 +316,7 @@ class GameState extends ChangeNotifier {
 
   void handleAcceptedGuess() async {
     guessList.add(AcceptedGuess(guess: getCurrentGuess()));
+    getMyGrid()?.addGuess(getCurrentGuess());
     chargeTilesFromGuess();
     // check for win condition
     if (isLevelWon()) {
