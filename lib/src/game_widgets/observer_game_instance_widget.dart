@@ -4,7 +4,10 @@ import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
+import 'package:lexpedition/src/game_widgets/blast_direction_widget.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
+import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart';
+import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
 
 class ObserverGameInstanceWidget extends StatelessWidget {
   final GameState gameState;
@@ -27,10 +30,7 @@ class ObserverGameInstanceWidget extends StatelessWidget {
             fit: BoxFit.cover),
       )),
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        /* BlastDirectionWidget(
-            blastDirection: getBlastDirection(
-                twoPlayerPlaySessionStateManager.getTheirLetterGrid()),
-            changeDirection: () => {}), */
+        BlastDirectionWidget(gameState: gameState),
         Row(children: [
           Expanded(child: determineColumn(leftColumn)),
           LetterGridWidget(
@@ -42,17 +42,14 @@ class ObserverGameInstanceWidget extends StatelessWidget {
   }
 
   Widget determineColumn(GameColumn gameColumn) {
-    return Container();
-    /* switch (gameColumn) {
+    switch (gameColumn) {
       case GameColumn.twoPlayerRightColumn:
-        return TwoPlayerRightColumnWidget(
-            twoPlayerPlaySessionStateManager: twoPlayerPlaySessionStateManager);
+        return TwoPlayerRightColumnWidget(gameState: gameState);
       case GameColumn.twoPlayerLeftColumn:
-        return TwoPlayerLeftColumnWidget(
-            twoPlayerPlaySessionStateManager: twoPlayerPlaySessionStateManager);
+        return TwoPlayerLeftColumnWidget(gameState: gameState,);
       default:
         return Container();
-    } */
+    }
   }
 
   getBlastDirection(LetterGrid? letterGrid) {

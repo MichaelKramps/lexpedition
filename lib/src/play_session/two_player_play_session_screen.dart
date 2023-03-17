@@ -25,7 +25,6 @@ class TwoPlayerPlaySessionScreen extends StatefulWidget {
 
 class _TwoPlayerPlaySessionScreenState
     extends State<TwoPlayerPlaySessionScreen> {
-  bool _showingMyGrid = true;
   bool _duringCelebration = false;
 
   @override
@@ -61,7 +60,7 @@ class _TwoPlayerPlaySessionScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [Text(waitingText)],
       ));
-    } else if (gameState.getMyGrid() != null && _showingMyGrid) {
+    } else if (gameState.getMyGrid() != null && gameState.viewingMyScreen) {
       return GameInstanceWidget(
           gameState: gameState,
           leftColumn: GameColumn.twoPlayerLeftColumn,
@@ -72,12 +71,6 @@ class _TwoPlayerPlaySessionScreenState
           leftColumn: GameColumn.twoPlayerLeftColumn,
           rightColumn: GameColumn.twoPlayerRightColumn);
     }
-  }
-
-  void toggleScreen() {
-    setState(() {
-      _showingMyGrid = !_showingMyGrid;
-    });
   }
 
   Future<void> _playerWon(GameState gameState) async {
