@@ -93,7 +93,6 @@ class GameState extends ChangeNotifier {
     _logger.info('updating puzzle');
     if (gameLevelCode != null) {
       //should always mean player is getting a new puzzle
-      _logger.info('setting my puzzle');
       GameLevel? loadedLevel =
           await LevelDatabaseConnection.lookUpLevelFromCode(gameLevelCode);
       if (loadedLevel != null) {
@@ -102,6 +101,7 @@ class GameState extends ChangeNotifier {
       }
     } else if (blastIndex != null && getMyGrid() != null) {
       //need to blast my puzzle based on partner's blast index
+      _logger.info('blasting from update');
       blastTilesAndNotify(blastIndex);
     }
 
@@ -113,13 +113,13 @@ class GameState extends ChangeNotifier {
     } else {
       _logger.info('2');
       setTheirGrid(theirLetterGrid);
+      setMyGridFromTheirs(theirLetterGrid);
     }
 
     if (isLevelWon()) {
       levelCompleted = true;
     }
-    _logger.info('12345');
-    _logger.info(getMyGrid()?.letterTiles[9].letter);
+    
     notifyAllPlayers();
   }
 
@@ -187,6 +187,23 @@ class GameState extends ChangeNotifier {
       primaryLetterGrid = newGrid;
     } else {
       secondaryLetterGrid = newGrid;
+    }
+  }
+
+  void setMyGridFromTheirs(LetterGrid theirGrid) {
+    if (getMyGrid() != null && getTheirGrid() != null) {
+      LetterGrid myGrid = getMyGrid() as LetterGrid;
+      for (int index = 0;
+          index < primaryLetterGrid.letterTiles.length;
+          index++) {
+        LetterTile myTile = myGrid.letterTiles[index];
+        LetterTile theirTile = theirGrid.letterTiles[index];
+        if (theirTile.primedForBlast) {
+          myTile.primeForBlast();
+        } else {
+          myTile.unprimeForBlast();
+        }
+      }
     }
   }
 

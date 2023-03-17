@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
@@ -49,14 +48,6 @@ class ObserverGameInstanceWidget extends StatelessWidget {
         return TwoPlayerLeftColumnWidget(gameState: gameState,);
       default:
         return Container();
-    }
-  }
-
-  getBlastDirection(LetterGrid? letterGrid) {
-    if (letterGrid == null) {
-      return BlastDirection.vertical;
-    } else {
-      return letterGrid.blastDirection;
     }
   }
 }
