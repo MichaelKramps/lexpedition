@@ -102,7 +102,7 @@ class GameState extends ChangeNotifier {
     } else if (blastIndex != null && getMyGrid() != null) {
       //need to blast my puzzle based on partner's blast index
       _logger.info('blasting from update');
-      blastTilesAndNotify(blastIndex);
+      blastTilesAndDontNotify(blastIndex);
     }
 
     if (averageGuesses != null && bestAttempt != null) {
@@ -119,7 +119,7 @@ class GameState extends ChangeNotifier {
     if (isLevelWon()) {
       levelCompleted = true;
     }
-    
+
     notifyAllPlayers();
   }
 
@@ -298,7 +298,7 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  void handleAcceptedGuess() {
+  void handleAcceptedGuess() async {
     guessList.add(AcceptedGuess(guess: getCurrentGuess()));
     chargeTilesFromGuess();
     // check for win condition
@@ -307,13 +307,31 @@ class GameState extends ChangeNotifier {
     } else if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
       //clearGuess() at end of this method will fire notifyAllPlayers
       //before blastTiles() unblasts the tiles
-      blastTilesAndNotify(currentGuess.last.index);
+      await blastTilesAndNotify(currentGuess.last.index);
     }
     //notifyAllPlayers() is called here
     clearGuessAndNotify();
   }
 
-  void blastTilesAndNotify(int index) async {
+  Future<void> blastTilesAndNotify(int index) async {
+    if (getMyGrid() != null) {
+      LetterGrid myGrid = getMyGrid() as LetterGrid;
+
+      myGrid.blastFromIndex(index);
+      PartyDatabaseConnection()
+          .updateMyPuzzle(letterGrid: myGrid, blastIndex: index);
+      if (isLevelWon()) {
+        levelCompleted = true;
+      }
+
+      //before this future returns,
+      //notifyAllPlayers() should call from somewhere else
+      await Future<void>.delayed(Constants.blastDuration);
+      myGrid.unblast();
+    }
+  }
+
+  void blastTilesAndDontNotify(int index) async {
     if (getMyGrid() != null) {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
 
@@ -326,9 +344,7 @@ class GameState extends ChangeNotifier {
       //notifyAllPlayers() should call from somewhere else
       await Future<void>.delayed(Constants.blastDuration);
       myGrid.unblast();
-
-      // notify again after unblasting
-      notifyAllPlayers();
+      notifyListeners();
     }
   }
 
