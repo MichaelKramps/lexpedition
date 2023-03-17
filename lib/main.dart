@@ -9,6 +9,7 @@ import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/main_menu/more_menu.dart';
+import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:lexpedition/src/play_session/two_player_puzzle_loader.dart';
 import 'package:lexpedition/src/party/join_party_screen.dart';
 import 'package:lexpedition/src/party/party_screen.dart';
@@ -160,7 +161,8 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                     path: 'session/:level',
                     builder: (context, state) {
-                      return OnePlayerPlaySessionScreen(winRoute: '/tutorial/won');
+                      return OnePlayerPlaySessionScreen(
+                          winRoute: '/tutorial/won');
                     },
                   ),
                   GoRoute(
@@ -189,13 +191,18 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                       path: 'oneplayer',
                       builder: (context, state) {
-                        return OnePlayerPlaySessionScreen(winRoute: '/freeplaywon');
+                        return OnePlayerPlaySessionScreen(
+                            winRoute: '/freeplaywon');
                       }),
                   GoRoute(
-                    path: 'twoplayer',
-                    builder: (context, state) =>
-                        TwoPlayerPuzzleLoader(key: UniqueKey()),
-                  )
+                      path: 'twoplayer',
+                      builder: (context, state) {
+                        return Consumer<GameState>(
+                            builder: (context, gameState, child) {
+                          return TwoPlayerPlaySessionScreen(
+                              gameState: gameState);
+                        });
+                      })
                 ]),
             GoRoute(
                 path: 'freeplaywon',

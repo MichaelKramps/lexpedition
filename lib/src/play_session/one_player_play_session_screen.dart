@@ -27,8 +27,7 @@ import '../style/palette.dart';
 class OnePlayerPlaySessionScreen extends StatefulWidget {
   final String winRoute;
 
-  const OnePlayerPlaySessionScreen(
-      {required this.winRoute, super.key});
+  const OnePlayerPlaySessionScreen({required this.winRoute, super.key});
 
   @override
   State<OnePlayerPlaySessionScreen> createState() =>
@@ -91,7 +90,7 @@ class _OnePlayerPlaySessionScreenState
   }
 
   Future<void> _playerWon(GameState gameState) async {
-    gameState.levelComplete();
+    gameState.completeLevel();
     Future<void>.delayed(Constants.clearPuzzlesDuration, () {
       PartyDatabaseConnection().clearLevels();
     });

@@ -49,13 +49,86 @@ class GameState extends ChangeNotifier {
         primaryLetterGrid = newLevel.letterGrid;
       }
     }
+    loadPuzzleAndNotify();
+  }
+
+  void loadTwoPlayerPuzzle({int? tutorialNumber, int? databaseId}) async {
+    _logger.info('loading a new two player puzzle');
+    resetPuzzle();
+    if (tutorialNumber != null) {
+      GameLevel tutorialLevel = GameLevel.copy(tutorialLevels[tutorialNumber]);
+      level = tutorialLevel;
+      primaryLetterGrid = tutorialLevel.letterGrid;
+    } else if (databaseId != null) {
+      //get the specific level in the database
+    } else {
+      GameLevel? newLevel =
+          await LevelDatabaseConnection.getNewTwoPlayerPuzzle();
+      if (newLevel != null) {
+        level = newLevel;
+        primaryLetterGrid = newLevel.letterGrid;
+        secondaryLetterGrid = newLevel.letterGridB;
+      }
+    }
+    loadPuzzleAndNotify();
+  }
+
+  void loadPuzzleAndNotify() {
+    PartyDatabaseConnection().loadPuzzleForPlayers(level: level);
+    notifyListeners();
+  }
+
+  void listenForPuzzleUpdatesFromPartner() {
+    _logger.info('listening');
+    PartyDatabaseConnection()
+        .listenForPuzzle(updateMyGameStateFromPartnerUpdate);
+  }
+
+  void updateMyGameStateFromPartnerUpdate(
+      {double? averageGuesses,
+      int? bestAttempt,
+      int? blastIndex,
+      String? gameLevelCode,
+      required LetterGrid theirLetterGrid}) async {
+    _logger.info('updating puzzle');
+    if (gameLevelCode != null) {
+      //should always mean player is getting a new puzzle
+      _logger.info('setting my puzzle');
+      GameLevel? loadedLevel =
+          await LevelDatabaseConnection.lookUpLevelFromCode(gameLevelCode);
+      if (loadedLevel != null) {
+        level = loadedLevel;
+        setMyGrid(loadedLevel.letterGridB as LetterGrid);
+      }
+    } else if (blastIndex != null && getMyGrid() != null) {
+      //need to blast my puzzle based on partner's blast index
+      blastTilesAndNotify(blastIndex);
+    }
+
+    if (averageGuesses != null && bestAttempt != null) {
+      _logger.info('1');
+      level.averageGuesses = averageGuesses;
+      level.bestAttempt = bestAttempt;
+      setTheirGrid(theirLetterGrid);
+    } else {
+      _logger.info('2');
+      setTheirGrid(theirLetterGrid);
+    }
+
+    if (isLevelWon()) {
+      levelCompleted = true;
+    }
+    _logger.info('12345');
+    _logger.info(getMyGrid()?.letterTiles[9].letter);
     notifyAllPlayers();
   }
 
   void notifyAllPlayers() {
     _logger.info('notifyAllPlayers()');
-    _logger.info(getCurrentGuess());
-    PartyDatabaseConnection().updateMyPuzzle(letterGrid: getMyGrid());
+    if (getMyGrid() != null) {
+      PartyDatabaseConnection()
+          .updateMyPuzzle(letterGrid: getMyGrid() as LetterGrid);
+    }
     notifyListeners();
   }
 
@@ -83,7 +156,7 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  void levelComplete() {
+  void completeLevel() {
     levelCompleted = false;
     notifyAllPlayers();
   }
@@ -101,12 +174,27 @@ class GameState extends ChangeNotifier {
     showBadGuess = false;
   }
 
-  LetterGrid getMyGrid() {
-    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
-    if (partyDatabaseConnection.isPartyLeader) {
+  LetterGrid? getMyGrid() {
+    if (PartyDatabaseConnection().isPartyLeader) {
       return primaryLetterGrid;
     } else {
-      return secondaryLetterGrid as LetterGrid;
+      return secondaryLetterGrid;
+    }
+  }
+
+  void setMyGrid(LetterGrid newGrid) {
+    if (PartyDatabaseConnection().isPartyLeader) {
+      primaryLetterGrid = newGrid;
+    } else {
+      secondaryLetterGrid = newGrid;
+    }
+  }
+
+  void setTheirGrid(LetterGrid newGrid) {
+    if (PartyDatabaseConnection().isPartyLeader) {
+      secondaryLetterGrid = newGrid;
+    } else {
+      primaryLetterGrid = newGrid;
     }
   }
 
@@ -129,9 +217,12 @@ class GameState extends ChangeNotifier {
 
   void clearGuessAndNotify() {
     currentGuess = [];
-    for (LetterTile tile in getMyGrid().letterTiles) {
-      tile.unselect();
-      tile.unprimeForBlast();
+    if (getMyGrid() != null) {
+      LetterGrid myGrid = getMyGrid() as LetterGrid;
+      for (LetterTile tile in myGrid.letterTiles) {
+        tile.unselect();
+        tile.unprimeForBlast();
+      }
     }
     notifyAllPlayers();
   }
@@ -199,25 +290,29 @@ class GameState extends ChangeNotifier {
     } else if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
       //clearGuess() at end of this method will fire notifyAllPlayers
       //before blastTiles() unblasts the tiles
-      blastTiles();
+      blastTilesAndNotify(currentGuess.last.index);
     }
     //notifyAllPlayers() is called here
     clearGuessAndNotify();
   }
 
-  void blastTiles() async {
-    getMyGrid().blastFromIndex(currentGuess.last.index);
-    if (isLevelWon()) {
-      levelCompleted = true;
+  void blastTilesAndNotify(int index) async {
+    if (getMyGrid() != null) {
+      LetterGrid myGrid = getMyGrid() as LetterGrid;
+
+      myGrid.blastFromIndex(index);
+      if (isLevelWon()) {
+        levelCompleted = true;
+      }
+
+      //before this future returns,
+      //notifyAllPlayers() should call from somewhere else
+      await Future<void>.delayed(Constants.blastDuration);
+      myGrid.unblast();
+
+      // notify again after unblasting
+      notifyAllPlayers();
     }
-
-    //before this future returns,
-    //notifyAllPlayers() should call from somewhere else
-    await Future<void>.delayed(Constants.blastDuration);
-    getMyGrid().unblast();
-
-    // notify again after unblasting
-    notifyAllPlayers();
   }
 
   void flipBadGuess() async {
@@ -241,16 +336,21 @@ class GameState extends ChangeNotifier {
   }
 
   void clickTileAtIndex(int clickedTileIndex, bool isSlideEvent) {
-    _logger.info('clickTileAtIndex(' + clickedTileIndex.toString() + ')');
-    LetterTile clickedTile = getMyGrid().letterTiles[clickedTileIndex];
-    if (clickedTile.tileType != TileType.empty) {
-      updateGuessAndNotify(clickedTile, isSlideEvent);
+    if (getMyGrid() != null) {
+      LetterGrid myGrid = getMyGrid() as LetterGrid;
+      LetterTile clickedTile = myGrid.letterTiles[clickedTileIndex];
+      if (clickedTile.tileType != TileType.empty) {
+        updateGuessAndNotify(clickedTile, isSlideEvent);
+      }
     }
   }
 
-  void changeBlastDirection() {
-    getMyGrid().changeBlastDirection();
-    notifyAllPlayers();
+  void changeBlastDirectionAndNotify() {
+    if (getMyGrid() != null) {
+      LetterGrid myGrid = getMyGrid() as LetterGrid;
+      myGrid.changeBlastDirection();
+      notifyAllPlayers();
+    }
   }
 
   List<AcceptedGuess> getAllGuessesInOrder() {

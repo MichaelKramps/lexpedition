@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:lexpedition/src/play_session/two_player_puzzle_loader.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
 class JoinPartyScreen extends StatefulWidget {
@@ -31,7 +34,9 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
   @override
   Widget build(BuildContext context) {
     if (_joined) {
-      return TwoPlayerPuzzleLoader();
+      return Consumer<GameState>(builder: (context, gameState, child) {
+        return TwoPlayerPlaySessionScreen(gameState: gameState);
+      });
     } else {
       return Scaffold(
           body: SizedBox.expand(

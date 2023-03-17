@@ -98,6 +98,7 @@ class LevelDatabaseConnection {
             averageGuesses: par.toDouble(),
             gridCode: gridString.split(','),
             puzzleId: int.parse(puzzleIdString),
+            gameLevelCode: '1' + int.parse(puzzleIdString).toString(),
             bestAttempt: best);
       }
     });
@@ -128,6 +129,7 @@ class LevelDatabaseConnection {
             gridCode: gridStringA.split(','),
             gridCodeB: gridStringB.split(','),
             puzzleId: int.parse(puzzleIdString),
+            gameLevelCode: '2' + int.parse(puzzleIdString).toString(),
             bestAttempt: best);
       }
     });
@@ -158,6 +160,7 @@ class LevelDatabaseConnection {
             averageGuesses: par.toDouble(),
             gridCode: gridString.split(','),
             puzzleId: int.parse(puzzleIdString),
+            gameLevelCode: '1' + int.parse(puzzleIdString).toString(),
             bestAttempt: best);
       }
     });
@@ -190,6 +193,7 @@ class LevelDatabaseConnection {
             gridCode: gridStringA.split(','),
             gridCodeB: gridStringB.split(','),
             puzzleId: int.parse(puzzleIdString),
+            gameLevelCode: '2' + int.parse(puzzleIdString).toString(),
             bestAttempt: best);
       }
     });
@@ -231,7 +235,8 @@ class LevelDatabaseConnection {
 
     bool levelCanBeUpdated = level != null;
     if (levelCanBeUpdated) {
-      int newBestAttempt = guesses < level.bestAttempt ? guesses : level.bestAttempt;
+      int newBestAttempt =
+          guesses < level.bestAttempt ? guesses : level.bestAttempt;
 
       int newAttempts = level.attempts + 1;
       int newAttemptsFinished = level.attemptsFinished + 1;
@@ -259,9 +264,8 @@ class LevelDatabaseConnection {
     if (levelCanBeUpdated) {
       int newAttempts = level.attempts + 1;
 
-      GameLevel updatedGameLevel = GameLevel(
-          gridCode: level.gridCode,
-          attempts: newAttempts);
+      GameLevel updatedGameLevel =
+          GameLevel(gridCode: level.gridCode, attempts: newAttempts);
 
       LevelDatabaseConnection.setOnePlayerLevelFromId(
           puzzleId, updatedGameLevel);
@@ -276,12 +280,19 @@ class LevelDatabaseConnection {
     if (levelCanBeUpdated) {
       int newAttempts = level.attempts + 1;
 
-      GameLevel updatedGameLevel = GameLevel(
-          gridCode: level.gridCode,
-          attempts: newAttempts);
+      GameLevel updatedGameLevel =
+          GameLevel(gridCode: level.gridCode, attempts: newAttempts);
 
       LevelDatabaseConnection.setTwoPlayerLevelFromId(
           puzzleId, updatedGameLevel);
+    }
+  }
+
+  static Future<GameLevel?> lookUpLevelFromCode(String lookupCode) async {
+    if (lookupCode[0] == "1") {
+      return await getOnePlayerLevelFromId(int.parse(lookupCode.substring(1)));
+    } else {
+      return await getTwoPlayerLevelFromId(int.parse(lookupCode.substring(1)));
     }
   }
 
@@ -299,6 +310,7 @@ class LevelDatabaseConnection {
     GameLevel gameLevel = GameLevel(
         gridCode: gridString.split(','),
         puzzleId: puzzleId,
+        gameLevelCode: '1' + puzzleId.toString(),
         attempts: attempts,
         bestAttempt: bestAttempt,
         attemptsFinished: attemptsFinished,
@@ -323,6 +335,7 @@ class LevelDatabaseConnection {
         gridCode: gridStringA.split(','),
         gridCodeB: gridStringB.split(','),
         puzzleId: puzzleId,
+        gameLevelCode: '2' + puzzleId.toString(),
         attempts: attempts,
         attemptsFinished: attemptsFinished,
         bestAttempt: bestAttempt,

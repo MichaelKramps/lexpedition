@@ -131,7 +131,7 @@ class PartyDatabaseConnection {
             'guesses': '',
             'averageGuesses': level.averageGuesses,
             'bestAttempt': level.bestAttempt,
-            'letterGridB': level.gridCodeB?.join(',')
+            'gameLevelCode': level.gameLevelCode
           },
           'letterGridB': {
             'gridString': level.gridCodeB?.join(','),
@@ -180,10 +180,9 @@ class PartyDatabaseConnection {
 
   void listenForPuzzle(
       Function(
-              {LetterGrid? myLetterGrid,
+              {String? gameLevelCode,
               required LetterGrid theirLetterGrid,
               int? blastIndex,
-              int? difficulty,
               double? averageGuesses,
               int? bestAttempt})
           callback) async {
@@ -198,19 +197,14 @@ class PartyDatabaseConnection {
             event.snapshot.child('gridString').value as String;
         final String guesses = event.snapshot.child('guesses').value as String;
 
-        String? myGridString = null;
+        String? gameLevelCode = null;
         try {
-          myGridString = event.snapshot.child('letterGridB').value as String?;
+          gameLevelCode = event.snapshot.child('gameLevelCode').value as String?;
         } catch (e) {}
 
         num? blastIndex = null;
         try {
           blastIndex = event.snapshot.child('blastIndex').value as num?;
-        } catch (e) {}
-
-        num? difficulty = null;
-        try {
-          difficulty = event.snapshot.child('difficulty').value as num?;
         } catch (e) {}
 
         num? averageGuesses = null;
@@ -236,16 +230,11 @@ class PartyDatabaseConnection {
             letterTiles: theirGridString.split(','),
             guesses: guesses.split(','),
             blastDirection: blastDirection);
-        final LetterGrid? myLetterGrid = myGridString == null
-            ? null
-            : LetterGrid.fromLiveDatabase(
-                letterTiles: myGridString.split(','), guesses: []);
 
         callback(
             theirLetterGrid: theirLetterGrid,
-            myLetterGrid: myLetterGrid,
+            gameLevelCode: gameLevelCode,
             blastIndex: blastIndex?.toInt(),
-            difficulty: difficulty?.toInt(),
             averageGuesses: averageGuesses?.toDouble(),
             bestAttempt: bestAttempt?.toInt());
       } catch (e) {}

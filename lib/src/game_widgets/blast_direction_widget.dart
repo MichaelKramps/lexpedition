@@ -11,7 +11,7 @@ class BlastDirectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkResponse(
-      onTap: () => {gameState.changeBlastDirection()},
+      onTap: () => {gameState.changeBlastDirectionAndNotify()},
       child: Image.asset(
         determineImage(),
         height: Constants.tileSize,
@@ -24,7 +24,7 @@ class BlastDirectionWidget extends StatelessWidget {
   String determineImage() {
     String path = 'assets/images/';
 
-    switch (gameState.getMyGrid().blastDirection) {
+    switch (gameState.getMyGrid()?.blastDirection) {
       case (BlastDirection.horizontal):
         path += 'staveright';
         break;

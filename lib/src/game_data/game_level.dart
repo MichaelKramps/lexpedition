@@ -4,6 +4,7 @@ import 'package:lexpedition/src/game_data/letter_tile.dart';
 class GameLevel {
   final String? name;
   final int? puzzleId;
+  final String? gameLevelCode;
   final List<String?> gridCode;
   final List<String?>? gridCodeB;
   late LetterGrid letterGrid;
@@ -19,6 +20,7 @@ class GameLevel {
       this.gridCodeB,
       this.name,
       this.puzzleId,
+      this.gameLevelCode,
       this.tutorialNumber = 100,
       this.attempts = 0,
       this.attemptsFinished = 0,

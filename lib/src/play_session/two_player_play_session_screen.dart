@@ -10,13 +10,13 @@ import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
   final GameState gameState;
 
-  const TwoPlayerPlaySessionScreen(
-      {super.key, required this.gameState});
+  const TwoPlayerPlaySessionScreen({super.key, required this.gameState});
 
   @override
   State<TwoPlayerPlaySessionScreen> createState() =>
@@ -28,31 +28,30 @@ class _TwoPlayerPlaySessionScreenState
   bool _showingMyGrid = true;
   bool _duringCelebration = false;
 
-  late DateTime _startOfPlay;
-
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-    _startOfPlay = DateTime.now();
+
+    widget.gameState.listenForPuzzleUpdatesFromPartner();
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(ignoring: _duringCelebration, child: determineStack());
-  }
-
-  Widget determineStack() {
-    if (!_duringCelebration) {
-      return determineVisibleGrid();
-    } else {
-      return determineVisibleGrid();
+    if (widget.gameState.levelCompleted) {
+      _playerWon(widget.gameState);
     }
+    return Scaffold(
+        body: IgnorePointer(
+            ignoring: _duringCelebration,
+            child: determineVisibleGrid(widget.gameState)));
   }
 
-  Widget determineVisibleGrid() {
-    if (widget.gameState.level.isBlankLevel()) {
+  Widget determineVisibleGrid(GameState gameState) {
+    new Logger('session screen')
+        .info(gameState.getMyGrid()?.letterTiles[9].letter);
+    if (gameState.level.isBlankLevel()) {
       String waitingText = PartyDatabaseConnection().isPartyLeader
           ? 'Loading puzzle...'
           : 'Waiting for your partner to start a game...';
@@ -62,16 +61,16 @@ class _TwoPlayerPlaySessionScreenState
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [Text(waitingText)],
       ));
-    } else if (widget.gameState.getMyGrid() != null && _showingMyGrid) {
+    } else if (gameState.getMyGrid() != null && _showingMyGrid) {
       return GameInstanceWidget(
-          gameState: widget.gameState,
+          gameState: gameState,
           leftColumn: GameColumn.twoPlayerLeftColumn,
           rightColumn: GameColumn.twoPlayerRightColumn);
     } else {
       return ObserverGameInstanceWidget(
-        gameState: widget.gameState,
-        leftColumn: GameColumn.twoPlayerLeftColumn,
-        rightColumn: GameColumn.twoPlayerRightColumn);
+          gameState: gameState,
+          leftColumn: GameColumn.twoPlayerLeftColumn,
+          rightColumn: GameColumn.twoPlayerRightColumn);
     }
   }
 
@@ -81,15 +80,15 @@ class _TwoPlayerPlaySessionScreenState
     });
   }
 
-  Future<void> _playerWon(int guesses) async {
-    // to prevent completed levels from being reloaded
+  Future<void> _playerWon(GameState gameState) async {
+    gameState.completeLevel();
     Future<void>.delayed(Constants.clearPuzzlesDuration, () {
       PartyDatabaseConnection().clearLevels();
     });
 
-    if (widget.gameState.level.puzzleId != null) {
+    if (gameState.level.puzzleId != null) {
       LevelDatabaseConnection.logTwoPlayerFinishedPuzzleResults(
-          widget.gameState.level.puzzleId as int, widget.gameState.guessList.length);
+          gameState.level.puzzleId as int, gameState.guessList.length);
     }
 
     // Let the player see the game just after winning for a bit.
@@ -124,4 +123,3 @@ class _TwoPlayerPlaySessionScreenState
     });
   }
 }
-

@@ -26,6 +26,7 @@ class FreePlay extends StatelessWidget {
           SizedBox(width: Constants.smallFont),
           ElevatedButton(
               onPressed: () {
+                gameState.loadTwoPlayerPuzzle();
                 GoRouter.of(context).push('/freeplay/twoplayer');
               },
               child: Text('Two Player')),
