@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
-import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
@@ -26,11 +25,10 @@ import '../style/confetti.dart';
 import '../style/palette.dart';
 
 class OnePlayerPlaySessionScreen extends StatefulWidget {
-  final GameLevel gameLevel;
   final String winRoute;
 
   const OnePlayerPlaySessionScreen(
-      {required this.gameLevel, required this.winRoute, super.key});
+      {required this.winRoute, super.key});
 
   @override
   State<OnePlayerPlaySessionScreen> createState() =>
@@ -40,8 +38,6 @@ class OnePlayerPlaySessionScreen extends StatefulWidget {
 class _OnePlayerPlaySessionScreenState
     extends State<OnePlayerPlaySessionScreen> {
   bool _duringCelebration = false;
-
-  late DateTime _startOfPlay;
 
   @override
   Widget build(BuildContext context) {
@@ -84,8 +80,6 @@ class _OnePlayerPlaySessionScreenState
     super.initState();
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-
-    _startOfPlay = DateTime.now();
 
     // Preload ad for the win screen.
     final adsRemoved =

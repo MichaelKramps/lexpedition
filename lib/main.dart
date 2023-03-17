@@ -160,12 +160,7 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                     path: 'session/:level',
                     builder: (context, state) {
-                      final levelNumber = int.parse(state.params['level']!);
-                      final level = tutorialLevels
-                          .singleWhere((e) => e.tutorialNumber == levelNumber);
-
-                      return OnePlayerPlaySessionScreen(
-                          gameLevel: level, winRoute: '/tutorial/won');
+                      return OnePlayerPlaySessionScreen(winRoute: '/tutorial/won');
                     },
                   ),
                   GoRoute(
@@ -194,12 +189,7 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                       path: 'oneplayer',
                       builder: (context, state) {
-                        return Consumer<GameState>(
-                            builder: (context, gameState, child) {
-                          return OnePlayerPlaySessionScreen(
-                              gameLevel: GameLevel(gridCode: blankGrid),
-                              winRoute: '/freeplaywon');
-                        });
+                        return OnePlayerPlaySessionScreen(winRoute: '/freeplaywon');
                       }),
                   GoRoute(
                     path: 'twoplayer',
