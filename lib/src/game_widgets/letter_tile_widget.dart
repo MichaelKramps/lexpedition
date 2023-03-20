@@ -84,7 +84,7 @@ class LetterTileWidget extends StatelessWidget {
   }
 
   BorderSide determineTileBorder(LetterTile letterTile) {
-    if (letterTile.primedForBlast) {
+    if (letterTile.primedForBlast || letterTile.primedForBlastFromPartner) {
       return BorderSide(width: 3, color: Color.fromARGB(255, 63, 181, 150));
     } else if (letterTile.selected) {
       return BorderSide(width: 2, color: Colors.orange);
@@ -94,7 +94,7 @@ class LetterTileWidget extends StatelessWidget {
   }
 
   Border determineEmptyBorder(LetterTile letterTile) {
-    if (letterTile.primedForBlast) {
+    if (letterTile.primedForBlast || letterTile.primedForBlastFromPartner) {
       return Border.all(
           color: Color.fromARGB(255, 63, 181, 150),
           width: 3,

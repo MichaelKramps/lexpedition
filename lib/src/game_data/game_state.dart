@@ -218,9 +218,9 @@ class GameState extends ChangeNotifier {
         LetterTile myTile = myGrid.letterTiles[index];
         LetterTile theirTile = theirGrid.letterTiles[index];
         if (theirTile.primedForBlast) {
-          myTile.primeForBlast();
+          myTile.primeForBlastFromPartner();
         } else {
-          myTile.unprimeForBlast();
+          myTile.unprimeForBlastFromPartner();
         }
       }
     }

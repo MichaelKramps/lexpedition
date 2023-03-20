@@ -8,6 +8,7 @@ class LetterTile {
   int index = -1;
   bool selected = false;
   bool primedForBlast = false;
+  bool primedForBlastFromPartner = false;
   bool blastFrom = false;
 
   LetterTile(String letter, TileType tileType, int requiredCharges,
@@ -42,8 +43,10 @@ class LetterTile {
         this.blastFrom = encodedString[7] == '1' ? true : false;
         try {
           this.primedForBlast = encodedString[8] == '1' ? true : false;
+          this.primedForBlastFromPartner = encodedString[9] == '1' ? true : false;
         } catch (e) {
           this.primedForBlast = false;
+          this.primedForBlastFromPartner = false;
         }
       } else {
         this.tileType = TileType.empty;
@@ -64,6 +67,7 @@ class LetterTile {
     encodedString += this.selected ? '1' : '0';
     encodedString += this.blastFrom ? '1' : '0';
     encodedString += this.primedForBlast ? '1' : '0';
+    encodedString += this.primedForBlastFromPartner ? '1' : '0';
 
     return encodedString;
   }
@@ -94,8 +98,16 @@ class LetterTile {
     this.primedForBlast = true;
   }
 
+  void primeForBlastFromPartner() {
+    this.primedForBlastFromPartner = true;
+  }
+
   void unprimeForBlast() {
     this.primedForBlast = false;
+  }
+
+  void unprimeForBlastFromPartner() {
+    this.primedForBlastFromPartner = false;
   }
 
   void blast() {
