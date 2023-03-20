@@ -148,6 +148,10 @@ class PartyDatabaseConnection {
         await FirebaseDatabase.instance
             .ref('party/' + partyCode + '/letterGridA')
             .remove();
+      } else {
+        await FirebaseDatabase.instance
+            .ref('party/' + partyCode + '/letterGridB')
+            .remove();
       }
     }
   }

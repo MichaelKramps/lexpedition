@@ -25,6 +25,7 @@ class Constants {
 
   static const celebrationDuration = Duration(milliseconds: 2000);
   static const preCelebrationDuration = Duration(milliseconds: 500);
+  static const waitForWinScreenDuration = Duration(milliseconds: 3000);
 
   static const Duration blastDuration = Duration(milliseconds: 350);
   static const Duration clearPuzzlesDuration = Duration(milliseconds: 400);

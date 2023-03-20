@@ -95,6 +95,15 @@ class LetterGrid {
     return rows;
   }
 
+  bool isBlank() {
+    for (LetterTile tile in letterTiles) {
+      if (tile.tileType != TileType.empty) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   List<String?> getReEncodedGrid() {
     List<String?> reEncodedGrid = [];
 
