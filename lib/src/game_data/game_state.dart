@@ -20,6 +20,7 @@ class GameState extends ChangeNotifier {
   bool levelCompleted = false;
   bool showBadGuess = false;
   bool viewingMyScreen = true;
+  bool blasting = false;
   Logger _logger = new Logger('game state');
 
   GameState({required this.level}) {
@@ -349,6 +350,7 @@ class GameState extends ChangeNotifier {
 
   Future<void> blastTilesAndNotify(int index) async {
     if (getMyGrid() != null) {
+      _logger.info('blasting my grid from ' + index.toString());
       LetterGrid myGrid = getMyGrid() as LetterGrid;
 
       myGrid.blastFromIndex(index);
@@ -366,7 +368,9 @@ class GameState extends ChangeNotifier {
   }
 
   void blastTilesAndDontNotify(int index) async {
-    if (getMyGrid() != null) {
+    if (getMyGrid() != null && !blasting) {
+      blasting = true;
+      _logger.info('blasting from ' + index.toString());
       LetterGrid myGrid = getMyGrid() as LetterGrid;
 
       myGrid.blastFromIndex(index);
@@ -378,6 +382,7 @@ class GameState extends ChangeNotifier {
       //notifyAllPlayers() should call from somewhere else
       await Future<void>.delayed(Constants.blastDuration);
       myGrid.unblast();
+      blasting = false;
       notifyListeners();
     }
   }
