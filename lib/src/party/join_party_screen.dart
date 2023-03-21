@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:lexpedition/src/party/voice_caller.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:provider/provider.dart';
@@ -16,10 +17,12 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
   bool _joined = PartyDatabaseConnection().listener != null;
   bool _error = false;
   final _textController = TextEditingController();
+  VoiceCaller _voiceCaller = VoiceCaller();
 
   @override
   void initState() {
     super.initState();
+    _voiceCaller.setupVoiceSDKEngine();
     Wakelock.enable();
   }
 
@@ -56,10 +59,15 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                     if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
                       await PartyDatabaseConnection.joinParty(
                           partyCode: partyCode);
+
                       setState(() {
                         _joined = true;
                         _error = false;
+                        _voiceCaller =
+                            VoiceCaller.withChannel(channelName: partyCode);
                       });
+
+                      _voiceCaller.join();
                     } else {
                       setState(() {
                         _error = true;
