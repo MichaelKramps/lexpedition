@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:logging/logging.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 
@@ -13,15 +14,15 @@ class VoiceCaller {
   bool _isJoined = false;
   late RtcEngine agoraEngine;
 
-  static VoiceCaller caller = VoiceCaller.nullConstructor();
+  static VoiceCaller _caller = VoiceCaller.nullConstructor();
 
   factory VoiceCaller() {
-    return caller;
+    return _caller;
   }
 
   VoiceCaller.withChannel({required this.channelName}) {
     this._uid = new Random().nextInt(9999999);
-    caller = this;
+    this.channelName = channelName;
   }
 
   VoiceCaller.nullConstructor() {}
@@ -31,7 +32,8 @@ class VoiceCaller {
     await [Permission.microphone].request();
 
     //create an instance of the Agora engine
-    RtcEngine agoraEngine = createAgoraRtcEngine();
+    this.agoraEngine = createAgoraRtcEngine();
+
     await agoraEngine
         .initialize(const RtcEngineContext(appId: VoiceCaller._appId));
 
@@ -50,26 +52,39 @@ class VoiceCaller {
         },
       ),
     );
+
+    // once we set up the agoraEngine we need to replace _caller
+    // so it can be referenced anywhere the code needs it
+    _caller = this;
   }
 
   void join() async {
-    // Set channel options including the client role and channel profile
-    ChannelMediaOptions options = const ChannelMediaOptions(
-      clientRoleType: ClientRoleType.clientRoleBroadcaster,
-      channelProfile: ChannelProfileType.channelProfileCommunication,
-    );
+    try {
+      // Set channel options including the client role and channel profile
+      ChannelMediaOptions options = const ChannelMediaOptions(
+        clientRoleType: ClientRoleType.clientRoleBroadcaster,
+        channelProfile: ChannelProfileType.channelProfileCommunication,
+      );
 
-    await agoraEngine.joinChannel(
-      token: VoiceCaller._token,
-      channelId: channelName,
-      options: options,
-      uid: _uid,
-    );
+      await agoraEngine.joinChannel(
+        token: VoiceCaller._token,
+        channelId: channelName,
+        options: options,
+        uid: _uid,
+      );
+    } catch (e) {
+      await setupVoiceSDKEngine();
+      join();
+    }
   }
 
   void leave() {
-    _isJoined = false;
-    _remoteUid = null;
-    agoraEngine.leaveChannel();
+    try {
+      _isJoined = false;
+      _remoteUid = null;
+      agoraEngine.leaveChannel();
+    } catch (e) {
+      // do nothing
+    }
   }
 }

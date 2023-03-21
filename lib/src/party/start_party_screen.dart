@@ -19,8 +19,6 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
 
   @override
   void initState() {
-    _voiceCaller.setupVoiceSDKEngine();
-
     super.initState();
   }
 

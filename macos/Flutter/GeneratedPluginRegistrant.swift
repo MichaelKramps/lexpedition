@@ -14,7 +14,7 @@ import firebase_database
 import games_services
 import in_app_purchase_storekit
 import iris_event
-import path_provider_macos
+import path_provider_foundation
 import shared_preferences_foundation
 import wakelock_macos
 

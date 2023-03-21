@@ -22,7 +22,6 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
   @override
   void initState() {
     super.initState();
-    _voiceCaller.setupVoiceSDKEngine();
     Wakelock.enable();
   }
 
