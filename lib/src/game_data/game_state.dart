@@ -362,12 +362,12 @@ class GameState extends ChangeNotifier {
       myGrid.blastFromIndex(index);
       PartyDatabaseConnection()
           .updateMyPuzzle(letterGrid: myGrid, blastIndex: index);
+      notifyListeners();
       if (isLevelWon()) {
         levelCompleted = true;
+        notifyListeners();
       }
 
-      //before this future returns,
-      //notifyAllPlayers() should call from somewhere else
       await Future<void>.delayed(Constants.blastDuration);
       myGrid.unblast();
     }
