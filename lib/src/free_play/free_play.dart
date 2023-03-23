@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class FreePlay extends StatelessWidget {
@@ -32,7 +33,8 @@ class FreePlay extends StatelessWidget {
               child: Text('Two Player')),
           SizedBox(width: Constants.smallFont),
           ElevatedButton(
-              onPressed: () => GoRouter.of(context).push('/'), child: Text('Back'))
+              onPressed: () => GoRouter.of(context).push('/'),
+              child: Text('Back'))
         ],
       )));
     });

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:lexpedition/src/party/voice_caller.dart';
 
 class StartPartyScreen extends StatefulWidget {
   const StartPartyScreen({super.key});
@@ -15,7 +14,6 @@ class StartPartyScreen extends StatefulWidget {
 
 class _StartPartyScreenState extends State<StartPartyScreen> {
   late String _partyCode = '';
-  late VoiceCaller _voiceCaller = VoiceCaller();
 
   @override
   void initState() {
@@ -40,11 +38,8 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
 
                 setState(() {
                   _partyCode = newPartyCode;
-                  _voiceCaller =
-                    VoiceCaller.withChannel(channelName: newPartyCode);
                 });
-
-                _voiceCaller.join();
+                
               },
               child: Text('Get Code')),
           SizedBox(width: 25),
