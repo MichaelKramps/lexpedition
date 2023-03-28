@@ -1,9 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:lexpedition/src/party/real_time_communication.dart';
+import 'package:logging/logging.dart';
 
 class StartPartyScreen extends StatefulWidget {
   const StartPartyScreen({super.key});
@@ -13,11 +16,24 @@ class StartPartyScreen extends StatefulWidget {
 }
 
 class _StartPartyScreenState extends State<StartPartyScreen> {
+  late RealTimeCommunication realTimeCommunication;
+  RTCVideoRenderer _localRenderer = RTCVideoRenderer();
+  RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
   late String _partyCode = '';
 
   @override
   void initState() {
+    _localRenderer.initialize();
+    _remoteRenderer.initialize();
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _localRenderer.dispose();
+    _remoteRenderer.dispose();
+    super.dispose();
   }
 
   @override
@@ -38,8 +54,22 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
 
                 setState(() {
                   _partyCode = newPartyCode;
+                  realTimeCommunication =
+                      RealTimeCommunication(roomId: newPartyCode);
                 });
+
+                realTimeCommunication.onAddRemoteStream = (stream) {
+                  _remoteRenderer.srcObject = stream;
+                  setState(() {});
+                };
+
+                await realTimeCommunication.openUserMedia(
+                    _localRenderer, _remoteRenderer);
                 
+                new Logger('start party').info('4');
+                await realTimeCommunication.createRoom(_remoteRenderer);
+
+                new Logger('start party').info('5');
               },
               child: Text('Get Code')),
           SizedBox(width: 25),
@@ -57,7 +87,8 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                   GoRouter.of(context).pop();
                 },
                 child: Text('Back'))
-          ]))
+          ])),
+      Expanded(child: RTCVideoView(_localRenderer, mirror: true))
     ]));
   }
 
