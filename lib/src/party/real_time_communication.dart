@@ -20,6 +20,7 @@ class RealTimeCommunication {
   MediaStream? localStream;
   MediaStream? remoteStream;
   String roomId;
+  int numberLocalIceCandidates = 0;
   StreamStateCallback? onAddRemoteStream;
   DatabaseReference roomDbReference = FirebaseDatabase.instance.ref('rooms');
   Logger _log = new Logger('RTC class');
@@ -37,10 +38,10 @@ class RealTimeCommunication {
     //create new room
     RTCSessionDescription offer = await peerConnection!.createOffer();
     await peerConnection!.setLocalDescription(offer);
-    _log.info('Created offer: ' + offer.toMap());
 
     Map<String, dynamic> roomWithOffer = {'offer': offer.toMap()};
 
+    _log.info('updating database with offer');
     await roomDbReference.child(roomId).update(roomWithOffer);
 
     //listen for remote session description
@@ -50,7 +51,7 @@ class RealTimeCommunication {
 
     //listen for remote ICE candidates
     roomDbReference
-        .child(roomId + 'calleeCandidates')
+        .child(roomId + '/calleeCandidates')
         .onValue
         .listen((DatabaseEvent event) {
       _log.info('Got new remote ICE candidate: ');
@@ -63,10 +64,6 @@ class RealTimeCommunication {
       RTCVideoRenderer localRenderer, RTCVideoRenderer remoteRenderer) async {
     MediaStream stream = await navigator.mediaDevices
         .getUserMedia({'video': true, 'audio': true});
-
-    _log.info(stream.getTracks().length);
-    _log.info(stream.getAudioTracks().length);
-    _log.info(stream.getVideoTracks().length);
 
     localRenderer.srcObject = stream;
     localStream = stream;
@@ -104,11 +101,11 @@ class RealTimeCommunication {
     };
 
     peerConnection?.onIceCandidate = (RTCIceCandidate candidate) {
-      _log.info('Got candidate: ' + candidate.toMap());
-      String roomString = roomId as String;
+      _log.info('Got candidate!');
+      numberLocalIceCandidates++;
       roomDbReference
-          .child(roomString + '/callerCandidates')
-          .update(candidate.toMap());
+          .child(roomId + '/callerCandidates')
+          .update({numberLocalIceCandidates.toString(): candidate.toMap()});
     };
 
     peerConnection?.onTrack = (RTCTrackEvent event) {

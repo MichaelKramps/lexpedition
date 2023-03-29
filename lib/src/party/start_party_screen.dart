@@ -62,14 +62,14 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                   _remoteRenderer.srcObject = stream;
                   setState(() {});
                 };
-
+                
                 await realTimeCommunication.openUserMedia(
                     _localRenderer, _remoteRenderer);
 
                 //the widget needs to be rebuilt now that our local renderer has data
                 setState(() {});
 
-                //await realTimeCommunication.createRoom(_remoteRenderer);
+                await realTimeCommunication.createRoom(_remoteRenderer);
               },
               child: Text('Get Code')),
           SizedBox(width: 25),
