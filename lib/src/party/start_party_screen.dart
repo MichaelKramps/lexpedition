@@ -65,11 +65,11 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
 
                 await realTimeCommunication.openUserMedia(
                     _localRenderer, _remoteRenderer);
-                
-                new Logger('start party').info('4');
-                await realTimeCommunication.createRoom(_remoteRenderer);
 
-                new Logger('start party').info('5');
+                //the widget needs to be rebuilt now that our local renderer has data
+                setState(() {});
+
+                //await realTimeCommunication.createRoom(_remoteRenderer);
               },
               child: Text('Get Code')),
           SizedBox(width: 25),
@@ -86,9 +86,14 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                 onPressed: () {
                   GoRouter.of(context).pop();
                 },
-                child: Text('Back'))
+                child: Text('Back')),
           ])),
-      Expanded(child: RTCVideoView(_localRenderer, mirror: true))
+      SizedBox(
+          height: 100,
+          width: 100,
+          child: DecoratedBox(
+              decoration: BoxDecoration(color: Colors.blueGrey),
+              child: RTCVideoView(_localRenderer, mirror: true)))
     ]));
   }
 

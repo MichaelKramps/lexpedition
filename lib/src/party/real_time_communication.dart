@@ -61,11 +61,12 @@ class RealTimeCommunication {
 
   Future<void> openUserMedia(
       RTCVideoRenderer localRenderer, RTCVideoRenderer remoteRenderer) async {
-    _log.info('1');
-    var stream = await navigator.mediaDevices
+    MediaStream stream = await navigator.mediaDevices
         .getUserMedia({'video': true, 'audio': true});
 
-    _log.info('2');
+    _log.info(stream.getTracks().length);
+    _log.info(stream.getAudioTracks().length);
+    _log.info(stream.getVideoTracks().length);
 
     localRenderer.srcObject = stream;
     localStream = stream;
