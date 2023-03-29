@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:logging/logging.dart';
 
 typedef void StreamStateCallback(MediaStream stream);
@@ -22,10 +23,12 @@ class RealTimeCommunication {
   String roomId;
   int numberLocalIceCandidates = 0;
   StreamStateCallback? onAddRemoteStream;
-  DatabaseReference roomDbReference = FirebaseDatabase.instance.ref('rooms');
+  late DatabaseReference roomDbReference;
   Logger _log = new Logger('RTC class');
 
-  RealTimeCommunication({required this.roomId});
+  RealTimeCommunication({required this.roomId}) {
+    this.roomDbReference = FirebaseDatabase.instance.ref('rooms/' + roomId);
+  }
 
   Future<void> createRoom(RTCVideoRenderer remoteRenderer) async {
     peerConnection = await createPeerConnection(configuration);
@@ -42,16 +45,16 @@ class RealTimeCommunication {
     Map<String, dynamic> roomWithOffer = {'offer': offer.toMap()};
 
     _log.info('updating database with offer');
-    await roomDbReference.child(roomId).update(roomWithOffer);
+    await roomDbReference.update(roomWithOffer);
 
     //listen for remote session description
-    roomDbReference.child(roomId).onValue.listen((DatabaseEvent event) {
+    roomDbReference.onValue.listen((DatabaseEvent event) {
       _log.info('Got updated room: ');
     });
 
     //listen for remote ICE candidates
     roomDbReference
-        .child(roomId + '/calleeCandidates')
+        .child('/calleeCandidates')
         .onValue
         .listen((DatabaseEvent event) {
       _log.info('Got new remote ICE candidate: ');
@@ -89,6 +92,11 @@ class RealTimeCommunication {
 
     if (roomId != null) {
       //delete entries into the database
+      if (PartyDatabaseConnection().isPartyLeader) {
+        roomDbReference.remove();
+      } else {
+        roomDbReference.child('/calleeCandidates').remove();
+      }
     }
 
     localStream!.dispose();
@@ -104,7 +112,7 @@ class RealTimeCommunication {
       _log.info('Got candidate!');
       numberLocalIceCandidates++;
       roomDbReference
-          .child(roomId + '/callerCandidates')
+          .child('/callerCandidates')
           .update({numberLocalIceCandidates.toString(): candidate.toMap()});
     };
 
