@@ -42,14 +42,18 @@ class RealTimeCommunication {
     RTCSessionDescription offer = await peerConnection!.createOffer();
     await peerConnection!.setLocalDescription(offer);
 
-    Map<String, dynamic> roomWithOffer = {'offer': offer.toMap()};
-
     _log.info('updating database with offer');
-    await roomDbReference.update(roomWithOffer);
+    await roomDbReference.child('offer').update(offer.toMap());
 
     //listen for remote session description
     roomDbReference.onValue.listen((DatabaseEvent event) {
       _log.info('Got updated room: ');
+      try {
+        DataSnapshot answerSnapshot = event.snapshot.child('answer');
+        peerConnection?.setRemoteDescription(
+          RTCSessionDescription(answerSnapshot.child('sdp').value as String, answerSnapshot.child('type').value as String)
+        );
+      } catch (e) {}
     });
 
     //listen for remote ICE candidates
@@ -57,11 +61,100 @@ class RealTimeCommunication {
         .child('/calleeCandidates')
         .onValue
         .listen((DatabaseEvent event) {
-      _log.info('Got new remote ICE candidate: ');
+      for (int iceIndex = 1;
+          iceIndex < event.snapshot.children.length + 1;
+          iceIndex++) {
+        String? candidate = null;
+        try {
+          candidate = event.snapshot
+              .child(iceIndex.toString())
+              .child('candidate')
+              .toString();
+        } catch (e) {}
+
+        String? sdpMid = null;
+        try {
+          sdpMid = event.snapshot
+              .child(iceIndex.toString())
+              .child('sdpMid')
+              .toString();
+        } catch (e) {}
+
+        int? sdpMLineIndex = null;
+        try {
+          sdpMLineIndex = event.snapshot
+              .child(iceIndex.toString())
+              .child('sdpMLineIndex')
+              .toString() as int;
+        } catch (e) {}
+
+        peerConnection!
+            .addCandidate(RTCIceCandidate(candidate, sdpMid, sdpMLineIndex));
+      }
     });
   }
 
-  Future<void> joinRoom(String roomId, RTCVideoRenderer remoteRenderer) async {}
+  Future<void> joinRoom(RTCVideoRenderer remoteRenderer) async {
+    //try {
+      peerConnection = await createPeerConnection(configuration);
+      registerPeerConnectionListeners();
+
+      localStream?.getTracks().forEach((MediaStreamTrack track) {
+        peerConnection?.addTrack(track, localStream!);
+      });
+
+      //create SDP answer
+      DataSnapshot offerSnapshot = await roomDbReference.child('offer').get();
+
+      await peerConnection?.setRemoteDescription(RTCSessionDescription(
+          offerSnapshot.child('sdp').value as String,
+          offerSnapshot.child('type').value as String));
+
+      RTCSessionDescription answer = await peerConnection!.createAnswer();
+      peerConnection!.setLocalDescription(answer);
+
+      await roomDbReference.child('answer').update(answer.toMap());
+
+      //listen for remote ICE candidates
+      roomDbReference
+          .child('/callerCandidates')
+          .onValue
+          .listen((DatabaseEvent event) {
+        for (int iceIndex = 1;
+            iceIndex < event.snapshot.children.length + 1;
+            iceIndex++) {
+          String? candidate = null;
+          try {
+            candidate = event.snapshot
+                .child(iceIndex.toString())
+                .child('candidate')
+                .toString();
+          } catch (e) {}
+
+          String? sdpMid = null;
+          try {
+            sdpMid = event.snapshot
+                .child(iceIndex.toString())
+                .child('sdpMid')
+                .toString();
+          } catch (e) {}
+
+          int? sdpMLineIndex = null;
+          try {
+            sdpMLineIndex = event.snapshot
+                .child(iceIndex.toString())
+                .child('sdpMLineIndex')
+                .toString() as int;
+          } catch (e) {}
+
+          peerConnection!
+              .addCandidate(RTCIceCandidate(candidate, sdpMid, sdpMLineIndex));
+        }
+      });
+    //} catch (e) {
+    //  _log.info('problem joining room');
+    //}
+  }
 
   Future<void> openUserMedia(
       RTCVideoRenderer localRenderer, RTCVideoRenderer remoteRenderer) async {
@@ -111,9 +204,15 @@ class RealTimeCommunication {
     peerConnection?.onIceCandidate = (RTCIceCandidate candidate) {
       _log.info('Got candidate!');
       numberLocalIceCandidates++;
-      roomDbReference
-          .child('/callerCandidates')
-          .update({numberLocalIceCandidates.toString(): candidate.toMap()});
+      if (PartyDatabaseConnection().isPartyLeader) {
+        roomDbReference
+            .child('/callerCandidates')
+            .update({numberLocalIceCandidates.toString(): candidate.toMap()});
+      } else {
+        roomDbReference
+            .child('/calleeCandidates')
+            .update({numberLocalIceCandidates.toString(): candidate.toMap()});
+      }
     };
 
     peerConnection?.onTrack = (RTCTrackEvent event) {

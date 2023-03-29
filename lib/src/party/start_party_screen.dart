@@ -88,12 +88,20 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                 },
                 child: Text('Back')),
           ])),
-      SizedBox(
+      Row(children: [
+        SizedBox(
           height: 100,
           width: 100,
           child: DecoratedBox(
               decoration: BoxDecoration(color: Colors.blueGrey),
-              child: RTCVideoView(_localRenderer, mirror: true)))
+              child: RTCVideoView(_localRenderer, mirror: true))),
+        SizedBox(
+          height: 100,
+          width: 100,
+          child: DecoratedBox(
+              decoration: BoxDecoration(color: Colors.grey),
+              child: RTCVideoView(_remoteRenderer)))
+      ])
     ]));
   }
 
