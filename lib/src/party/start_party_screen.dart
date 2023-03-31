@@ -58,7 +58,7 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                       RealTimeCommunication(roomId: newPartyCode);
                 });
 
-                realTimeCommunication.onAddRemoteStream = (stream) {
+                realTimeCommunication.onAddRemoteStream = (MediaStream stream) {
                   _remoteRenderer.srcObject = stream;
                   setState(() {});
                 };

@@ -46,14 +46,18 @@ class RealTimeCommunication {
     await roomDbReference.child('offer').update(offer.toMap());
 
     //listen for remote session description
-    roomDbReference.onValue.listen((DatabaseEvent event) {
+    roomDbReference.child('answer').onValue.listen((DatabaseEvent event) {
       _log.info('Got updated room: ');
-      try {
-        DataSnapshot answerSnapshot = event.snapshot.child('answer');
-        peerConnection?.setRemoteDescription(
-          RTCSessionDescription(answerSnapshot.child('sdp').value as String, answerSnapshot.child('type').value as String)
-        );
-      } catch (e) {}
+      //try {
+      DataSnapshot answerSnapshot = event.snapshot;
+      if (answerSnapshot.value != null) {
+        peerConnection?.setRemoteDescription(RTCSessionDescription(
+            answerSnapshot.child('sdp').value as String,
+            answerSnapshot.child('type').value as String));
+      }
+      //} catch (e) {
+      //  _log.info('problem updating room on remote update');
+      //}
     });
 
     //listen for remote ICE candidates
@@ -61,33 +65,30 @@ class RealTimeCommunication {
         .child('/calleeCandidates')
         .onValue
         .listen((DatabaseEvent event) {
-      for (int iceIndex = 1;
-          iceIndex < event.snapshot.children.length + 1;
-          iceIndex++) {
-        String? candidate = null;
-        try {
-          candidate = event.snapshot
-              .child(iceIndex.toString())
-              .child('candidate')
-              .toString();
-        } catch (e) {}
+      String iceIndex = event.snapshot.children.length.toString();
+      String? candidate = null;
+      try {
+        candidate = event.snapshot
+            .child(iceIndex.toString())
+            .child('candidate')
+            .value as String;
+      } catch (e) {}
 
-        String? sdpMid = null;
-        try {
-          sdpMid = event.snapshot
-              .child(iceIndex.toString())
-              .child('sdpMid')
-              .toString();
-        } catch (e) {}
+      String? sdpMid = null;
+      try {
+        sdpMid = event.snapshot.child(iceIndex.toString()).child('sdpMid').value
+            as String;
+      } catch (e) {}
 
-        int? sdpMLineIndex = null;
-        try {
-          sdpMLineIndex = event.snapshot
-              .child(iceIndex.toString())
-              .child('sdpMLineIndex')
-              .toString() as int;
-        } catch (e) {}
+      int? sdpMLineIndex = null;
+      try {
+        sdpMLineIndex = event.snapshot
+            .child(iceIndex.toString())
+            .child('sdpMLineIndex')
+            .value as int;
+      } catch (e) {}
 
+      if (candidate != null && sdpMid != null && sdpMLineIndex != null) {
         peerConnection!
             .addCandidate(RTCIceCandidate(candidate, sdpMid, sdpMLineIndex));
       }
@@ -95,65 +96,65 @@ class RealTimeCommunication {
   }
 
   Future<void> joinRoom(RTCVideoRenderer remoteRenderer) async {
-    //try {
-      peerConnection = await createPeerConnection(configuration);
-      registerPeerConnectionListeners();
+    peerConnection = await createPeerConnection(configuration);
+    registerPeerConnectionListeners();
 
-      localStream?.getTracks().forEach((MediaStreamTrack track) {
-        peerConnection?.addTrack(track, localStream!);
-      });
+    localStream?.getTracks().forEach((MediaStreamTrack track) {
+      peerConnection?.addTrack(track, localStream!);
+    });
 
-      //create SDP answer
-      DataSnapshot offerSnapshot = await roomDbReference.child('offer').get();
+    //create SDP answer
+    DataSnapshot offerSnapshot = await roomDbReference.child('offer').get();
 
+    try {
       await peerConnection?.setRemoteDescription(RTCSessionDescription(
           offerSnapshot.child('sdp').value as String,
           offerSnapshot.child('type').value as String));
+    } catch (e) {}
 
-      RTCSessionDescription answer = await peerConnection!.createAnswer();
-      peerConnection!.setLocalDescription(answer);
+    RTCSessionDescription answer = await peerConnection!.createAnswer();
+    peerConnection!.setLocalDescription(answer);
 
-      await roomDbReference.child('answer').update(answer.toMap());
+    await roomDbReference.child('answer').update(answer.toMap());
 
-      //listen for remote ICE candidates
-      roomDbReference
-          .child('/callerCandidates')
-          .onValue
-          .listen((DatabaseEvent event) {
-        for (int iceIndex = 1;
-            iceIndex < event.snapshot.children.length + 1;
-            iceIndex++) {
-          String? candidate = null;
-          try {
-            candidate = event.snapshot
-                .child(iceIndex.toString())
-                .child('candidate')
-                .toString();
-          } catch (e) {}
+    //listen for remote ICE candidates
+    roomDbReference
+        .child('/callerCandidates')
+        .onValue
+        .listen((DatabaseEvent event) {
+      int numberCandidates = event.snapshot.children.length;
+      String? candidate = null;
+      for (int iceIndex = 1; iceIndex <= numberCandidates; iceIndex++) {
+        try {
+          candidate = event.snapshot
+              .child(iceIndex.toString())
+              .child('candidate')
+              .value as String;
+        } catch (e) {}
 
-          String? sdpMid = null;
-          try {
-            sdpMid = event.snapshot
-                .child(iceIndex.toString())
-                .child('sdpMid')
-                .toString();
-          } catch (e) {}
+        String? sdpMid = null;
+        try {
+          sdpMid = event.snapshot
+              .child(iceIndex.toString())
+              .child('sdpMid')
+              .value as String;
+        } catch (e) {}
 
-          int? sdpMLineIndex = null;
-          try {
-            sdpMLineIndex = event.snapshot
-                .child(iceIndex.toString())
-                .child('sdpMLineIndex')
-                .toString() as int;
-          } catch (e) {}
+        int? sdpMLineIndex = null;
+        try {
+          sdpMLineIndex = event.snapshot
+              .child(iceIndex.toString())
+              .child('sdpMLineIndex')
+              .value as int;
+        } catch (e) {}
 
+        if (candidate != null && sdpMid != null && sdpMLineIndex != null) {
+          _log.info('adding candidate');
           peerConnection!
               .addCandidate(RTCIceCandidate(candidate, sdpMid, sdpMLineIndex));
         }
-      });
-    //} catch (e) {
-    //  _log.info('problem joining room');
-    //}
+      }
+    });
   }
 
   Future<void> openUserMedia(
@@ -183,13 +184,11 @@ class RealTimeCommunication {
       peerConnection!.close();
     }
 
-    if (roomId != null) {
-      //delete entries into the database
-      if (PartyDatabaseConnection().isPartyLeader) {
-        roomDbReference.remove();
-      } else {
-        roomDbReference.child('/calleeCandidates').remove();
-      }
+    //delete entries into the database
+    if (PartyDatabaseConnection().isPartyLeader) {
+      roomDbReference.remove();
+    } else {
+      roomDbReference.child('/calleeCandidates').remove();
     }
 
     localStream!.dispose();
@@ -202,7 +201,6 @@ class RealTimeCommunication {
     };
 
     peerConnection?.onIceCandidate = (RTCIceCandidate candidate) {
-      _log.info('Got candidate!');
       numberLocalIceCandidates++;
       if (PartyDatabaseConnection().isPartyLeader) {
         roomDbReference
@@ -217,6 +215,8 @@ class RealTimeCommunication {
 
     peerConnection?.onTrack = (RTCTrackEvent event) {
       _log.info('Got remote track: ' + event.streams[0].toString());
+      _log.info(
+          'connection state: ' + peerConnection!.connectionState.toString());
       event.streams[0].getTracks().forEach((track) {
         _log.info('Add track to remote stream: ' + track.toString());
         remoteStream?.addTrack(track);
