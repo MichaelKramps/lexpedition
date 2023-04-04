@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/main_menu/more_menu.dart';
+import 'package:lexpedition/src/party/real_time_communication.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:lexpedition/src/party/join_party_screen.dart';
 import 'package:lexpedition/src/party/party_screen.dart';
@@ -293,6 +294,9 @@ class MyApp extends StatelessWidget {
           ),
           ChangeNotifierProvider(create: (context) {
             return GameState.emptyState();
+          }),
+          ChangeNotifierProvider(create: (context) {
+            return RealTimeCommunication();
           }),
           Provider<GamesServicesController?>.value(
               value: gamesServicesController),

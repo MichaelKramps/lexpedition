@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:lexpedition/src/party/party_video_display_widget.dart';
 import 'package:lexpedition/src/party/real_time_communication.dart';
-import 'package:logging/logging.dart';
+import 'package:provider/provider.dart';
 
 class StartPartyScreen extends StatefulWidget {
   const StartPartyScreen({super.key});
@@ -17,22 +17,15 @@ class StartPartyScreen extends StatefulWidget {
 
 class _StartPartyScreenState extends State<StartPartyScreen> {
   late RealTimeCommunication realTimeCommunication;
-  RTCVideoRenderer _localRenderer = RTCVideoRenderer();
-  RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
   late String _partyCode = '';
 
   @override
   void initState() {
-    _localRenderer.initialize();
-    _remoteRenderer.initialize();
-
     super.initState();
   }
 
   @override
   void dispose() {
-    _localRenderer.dispose();
-    _remoteRenderer.dispose();
     super.dispose();
   }
 
@@ -44,34 +37,26 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ElevatedButton(
-              onPressed: () async {
-                String newPartyCode = buildPartyCode();
-                PartyDatabaseConnection partyConnection =
-                    await PartyDatabaseConnection.startParty(
-                        partyCode: newPartyCode);
-                partyConnection.createPartyEntry();
+          Consumer<RealTimeCommunication>(
+              builder: (context, realTimeCommunication, child) {
+            return ElevatedButton(
+                onPressed: () async {
+                  String newPartyCode = buildPartyCode();
+                  PartyDatabaseConnection partyConnection =
+                      await PartyDatabaseConnection.startParty(
+                          partyCode: newPartyCode);
+                  partyConnection.createPartyEntry();
 
-                setState(() {
-                  _partyCode = newPartyCode;
-                  realTimeCommunication =
-                      RealTimeCommunication(roomId: newPartyCode);
-                });
+                  setState(() {
+                    _partyCode = newPartyCode;
+                  });
 
-                realTimeCommunication.onAddRemoteStream = (MediaStream stream) {
-                  _remoteRenderer.srcObject = stream;
-                  setState(() {});
-                };
-                
-                await realTimeCommunication.openUserMedia(
-                    _localRenderer, _remoteRenderer);
-
-                //the widget needs to be rebuilt now that our local renderer has data
-                setState(() {});
-
-                await realTimeCommunication.createRoom(_remoteRenderer);
-              },
-              child: Text('Get Code')),
+                  realTimeCommunication.addRoomId(newPartyCode);
+                  await realTimeCommunication.openUserMedia();
+                  await realTimeCommunication.createRoom();
+                },
+                child: Text('Get Code'));
+          }),
           SizedBox(width: 25),
           Text(_partyCode, style: getTextStyle())
         ],
@@ -88,20 +73,7 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                 },
                 child: Text('Back')),
           ])),
-      Row(children: [
-        SizedBox(
-          height: 100,
-          width: 100,
-          child: DecoratedBox(
-              decoration: BoxDecoration(color: Colors.blueGrey),
-              child: RTCVideoView(_localRenderer, mirror: true))),
-        SizedBox(
-          height: 100,
-          width: 100,
-          child: DecoratedBox(
-              decoration: BoxDecoration(color: Colors.grey),
-              child: RTCVideoView(_remoteRenderer)))
-      ])
+      PartyVideoDisplayWidget()
     ]));
   }
 

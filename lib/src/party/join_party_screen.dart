@@ -4,7 +4,6 @@ import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/party/real_time_communication.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -17,16 +16,12 @@ class JoinPartyScreen extends StatefulWidget {
 
 class _JoinPartyScreenState extends State<JoinPartyScreen> {
   late RealTimeCommunication realTimeCommunication;
-  RTCVideoRenderer _localRenderer = RTCVideoRenderer();
-  RTCVideoRenderer _remoteRenderer = RTCVideoRenderer();
   bool _joined = PartyDatabaseConnection().listener != null;
   bool _error = false;
   final _textController = TextEditingController();
 
   @override
   void initState() {
-    _localRenderer.initialize();
-    _remoteRenderer.initialize();
     super.initState();
     Wakelock.enable();
   }
@@ -41,23 +36,9 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
   @override
   Widget build(BuildContext context) {
     if (_joined) {
-      return Row(children: [
-        SizedBox(
-            height: 100,
-            width: 100,
-            child: DecoratedBox(
-                decoration: BoxDecoration(color: Colors.blueGrey),
-                child: RTCVideoView(_localRenderer, mirror: true))),
-        SizedBox(
-            height: 100,
-            width: 100,
-            child: DecoratedBox(
-                decoration: BoxDecoration(color: Colors.grey),
-                child: RTCVideoView(_remoteRenderer)))
-      ]);
-      //return Consumer<GameState>(builder: (context, gameState, child) {
-      //  return TwoPlayerPlaySessionScreen(gameState: gameState);
-      //});
+      return Consumer<GameState>(builder: (context, gameState, child) {
+        return TwoPlayerPlaySessionScreen(gameState: gameState);
+      });
     } else {
       return Scaffold(
           body: SizedBox.expand(
@@ -72,39 +53,32 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Party Code"))),
-              ElevatedButton(
-                  onPressed: () async {
-                    String partyCode = _textController.text.toUpperCase();
-                    if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
-                      await PartyDatabaseConnection.joinParty(
-                          partyCode: partyCode);
+              Consumer<RealTimeCommunication>(
+                  builder: (context, realTimeCommunication, child) {
+                return ElevatedButton(
+                    onPressed: () async {
+                      String partyCode = _textController.text.toUpperCase();
+                      if (await PartyDatabaseConnection.canJoinParty(
+                          partyCode)) {
+                        await PartyDatabaseConnection.joinParty(
+                            partyCode: partyCode);
 
-                      setState(() {
-                        _joined = true;
-                        _error = false;
-                        realTimeCommunication =
-                            RealTimeCommunication(roomId: partyCode);
-                      });
+                        setState(() {
+                          _joined = true;
+                          _error = false;
+                        });
 
-                      realTimeCommunication.onAddRemoteStream = (stream) {
-                        _remoteRenderer.srcObject = stream;
-                        setState(() {});
-                      };
-
-                      await realTimeCommunication.openUserMedia(
-                          _localRenderer, _remoteRenderer);
-
-                      //the widget needs to be rebuilt now that our local renderer has data
-                      setState(() {});
-
-                      await realTimeCommunication.joinRoom(_remoteRenderer);
-                    } else {
-                      setState(() {
-                        _error = true;
-                      });
-                    }
-                  },
-                  child: Text('Join'))
+                        realTimeCommunication.addRoomId(partyCode);
+                        await realTimeCommunication.openUserMedia();
+                        await realTimeCommunication.joinRoom();
+                      } else {
+                        setState(() {
+                          _error = true;
+                        });
+                      }
+                    },
+                    child: Text('Join'));
+              })
             ]),
             Visibility(
                 visible: _error,

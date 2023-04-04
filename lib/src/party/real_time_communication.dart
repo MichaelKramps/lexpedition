@@ -1,11 +1,12 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:logging/logging.dart';
 
 typedef void StreamStateCallback(MediaStream stream);
 
-class RealTimeCommunication {
+class RealTimeCommunication extends ChangeNotifier {
   Map<String, dynamic> configuration = {
     'iceServers': [
       {
@@ -18,19 +19,28 @@ class RealTimeCommunication {
   };
 
   RTCPeerConnection? peerConnection;
+  RTCVideoRenderer localRenderer = RTCVideoRenderer();
+  RTCVideoRenderer remoteRenderer = RTCVideoRenderer();
   MediaStream? localStream;
   MediaStream? remoteStream;
-  String roomId;
+  String roomId = '';
   int numberLocalIceCandidates = 0;
   StreamStateCallback? onAddRemoteStream;
   late DatabaseReference roomDbReference;
   Logger _log = new Logger('RTC class');
 
-  RealTimeCommunication({required this.roomId}) {
+  RealTimeCommunication() {
+    localRenderer.initialize();
+    remoteRenderer.initialize();
+    notifyListeners();
+  }
+
+  void addRoomId(String roomId) {
+    this.roomId = roomId;
     this.roomDbReference = FirebaseDatabase.instance.ref('rooms/' + roomId);
   }
 
-  Future<void> createRoom(RTCVideoRenderer remoteRenderer) async {
+  Future<void> createRoom() async {
     peerConnection = await createPeerConnection(configuration);
     registerPeerConnectionListeners();
 
@@ -48,16 +58,16 @@ class RealTimeCommunication {
     //listen for remote session description
     roomDbReference.child('answer').onValue.listen((DatabaseEvent event) {
       _log.info('Got updated room: ');
-      //try {
-      DataSnapshot answerSnapshot = event.snapshot;
-      if (answerSnapshot.value != null) {
-        peerConnection?.setRemoteDescription(RTCSessionDescription(
-            answerSnapshot.child('sdp').value as String,
-            answerSnapshot.child('type').value as String));
+      try {
+        DataSnapshot answerSnapshot = event.snapshot;
+        if (answerSnapshot.value != null) {
+          peerConnection?.setRemoteDescription(RTCSessionDescription(
+              answerSnapshot.child('sdp').value as String,
+              answerSnapshot.child('type').value as String));
+        }
+      } catch (e) {
+        _log.info('problem updating room on remote update');
       }
-      //} catch (e) {
-      //  _log.info('problem updating room on remote update');
-      //}
     });
 
     //listen for remote ICE candidates
@@ -95,7 +105,7 @@ class RealTimeCommunication {
     });
   }
 
-  Future<void> joinRoom(RTCVideoRenderer remoteRenderer) async {
+  Future<void> joinRoom() async {
     peerConnection = await createPeerConnection(configuration);
     registerPeerConnectionListeners();
 
@@ -157,8 +167,7 @@ class RealTimeCommunication {
     });
   }
 
-  Future<void> openUserMedia(
-      RTCVideoRenderer localRenderer, RTCVideoRenderer remoteRenderer) async {
+  Future<void> openUserMedia() async {
     MediaStream stream = await navigator.mediaDevices
         .getUserMedia({'video': true, 'audio': true});
 
@@ -166,9 +175,11 @@ class RealTimeCommunication {
     localStream = stream;
 
     remoteRenderer.srcObject = await createLocalMediaStream('key');
+
+    notifyListeners();
   }
 
-  Future<void> hangUp(RTCVideoRenderer localRenderer) async {
+  Future<void> hangUp() async {
     List<MediaStreamTrack> tracks = localRenderer.srcObject!.getTracks();
     tracks.forEach((track) {
       track.stop();
@@ -237,8 +248,9 @@ class RealTimeCommunication {
 
     peerConnection?.onAddStream = (MediaStream remoteStream) {
       _log.info('Add remote stream');
-      onAddRemoteStream?.call(remoteStream);
       this.remoteStream = remoteStream;
+      remoteRenderer.srcObject = this.remoteStream;
+      notifyListeners();
     };
   }
 }
