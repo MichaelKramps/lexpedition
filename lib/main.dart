@@ -6,6 +6,7 @@
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:lexpedition/src/lexpedition/lexpedition_screen.dart';
 import 'package:lexpedition/src/main_menu/more_menu.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:lexpedition/src/party/join_party_screen.dart';
@@ -255,6 +256,24 @@ class MyApp extends StatelessWidget {
                       path: 'start',
                       builder: (context, state) =>
                           const StartPartyScreen(key: Key('start party')))
+                ]),
+            GoRoute(
+                path: 'lexpedition',
+                builder: (context, state) =>
+                    const LexpeditionScreen(key: Key('lexpedition')),
+                routes:[
+                    GoRoute (
+                      path: 'oneplayer',
+                      builder: (context, state) =>
+                          Container()),
+                    GoRoute (
+                      path: 'twoplayer',
+                      builder: (context, state) => 
+                          Container()),
+                    GoRoute (
+                      path: 'backlog',
+                      builder: (context, state) => 
+                          Container())
                 ]),
           ]),
     ],

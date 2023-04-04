@@ -32,7 +32,7 @@ class FreePlay extends StatelessWidget {
               ElevatedButton(
                   onPressed: () async {
                     await gameState.loadTwoPlayerPuzzle();
-                    if (gameState.errorDefinition == ErrorDefinition.noError){
+                    if (gameState.errorDefinition == ErrorDefinition.noError) {
                       GoRouter.of(context).push('/freeplay/twoplayer');
                     }                   
                   },
