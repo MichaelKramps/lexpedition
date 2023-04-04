@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/accepted_guess.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/error_definitions.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
@@ -21,6 +22,7 @@ class GameState extends ChangeNotifier {
   bool showBadGuess = false;
   bool viewingMyScreen = true;
   bool blasting = false;
+  ErrorDefinition errorDefinition = ErrorDefinition.noError;
   Logger _logger = new Logger('game state');
 
   GameState({required this.level}) {
@@ -33,7 +35,7 @@ class GameState extends ChangeNotifier {
 
   GameState.emptyState() {}
 
-  void loadOnePlayerPuzzle({int? tutorialNumber, int? databaseId}) async {
+  Future<void> loadOnePlayerPuzzle({int? tutorialNumber, int? databaseId}) async {
     _logger.info('loading a new puzzle');
     resetPuzzle();
     if (tutorialNumber != null) {
@@ -44,16 +46,18 @@ class GameState extends ChangeNotifier {
       //get the specific level in the database
     } else {
       GameLevel? newLevel =
-          await LevelDatabaseConnection.getNewOnePlayerPuzzle();
+          await LevelDatabaseConnection.getOnePlayerPuzzle();
       if (newLevel != null) {
         level = newLevel;
         primaryLetterGrid = newLevel.letterGrid;
+      } else {
+        errorDefinition = ErrorDefinition.levelFetchError;
       }
     }
     loadPuzzleAndNotify();
   }
 
-  void loadTwoPlayerPuzzle({int? tutorialNumber, int? databaseId}) async {
+  Future<void> loadTwoPlayerPuzzle({int? tutorialNumber, int? databaseId}) async {
     _logger.info('loading a new two player puzzle');
     resetPuzzle();
     if (tutorialNumber != null) {
@@ -64,11 +68,13 @@ class GameState extends ChangeNotifier {
       //get the specific level in the database
     } else {
       GameLevel? newLevel =
-          await LevelDatabaseConnection.getNewTwoPlayerPuzzle();
+          await LevelDatabaseConnection.getTwoPlayerPuzzle();
       if (newLevel != null) {
         level = newLevel;
         primaryLetterGrid = newLevel.letterGrid;
         secondaryLetterGrid = newLevel.letterGridB;
+      } else {
+        errorDefinition = ErrorDefinition.levelFetchError;
       }
     }
     loadPuzzleAndNotify();
@@ -76,6 +82,11 @@ class GameState extends ChangeNotifier {
 
   void loadPuzzleAndNotify() {
     PartyDatabaseConnection().loadPuzzleForPlayers(level: level);
+    notifyListeners();
+  }
+
+  void resetError(){
+    errorDefinition = ErrorDefinition.noError;
     notifyListeners();
   }
 

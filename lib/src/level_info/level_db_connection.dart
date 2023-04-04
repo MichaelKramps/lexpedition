@@ -2,77 +2,86 @@ import 'dart:math';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
+import 'package:logging/logging.dart';
 
 class LevelDatabaseConnection {
-  static Future<GameLevel> getOnePlayerPuzzle() async {
-    late GameLevel? possibleGameLevel;
+  static Future<GameLevel?> getOnePlayerPuzzle() async {
+    GameLevel? possibleGameLevel = null;
 
     int puzzleType = new Random().nextInt(4);
+    try{ 
+      switch (puzzleType) {
+        case 0:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getNewOnePlayerPuzzle();
+          break;
+        case 1:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(0, 7);
+          break;
+        case 2:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(5, 10);
+          break;
+        case 3:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(
+                  10, 1000);
+          break;
+        default:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getNewOnePlayerPuzzle();
+          break;
+      }
 
-    switch (puzzleType) {
-      case 0:
-        possibleGameLevel =
-            await LevelDatabaseConnection.getNewOnePlayerPuzzle();
-        break;
-      case 1:
-        possibleGameLevel =
-            await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(0, 7);
-        break;
-      case 2:
-        possibleGameLevel =
-            await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(5, 10);
-        break;
-      case 3:
-        possibleGameLevel =
-            await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(
-                10, 1000);
-        break;
-      default:
-        possibleGameLevel =
-            await LevelDatabaseConnection.getNewOnePlayerPuzzle();
-        break;
+      if (possibleGameLevel != null) {
+        return possibleGameLevel;
+      } else {
+        return LevelDatabaseConnection.getOnePlayerPuzzle();
+      }
     }
-
-    if (possibleGameLevel != null) {
+    catch(error){      
       return possibleGameLevel;
-    } else {
-      return LevelDatabaseConnection.getOnePlayerPuzzle();
     }
   }
 
-  static Future<GameLevel> getTwoPlayerPuzzle() async {
-    late GameLevel? possibleGameLevel;
+  static Future<GameLevel?> getTwoPlayerPuzzle() async {
+    GameLevel? possibleGameLevel = null;
 
     int puzzleType = new Random().nextInt(4);
+    try{
+      switch (puzzleType) {
+        case 0:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getNewTwoPlayerPuzzle();
+          break;
+        case 1:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getTwoPlayerPuzzleInGuessRange(0, 10);
+          break;
+        case 2:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getTwoPlayerPuzzleInGuessRange(8, 15);
+          break;
+        case 3:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getTwoPlayerPuzzleInGuessRange(
+                  15, 1000);
+          break;
+        default:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getNewTwoPlayerPuzzle();
+          break;
+      }
 
-    switch (puzzleType) {
-      case 0:
-        possibleGameLevel =
-            await LevelDatabaseConnection.getNewTwoPlayerPuzzle();
-        break;
-      case 1:
-        possibleGameLevel =
-            await LevelDatabaseConnection.getTwoPlayerPuzzleInGuessRange(0, 10);
-        break;
-      case 2:
-        possibleGameLevel =
-            await LevelDatabaseConnection.getTwoPlayerPuzzleInGuessRange(8, 15);
-        break;
-      case 3:
-        possibleGameLevel =
-            await LevelDatabaseConnection.getTwoPlayerPuzzleInGuessRange(
-                15, 1000);
-        break;
-      default:
-        possibleGameLevel =
-            await LevelDatabaseConnection.getNewTwoPlayerPuzzle();
-        break;
+      if (possibleGameLevel != null) {
+        return possibleGameLevel;
+      } else {
+        return LevelDatabaseConnection.getTwoPlayerPuzzle();
+      }
     }
-
-    if (possibleGameLevel != null) {
+    catch(error){
       return possibleGameLevel;
-    } else {
-      return LevelDatabaseConnection.getTwoPlayerPuzzle();
     }
   }
 
