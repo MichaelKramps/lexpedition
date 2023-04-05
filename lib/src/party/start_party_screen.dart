@@ -72,8 +72,7 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                   GoRouter.of(context).pop();
                 },
                 child: Text('Back')),
-          ])),
-      PartyVideoDisplayWidget()
+          ]))
     ]));
   }
 

@@ -10,7 +10,6 @@ import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:lexpedition/src/party/party_video_display_widget.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
@@ -44,10 +43,7 @@ class _TwoPlayerPlaySessionScreenState
     return Scaffold(
         body: IgnorePointer(
             ignoring: _duringCelebration,
-            child: Stack(children: [
-              determineVisibleGrid(widget.gameState),
-              PartyVideoDisplayWidget()
-            ])
+            child: determineVisibleGrid(widget.gameState)
         )
     );
   }
