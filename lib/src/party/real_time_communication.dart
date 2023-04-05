@@ -180,6 +180,8 @@ class RealTimeCommunication extends ChangeNotifier {
   }
 
   Future<void> hangUp() async {
+    roomId = '';
+
     List<MediaStreamTrack> tracks = localRenderer.srcObject!.getTracks();
     tracks.forEach((track) {
       track.stop();
@@ -204,6 +206,8 @@ class RealTimeCommunication extends ChangeNotifier {
 
     localStream!.dispose();
     remoteStream!.dispose();
+
+    notifyListeners();
   }
 
   void registerPeerConnectionListeners() {

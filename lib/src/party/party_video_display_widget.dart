@@ -16,9 +16,9 @@ class _PartyVideoDisplayWidgetState extends State<PartyVideoDisplayWidget> {
   Widget build(BuildContext context) {
     return Consumer<RealTimeCommunication>(
         builder: (context, realTimeCommunication, child) {
-      return Expanded(child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
+      if (realTimeCommunication.roomId.length > 0) {
+        return Expanded(
+            child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -34,11 +34,14 @@ class _PartyVideoDisplayWidgetState extends State<PartyVideoDisplayWidget> {
                   width: 100,
                   child: DecoratedBox(
                       decoration: BoxDecoration(color: Colors.grey),
-                      child: RTCVideoView(realTimeCommunication.remoteRenderer)))
+                      child:
+                          RTCVideoView(realTimeCommunication.remoteRenderer)))
             ],
           )
-        ]
-      ));
+        ]));
+      } else {
+        return Container();
+      }
     });
   }
 }

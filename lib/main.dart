@@ -159,8 +159,8 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                     path: 'session/:level',
                     builder: (context, state) {
-                      return OnePlayerPlaySessionScreen(
-                          winRoute: '/tutorial/won');
+                      return VideoCallWrapperWidget(screen: OnePlayerPlaySessionScreen(
+                          winRoute: '/tutorial/won'));
                     },
                   ),
                   GoRoute(
@@ -184,21 +184,21 @@ class MyApp extends StatelessWidget {
             ),
             GoRoute(
                 path: 'freeplay',
-                builder: (context, state) => FreePlay(key: UniqueKey()),
+                builder: (context, state) => VideoCallWrapperWidget(screen: FreePlay(key: UniqueKey())),
                 routes: [
                   GoRoute(
                       path: 'oneplayer',
                       builder: (context, state) {
-                        return OnePlayerPlaySessionScreen(
-                            winRoute: '/freeplaywon');
+                        return VideoCallWrapperWidget(screen: OnePlayerPlaySessionScreen(
+                            winRoute: '/freeplaywon'));
                       }),
                   GoRoute(
                       path: 'twoplayer',
                       builder: (context, state) {
                         return Consumer<GameState>(
                             builder: (context, gameState, child) {
-                          return TwoPlayerPlaySessionScreen(
-                              gameState: gameState);
+                          return VideoCallWrapperWidget(screen: TwoPlayerPlaySessionScreen(
+                              gameState: gameState));
                         });
                       })
                 ]),
@@ -231,7 +231,7 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 path: 'buildpuzzle',
                 builder: (context, state) =>
-                    const BuildPuzzleScreen(key: Key('build puzzle')),
+                    VideoCallWrapperWidget(screen: BuildPuzzleScreen(key: Key('build puzzle'))),
                 routes: [
                   GoRoute(
                       path: '1player',
