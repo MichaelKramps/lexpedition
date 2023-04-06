@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
+import 'package:lexpedition/src/user_interface/generic_button.dart';
 
 class TutorialCompletePlayerMenu extends StatefulWidget {
   const TutorialCompletePlayerMenu({super.key});
@@ -24,11 +26,11 @@ class _TutorialCompletePlayerMenuState
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
-              onPressed: () {
+            BasicUserInterfaceButton(
+              onPressFunction: () {
                 GoRouter.of(context).push('/lexpedition');
               },
-              child: const Text('Lexpedition'),
+              buttonText: 'Lexpedition',
             ),
             SizedBox(width: Constants.smallFont),
             ElevatedButton(

@@ -348,7 +348,8 @@ class MyApp extends StatelessWidget {
 
           return MaterialApp.router(
             title: 'Lexpedition',
-            theme: ThemeData.from(
+            theme: ThemeData(
+              fontFamily: 'Permanent Marker',
               colorScheme: ColorScheme.fromSeed(
                 seedColor: palette.darkPen,
                 background: palette.backgroundMain,

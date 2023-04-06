@@ -11,29 +11,50 @@ class LexpeditionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox.expand(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () =>
-                GoRouter.of(context).push('/lexpedition/oneplayer'), 
-              child: Text('Single Player Lexpedition')),
-              SizedBox(width: Constants.smallFont),
-            ElevatedButton(
-              onPressed: () =>
-                GoRouter.of(context).push('/lexpedition/twoplayer'), 
-              child: Text('Two Player Lexpedition')),
-              SizedBox(width: Constants.smallFont),
-            ElevatedButton(
-              onPressed: () =>
-                GoRouter.of(context).push('/lexpedition/backlog'), 
-              child: Text('Hisoric Lexpeditions')),
-              SizedBox(width: Constants.smallFont),
-            ElevatedButton(
-                  onPressed: () => GoRouter.of(context).pop(), child: Text('Back'))
-          ],)
+      body: Padding(
+        padding: const EdgeInsets.all(100.0),
+        child: SizedBox.expand(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ElevatedButton(
+                onPressed: () =>
+                  GoRouter.of(context).push('/lexpedition/oneplayer') , 
+                child: Text('Single Player Lexpedition'),
+                style: ElevatedButton.styleFrom(
+                  shape: StadiumBorder(),
+                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0)
+                )),
+                SizedBox(width: Constants.smallFont),
+              ElevatedButton(
+                onPressed: () =>
+                  GoRouter.of(context).push('/lexpedition/twoplayer'), 
+                child: Text('Two Player Lexpedition'),
+                style: ElevatedButton.styleFrom(
+                  shape: StadiumBorder(),
+                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0)
+                )),
+                SizedBox(width: Constants.smallFont),
+              ElevatedButton(
+                onPressed: () =>
+                  GoRouter.of(context).push('/lexpedition/backlog'), 
+                child: Text('Older Lexpeditions'),
+                style: ElevatedButton.styleFrom(
+                  shape: StadiumBorder(),
+                  padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0)
+                )),
+                SizedBox(width: Constants.smallFont),
+              ElevatedButton(
+                  onPressed: () => 
+                    GoRouter.of(context).pop(), 
+                  child: Text('Back'),
+                  style: ElevatedButton.styleFrom(
+                    shape: StadiumBorder(),
+                    padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 15.0)
+                ))
+            ],)
+        ),
       )
     );
   }

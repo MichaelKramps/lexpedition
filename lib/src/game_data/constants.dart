@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Constants {
   static double tileSize = 64;
   static double tileMargin = tileSize * 0.025;
@@ -32,4 +34,11 @@ class Constants {
   static const Duration showBadGuessDuration = Duration(milliseconds: 1000);
 
   static const int guessLengthToActivateBlast = 5;
+
+  //User Interface Constants
+  static const double buttonWidth = 240;
+  static const double buttonDepth = 3;
+  static const double buttonBorderRadiusAmount = 5;
+  static const BorderRadiusGeometry buttonBorderRadius = BorderRadius.all(Radius.circular(Constants.buttonBorderRadiusAmount));
+  static const Duration buttonPressAnimationDuration = Duration(milliseconds: 75); 
 }
