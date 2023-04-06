@@ -27,24 +27,24 @@ class _TutorialCompletePlayerMenuState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             BasicUserInterfaceButton(
-              onPressFunction: () {
+              onPressed: () {
                 GoRouter.of(context).push('/lexpedition');
               },
-              buttonText: 'Lexpedition',
+              buttonText: 'LEXPEDITION',
             ),
             SizedBox(width: Constants.smallFont),
-            ElevatedButton(
+            BasicUserInterfaceButton(
               onPressed: () {
                 GoRouter.of(context).push('/freeplay');
               },
-              child: const Text('Free Play'),
+              buttonText: "FREE PLAY",
             ),
             SizedBox(width: Constants.smallFont),
-            ElevatedButton(
+            BasicUserInterfaceButton(
               onPressed: () {
                 GoRouter.of(context).push('/moremenu');
               },
-              child: const Text('More...'),
+              buttonText: "MORE...",
             )
           ],
         )
@@ -100,13 +100,13 @@ class _TutorialCompletePlayerMenuState
         child: const Text('Play with a Friend'),
       );
     } else {
-      return ElevatedButton(
+      return BasicUserInterfaceButton(
         onPressed: () {
           setState(() {
             _areYouSure = true;
           });
         },
-        child: const Text('Play Solo'),
+        buttonText: 'PLAY SOLO',
       );
     }
   }

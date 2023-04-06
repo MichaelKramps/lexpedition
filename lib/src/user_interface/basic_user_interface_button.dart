@@ -6,9 +6,9 @@ import 'package:lexpedition/src/user_interface/generic_button.dart';
 class BasicUserInterfaceButton extends StatelessWidget {
 
   String buttonText;
-  void Function() onPressFunction;
+  void Function() onPressed;
 
-  BasicUserInterfaceButton({super.key, required this.buttonText, required this.onPressFunction});
+  BasicUserInterfaceButton({super.key, required this.buttonText, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class BasicUserInterfaceButton extends StatelessWidget {
       primaryButtonColor: Colors.blue,
       primaryButtonShadow: Color.fromARGB(255, 13, 60, 143),
       buttonText: buttonText, 
-      onPressFunction: onPressFunction);
+      onPressed: onPressed);
   }
 
   ButtonStyle unpressedStyle() {

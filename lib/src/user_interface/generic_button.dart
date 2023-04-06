@@ -8,14 +8,14 @@ class GenericButton extends StatefulWidget {
   Color primaryButtonColor;
   Color primaryButtonShadow;
   String buttonText;
-  void Function() onPressFunction;
+  void Function() onPressed;
 
   GenericButton({
     super.key,
     required this.primaryButtonColor,
     required this.primaryButtonShadow, 
     required this.buttonText, 
-    required this.onPressFunction});
+    required this.onPressed});
 
   @override
   State<GenericButton> createState() => _GenericButtonState();
@@ -73,7 +73,7 @@ class _GenericButtonState extends State<GenericButton> {
     setState(() {
       _pressed = !_pressed;
     });
-    widget.onPressFunction;
+    widget.onPressed;
   }
 
   double buttonPosition(){
