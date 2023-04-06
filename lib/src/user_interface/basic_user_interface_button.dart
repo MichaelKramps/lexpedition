@@ -18,16 +18,4 @@ class BasicUserInterfaceButton extends StatelessWidget {
       buttonText: buttonText, 
       onPressed: onPressed);
   }
-
-  ButtonStyle unpressedStyle() {
-    return ButtonStyle(
-      elevation: MaterialStatePropertyAll(1)
-    );
-  }
-
-  ButtonStyle pressedStyle() {
-    return ButtonStyle(
-      elevation: MaterialStatePropertyAll(0)
-    );
-  }
 }

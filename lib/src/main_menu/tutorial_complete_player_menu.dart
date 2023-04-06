@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
-import 'package:lexpedition/src/user_interface/generic_button.dart';
+import 'package:lexpedition/src/user_interface/featured_user_interface_button.dart';
 
 class TutorialCompletePlayerMenu extends StatefulWidget {
   const TutorialCompletePlayerMenu({super.key});
@@ -63,21 +63,21 @@ class _TutorialCompletePlayerMenuState
                           "Are you sure you want to disconnect from your partner?"),
                       Row(
                         children: [
-                          ElevatedButton(
+                          BasicUserInterfaceButton(
                               onPressed: () {
                                 PartyDatabaseConnection().leaveParty();
                                 setState(() {
                                   _areYouSure = false;
                                 });
                               },
-                              child: Text("Yes")),
-                          ElevatedButton(
+                              buttonText: "YES"),
+                          BasicUserInterfaceButton(
                               onPressed: () {
                                 setState(() {
                                   _areYouSure = false;
                                 });
                               },
-                              child: Text("No"))
+                              buttonText: "NO")
                         ],
                       )
                     ],
@@ -89,15 +89,11 @@ class _TutorialCompletePlayerMenuState
     PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
 
     if (partyDatabaseConnection.isNull()) {
-      final ButtonStyle buttonStyle =
-          TextButton.styleFrom(backgroundColor: Colors.amber);
-
-      return ElevatedButton(
+      return FeaturedUserInterfaceButton(
         onPressed: () {
           GoRouter.of(context).push('/party');
         },
-        style: buttonStyle,
-        child: const Text('Play with a Friend'),
+        buttonText: 'PLAY WITH A FRIEND',
       );
     } else {
       return BasicUserInterfaceButton(

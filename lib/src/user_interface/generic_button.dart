@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 
 class GenericButton extends StatefulWidget {
+  final Color primaryButtonColor;
+  final Color primaryButtonShadow;
+  final String buttonText;
+  final void Function() onPressed;
 
-  Color primaryButtonColor;
-  Color primaryButtonShadow;
-  String buttonText;
-  void Function() onPressed;
-
-  GenericButton({
-    super.key,
-    required this.primaryButtonColor,
-    required this.primaryButtonShadow, 
-    required this.buttonText, 
-    required this.onPressed});
+  GenericButton(
+      {super.key,
+      required this.primaryButtonColor,
+      required this.primaryButtonShadow,
+      required this.buttonText,
+      required this.onPressed});
 
   @override
   State<GenericButton> createState() => _GenericButtonState();
@@ -28,56 +25,53 @@ class _GenericButtonState extends State<GenericButton> {
   Widget build(BuildContext context) {
     return Container(
       height: Constants.bigFont + Constants.buttonBorderRadiusAmount,
-      width: Constants.buttonWidth,
+      width: calculateButtonWidth(),
       child: GestureDetector(
-        onTap: () => pressButton(),
-        child: Container(
-          child: Stack(
-            children:[
-              Positioned(
+          onTap: () => pressButton(),
+          child: Container(
+              child: Stack(children: [
+            Positioned(
                 bottom: 0,
                 child: Container(
                   height: Constants.bigFont,
-                  width: Constants.buttonWidth,
+                  width: calculateButtonWidth(),
                   decoration: BoxDecoration(
-                    borderRadius: Constants.buttonBorderRadius,
-                    color: widget.primaryButtonShadow
-                  ),
-              )),
-              AnimatedPositioned(
+                      borderRadius: Constants.buttonBorderRadius,
+                      color: widget.primaryButtonShadow),
+                )),
+            AnimatedPositioned(
                 duration: Constants.buttonPressAnimationDuration,
                 curve: Curves.decelerate,
                 bottom: buttonPosition(),
                 child: Container(
                   height: Constants.bigFont,
-                  width: Constants.buttonWidth,
+                  width: calculateButtonWidth(),
                   decoration: BoxDecoration(
-                    borderRadius: Constants.buttonBorderRadius,
-                    color: widget.primaryButtonColor
-                  ),
-                child: Center(
-                  child: Text(
-                    widget.buttonText, 
-                    style: TextStyle(fontSize: Constants.smallFont, color: Colors.white)
-                  )
-                ),
-              ))
-            ]
-          )
-        )
-      ),
+                      borderRadius: Constants.buttonBorderRadius,
+                      color: widget.primaryButtonColor),
+                  child: Center(
+                      child: Text(widget.buttonText,
+                          style: TextStyle(
+                              fontSize: Constants.smallFont,
+                              color: Colors.white))),
+                ))
+          ]))),
     );
+  }
+
+  double calculateButtonWidth() {
+    return widget.buttonText.length * 20;
   }
 
   void pressButton() {
     setState(() {
       _pressed = !_pressed;
     });
-    widget.onPressed;
+    widget.onPressed();
   }
 
-  double buttonPosition(){
-    if (_pressed){
+  double buttonPosition() {
+    if (_pressed) {
       return 0;
     } else {
       return 4;
