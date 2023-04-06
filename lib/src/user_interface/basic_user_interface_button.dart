@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:lexpedition/src/user_interface/generic_button.dart';
 
 class BasicUserInterfaceButton extends StatelessWidget {

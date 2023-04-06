@@ -30,21 +30,21 @@ class _TutorialCompletePlayerMenuState
               onPressed: () {
                 GoRouter.of(context).push('/lexpedition');
               },
-              buttonText: 'LEXPEDITION',
+              buttonText: 'Lexpedition',
             ),
             SizedBox(width: Constants.smallFont),
             BasicUserInterfaceButton(
               onPressed: () {
                 GoRouter.of(context).push('/freeplay');
               },
-              buttonText: "FREE PLAY",
+              buttonText: "Free Play",
             ),
             SizedBox(width: Constants.smallFont),
             BasicUserInterfaceButton(
               onPressed: () {
                 GoRouter.of(context).push('/moremenu');
               },
-              buttonText: "MORE...",
+              buttonText: "More...",
             )
           ],
         )
@@ -70,14 +70,14 @@ class _TutorialCompletePlayerMenuState
                                   _areYouSure = false;
                                 });
                               },
-                              buttonText: "YES"),
+                              buttonText: "Yes"),
                           BasicUserInterfaceButton(
                               onPressed: () {
                                 setState(() {
                                   _areYouSure = false;
                                 });
                               },
-                              buttonText: "NO")
+                              buttonText: "No")
                         ],
                       )
                     ],
@@ -93,7 +93,7 @@ class _TutorialCompletePlayerMenuState
         onPressed: () {
           GoRouter.of(context).push('/party');
         },
-        buttonText: 'PLAY WITH A FRIEND',
+        buttonText: 'Play with a Friend',
       );
     } else {
       return BasicUserInterfaceButton(
@@ -102,7 +102,7 @@ class _TutorialCompletePlayerMenuState
             _areYouSure = true;
           });
         },
-        buttonText: 'PLAY SOLO',
+        buttonText: 'Play Solo',
       );
     }
   }

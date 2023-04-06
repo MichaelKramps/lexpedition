@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 
 class MoreMenu extends StatelessWidget {
   const MoreMenu({super.key});
@@ -12,28 +13,28 @@ class MoreMenu extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
+            BasicUserInterfaceButton(
               onPressed: () {
                 GoRouter.of(context).push('/buildpuzzle');
               },
-              child: const Text('Puzzle Builder'),
+              buttonText: 'Puzzle Builder',
             ),
             SizedBox(width: Constants.smallFont),
-            ElevatedButton(
+            BasicUserInterfaceButton(
               onPressed: () {
                 GoRouter.of(context).push('/tutorial');
               },
-              child: const Text('Tutorial'),
+              buttonText: 'Tutorial',
             ),
             SizedBox(width: Constants.smallFont),
-            ElevatedButton(
+            BasicUserInterfaceButton(
               onPressed: () => GoRouter.of(context).push('/settings'),
-              child: const Text('Settings'),
+              buttonText: 'Settings',
             ),
             SizedBox(width: Constants.smallFont),
-            ElevatedButton(
+            BasicUserInterfaceButton(
                 onPressed: () => GoRouter.of(context).pop(),
-                child: Text('Back'))
+                buttonText: 'Back')
           ],
         ),
       )

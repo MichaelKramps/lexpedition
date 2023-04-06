@@ -5,6 +5,7 @@ import 'package:lexpedition/src/game_data/error_definitions.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/error_display_widget.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:provider/provider.dart';
 
 class FreePlay extends StatelessWidget {
@@ -20,26 +21,26 @@ class FreePlay extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ElevatedButton(
+              BasicUserInterfaceButton(
                   onPressed: () async {
                     await gameState.loadOnePlayerPuzzle();
                     if (gameState.errorDefinition == ErrorDefinition.noError) {
                       GoRouter.of(context).push('/freeplay/oneplayer');
                     }            
                   },
-                  child: Text('One Player')),
+                  buttonText: 'One Player'),
               SizedBox(width: Constants.smallFont),
-              ElevatedButton(
+              BasicUserInterfaceButton(
                   onPressed: () async {
                     await gameState.loadTwoPlayerPuzzle();
                     if (gameState.errorDefinition == ErrorDefinition.noError) {
                       GoRouter.of(context).push('/freeplay/twoplayer');
                     }                   
                   },
-                  child: Text('Two Player')),
+                  buttonText: 'Two Player'),
               SizedBox(width: Constants.smallFont),
-              ElevatedButton(
-                  onPressed: () => GoRouter.of(context).pop(), child: Text('Back'))
+              BasicUserInterfaceButton(
+                  onPressed: () => GoRouter.of(context).pop(), buttonText: 'Back')
             ],     
           )), 
           GameStateErrorDisplay()

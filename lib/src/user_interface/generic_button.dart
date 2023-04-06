@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:logging/logging.dart';
 
 class GenericButton extends StatefulWidget {
   final Color primaryButtonColor;
@@ -50,7 +51,7 @@ class _GenericButtonState extends State<GenericButton> {
                       borderRadius: Constants.buttonBorderRadius,
                       color: widget.primaryButtonColor),
                   child: Center(
-                      child: Text(widget.buttonText,
+                      child: Text(widget.buttonText.toUpperCase(),
                           style: TextStyle(
                               fontSize: Constants.smallFont,
                               color: Colors.white))),
@@ -63,18 +64,22 @@ class _GenericButtonState extends State<GenericButton> {
     return widget.buttonText.length * 20;
   }
 
-  void pressButton() {
+  void pressButton() async {
     setState(() {
-      _pressed = !_pressed;
+      _pressed = true;
     });
+    await Future.delayed(Constants.buttonPressAnimationDuration);
     widget.onPressed();
+    setState(() {
+      _pressed = false;
+    });
   }
 
   double buttonPosition() {
     if (_pressed) {
       return 0;
     } else {
-      return 4;
+      return Constants.buttonDepth;
     }
   }
 }
