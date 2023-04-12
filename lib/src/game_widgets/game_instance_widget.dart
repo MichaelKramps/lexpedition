@@ -104,7 +104,6 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   }
 
   void handleMouseEvent(double pointerx, double pointery, bool isSlideEvent) {
-    new Logger('game instance widget').info('handling mouse event');
     int shrinkClickableSpace = isSlideEvent ? 10 : 0;
     int selectedIndex =
         determineTileIndex(pointerx, pointery, shrinkClickableSpace);

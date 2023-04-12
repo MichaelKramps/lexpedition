@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:lexpedition/src/party/party_video_display_widget.dart';
+import 'package:lexpedition/src/party/real_time_communication.dart';
+import 'package:provider/provider.dart';
 
 class StartPartyScreen extends StatefulWidget {
   const StartPartyScreen({super.key});
@@ -13,7 +16,18 @@ class StartPartyScreen extends StatefulWidget {
 }
 
 class _StartPartyScreenState extends State<StartPartyScreen> {
+  late RealTimeCommunication realTimeCommunication;
   late String _partyCode = '';
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,19 +37,26 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ElevatedButton(
-              onPressed: () async {
-                String newPartyCode = buildPartyCode();
-                PartyDatabaseConnection partyConnection =
-                    await PartyDatabaseConnection.startParty(
-                        partyCode: newPartyCode);
-                partyConnection.createPartyEntry();
+          Consumer<RealTimeCommunication>(
+              builder: (context, realTimeCommunication, child) {
+            return ElevatedButton(
+                onPressed: () async {
+                  String newPartyCode = buildPartyCode();
+                  PartyDatabaseConnection partyConnection =
+                      await PartyDatabaseConnection.startParty(
+                          partyCode: newPartyCode);
+                  partyConnection.createPartyEntry();
 
-                setState(() {
-                  _partyCode = newPartyCode;
-                });
-              },
-              child: Text('Get Code')),
+                  setState(() {
+                    _partyCode = newPartyCode;
+                  });
+
+                  realTimeCommunication.addRoomId(newPartyCode);
+                  await realTimeCommunication.openUserMedia();
+                  await realTimeCommunication.createRoom();
+                },
+                child: Text('Get Code'));
+          }),
           SizedBox(width: 25),
           Text(_partyCode, style: getTextStyle())
         ],
@@ -50,7 +71,7 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                 onPressed: () {
                   GoRouter.of(context).pop();
                 },
-                child: Text('Back'))
+                child: Text('Back')),
           ]))
     ]));
   }

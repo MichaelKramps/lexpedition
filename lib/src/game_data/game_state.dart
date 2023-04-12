@@ -110,7 +110,12 @@ class GameState extends ChangeNotifier {
           await LevelDatabaseConnection.lookUpLevelFromCode(gameLevelCode);
       if (loadedLevel != null) {
         level = loadedLevel;
-        setMyGrid(loadedLevel.letterGridB as LetterGrid);
+        if (gameLevelCode[0] == 2) {
+          // two player level was loaded
+          setMyGrid(loadedLevel.letterGridB as LetterGrid);
+        } else {
+          //it will be loaded by later code
+        }
       }
     } else if (blastIndex != null && getMyGrid() != null) {
       //need to blast my puzzle based on partner's blast index
@@ -201,16 +206,17 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  bool myGridExists() {
-    if (getMyGrid() == null) {
-      return false;
-    } else {
+  bool aGridExists() {
+    if (getMyGrid() != null) {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
-      if (myGrid.isBlank()) {
-        return false;
+      return !myGrid.isBlank();
+    } else {
+      if (getTheirGrid() != null) {
+        LetterGrid theirGrid = getTheirGrid() as LetterGrid;
+        return !theirGrid.isBlank();
       }
     }
-    return true;
+    return false;
   }
 
   void setMyGrid(LetterGrid newGrid) {
@@ -367,12 +373,12 @@ class GameState extends ChangeNotifier {
       myGrid.blastFromIndex(index);
       PartyDatabaseConnection()
           .updateMyPuzzle(letterGrid: myGrid, blastIndex: index);
+      notifyListeners();
       if (isLevelWon()) {
         levelCompleted = true;
+        notifyListeners();
       }
 
-      //before this future returns,
-      //notifyAllPlayers() should call from somewhere else
       await Future<void>.delayed(Constants.blastDuration);
       myGrid.unblast();
     }

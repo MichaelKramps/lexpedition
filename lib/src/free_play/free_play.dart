@@ -39,7 +39,7 @@ class FreePlay extends StatelessWidget {
                   child: Text('Two Player')),
               SizedBox(width: Constants.smallFont),
               ElevatedButton(
-                  onPressed: () => GoRouter.of(context).pop(), child: Text('Back'))
+                  onPressed: () => GoRouter.of(context).push('/'), child: Text('Back'))
             ],     
           )), 
           GameStateErrorDisplay()

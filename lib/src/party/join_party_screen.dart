@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:lexpedition/src/party/real_time_communication.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,7 @@ class JoinPartyScreen extends StatefulWidget {
 }
 
 class _JoinPartyScreenState extends State<JoinPartyScreen> {
+  late RealTimeCommunication realTimeCommunication;
   bool _joined = PartyDatabaseConnection().listener != null;
   bool _error = false;
   final _textController = TextEditingController();
@@ -50,23 +53,32 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Party Code"))),
-              ElevatedButton(
-                  onPressed: () async {
-                    String partyCode = _textController.text.toUpperCase();
-                    if (await PartyDatabaseConnection.canJoinParty(partyCode)) {
-                      await PartyDatabaseConnection.joinParty(
-                          partyCode: partyCode);
-                      setState(() {
-                        _joined = true;
-                        _error = false;
-                      });
-                    } else {
-                      setState(() {
-                        _error = true;
-                      });
-                    }
-                  },
-                  child: Text('Join'))
+              Consumer<RealTimeCommunication>(
+                  builder: (context, realTimeCommunication, child) {
+                return ElevatedButton(
+                    onPressed: () async {
+                      String partyCode = _textController.text.toUpperCase();
+                      if (await PartyDatabaseConnection.canJoinParty(
+                          partyCode)) {
+                        await PartyDatabaseConnection.joinParty(
+                            partyCode: partyCode);
+
+                        setState(() {
+                          _joined = true;
+                          _error = false;
+                        });
+
+                        realTimeCommunication.addRoomId(partyCode);
+                        await realTimeCommunication.openUserMedia();
+                        await realTimeCommunication.joinRoom();
+                      } else {
+                        setState(() {
+                          _error = true;
+                        });
+                      }
+                    },
+                    child: Text('Join'));
+              })
             ]),
             Visibility(
                 visible: _error,

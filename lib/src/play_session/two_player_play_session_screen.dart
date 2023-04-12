@@ -43,11 +43,13 @@ class _TwoPlayerPlaySessionScreenState
     return Scaffold(
         body: IgnorePointer(
             ignoring: _duringCelebration,
-            child: determineVisibleGrid(widget.gameState)));
+            child: determineVisibleGrid(widget.gameState)
+        )
+    );
   }
 
   Widget determineVisibleGrid(GameState gameState) {
-    if (!gameState.myGridExists()) {
+    if (!gameState.aGridExists()) {
       String waitingText = PartyDatabaseConnection().isPartyLeader
           ? 'Loading puzzle...'
           : 'Waiting for your partner to start a game...';
