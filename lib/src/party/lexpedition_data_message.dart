@@ -12,18 +12,30 @@ class LexpeditionDataMessage {
   }
 
   LexpeditionDataMessage.fromGameData(String gameDataString) {
-    this.type = LexpeditionDataMessageType.gameData;
+    this.type = LexpeditionDataMessageType.updateLevel;
     this.text = gameDataString;
+  }
+
+  LexpeditionDataMessage.fromLoadLevelData(String gameDataString) {
+    this.type = LexpeditionDataMessageType.loadLevel;
+    this.text = gameDataString;
+  }
+
+  LexpeditionDataMessage.fromBlastIndex(int blastIndex) {
+    this.type = LexpeditionDataMessageType.blastIndex;
+    this.text = blastIndex.toString();
   }
 
   LexpeditionDataMessageType determineDataType(String rtcMessageText) {
     String typeString = rtcMessageText.split(Constants.rtcMessageSplitter)[0];
 
     switch (typeString) {
-      case 'gameData':
-        return LexpeditionDataMessageType.gameData;
-      case 'chat':
-        return LexpeditionDataMessageType.chat;
+      case 'updateLevel':
+        return LexpeditionDataMessageType.updateLevel;
+      case 'loadLevel':
+        return LexpeditionDataMessageType.loadLevel;
+      case 'blastIndex':
+        return LexpeditionDataMessageType.blastIndex;
       default:
         return LexpeditionDataMessageType.raw;
     }
@@ -31,10 +43,12 @@ class LexpeditionDataMessage {
 
   String dataTypeToString() {
     switch (this.type) {
-      case LexpeditionDataMessageType.gameData:
-        return 'gameData';
-      case LexpeditionDataMessageType.chat:
-        return 'chat';
+      case LexpeditionDataMessageType.updateLevel:
+        return 'updateLevel';
+      case LexpeditionDataMessageType.loadLevel:
+        return 'loadLevel';
+      case LexpeditionDataMessageType.blastIndex:
+        return 'blastIndex';
       default:
         return 'raw';
     }
@@ -55,4 +69,4 @@ class LexpeditionDataMessage {
   }
 }
 
-enum LexpeditionDataMessageType { gameData, chat, raw }
+enum LexpeditionDataMessageType { updateLevel, loadLevel, blastIndex, raw }

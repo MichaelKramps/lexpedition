@@ -34,4 +34,5 @@ class Constants {
   static const int guessLengthToActivateBlast = 5;
 
   static const String rtcMessageSplitter = ':;:!:';
+  static const String rtcLoadLevelDataSplitter = ':';
 }

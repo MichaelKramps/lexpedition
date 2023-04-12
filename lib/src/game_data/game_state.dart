@@ -38,7 +38,11 @@ class GameState extends ChangeNotifier {
   }
 
   GameState.emptyState() {
-    this.realTimeCommunication.setNotifyListeners(notifyListeners);
+    this.realTimeCommunication.setGameStateFunctions(
+        notifyListeners: notifyListeners,
+        loadPuzzleFromPeerUpdate: loadPuzzleFromPeerUpdate,
+        updatePuzzleFromPeerUpdate: updatePuzzleFromPeerUpdate,
+        blastPuzzleFromPeerUpdate: blastPuzzleFromPeerUpdate);
   }
 
   Future<void> loadOnePlayerPuzzle(
@@ -87,7 +91,7 @@ class GameState extends ChangeNotifier {
   }
 
   void loadPuzzleAndNotify() {
-    PartyDatabaseConnection().loadPuzzleForPlayers(level: level);
+    realTimeCommunication.sendPuzzleToPeer(level);
     notifyListeners();
   }
 
@@ -96,61 +100,82 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void listenForPuzzleUpdatesFromPartner() {
-    _logger.info('listening');
-    PartyDatabaseConnection()
-        .listenForPuzzle(updateMyGameStateFromPartnerUpdate);
+  // void listenForPuzzleUpdatesFromPartner() {
+  //   _logger.info('listening');
+  //   PartyDatabaseConnection()
+  //       .listenForPuzzle(updateMyGameStateFromPartnerUpdate);
+  // }
+
+  void loadPuzzleFromPeerUpdate(GameLevel level) {
+    this.level = level;
+    this.primaryLetterGrid = LetterGrid(level.gridCode);
+    this.secondaryLetterGrid =
+        level.gridCodeB == null ? null : LetterGrid(level.gridCodeB!);
+    notifyListeners();
   }
 
-  void updateMyGameStateFromPartnerUpdate(
-      {double? averageGuesses,
-      int? bestAttempt,
-      int? blastIndex,
-      String? gameLevelCode,
-      required LetterGrid theirLetterGrid}) async {
-    _logger.info('updating puzzle');
-    if (gameLevelCode != null) {
-      //should always mean player is getting a new puzzle
-      resetPuzzle();
-      GameLevel? loadedLevel =
-          await LevelDatabaseConnection.lookUpLevelFromCode(gameLevelCode);
-      if (loadedLevel != null) {
-        level = loadedLevel;
-        if (gameLevelCode[0] == 2) {
-          // two player level was loaded
-          setMyGrid(loadedLevel.letterGridB as LetterGrid);
-        } else {
-          //it will be loaded by later code
-        }
-      }
-    } else if (blastIndex != null && getMyGrid() != null) {
-      //need to blast my puzzle based on partner's blast index
+  void updatePuzzleFromPeerUpdate(LetterGrid theirLetterGrid) {
+    setTheirGrid(theirLetterGrid);
+    setMyGridFromTheirs(theirLetterGrid);
+    notifyListeners();
+  }
+
+  void blastPuzzleFromPeerUpdate(int blastIndex) {
+    if (getMyGrid() != null) {
       blastTilesAndDontNotify(blastIndex);
+      notifyListeners();
     }
-
-    if (averageGuesses != null && bestAttempt != null) {
-      level.averageGuesses = averageGuesses;
-      level.bestAttempt = bestAttempt;
-      setTheirGrid(theirLetterGrid);
-    } else {
-      setTheirGrid(theirLetterGrid);
-      setMyGridFromTheirs(theirLetterGrid);
-    }
-
-    addNewGuessesFromPartner(theirLetterGrid);
-
-    if (isLevelWon()) {
-      levelCompleted = true;
-    }
-
-    notifyAllPlayers();
   }
+
+  // void updateMyGameStateFromPartnerUpdate(
+  //     {double? averageGuesses,
+  //     int? bestAttempt,
+  //     int? blastIndex,
+  //     String? gameLevelCode,
+  //     required LetterGrid theirLetterGrid}) async {
+  //   _logger.info('updating puzzle');
+  //   if (gameLevelCode != null) {
+  //     //should always mean player is getting a new puzzle
+  //     resetPuzzle();
+  //     GameLevel? loadedLevel =
+  //         await LevelDatabaseConnection.lookUpLevelFromCode(gameLevelCode);
+  //     if (loadedLevel != null) {
+  //       level = loadedLevel;
+  //       if (gameLevelCode[0] == 2) {
+  //         // two player level was loaded
+  //         setMyGrid(loadedLevel.letterGridB as LetterGrid);
+  //       } else {
+  //         //it will be loaded by later code
+  //       }
+  //     }
+  //   } else if (blastIndex != null && getMyGrid() != null) {
+  //     //need to blast my puzzle based on partner's blast index
+  //     blastTilesAndDontNotify(blastIndex);
+  //   }
+
+  //   if (averageGuesses != null && bestAttempt != null) {
+  //     level.averageGuesses = averageGuesses;
+  //     level.bestAttempt = bestAttempt;
+  //     setTheirGrid(theirLetterGrid);
+  //   } else {
+  //     setTheirGrid(theirLetterGrid);
+  //     setMyGridFromTheirs(theirLetterGrid);
+  //   }
+
+  //   addNewGuessesFromPartner(theirLetterGrid);
+
+  //   if (isLevelWon()) {
+  //     levelCompleted = true;
+  //   }
+
+  //   notifyAllPlayers();
+  // }
 
   void notifyAllPlayers() {
     _logger.info('notifyAllPlayers()');
     if (getMyGrid() != null) {
-      PartyDatabaseConnection()
-          .updateMyPuzzle(letterGrid: getMyGrid() as LetterGrid);
+      realTimeCommunication
+          .sendUpdatedGameDataToPeer(getMyGrid()!.encodedGridToString());
     }
     notifyListeners();
   }
@@ -377,8 +402,8 @@ class GameState extends ChangeNotifier {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
 
       myGrid.blastFromIndex(index);
-      PartyDatabaseConnection()
-          .updateMyPuzzle(letterGrid: myGrid, blastIndex: index);
+      //PartyDatabaseConnection().updateMyPuzzle(letterGrid: myGrid, blastIndex: index);
+      realTimeCommunication.sendBlastIndexDataToPeer(index);
       notifyListeners();
       if (isLevelWon()) {
         levelCompleted = true;

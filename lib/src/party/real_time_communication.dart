@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/party/lexpedition_data_message.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:logging/logging.dart';
@@ -25,7 +26,10 @@ class RealTimeCommunication {
   MediaStream? localStream;
   MediaStream? remoteStream;
   String roomId = '';
-  Function? notifyListeners;
+  late Function notifyListeners;
+  late Function loadPuzzleFromPeerUpdate;
+  late Function updatePuzzleFromPeerUpdate;
+  late Function blastPuzzleFromPeerUpdate;
   int numberLocalIceCandidates = 0;
   StreamStateCallback? onAddRemoteStream;
   late DatabaseReference roomDbReference;
@@ -37,8 +41,15 @@ class RealTimeCommunication {
     ;
   }
 
-  void setNotifyListeners(Function notifyListeners) {
+  void setGameStateFunctions(
+      {required Function notifyListeners,
+      required Function loadPuzzleFromPeerUpdate,
+      required Function updatePuzzleFromPeerUpdate,
+      required Function blastPuzzleFromPeerUpdate}) {
     this.notifyListeners = notifyListeners;
+    this.loadPuzzleFromPeerUpdate = loadPuzzleFromPeerUpdate;
+    this.updatePuzzleFromPeerUpdate = updatePuzzleFromPeerUpdate;
+    this.blastPuzzleFromPeerUpdate = blastPuzzleFromPeerUpdate;
   }
 
   void addRoomId(String roomId) {
@@ -282,18 +293,32 @@ class RealTimeCommunication {
   }
 
   void handleDataChannelMessage(LexpeditionDataMessage message) {
-    if (message.type == LexpeditionDataMessageType.gameData) {
+    if (message.type == LexpeditionDataMessageType.updateLevel) {
       //handle game data
-    } else if (message.type == LexpeditionDataMessageType.chat) {
-      //handle chat data
+    } else if (message.type == LexpeditionDataMessageType.loadLevel) {
+      //handle level load data
+      GameLevel level = GameLevel.fromPeer(message.text);
+      loadPuzzleFromPeerUpdate(level);
     } else {
       //handle raw data
     }
   }
 
-  void sendGameDataToPeer(String gameDataString) {
+  void sendPuzzleToPeer(GameLevel level) {
+    LexpeditionDataMessage thisMessage =
+        LexpeditionDataMessage.fromLoadLevelData(level.rtcEncode());
+    _dataChannel?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+  }
+
+  void sendUpdatedGameDataToPeer(String gameDataString) {
     LexpeditionDataMessage thisMessage =
         LexpeditionDataMessage.fromGameData(gameDataString);
+    _dataChannel?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+  }
+
+  void sendBlastIndexDataToPeer(int blastIndex) {
+    LexpeditionDataMessage thisMessage =
+        LexpeditionDataMessage.fromBlastIndex(blastIndex);
     _dataChannel?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
   }
 }

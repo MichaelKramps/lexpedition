@@ -30,8 +30,6 @@ class _TwoPlayerPlaySessionScreenState
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
 
-    widget.gameState.listenForPuzzleUpdatesFromPartner();
-
     super.initState();
   }
 

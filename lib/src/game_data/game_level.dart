@@ -1,3 +1,4 @@
+import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 
@@ -32,6 +33,19 @@ class GameLevel {
     } else {
       this.letterGridB = null;
     }
+  }
+
+  factory GameLevel.fromPeer(String levelText) {
+    //decoding string from rtcEncode in this class
+    List<String> splitLevelText =
+        levelText.split(Constants.rtcLoadLevelDataSplitter);
+
+    return GameLevel(
+      gridCode: splitLevelText[0].split(','),
+      gridCodeB: splitLevelText[1] == 'null' ? null : splitLevelText[1].split(','),
+      averageGuesses: double.parse(splitLevelText[2]),
+      bestAttempt: int.parse(splitLevelText[3])
+    );
   }
 
   factory GameLevel.copy(GameLevel levelToCopy) {
@@ -73,5 +87,19 @@ class GameLevel {
     } else {
       return name as String;
     }
+  }
+
+  String rtcEncode() {
+    String encodedLevel = '';
+
+    encodedLevel += gridCode.join(',');
+    encodedLevel += Constants.rtcLoadLevelDataSplitter;
+    encodedLevel += gridCodeB == null ? 'null' : gridCodeB!.join(',');
+    encodedLevel += Constants.rtcLoadLevelDataSplitter;
+    encodedLevel += averageGuesses.toString();
+    encodedLevel += Constants.rtcLoadLevelDataSplitter;
+    encodedLevel += bestAttempt.toString();
+
+    return encodedLevel;
   }
 }
