@@ -32,4 +32,6 @@ class Constants {
   static const Duration showBadGuessDuration = Duration(milliseconds: 1000);
 
   static const int guessLengthToActivateBlast = 5;
+
+  static const String rtcMessageSplitter = ':;:!:';
 }

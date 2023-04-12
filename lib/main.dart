@@ -296,9 +296,6 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) {
             return GameState.emptyState();
           }),
-          ChangeNotifierProvider(create: (context) {
-            return RealTimeCommunication();
-          }),
           Provider<GamesServicesController?>.value(
               value: gamesServicesController),
           Provider<AdsController?>.value(value: adsController),

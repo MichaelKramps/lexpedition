@@ -1,12 +1,12 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:lexpedition/src/party/lexpedition_data_message.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:logging/logging.dart';
 
 typedef void StreamStateCallback(MediaStream stream);
 
-class RealTimeCommunication extends ChangeNotifier {
+class RealTimeCommunication {
   Map<String, dynamic> configuration = {
     'iceServers': [
       {
@@ -21,9 +21,11 @@ class RealTimeCommunication extends ChangeNotifier {
   RTCPeerConnection? peerConnection;
   RTCVideoRenderer localRenderer = RTCVideoRenderer();
   RTCVideoRenderer remoteRenderer = RTCVideoRenderer();
+  RTCDataChannel? _dataChannel;
   MediaStream? localStream;
   MediaStream? remoteStream;
   String roomId = '';
+  Function? notifyListeners;
   int numberLocalIceCandidates = 0;
   StreamStateCallback? onAddRemoteStream;
   late DatabaseReference roomDbReference;
@@ -32,7 +34,11 @@ class RealTimeCommunication extends ChangeNotifier {
   RealTimeCommunication() {
     localRenderer.initialize();
     remoteRenderer.initialize();
-    notifyListeners();
+    ;
+  }
+
+  void setNotifyListeners(Function notifyListeners) {
+    this.notifyListeners = notifyListeners;
   }
 
   void addRoomId(String roomId) {
@@ -42,6 +48,12 @@ class RealTimeCommunication extends ChangeNotifier {
 
   Future<void> createRoom() async {
     peerConnection = await createPeerConnection(configuration);
+    _dataChannel = await peerConnection!
+        .createDataChannel('peerData', RTCDataChannelInit());
+    _dataChannel!.onMessage = (RTCDataChannelMessage dataMessage) {
+      handleDataChannelMessage(LexpeditionDataMessage(dataMessage));
+    };
+
     registerPeerConnectionListeners();
 
     localStream?.getTracks().forEach((track) {
@@ -176,7 +188,7 @@ class RealTimeCommunication extends ChangeNotifier {
 
     remoteRenderer.srcObject = await createLocalMediaStream('key');
 
-    notifyListeners();
+    notifyListeners!();
   }
 
   Future<void> hangUp() async {
@@ -207,7 +219,7 @@ class RealTimeCommunication extends ChangeNotifier {
     localStream!.dispose();
     remoteStream!.dispose();
 
-    notifyListeners();
+    notifyListeners!();
   }
 
   void registerPeerConnectionListeners() {
@@ -240,6 +252,10 @@ class RealTimeCommunication extends ChangeNotifier {
 
     peerConnection?.onConnectionState = (RTCPeerConnectionState state) {
       _log.info('Connection state change: ' + state.toString());
+      if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
+        _log.info('kramps here');
+        _dataChannel?.send(RTCDataChannelMessage('hello there from somewhere'));
+      }
     };
 
     peerConnection?.onSignalingState = (RTCSignalingState state) {
@@ -254,7 +270,30 @@ class RealTimeCommunication extends ChangeNotifier {
       _log.info('Add remote stream');
       this.remoteStream = remoteStream;
       remoteRenderer.srcObject = this.remoteStream;
-      notifyListeners();
+      notifyListeners!();
     };
+
+    peerConnection?.onDataChannel = (RTCDataChannel channel) {
+      _dataChannel = channel;
+      _dataChannel!.onMessage = (RTCDataChannelMessage dataMessage) {
+        handleDataChannelMessage(LexpeditionDataMessage(dataMessage));
+      };
+    };
+  }
+
+  void handleDataChannelMessage(LexpeditionDataMessage message) {
+    if (message.type == LexpeditionDataMessageType.gameData) {
+      //handle game data
+    } else if (message.type == LexpeditionDataMessageType.chat) {
+      //handle chat data
+    } else {
+      //handle raw data
+    }
+  }
+
+  void sendGameDataToPeer(String gameDataString) {
+    LexpeditionDataMessage thisMessage =
+        LexpeditionDataMessage.fromGameData(gameDataString);
+    _dataChannel?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
   }
 }

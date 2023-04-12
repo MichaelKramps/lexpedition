@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/party/party_video_display_widget.dart';
 import 'package:lexpedition/src/party/real_time_communication.dart';
@@ -16,7 +17,6 @@ class StartPartyScreen extends StatefulWidget {
 }
 
 class _StartPartyScreenState extends State<StartPartyScreen> {
-  late RealTimeCommunication realTimeCommunication;
   late String _partyCode = '';
 
   @override
@@ -37,8 +37,8 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Consumer<RealTimeCommunication>(
-              builder: (context, realTimeCommunication, child) {
+          Consumer<GameState>(
+              builder: (context, gameState, child) {
             return ElevatedButton(
                 onPressed: () async {
                   String newPartyCode = buildPartyCode();
@@ -51,9 +51,9 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                     _partyCode = newPartyCode;
                   });
 
-                  realTimeCommunication.addRoomId(newPartyCode);
-                  await realTimeCommunication.openUserMedia();
-                  await realTimeCommunication.createRoom();
+                  gameState.realTimeCommunication.addRoomId(newPartyCode);
+                  await gameState.realTimeCommunication.openUserMedia();
+                  await gameState.realTimeCommunication.createRoom();
                 },
                 child: Text('Get Code'));
           }),

@@ -15,7 +15,6 @@ class JoinPartyScreen extends StatefulWidget {
 }
 
 class _JoinPartyScreenState extends State<JoinPartyScreen> {
-  late RealTimeCommunication realTimeCommunication;
   bool _joined = PartyDatabaseConnection().listener != null;
   bool _error = false;
   final _textController = TextEditingController();
@@ -53,8 +52,8 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                       decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: "Party Code"))),
-              Consumer<RealTimeCommunication>(
-                  builder: (context, realTimeCommunication, child) {
+              Consumer<GameState>(
+                  builder: (context, gameState, child) {
                 return ElevatedButton(
                     onPressed: () async {
                       String partyCode = _textController.text.toUpperCase();
@@ -68,9 +67,9 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                           _error = false;
                         });
 
-                        realTimeCommunication.addRoomId(partyCode);
-                        await realTimeCommunication.openUserMedia();
-                        await realTimeCommunication.joinRoom();
+                        gameState.realTimeCommunication.addRoomId(partyCode);
+                        await gameState.realTimeCommunication.openUserMedia();
+                        await gameState.realTimeCommunication.joinRoom();
                       } else {
                         setState(() {
                           _error = true;

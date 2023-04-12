@@ -9,6 +9,7 @@ import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:lexpedition/src/party/real_time_communication.dart';
 import 'package:lexpedition/src/tutorial/tutorial_levels.dart';
 import 'package:logging/logging.dart';
 
@@ -16,6 +17,7 @@ class GameState extends ChangeNotifier {
   GameLevel level = GameLevel(gridCode: blankGrid);
   LetterGrid primaryLetterGrid = LetterGrid.blankGrid();
   LetterGrid? secondaryLetterGrid;
+  RealTimeCommunication realTimeCommunication = RealTimeCommunication();
   List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guessList = [];
   bool levelCompleted = false;
@@ -25,6 +27,8 @@ class GameState extends ChangeNotifier {
   ErrorDefinition errorDefinition = ErrorDefinition.noError;
   Logger _logger = new Logger('game state');
 
+  //toString() method and GameState.fromString() constructor maybe??
+
   GameState({required this.level}) {
     primaryLetterGrid = level.letterGrid;
 
@@ -33,9 +37,12 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  GameState.emptyState() {}
+  GameState.emptyState() {
+    this.realTimeCommunication.setNotifyListeners(notifyListeners);
+  }
 
-  Future<void> loadOnePlayerPuzzle({int? tutorialNumber, int? databaseId}) async {
+  Future<void> loadOnePlayerPuzzle(
+      {int? tutorialNumber, int? databaseId}) async {
     _logger.info('loading a new puzzle');
     resetPuzzle();
     if (tutorialNumber != null) {
@@ -45,8 +52,7 @@ class GameState extends ChangeNotifier {
     } else if (databaseId != null) {
       //get the specific level in the database
     } else {
-      GameLevel? newLevel =
-          await LevelDatabaseConnection.getOnePlayerPuzzle();
+      GameLevel? newLevel = await LevelDatabaseConnection.getOnePlayerPuzzle();
       if (newLevel != null) {
         level = newLevel;
         primaryLetterGrid = newLevel.letterGrid;
@@ -57,7 +63,8 @@ class GameState extends ChangeNotifier {
     loadPuzzleAndNotify();
   }
 
-  Future<void> loadTwoPlayerPuzzle({int? tutorialNumber, int? databaseId}) async {
+  Future<void> loadTwoPlayerPuzzle(
+      {int? tutorialNumber, int? databaseId}) async {
     _logger.info('loading a new two player puzzle');
     resetPuzzle();
     if (tutorialNumber != null) {
@@ -67,8 +74,7 @@ class GameState extends ChangeNotifier {
     } else if (databaseId != null) {
       //get the specific level in the database
     } else {
-      GameLevel? newLevel =
-          await LevelDatabaseConnection.getTwoPlayerPuzzle();
+      GameLevel? newLevel = await LevelDatabaseConnection.getTwoPlayerPuzzle();
       if (newLevel != null) {
         level = newLevel;
         primaryLetterGrid = newLevel.letterGrid;
@@ -85,7 +91,7 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetError(){
+  void resetError() {
     errorDefinition = ErrorDefinition.noError;
     notifyListeners();
   }

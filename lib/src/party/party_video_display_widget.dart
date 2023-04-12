@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/party/real_time_communication.dart';
 import 'package:provider/provider.dart';
 
@@ -16,9 +17,9 @@ class _PartyVideoDisplayWidgetState extends State<PartyVideoDisplayWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<RealTimeCommunication>(
-        builder: (context, realTimeCommunication, child) {
-      if (realTimeCommunication.roomId.length > 0) {
+    return Consumer<GameState>(
+        builder: (context, gameState, child) {
+      if (gameState.realTimeCommunication.roomId.length > 0) {
         return Expanded(
             child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
           Row(
@@ -37,7 +38,7 @@ class _PartyVideoDisplayWidgetState extends State<PartyVideoDisplayWidget> {
                     width: determineWidth(true),
                     child: DecoratedBox(
                         decoration: BoxDecoration(color: Color.fromARGB(255, 211, 240, 255)),
-                        child: RTCVideoView(realTimeCommunication.localRenderer,
+                        child: RTCVideoView(gameState.realTimeCommunication.localRenderer,
                             mirror: true))),
               ),
               GestureDetector(
@@ -54,7 +55,7 @@ class _PartyVideoDisplayWidgetState extends State<PartyVideoDisplayWidget> {
                     child: DecoratedBox(
                         decoration: BoxDecoration(color: Color.fromARGB(255, 219, 219, 219)),
                         child: RTCVideoView(
-                            realTimeCommunication.remoteRenderer))),
+                            gameState.realTimeCommunication.remoteRenderer))),
               )
             ],
           )
