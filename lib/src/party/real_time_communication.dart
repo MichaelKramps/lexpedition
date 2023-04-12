@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
+import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/party/lexpedition_data_message.dart';
 import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:logging/logging.dart';
@@ -27,9 +28,9 @@ class RealTimeCommunication {
   MediaStream? remoteStream;
   String roomId = '';
   late Function notifyListeners;
-  late Function loadPuzzleFromPeerUpdate;
-  late Function updatePuzzleFromPeerUpdate;
-  late Function blastPuzzleFromPeerUpdate;
+  late Function(GameLevel) loadPuzzleFromPeerUpdate;
+  late Function(LetterGrid) updatePuzzleFromPeerUpdate;
+  late Function(int) blastPuzzleFromPeerUpdate;
   int numberLocalIceCandidates = 0;
   StreamStateCallback? onAddRemoteStream;
   late DatabaseReference roomDbReference;
@@ -43,9 +44,9 @@ class RealTimeCommunication {
 
   void setGameStateFunctions(
       {required Function notifyListeners,
-      required Function loadPuzzleFromPeerUpdate,
-      required Function updatePuzzleFromPeerUpdate,
-      required Function blastPuzzleFromPeerUpdate}) {
+      required Function(GameLevel) loadPuzzleFromPeerUpdate,
+      required Function(LetterGrid) updatePuzzleFromPeerUpdate,
+      required Function(int) blastPuzzleFromPeerUpdate}) {
     this.notifyListeners = notifyListeners;
     this.loadPuzzleFromPeerUpdate = loadPuzzleFromPeerUpdate;
     this.updatePuzzleFromPeerUpdate = updatePuzzleFromPeerUpdate;
@@ -199,7 +200,7 @@ class RealTimeCommunication {
 
     remoteRenderer.srcObject = await createLocalMediaStream('key');
 
-    notifyListeners!();
+    notifyListeners();
   }
 
   Future<void> hangUp() async {
@@ -230,7 +231,7 @@ class RealTimeCommunication {
     localStream!.dispose();
     remoteStream!.dispose();
 
-    notifyListeners!();
+    notifyListeners();
   }
 
   void registerPeerConnectionListeners() {
@@ -281,7 +282,7 @@ class RealTimeCommunication {
       _log.info('Add remote stream');
       this.remoteStream = remoteStream;
       remoteRenderer.srcObject = this.remoteStream;
-      notifyListeners!();
+      notifyListeners();
     };
 
     peerConnection?.onDataChannel = (RTCDataChannel channel) {
@@ -295,10 +296,14 @@ class RealTimeCommunication {
   void handleDataChannelMessage(LexpeditionDataMessage message) {
     if (message.type == LexpeditionDataMessageType.updateLevel) {
       //handle game data
+      LetterGrid theirGrid = LetterGrid(message.text.split(','));
+      updatePuzzleFromPeerUpdate(theirGrid);
     } else if (message.type == LexpeditionDataMessageType.loadLevel) {
       //handle level load data
       GameLevel level = GameLevel.fromPeer(message.text);
       loadPuzzleFromPeerUpdate(level);
+    } else if (message.type == LexpeditionDataMessageType.blastIndex) {
+      //handle blast data
     } else {
       //handle raw data
     }
