@@ -304,6 +304,7 @@ class RealTimeCommunication {
       loadPuzzleFromPeerUpdate(level);
     } else if (message.type == LexpeditionDataMessageType.blastIndex) {
       //handle blast data
+      blastPuzzleFromPeerUpdate(int.parse(message.text));
     } else {
       //handle raw data
     }
