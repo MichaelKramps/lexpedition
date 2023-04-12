@@ -12,6 +12,8 @@ class PartyVideoDisplayWidget extends StatefulWidget {
 }
 
 class _PartyVideoDisplayWidgetState extends State<PartyVideoDisplayWidget> {
+  RTCScreenState _screenState = RTCScreenState.both;
+
   @override
   Widget build(BuildContext context) {
     return Consumer<RealTimeCommunication>(
@@ -22,20 +24,38 @@ class _PartyVideoDisplayWidgetState extends State<PartyVideoDisplayWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: DecoratedBox(
-                      decoration: BoxDecoration(color: Colors.blueGrey),
-                      child: RTCVideoView(realTimeCommunication.localRenderer,
-                          mirror: true))),
-              SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: DecoratedBox(
-                      decoration: BoxDecoration(color: Colors.grey),
-                      child:
-                          RTCVideoView(realTimeCommunication.remoteRenderer)))
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _screenState = _screenState == RTCScreenState.both
+                        ? RTCScreenState.mine
+                        : RTCScreenState.both;
+                  });
+                },
+                child: SizedBox(
+                    height: determineHeight(true),
+                    width: determineWidth(true),
+                    child: DecoratedBox(
+                        decoration: BoxDecoration(color: Color.fromARGB(255, 211, 240, 255)),
+                        child: RTCVideoView(realTimeCommunication.localRenderer,
+                            mirror: true))),
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _screenState = _screenState == RTCScreenState.both
+                        ? RTCScreenState.theirs
+                        : RTCScreenState.both;
+                  });
+                },
+                child: SizedBox(
+                    height: determineHeight(false),
+                    width: determineWidth(false),
+                    child: DecoratedBox(
+                        decoration: BoxDecoration(color: Color.fromARGB(255, 219, 219, 219)),
+                        child: RTCVideoView(
+                            realTimeCommunication.remoteRenderer))),
+              )
             ],
           )
         ]));
@@ -44,4 +64,26 @@ class _PartyVideoDisplayWidgetState extends State<PartyVideoDisplayWidget> {
       }
     });
   }
+
+  double determineHeight(bool myScreen) {
+    if (_screenState == RTCScreenState.both) {
+      return 80;
+    } else if (_screenState == RTCScreenState.mine) {
+      return myScreen ? 160 : 0;
+    } else {
+      return myScreen ? 0 : 160;
+    }
+  }
+
+  double determineWidth(bool myScreen) {
+    if (_screenState == RTCScreenState.both) {
+      return 120;
+    } else if (_screenState == RTCScreenState.mine) {
+      return myScreen ? 240 : 0;
+    } else {
+      return myScreen ? 0 : 240;
+    }
+  }
 }
+
+enum RTCScreenState { both, mine, theirs }
