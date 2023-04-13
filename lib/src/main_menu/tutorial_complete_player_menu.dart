@@ -68,7 +68,6 @@ class _TutorialCompletePlayerMenuState
                               builder: (context, gameState, child) {
                             return ElevatedButton(
                                 onPressed: () {
-                                  PartyDatabaseConnection().leaveParty();
                                   gameState.realTimeCommunication.hangUp();
                                   setState(() {
                                     _areYouSure = false;
@@ -91,38 +90,40 @@ class _TutorialCompletePlayerMenuState
   }
 
   Widget determinePartyButton(BuildContext context) {
-    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
+    return Consumer<GameState>(builder: (context, gameState, child) {
+      if (!gameState.realTimeCommunication.isConnected) {
+        final ButtonStyle buttonStyle =
+            TextButton.styleFrom(backgroundColor: Colors.amber);
 
-    if (partyDatabaseConnection.isNull()) {
-      final ButtonStyle buttonStyle =
-          TextButton.styleFrom(backgroundColor: Colors.amber);
-
-      return ElevatedButton(
-        onPressed: () {
-          GoRouter.of(context).push('/party');
-        },
-        style: buttonStyle,
-        child: const Text('Play with a Friend'),
-      );
-    } else {
-      return ElevatedButton(
-        onPressed: () {
-          setState(() {
-            _areYouSure = true;
-          });
-        },
-        child: const Text('Play Solo'),
-      );
-    }
+        return ElevatedButton(
+          onPressed: () {
+            GoRouter.of(context).push('/party');
+          },
+          style: buttonStyle,
+          child: const Text('Play with a Friend'),
+        );
+      } else {
+        return ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _areYouSure = true;
+            });
+          },
+          child: const Text('Play Solo'),
+        );
+      }
+    });
   }
 
   Widget checkToDisplayPartyCode() {
-    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
-    if (partyDatabaseConnection.isNull() ||
-        !partyDatabaseConnection.isPartyLeader) {
-      return SizedBox();
-    } else {
-      return Text("Your partner code is " + partyDatabaseConnection.partyCode);
-    }
+    return Consumer<GameState>(builder: (context, gameState, child) {
+      if (!gameState.realTimeCommunication.isConnected ||
+          !gameState.realTimeCommunication.isPartyLeader) {
+        return SizedBox();
+      } else {
+        return Text(
+            "Your partner code is " + gameState.realTimeCommunication.roomId);
+      }
+    });
   }
 }

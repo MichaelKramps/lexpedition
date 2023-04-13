@@ -91,9 +91,6 @@ class _OnePlayerPlaySessionScreenState
 
   Future<void> _playerWon(GameState gameState) async {
     gameState.completeLevel();
-    Future<void>.delayed(Constants.clearPuzzlesDuration, () {
-      PartyDatabaseConnection().clearLevels();
-    });
 
     if (gameState.level.puzzleId != null) {
       LevelDatabaseConnection.logOnePlayerFinishedPuzzleResults(

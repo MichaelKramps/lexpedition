@@ -42,10 +42,6 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
             return ElevatedButton(
                 onPressed: () async {
                   String newPartyCode = buildPartyCode();
-                  PartyDatabaseConnection partyConnection =
-                      await PartyDatabaseConnection.startParty(
-                          partyCode: newPartyCode);
-                  partyConnection.createPartyEntry();
 
                   setState(() {
                     _partyCode = newPartyCode;

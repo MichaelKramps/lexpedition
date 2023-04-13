@@ -48,7 +48,7 @@ class _TwoPlayerPlaySessionScreenState
 
   Widget determineVisibleGrid(GameState gameState) {
     if (!gameState.aGridExists()) {
-      String waitingText = PartyDatabaseConnection().isPartyLeader
+      String waitingText = gameState.realTimeCommunication.isPartyLeader
           ? 'Loading puzzle...'
           : 'Waiting for your partner to start a game...';
       return SizedBox.expand(
@@ -72,9 +72,6 @@ class _TwoPlayerPlaySessionScreenState
 
   Future<void> _playerWon(GameState gameState) async {
     gameState.completeLevel();
-    Future<void>.delayed(Constants.clearPuzzlesDuration, () {
-      PartyDatabaseConnection().clearLevels();
-    });
 
     if (gameState.level.puzzleId != null) {
       LevelDatabaseConnection.logTwoPlayerFinishedPuzzleResults(
@@ -105,7 +102,7 @@ class _TwoPlayerPlaySessionScreenState
     /// Give the player some time to see the celebration animation.
     if (!mounted) return;
     await Future<void>.delayed(Constants.celebrationDuration, () {
-      if (PartyDatabaseConnection().isPartyLeader) {
+      if (gameState.realTimeCommunication.isPartyLeader) {
         GoRouter.of(context).push('/freeplaywon/leader');
       } else {
         GoRouter.of(context).push('/freeplaywon/joiner');

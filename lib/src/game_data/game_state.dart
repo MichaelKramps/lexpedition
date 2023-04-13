@@ -100,12 +100,6 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void listenForPuzzleUpdatesFromPartner() {
-  //   _logger.info('listening');
-  //   PartyDatabaseConnection()
-  //       .listenForPuzzle(updateMyGameStateFromPartnerUpdate);
-  // }
-
   void loadPuzzleFromPeerUpdate(GameLevel level) {
     this.level = level;
     this.primaryLetterGrid = LetterGrid(level.gridCode);
@@ -230,7 +224,7 @@ class GameState extends ChangeNotifier {
   }
 
   LetterGrid? getMyGrid() {
-    if (PartyDatabaseConnection().isPartyLeader) {
+    if (realTimeCommunication.isPartyLeader) {
       return primaryLetterGrid;
     } else {
       return secondaryLetterGrid;
@@ -251,7 +245,7 @@ class GameState extends ChangeNotifier {
   }
 
   void setMyGrid(LetterGrid newGrid) {
-    if (PartyDatabaseConnection().isPartyLeader) {
+    if (realTimeCommunication.isPartyLeader) {
       primaryLetterGrid = newGrid;
     } else {
       secondaryLetterGrid = newGrid;
@@ -290,7 +284,7 @@ class GameState extends ChangeNotifier {
   }
 
   void setTheirGrid(LetterGrid newGrid) {
-    if (PartyDatabaseConnection().isPartyLeader) {
+    if (realTimeCommunication.isPartyLeader) {
       secondaryLetterGrid = newGrid;
     } else {
       primaryLetterGrid = newGrid;
@@ -298,8 +292,7 @@ class GameState extends ChangeNotifier {
   }
 
   LetterGrid? getTheirGrid() {
-    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
-    if (partyDatabaseConnection.isPartyLeader) {
+    if (realTimeCommunication.isPartyLeader) {
       return secondaryLetterGrid;
     } else {
       return primaryLetterGrid;
@@ -402,7 +395,6 @@ class GameState extends ChangeNotifier {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
 
       myGrid.blastFromIndex(index);
-      //PartyDatabaseConnection().updateMyPuzzle(letterGrid: myGrid, blastIndex: index);
       realTimeCommunication.sendBlastIndexDataToPeer(index);
       notifyListeners();
       if (isLevelWon()) {

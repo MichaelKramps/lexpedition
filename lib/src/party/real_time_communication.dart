@@ -27,6 +27,8 @@ class RealTimeCommunication {
   MediaStream? localStream;
   MediaStream? remoteStream;
   String roomId = '';
+  bool isPartyLeader = true;
+  bool isConnected = false;
   late Function notifyListeners;
   late Function(GameLevel) loadPuzzleFromPeerUpdate;
   late Function(LetterGrid) updatePuzzleFromPeerUpdate;
@@ -59,6 +61,7 @@ class RealTimeCommunication {
   }
 
   Future<void> createRoom() async {
+    this.isPartyLeader = true;
     peerConnection = await createPeerConnection(configuration);
     _dataChannel = await peerConnection!
         .createDataChannel('peerData', RTCDataChannelInit());
@@ -130,6 +133,7 @@ class RealTimeCommunication {
   }
 
   Future<void> joinRoom() async {
+    this.isPartyLeader = false;
     peerConnection = await createPeerConnection(configuration);
     registerPeerConnectionListeners();
 
@@ -204,7 +208,9 @@ class RealTimeCommunication {
   }
 
   Future<void> hangUp() async {
-    roomId = '';
+    this.isPartyLeader = true;
+    this.isConnected = false;
+    this.roomId = '';
 
     List<MediaStreamTrack> tracks = localRenderer.srcObject!.getTracks();
     tracks.forEach((track) {
@@ -222,7 +228,7 @@ class RealTimeCommunication {
     }
 
     //delete entries into the database
-    if (PartyDatabaseConnection().isPartyLeader) {
+    if (this.isPartyLeader) {
       roomDbReference.remove();
     } else {
       roomDbReference.child('/calleeCandidates').remove();
@@ -241,7 +247,7 @@ class RealTimeCommunication {
 
     peerConnection?.onIceCandidate = (RTCIceCandidate candidate) {
       numberLocalIceCandidates++;
-      if (PartyDatabaseConnection().isPartyLeader) {
+      if (this.isPartyLeader) {
         roomDbReference
             .child('/callerCandidates')
             .update({numberLocalIceCandidates.toString(): candidate.toMap()});
@@ -265,8 +271,7 @@ class RealTimeCommunication {
     peerConnection?.onConnectionState = (RTCPeerConnectionState state) {
       _log.info('Connection state change: ' + state.toString());
       if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
-        _log.info('kramps here');
-        _dataChannel?.send(RTCDataChannelMessage('hello there from somewhere'));
+        this.isConnected = true;
       }
     };
 
