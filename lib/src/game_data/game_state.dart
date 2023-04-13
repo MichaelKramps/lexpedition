@@ -20,6 +20,7 @@ class GameState extends ChangeNotifier {
   List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guessList = [];
   bool levelCompleted = false;
+  bool celebrating = false;
   bool showBadGuess = false;
   bool viewingMyScreen = true;
   bool blasting = false;
