@@ -93,16 +93,6 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
     }
   }
 
-  bool isLevelWon(
-      LetterGrid primaryLetterGrid, LetterGrid? secondaryLetterGrid) {
-    if (secondaryLetterGrid == null) {
-      return primaryLetterGrid.isFullyCharged();
-    } else {
-      return primaryLetterGrid.isFullyCharged() &&
-          secondaryLetterGrid.isFullyCharged();
-    }
-  }
-
   void handleMouseEvent(double pointerx, double pointery, bool isSlideEvent) {
     int shrinkClickableSpace = isSlideEvent ? 10 : 0;
     int selectedIndex =

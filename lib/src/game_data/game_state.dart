@@ -8,7 +8,6 @@ import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
-import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:lexpedition/src/party/real_time_communication.dart';
 import 'package:lexpedition/src/tutorial/tutorial_levels.dart';
 import 'package:logging/logging.dart';
@@ -101,6 +100,7 @@ class GameState extends ChangeNotifier {
   }
 
   void loadPuzzleFromPeerUpdate(GameLevel level) {
+    resetPuzzle();
     this.level = level;
     this.primaryLetterGrid = LetterGrid(level.gridCode);
     this.secondaryLetterGrid =
@@ -111,14 +111,22 @@ class GameState extends ChangeNotifier {
   void updatePuzzleFromPeerUpdate(LetterGrid theirLetterGrid) {
     setTheirGrid(theirLetterGrid);
     setMyGridFromTheirs(theirLetterGrid);
+
+    if (isLevelWon()) {
+      levelCompleted = true;
+    }
+
     notifyListeners();
   }
 
   void blastPuzzleFromPeerUpdate(int blastIndex) {
-    if (getMyGrid() != null) {
-      blastTilesAndDontNotify(blastIndex);
-      notifyListeners();
+    blastTilesAndDontNotify(blastIndex);
+
+    if (isLevelWon()) {
+      levelCompleted = true;
     }
+
+    notifyListeners();
   }
 
   // void updateMyGameStateFromPartnerUpdate(
@@ -408,20 +416,19 @@ class GameState extends ChangeNotifier {
   }
 
   void blastTilesAndDontNotify(int index) async {
-    if (getMyGrid() != null && !blasting) {
-      blasting = true;
-      _logger.info('blasting from ' + index.toString());
-      LetterGrid myGrid = getMyGrid() as LetterGrid;
+    LetterGrid gridToBlast =
+        getMyGrid() != null ? getMyGrid()! : getTheirGrid()!;
 
-      myGrid.blastFromIndex(index);
+    if (!blasting) {
+      blasting = true;
+
+      gridToBlast.blastFromIndex(index);
       if (isLevelWon()) {
         levelCompleted = true;
       }
 
-      //before this future returns,
-      //notifyAllPlayers() should call from somewhere else
       await Future<void>.delayed(Constants.blastDuration);
-      myGrid.unblast();
+      gridToBlast.unblast();
       blasting = false;
       notifyListeners();
     }
