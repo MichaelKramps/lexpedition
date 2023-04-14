@@ -33,6 +33,7 @@ class RealTimeCommunication {
   late Function(GameLevel) loadPuzzleFromPeerUpdate;
   late Function(LetterGrid) updatePuzzleFromPeerUpdate;
   late Function(int) blastPuzzleFromPeerUpdate;
+  late Function(String) updateGuessListFromPeerUpdate;
   int numberLocalIceCandidates = 0;
   StreamStateCallback? onAddRemoteStream;
   late DatabaseReference roomDbReference;
@@ -48,11 +49,13 @@ class RealTimeCommunication {
       {required Function notifyListeners,
       required Function(GameLevel) loadPuzzleFromPeerUpdate,
       required Function(LetterGrid) updatePuzzleFromPeerUpdate,
-      required Function(int) blastPuzzleFromPeerUpdate}) {
+      required Function(int) blastPuzzleFromPeerUpdate,
+      required Function(String) updateGuessListFromPeerUpdate}) {
     this.notifyListeners = notifyListeners;
     this.loadPuzzleFromPeerUpdate = loadPuzzleFromPeerUpdate;
     this.updatePuzzleFromPeerUpdate = updatePuzzleFromPeerUpdate;
     this.blastPuzzleFromPeerUpdate = blastPuzzleFromPeerUpdate;
+    this.updateGuessListFromPeerUpdate = updateGuessListFromPeerUpdate;
   }
 
   void addRoomId(String roomId) {
@@ -310,6 +313,9 @@ class RealTimeCommunication {
     } else if (message.type == LexpeditionDataMessageType.blastIndex) {
       //handle blast data
       blastPuzzleFromPeerUpdate(int.parse(message.text));
+    } else if (message.type == LexpeditionDataMessageType.acceptedGuess) {
+      //handle accepted guess data
+      updateGuessListFromPeerUpdate(message.text);
     } else {
       //handle raw data
     }
@@ -330,6 +336,12 @@ class RealTimeCommunication {
   void sendBlastIndexDataToPeer(int blastIndex) {
     LexpeditionDataMessage thisMessage =
         LexpeditionDataMessage.fromBlastIndex(blastIndex);
+    _dataChannel?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+  }
+
+  void sendAcceptedGuessToPeer(String acceptedGuess) {
+    LexpeditionDataMessage thisMessage =
+        LexpeditionDataMessage.fromAcceptedGuess(acceptedGuess);
     _dataChannel?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
   }
 }

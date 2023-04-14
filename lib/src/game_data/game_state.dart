@@ -42,7 +42,8 @@ class GameState extends ChangeNotifier {
         notifyListeners: notifyListeners,
         loadPuzzleFromPeerUpdate: loadPuzzleFromPeerUpdate,
         updatePuzzleFromPeerUpdate: updatePuzzleFromPeerUpdate,
-        blastPuzzleFromPeerUpdate: blastPuzzleFromPeerUpdate);
+        blastPuzzleFromPeerUpdate: blastPuzzleFromPeerUpdate,
+        updateGuessListFromPeerUpdate: updateGuessListFromPeerUpdate);
   }
 
   Future<void> loadOnePlayerPuzzle(
@@ -91,6 +92,7 @@ class GameState extends ChangeNotifier {
   }
 
   void loadPuzzleAndNotify() {
+    this.celebrating = false;
     realTimeCommunication.sendPuzzleToPeer(level);
     notifyListeners();
   }
@@ -126,6 +128,12 @@ class GameState extends ChangeNotifier {
     if (isLevelWon()) {
       levelCompleted = true;
     }
+
+    notifyListeners();
+  }
+
+  void updateGuessListFromPeerUpdate(String acceptedGuess) {
+    this.guessList.add(AcceptedGuess(guess: acceptedGuess, fromMe: false));
 
     notifyListeners();
   }
@@ -451,6 +459,7 @@ class GameState extends ChangeNotifier {
     if (currentGuess.length < 3 || !currentGuessIsValid()) {
       flipBadGuess();
     } else {
+      realTimeCommunication.sendAcceptedGuessToPeer(getCurrentGuess());
       handleAcceptedGuess();
     }
   }

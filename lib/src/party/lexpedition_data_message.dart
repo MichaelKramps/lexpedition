@@ -26,6 +26,11 @@ class LexpeditionDataMessage {
     this.text = blastIndex.toString();
   }
 
+  LexpeditionDataMessage.fromAcceptedGuess(String acceptedGuess) {
+    this.type = LexpeditionDataMessageType.acceptedGuess;
+    this.text = acceptedGuess;
+  }
+
   LexpeditionDataMessageType determineDataType(String rtcMessageText) {
     String typeString = rtcMessageText.split(Constants.rtcMessageSplitter)[0];
 
@@ -36,6 +41,8 @@ class LexpeditionDataMessage {
         return LexpeditionDataMessageType.loadLevel;
       case 'blastIndex':
         return LexpeditionDataMessageType.blastIndex;
+      case 'acceptedGuess':
+        return LexpeditionDataMessageType.acceptedGuess;
       default:
         return LexpeditionDataMessageType.raw;
     }
@@ -49,6 +56,8 @@ class LexpeditionDataMessage {
         return 'loadLevel';
       case LexpeditionDataMessageType.blastIndex:
         return 'blastIndex';
+      case LexpeditionDataMessageType.acceptedGuess:
+        return 'acceptedGuess';
       default:
         return 'raw';
     }
@@ -69,4 +78,4 @@ class LexpeditionDataMessage {
   }
 }
 
-enum LexpeditionDataMessageType { updateLevel, loadLevel, blastIndex, raw }
+enum LexpeditionDataMessageType { updateLevel, loadLevel, blastIndex, acceptedGuess, raw }
