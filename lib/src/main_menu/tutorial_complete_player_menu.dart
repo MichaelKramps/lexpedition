@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
-import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:lexpedition/src/party/real_time_communication.dart';
 import 'package:provider/provider.dart';
 
 class TutorialCompletePlayerMenu extends StatefulWidget {

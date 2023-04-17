@@ -3,7 +3,6 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/party/lexpedition_data_message.dart';
-import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:logging/logging.dart';
 
 typedef void StreamStateCallback(MediaStream stream);

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
-import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
