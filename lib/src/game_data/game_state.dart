@@ -71,6 +71,7 @@ class GameState extends ChangeNotifier {
   Future<void> loadTwoPlayerPuzzle(
       {int? tutorialNumber, int? databaseId}) async {
     _logger.info('loading a new two player puzzle');
+    secondaryLetterGrid = null;
     resetPuzzle();
     if (tutorialNumber != null) {
       GameLevel tutorialLevel = GameLevel.copy(tutorialLevels[tutorialNumber]);
@@ -92,7 +93,6 @@ class GameState extends ChangeNotifier {
   }
 
   void loadPuzzleAndNotify() {
-    this.celebrating = false;
     realTimeCommunication.sendPuzzleToPeer(level);
     notifyListeners();
   }
@@ -137,50 +137,6 @@ class GameState extends ChangeNotifier {
 
     notifyListeners();
   }
-
-  // void updateMyGameStateFromPartnerUpdate(
-  //     {double? averageGuesses,
-  //     int? bestAttempt,
-  //     int? blastIndex,
-  //     String? gameLevelCode,
-  //     required LetterGrid theirLetterGrid}) async {
-  //   _logger.info('updating puzzle');
-  //   if (gameLevelCode != null) {
-  //     //should always mean player is getting a new puzzle
-  //     resetPuzzle();
-  //     GameLevel? loadedLevel =
-  //         await LevelDatabaseConnection.lookUpLevelFromCode(gameLevelCode);
-  //     if (loadedLevel != null) {
-  //       level = loadedLevel;
-  //       if (gameLevelCode[0] == 2) {
-  //         // two player level was loaded
-  //         setMyGrid(loadedLevel.letterGridB as LetterGrid);
-  //       } else {
-  //         //it will be loaded by later code
-  //       }
-  //     }
-  //   } else if (blastIndex != null && getMyGrid() != null) {
-  //     //need to blast my puzzle based on partner's blast index
-  //     blastTilesAndDontNotify(blastIndex);
-  //   }
-
-  //   if (averageGuesses != null && bestAttempt != null) {
-  //     level.averageGuesses = averageGuesses;
-  //     level.bestAttempt = bestAttempt;
-  //     setTheirGrid(theirLetterGrid);
-  //   } else {
-  //     setTheirGrid(theirLetterGrid);
-  //     setMyGridFromTheirs(theirLetterGrid);
-  //   }
-
-  //   addNewGuessesFromPartner(theirLetterGrid);
-
-  //   if (isLevelWon()) {
-  //     levelCompleted = true;
-  //   }
-
-  //   notifyAllPlayers();
-  // }
 
   void notifyAllPlayers() {
     _logger.info('notifyAllPlayers()');
@@ -237,6 +193,7 @@ class GameState extends ChangeNotifier {
     currentGuess = [];
     guessList = [];
     levelCompleted = false;
+    celebrating = false;
     showBadGuess = false;
   }
 
