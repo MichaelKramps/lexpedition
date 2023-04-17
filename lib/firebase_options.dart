@@ -72,7 +72,7 @@ class DefaultFirebaseOptions {
     storageBucket: 'lexpedition-9c482.appspot.com',
     androidClientId: '519909098010-qgiop3d1egvp2h7asc85ir0ock2n8bp2.apps.googleusercontent.com',
     iosClientId: '519909098010-qb67kjpgonk2rdvrdf7odl872ha7vulc.apps.googleusercontent.com',
-    iosBundleId: 'com.example.gameTemplate',
+    iosBundleId: 'games.kinship.lexpedition',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
