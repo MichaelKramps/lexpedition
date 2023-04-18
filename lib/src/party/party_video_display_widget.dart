@@ -19,7 +19,7 @@ class _PartyVideoDisplayWidgetState extends State<PartyVideoDisplayWidget> {
     return Consumer<GameState>(
         builder: (context, gameState, child) {
       if (gameState.realTimeCommunication.roomId.length > 0) {
-        return Expanded(
+        return SizedBox.expand(
             child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
