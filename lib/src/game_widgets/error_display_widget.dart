@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:lexpedition/src/game_data/error_definitions.dart';
 import 'package:provider/provider.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';

@@ -12,7 +12,6 @@ import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
@@ -38,7 +37,6 @@ class _OnePlayerPlaySessionScreenState
 
   @override
   Widget build(BuildContext context) {
-    new Logger('oneplayerplaysession').info('building');
     final palette = context.watch<Palette>();
 
     return Consumer<GameState>(builder: (context, gameState, child) {
