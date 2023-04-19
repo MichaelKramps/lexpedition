@@ -321,26 +321,38 @@ class RealTimeCommunication {
   }
 
   void sendPuzzleToPeer(GameLevel level) {
-    LexpeditionDataMessage thisMessage =
-        LexpeditionDataMessage.fromLoadLevelData(level.rtcEncode());
-    _dataChannel?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+    if (this.isConnected) {
+      LexpeditionDataMessage thisMessage =
+          LexpeditionDataMessage.fromLoadLevelData(level.rtcEncode());
+      _dataChannel
+          ?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+    }
   }
 
   void sendUpdatedGameDataToPeer(String gameDataString) {
-    LexpeditionDataMessage thisMessage =
-        LexpeditionDataMessage.fromGameData(gameDataString);
-    _dataChannel?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+    if (this.isConnected) {
+      LexpeditionDataMessage thisMessage =
+          LexpeditionDataMessage.fromGameData(gameDataString);
+      _dataChannel
+          ?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+    }
   }
 
   void sendBlastIndexDataToPeer(int blastIndex) {
-    LexpeditionDataMessage thisMessage =
-        LexpeditionDataMessage.fromBlastIndex(blastIndex);
-    _dataChannel?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+    if (this.isConnected) {
+      LexpeditionDataMessage thisMessage =
+          LexpeditionDataMessage.fromBlastIndex(blastIndex);
+      _dataChannel
+          ?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+    }
   }
 
   void sendAcceptedGuessToPeer(String acceptedGuess) {
-    LexpeditionDataMessage thisMessage =
-        LexpeditionDataMessage.fromAcceptedGuess(acceptedGuess);
-    _dataChannel?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+    if (this.isConnected) {
+      LexpeditionDataMessage thisMessage =
+          LexpeditionDataMessage.fromAcceptedGuess(acceptedGuess);
+      _dataChannel
+          ?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+    }
   }
 }
