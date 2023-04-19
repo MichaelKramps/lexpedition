@@ -28,15 +28,17 @@ class ObserverGameInstanceWidget extends StatelessWidget {
             image: AssetImage(Constants.backgroundImagePath),
             fit: BoxFit.cover),
       )),
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        BlastDirectionWidget(gameState: gameState),
-        Row(children: [
+      Row(
+        children: [
           Expanded(child: determineColumn(leftColumn)),
-          LetterGridWidget(
-              letterGrid: gameState.getTheirGrid() as LetterGrid),
+          Column( 
+            children: [
+              BlastDirectionWidget(gameState: gameState),
+              LetterGridWidget(
+                  letterGrid: gameState.getTheirGrid() as LetterGrid),
+          ]),
           Expanded(child: determineColumn(rightColumn))
-        ])
-      ])
+      ]),
     ]);
   }
 
