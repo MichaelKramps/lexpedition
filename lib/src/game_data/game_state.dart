@@ -435,6 +435,7 @@ class GameState extends ChangeNotifier {
     if (getMyGrid() != null) {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
       myGrid.changeBlastDirection();
+      realTimeCommunication.sendUpdatedGameDataToPeer(myGrid.encodedGridToString());
       notifyAllPlayers();
     }
   }

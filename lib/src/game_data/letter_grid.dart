@@ -11,10 +11,15 @@ class LetterGrid {
   List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guesses = [];
 
-  LetterGrid(List<String?> letterTiles) {
-    assert(letterTiles.length == 24);
-    this.encodedTiles = letterTiles;
-    this.letterTiles = this.decodeLetterTiles(letterTiles);
+  LetterGrid(List<String?> gridData) {
+    assert(gridData.length == 24 || gridData.length == 25);
+    if (gridData.length == 25) {
+      // includes blast direction
+      this.blastDirection = BlastDirection.values[int.parse(gridData[24]!)];
+      gridData.removeLast();
+    }
+    this.encodedTiles = gridData;
+    this.letterTiles = this.decodeLetterTiles(gridData);
     this.rows = this.setRows(this.letterTiles);
   }
 
@@ -45,20 +50,6 @@ class LetterGrid {
       null,
       null
     ]);
-  }
-
-  LetterGrid.fromLiveDatabase(
-      {required List<String?> letterTiles,
-      required List<String> guesses,
-      BlastDirection? blastDirection}) {
-    assert(letterTiles.length == 24);
-    this.encodedTiles = letterTiles;
-    this.letterTiles = this.decodeLetterTiles(letterTiles);
-    this.rows = this.setRows(this.letterTiles);
-    setGuessesFromDatabase(guesses);
-    if (blastDirection != null) {
-      this.blastDirection = blastDirection;
-    }
   }
 
   List<LetterTile> decodeLetterTiles(List<String?> encodedTiles) {
@@ -172,7 +163,9 @@ class LetterGrid {
       }
     }
 
-    return gridString.substring(0, gridString.length - 1);
+    gridString += blastDirection.index.toString();
+
+    return gridString;
   }
 
   void resetGrid() {

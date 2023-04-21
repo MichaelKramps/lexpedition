@@ -5,6 +5,7 @@ import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/blast_direction_widget.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
+import 'package:lexpedition/src/game_widgets/observer_blast_direction_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
 
@@ -33,7 +34,7 @@ class ObserverGameInstanceWidget extends StatelessWidget {
           Expanded(child: determineColumn(leftColumn)),
           Column( 
             children: [
-              BlastDirectionWidget(gameState: gameState),
+              ObserverBlastDirectionWidget(gameState: gameState),
               LetterGridWidget(
                   letterGrid: gameState.getTheirGrid() as LetterGrid),
           ]),
