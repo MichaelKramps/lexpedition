@@ -9,7 +9,6 @@ import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_game_instance_widget.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
-import 'package:lexpedition/src/party/party_db_connection.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
@@ -24,31 +23,29 @@ class TwoPlayerPlaySessionScreen extends StatefulWidget {
 
 class _TwoPlayerPlaySessionScreenState
     extends State<TwoPlayerPlaySessionScreen> {
-  bool _duringCelebration = false;
 
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-
-    widget.gameState.listenForPuzzleUpdatesFromPartner();
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.gameState.levelCompleted) {
+    if (widget.gameState.levelCompleted && !widget.gameState.celebrating) {
+      widget.gameState.celebrating = true;
       _playerWon(widget.gameState);
     }
     return Scaffold(
         body: IgnorePointer(
-            ignoring: _duringCelebration,
+            ignoring: widget.gameState.celebrating,
             child: determineVisibleGrid(widget.gameState)));
   }
 
   Widget determineVisibleGrid(GameState gameState) {
-    if (!gameState.myGridExists()) {
-      String waitingText = PartyDatabaseConnection().isPartyLeader
+    if (!gameState.aGridExists()) {
+      String waitingText = gameState.realTimeCommunication.isPartyLeader
           ? 'Loading puzzle...'
           : 'Waiting for your partner to start a game...';
       return SizedBox.expand(
@@ -72,9 +69,6 @@ class _TwoPlayerPlaySessionScreenState
 
   Future<void> _playerWon(GameState gameState) async {
     gameState.completeLevel();
-    Future<void>.delayed(Constants.clearPuzzlesDuration, () {
-      PartyDatabaseConnection().clearLevels();
-    });
 
     if (gameState.level.puzzleId != null) {
       LevelDatabaseConnection.logTwoPlayerFinishedPuzzleResults(
@@ -105,7 +99,7 @@ class _TwoPlayerPlaySessionScreenState
     /// Give the player some time to see the celebration animation.
     if (!mounted) return;
     await Future<void>.delayed(Constants.celebrationDuration, () {
-      if (PartyDatabaseConnection().isPartyLeader) {
+      if (gameState.realTimeCommunication.isPartyLeader) {
         GoRouter.of(context).push('/freeplaywon/leader');
       } else {
         GoRouter.of(context).push('/freeplaywon/joiner');

@@ -35,6 +35,9 @@ class Constants {
 
   static const int guessLengthToActivateBlast = 5;
 
+  static const String rtcMessageSplitter = ':;:!:';
+  static const String rtcLoadLevelDataSplitter = ':';
+
   //User Interface Constants
   static const double buttonWidth = 240;
   static const double buttonDepth = 3;

@@ -12,8 +12,6 @@ import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
-import 'package:lexpedition/src/party/party_db_connection.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
@@ -36,19 +34,18 @@ class OnePlayerPlaySessionScreen extends StatefulWidget {
 
 class _OnePlayerPlaySessionScreenState
     extends State<OnePlayerPlaySessionScreen> {
-  bool _duringCelebration = false;
 
   @override
   Widget build(BuildContext context) {
-    new Logger('oneplayerplaysession').info('building');
     final palette = context.watch<Palette>();
 
     return Consumer<GameState>(builder: (context, gameState, child) {
-      if (gameState.levelCompleted) {
+      if (gameState.levelCompleted && !gameState.celebrating) {
+        gameState.celebrating = true;
         _playerWon(gameState);
       }
       return IgnorePointer(
-          ignoring: _duringCelebration,
+          ignoring: gameState.celebrating,
           child: Scaffold(
             backgroundColor: palette.backgroundPlaySession,
             body: Stack(
@@ -60,10 +57,10 @@ class _OnePlayerPlaySessionScreenState
                 ),
                 SizedBox.expand(
                   child: Visibility(
-                    visible: _duringCelebration,
+                    visible: gameState.celebrating,
                     child: IgnorePointer(
                       child: Confetti(
-                        isStopped: !_duringCelebration,
+                        isStopped: !gameState.celebrating,
                       ),
                     ),
                   ),
@@ -91,9 +88,6 @@ class _OnePlayerPlaySessionScreenState
 
   Future<void> _playerWon(GameState gameState) async {
     gameState.completeLevel();
-    Future<void>.delayed(Constants.clearPuzzlesDuration, () {
-      PartyDatabaseConnection().clearLevels();
-    });
 
     if (gameState.level.puzzleId != null) {
       LevelDatabaseConnection.logOnePlayerFinishedPuzzleResults(
@@ -106,10 +100,6 @@ class _OnePlayerPlaySessionScreenState
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(Constants.preCelebrationDuration);
     if (!mounted) return;
-
-    setState(() {
-      _duringCelebration = true;
-    });
 
     final audioController = context.read<AudioController>();
     audioController.playSfx(SfxType.congrats);

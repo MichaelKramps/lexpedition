@@ -73,7 +73,9 @@ class LetterTile {
   }
 
   void addCharge() {
-    this.currentCharges += 1;
+    if (this.currentCharges < 9) {
+      this.currentCharges += 1;
+    }
   }
 
   void addPositionalCharge(TileType positionInGuess) {
@@ -83,7 +85,9 @@ class LetterTile {
   }
 
   void removeCharge() {
-    this.currentCharges -= 1;
+    if (this.currentCharges > 0) {
+      this.currentCharges -= 1;
+    }
   }
 
   void select() {
@@ -124,7 +128,9 @@ class LetterTile {
   }
 
   void addObstacleCharge() {
-    this.currentObstacleCharges += 1;
+    if (this.currentObstacleCharges < 9) {
+      this.currentObstacleCharges += 1;
+    }
   }
 
   void resetTile() {

@@ -10,7 +10,6 @@ import 'package:lexpedition/src/game_widgets/one_player_left_column_widget.dart'
 import 'package:lexpedition/src/game_widgets/one_player_right_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
-import 'package:logging/logging.dart';
 import 'package:wakelock/wakelock.dart';
 
 class GameInstanceWidget extends StatefulWidget {
@@ -93,18 +92,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
     }
   }
 
-  bool isLevelWon(
-      LetterGrid primaryLetterGrid, LetterGrid? secondaryLetterGrid) {
-    if (secondaryLetterGrid == null) {
-      return primaryLetterGrid.isFullyCharged();
-    } else {
-      return primaryLetterGrid.isFullyCharged() &&
-          secondaryLetterGrid.isFullyCharged();
-    }
-  }
-
   void handleMouseEvent(double pointerx, double pointery, bool isSlideEvent) {
-    new Logger('game instance widget').info('handling mouse event');
     int shrinkClickableSpace = isSlideEvent ? 10 : 0;
     int selectedIndex =
         determineTileIndex(pointerx, pointery, shrinkClickableSpace);

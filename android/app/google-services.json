@@ -43,7 +43,7 @@
               "client_id": "519909098010-qb67kjpgonk2rdvrdf7odl872ha7vulc.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.gameTemplate"
+                "bundle_id": "games.kinship.lexpedition"
               }
             }
           ]
@@ -79,7 +79,7 @@
               "client_id": "519909098010-qb67kjpgonk2rdvrdf7odl872ha7vulc.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.gameTemplate"
+                "bundle_id": "games.kinship.lexpedition"
               }
             }
           ]

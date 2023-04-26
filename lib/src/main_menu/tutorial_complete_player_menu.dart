@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
-import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:provider/provider.dart';
 import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:lexpedition/src/user_interface/featured_user_interface_button.dart';
 
@@ -73,15 +74,18 @@ class _TutorialCompletePlayerMenuState
                           "Are you sure you want to disconnect from your partner?"),
                       Row(
                         children: [
-                          BasicUserInterfaceButton(
-                              onPressed: () {
-                                PartyDatabaseConnection().leaveParty();
-                                setState(() {
-                                  _areYouSure = false;
-                                });
-                              },
-                              buttonText: "Yes"),
-                          BasicUserInterfaceButton(
+                          Consumer<GameState>(
+                              builder: (context, gameState, child) {
+                            return ElevatedButton(
+                                onPressed: () {
+                                  gameState.realTimeCommunication.hangUp();
+                                  setState(() {
+                                    _areYouSure = false;
+                                  });
+                                },
+                                child: Text("Yes"));
+                          }),
+                          ElevatedButton(
                               onPressed: () {
                                 setState(() {
                                   _areYouSure = false;
@@ -96,34 +100,40 @@ class _TutorialCompletePlayerMenuState
   }
 
   Widget determinePartyButton(BuildContext context) {
-    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
+    return Consumer<GameState>(builder: (context, gameState, child) {
+      if (!gameState.realTimeCommunication.isConnected) {
+        final ButtonStyle buttonStyle =
+            TextButton.styleFrom(backgroundColor: Colors.amber);
 
-    if (partyDatabaseConnection.isNull()) {
-      return FeaturedUserInterfaceButton(
-        onPressed: () {
-          GoRouter.of(context).push('/party');
-        },
-        buttonText: 'Play with a Friend',
-      );
-    } else {
-      return BasicUserInterfaceButton(
-        onPressed: () {
-          setState(() {
-            _areYouSure = true;
-          });
-        },
-        buttonText: 'Play Solo',
-      );
-    }
+        return ElevatedButton(
+          onPressed: () {
+            GoRouter.of(context).push('/party');
+          },
+          style: buttonStyle,
+          child: const Text('Play with a Friend'),
+        );
+      } else {
+        return ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _areYouSure = true;
+            });
+          },
+          child: const Text('Play Solo'),
+        );
+      }
+    });
   }
 
   Widget checkToDisplayPartyCode() {
-    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
-    if (partyDatabaseConnection.isNull() ||
-        !partyDatabaseConnection.isPartyLeader) {
-      return SizedBox();
-    } else {
-      return Text("Your partner code is " + partyDatabaseConnection.partyCode);
-    }
+    return Consumer<GameState>(builder: (context, gameState, child) {
+      if (!gameState.realTimeCommunication.isConnected ||
+          !gameState.realTimeCommunication.isPartyLeader) {
+        return SizedBox();
+      } else {
+        return Text(
+            "Your partner code is " + gameState.realTimeCommunication.roomId);
+      }
+    });
   }
 }

@@ -8,7 +8,7 @@ import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
-import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:lexpedition/src/party/real_time_communication.dart';
 import 'package:lexpedition/src/tutorial/tutorial_levels.dart';
 import 'package:logging/logging.dart';
 
@@ -16,14 +16,18 @@ class GameState extends ChangeNotifier {
   GameLevel level = GameLevel(gridCode: blankGrid);
   LetterGrid primaryLetterGrid = LetterGrid.blankGrid();
   LetterGrid? secondaryLetterGrid;
+  RealTimeCommunication realTimeCommunication = RealTimeCommunication();
   List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guessList = [];
   bool levelCompleted = false;
+  bool celebrating = false;
   bool showBadGuess = false;
   bool viewingMyScreen = true;
   bool blasting = false;
   ErrorDefinition errorDefinition = ErrorDefinition.noError;
   Logger _logger = new Logger('game state');
+
+  //toString() method and GameState.fromString() constructor maybe??
 
   GameState({required this.level}) {
     primaryLetterGrid = level.letterGrid;
@@ -33,9 +37,17 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  GameState.emptyState() {}
+  GameState.emptyState() {
+    this.realTimeCommunication.setGameStateFunctions(
+        notifyListeners: notifyListeners,
+        loadPuzzleFromPeerUpdate: loadPuzzleFromPeerUpdate,
+        updatePuzzleFromPeerUpdate: updatePuzzleFromPeerUpdate,
+        blastPuzzleFromPeerUpdate: blastPuzzleFromPeerUpdate,
+        updateGuessListFromPeerUpdate: updateGuessListFromPeerUpdate);
+  }
 
-  Future<void> loadOnePlayerPuzzle({int? tutorialNumber, int? databaseId}) async {
+  Future<void> loadOnePlayerPuzzle(
+      {int? tutorialNumber, int? databaseId}) async {
     _logger.info('loading a new puzzle');
     resetPuzzle();
     if (tutorialNumber != null) {
@@ -45,8 +57,7 @@ class GameState extends ChangeNotifier {
     } else if (databaseId != null) {
       //get the specific level in the database
     } else {
-      GameLevel? newLevel =
-          await LevelDatabaseConnection.getOnePlayerPuzzle();
+      GameLevel? newLevel = await LevelDatabaseConnection.getOnePlayerPuzzle();
       if (newLevel != null) {
         level = newLevel;
         primaryLetterGrid = newLevel.letterGrid;
@@ -57,8 +68,10 @@ class GameState extends ChangeNotifier {
     loadPuzzleAndNotify();
   }
 
-  Future<void> loadTwoPlayerPuzzle({int? tutorialNumber, int? databaseId}) async {
+  Future<void> loadTwoPlayerPuzzle(
+      {int? tutorialNumber, int? databaseId}) async {
     _logger.info('loading a new two player puzzle');
+    secondaryLetterGrid = null;
     resetPuzzle();
     if (tutorialNumber != null) {
       GameLevel tutorialLevel = GameLevel.copy(tutorialLevels[tutorialNumber]);
@@ -67,8 +80,7 @@ class GameState extends ChangeNotifier {
     } else if (databaseId != null) {
       //get the specific level in the database
     } else {
-      GameLevel? newLevel =
-          await LevelDatabaseConnection.getTwoPlayerPuzzle();
+      GameLevel? newLevel = await LevelDatabaseConnection.getTwoPlayerPuzzle();
       if (newLevel != null) {
         level = newLevel;
         primaryLetterGrid = newLevel.letterGrid;
@@ -81,65 +93,56 @@ class GameState extends ChangeNotifier {
   }
 
   void loadPuzzleAndNotify() {
-    PartyDatabaseConnection().loadPuzzleForPlayers(level: level);
+    realTimeCommunication.sendPuzzleToPeer(level);
     notifyListeners();
   }
 
-  void resetError(){
+  void resetError() {
     errorDefinition = ErrorDefinition.noError;
     notifyListeners();
   }
 
-  void listenForPuzzleUpdatesFromPartner() {
-    _logger.info('listening');
-    PartyDatabaseConnection()
-        .listenForPuzzle(updateMyGameStateFromPartnerUpdate);
+  void loadPuzzleFromPeerUpdate(GameLevel level) {
+    resetPuzzle();
+    this.level = level;
+    this.primaryLetterGrid = LetterGrid(level.gridCode);
+    this.secondaryLetterGrid =
+        level.gridCodeB == null ? null : LetterGrid(level.gridCodeB!);
+    notifyListeners();
   }
 
-  void updateMyGameStateFromPartnerUpdate(
-      {double? averageGuesses,
-      int? bestAttempt,
-      int? blastIndex,
-      String? gameLevelCode,
-      required LetterGrid theirLetterGrid}) async {
-    _logger.info('updating puzzle');
-    if (gameLevelCode != null) {
-      //should always mean player is getting a new puzzle
-      resetPuzzle();
-      GameLevel? loadedLevel =
-          await LevelDatabaseConnection.lookUpLevelFromCode(gameLevelCode);
-      if (loadedLevel != null) {
-        level = loadedLevel;
-        setMyGrid(loadedLevel.letterGridB as LetterGrid);
-      }
-    } else if (blastIndex != null && getMyGrid() != null) {
-      //need to blast my puzzle based on partner's blast index
-      blastTilesAndDontNotify(blastIndex);
-    }
-
-    if (averageGuesses != null && bestAttempt != null) {
-      level.averageGuesses = averageGuesses;
-      level.bestAttempt = bestAttempt;
-      setTheirGrid(theirLetterGrid);
-    } else {
-      setTheirGrid(theirLetterGrid);
-      setMyGridFromTheirs(theirLetterGrid);
-    }
-
-    addNewGuessesFromPartner(theirLetterGrid);
+  void updatePuzzleFromPeerUpdate(LetterGrid theirLetterGrid) {
+    setTheirGrid(theirLetterGrid);
+    setMyGridFromTheirs(theirLetterGrid);
 
     if (isLevelWon()) {
       levelCompleted = true;
     }
 
-    notifyAllPlayers();
+    notifyListeners();
+  }
+
+  void blastPuzzleFromPeerUpdate(int blastIndex) {
+    blastTilesAndDontNotify(blastIndex);
+
+    if (isLevelWon()) {
+      levelCompleted = true;
+    }
+
+    notifyListeners();
+  }
+
+  void updateGuessListFromPeerUpdate(String acceptedGuess) {
+    this.guessList.add(AcceptedGuess(guess: acceptedGuess, fromMe: false));
+
+    notifyListeners();
   }
 
   void notifyAllPlayers() {
     _logger.info('notifyAllPlayers()');
     if (getMyGrid() != null) {
-      PartyDatabaseConnection()
-          .updateMyPuzzle(letterGrid: getMyGrid() as LetterGrid);
+      realTimeCommunication
+          .sendUpdatedGameDataToPeer(getMyGrid()!.encodedGridToString());
     }
     notifyListeners();
   }
@@ -190,31 +193,33 @@ class GameState extends ChangeNotifier {
     currentGuess = [];
     guessList = [];
     levelCompleted = false;
+    celebrating = false;
     showBadGuess = false;
   }
 
   LetterGrid? getMyGrid() {
-    if (PartyDatabaseConnection().isPartyLeader) {
+    if (realTimeCommunication.isPartyLeader) {
       return primaryLetterGrid;
     } else {
       return secondaryLetterGrid;
     }
   }
 
-  bool myGridExists() {
-    if (getMyGrid() == null) {
-      return false;
-    } else {
+  bool aGridExists() {
+    if (getMyGrid() != null) {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
-      if (myGrid.isBlank()) {
-        return false;
+      return !myGrid.isBlank();
+    } else {
+      if (getTheirGrid() != null) {
+        LetterGrid theirGrid = getTheirGrid() as LetterGrid;
+        return !theirGrid.isBlank();
       }
     }
-    return true;
+    return false;
   }
 
   void setMyGrid(LetterGrid newGrid) {
-    if (PartyDatabaseConnection().isPartyLeader) {
+    if (realTimeCommunication.isPartyLeader) {
       primaryLetterGrid = newGrid;
     } else {
       secondaryLetterGrid = newGrid;
@@ -253,7 +258,7 @@ class GameState extends ChangeNotifier {
   }
 
   void setTheirGrid(LetterGrid newGrid) {
-    if (PartyDatabaseConnection().isPartyLeader) {
+    if (realTimeCommunication.isPartyLeader) {
       secondaryLetterGrid = newGrid;
     } else {
       primaryLetterGrid = newGrid;
@@ -261,8 +266,7 @@ class GameState extends ChangeNotifier {
   }
 
   LetterGrid? getTheirGrid() {
-    PartyDatabaseConnection partyDatabaseConnection = PartyDatabaseConnection();
-    if (partyDatabaseConnection.isPartyLeader) {
+    if (realTimeCommunication.isPartyLeader) {
       return secondaryLetterGrid;
     } else {
       return primaryLetterGrid;
@@ -365,34 +369,32 @@ class GameState extends ChangeNotifier {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
 
       myGrid.blastFromIndex(index);
-      PartyDatabaseConnection()
-          .updateMyPuzzle(letterGrid: myGrid, blastIndex: index);
+      realTimeCommunication.sendBlastIndexDataToPeer(index);
+      notifyListeners();
       if (isLevelWon()) {
         levelCompleted = true;
+        notifyListeners();
       }
 
-      //before this future returns,
-      //notifyAllPlayers() should call from somewhere else
       await Future<void>.delayed(Constants.blastDuration);
       myGrid.unblast();
     }
   }
 
   void blastTilesAndDontNotify(int index) async {
-    if (getMyGrid() != null && !blasting) {
-      blasting = true;
-      _logger.info('blasting from ' + index.toString());
-      LetterGrid myGrid = getMyGrid() as LetterGrid;
+    LetterGrid gridToBlast =
+        getMyGrid() != null ? getMyGrid()! : getTheirGrid()!;
 
-      myGrid.blastFromIndex(index);
+    if (!blasting) {
+      blasting = true;
+
+      gridToBlast.blastFromIndex(index);
       if (isLevelWon()) {
         levelCompleted = true;
       }
 
-      //before this future returns,
-      //notifyAllPlayers() should call from somewhere else
       await Future<void>.delayed(Constants.blastDuration);
-      myGrid.unblast();
+      gridToBlast.unblast();
       blasting = false;
       notifyListeners();
     }
@@ -414,6 +416,7 @@ class GameState extends ChangeNotifier {
     if (currentGuess.length < 3 || !currentGuessIsValid()) {
       flipBadGuess();
     } else {
+      realTimeCommunication.sendAcceptedGuessToPeer(getCurrentGuess());
       handleAcceptedGuess();
     }
   }
@@ -432,6 +435,7 @@ class GameState extends ChangeNotifier {
     if (getMyGrid() != null) {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
       myGrid.changeBlastDirection();
+      realTimeCommunication.sendUpdatedGameDataToPeer(myGrid.encodedGridToString());
       notifyAllPlayers();
     }
   }

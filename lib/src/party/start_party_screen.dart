@@ -3,7 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
-import 'package:lexpedition/src/party/party_db_connection.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:provider/provider.dart';
 
 class StartPartyScreen extends StatefulWidget {
   const StartPartyScreen({super.key});
@@ -16,6 +17,16 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
   late String _partyCode = '';
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -23,19 +34,22 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ElevatedButton(
-              onPressed: () async {
-                String newPartyCode = buildPartyCode();
-                PartyDatabaseConnection partyConnection =
-                    await PartyDatabaseConnection.startParty(
-                        partyCode: newPartyCode);
-                partyConnection.createPartyEntry();
+          Consumer<GameState>(
+              builder: (context, gameState, child) {
+            return ElevatedButton(
+                onPressed: () async {
+                  String newPartyCode = buildPartyCode();
 
-                setState(() {
-                  _partyCode = newPartyCode;
-                });
-              },
-              child: Text('Get Code')),
+                  setState(() {
+                    _partyCode = newPartyCode;
+                  });
+
+                  gameState.realTimeCommunication.addRoomId(newPartyCode);
+                  await gameState.realTimeCommunication.openUserMedia();
+                  await gameState.realTimeCommunication.createRoom();
+                },
+                child: Text('Get Code'));
+          }),
           SizedBox(width: 25),
           Text(_partyCode, style: getTextStyle())
         ],
@@ -50,7 +64,7 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                 onPressed: () {
                   GoRouter.of(context).pop();
                 },
-                child: Text('Back'))
+                child: Text('Back')),
           ]))
     ]));
   }
