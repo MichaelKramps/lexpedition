@@ -21,6 +21,16 @@ class _TutorialCompletePlayerMenuState
   Widget build(BuildContext context) {
     return Stack(children: [
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            new Container(
+              padding: const EdgeInsets.all(20),
+              child: new Image.asset(
+                "assets/images/Lexpedition Logo.gif",
+                fit: BoxFit.cover,)
+            ,)
+          ],),
         checkToDisplayPartyCode(),
         determinePartyButton(context),
         Row(
@@ -81,7 +91,7 @@ class _TutorialCompletePlayerMenuState
                         ],
                       )
                     ],
-                  ))))
+                  ))))            
     ]);
   }
 

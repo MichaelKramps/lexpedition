@@ -14,37 +14,46 @@ class FreePlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<GameState>(builder: (context, gameState, child) {
-      return Scaffold(
-          body: Stack(
-            children: [SizedBox.expand(
-                  child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              BasicUserInterfaceButton(
-                  onPressed: () async {
-                    await gameState.loadOnePlayerPuzzle();
-                    if (gameState.errorDefinition == ErrorDefinition.noError) {
-                      GoRouter.of(context).push('/freeplay/oneplayer');
-                    }            
-                  },
-                  buttonText: 'One Player'),
-              SizedBox(width: Constants.smallFont),
-              BasicUserInterfaceButton(
-                  onPressed: () async {
-                    await gameState.loadTwoPlayerPuzzle();
-                    if (gameState.errorDefinition == ErrorDefinition.noError) {
-                      GoRouter.of(context).push('/freeplay/twoplayer');
-                    }                   
-                  },
-                  buttonText: 'Two Player'),
-              SizedBox(width: Constants.smallFont),
-              BasicUserInterfaceButton(
-                  onPressed: () => GoRouter.of(context).pop(), buttonText: 'Back')
-            ],     
-          )), 
-          GameStateErrorDisplay()
-        ])
+      return Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage ("assets/images/Freeplay Background.png"),
+            fit: BoxFit.cover, 
+          ),
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Padding(
+            padding: const EdgeInsets.all(100.0),
+            child: SizedBox.expand(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BasicUserInterfaceButton(
+                    onPressed: () {
+                        GoRouter.of(context).push('/freeplay/oneplayer');
+                      },
+                    buttonText: 'Single Player',
+                  ),
+                  BasicUserInterfaceButton(
+                    onPressed: () {
+                        GoRouter.of(context).push('/freeplay/twoplayer');
+                      },
+                    buttonText: 'Two Player',
+                  ),
+                  BasicUserInterfaceButton(
+                    onPressed: () {
+                        GoRouter.of(context).pop();
+                      },
+                    buttonText: 'Back',
+                  ),
+                  GameStateErrorDisplay()
+                ],
+              )
+            ),
+          ),
+        ),
       );
     });
   }

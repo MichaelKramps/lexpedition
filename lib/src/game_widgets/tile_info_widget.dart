@@ -37,7 +37,7 @@ class TileInfoWidget extends StatelessWidget {
 
   Color determineTextColor(int requiredCharges, int currentCharges) {
     if (currentCharges < requiredCharges) {
-      return Colors.white;
+      return Color.fromARGB(255, 0, 0, 0);
     } else {
       return Colors.black;
     }

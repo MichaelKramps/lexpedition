@@ -76,11 +76,11 @@ class LetterTileWidget extends StatelessWidget {
         case (TileType.end):
           return imagePath + 'red-end.png';
         default:
-          return imagePath + 'blue-basic.png';
+          return imagePath + 'Temp Basic Tile.gif';
       }
     }
 
-    return imagePath + 'blue-basic.png';
+    return imagePath + 'Temp Basic Tile.png';
   }
 
   BorderSide determineTileBorder(LetterTile letterTile) {

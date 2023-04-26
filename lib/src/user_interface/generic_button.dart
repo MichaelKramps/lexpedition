@@ -53,6 +53,7 @@ class _GenericButtonState extends State<GenericButton> {
                   child: Center(
                       child: Text(widget.buttonText.toUpperCase(),
                           style: TextStyle(
+                            fontFamily: Constants.buttonUIFont,
                               fontSize: Constants.smallFont,
                               color: Colors.white))),
                 ))

@@ -36,8 +36,15 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
     final playerProgress = context.watch<PlayerProgress>();
 
     return Scaffold(
-        backgroundColor: palette.backgroundMain,
-        body: determineCorrectMenuToUse(playerProgress));
+        body: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/Plain Background.png"),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: determineCorrectMenuToUse(playerProgress)
+        ));
   }
 
   Widget determineCorrectMenuToUse(PlayerProgress playerProgress) {

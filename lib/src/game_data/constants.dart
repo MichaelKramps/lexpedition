@@ -23,7 +23,7 @@ class Constants {
 
   static String assetsPath = 'assets';
   static String imagePath = assetsPath + '/images';
-  static String backgroundImagePath = imagePath + '/g4.bmp';
+  static String backgroundImagePath = imagePath + '/Plain Background.png';
 
   static const celebrationDuration = Duration(milliseconds: 2000);
   static const preCelebrationDuration = Duration(milliseconds: 500);
@@ -41,4 +41,5 @@ class Constants {
   static const double buttonBorderRadiusAmount = 5;
   static const BorderRadiusGeometry buttonBorderRadius = BorderRadius.all(Radius.circular(Constants.buttonBorderRadiusAmount));
   static const Duration buttonPressAnimationDuration = Duration(milliseconds: 75); 
+  static const String buttonUIFont = 'Black Han Sans';
 }
