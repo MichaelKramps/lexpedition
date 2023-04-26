@@ -76,16 +76,16 @@ class _TutorialCompletePlayerMenuState
                         children: [
                           Consumer<GameState>(
                               builder: (context, gameState, child) {
-                            return ElevatedButton(
+                            return BasicUserInterfaceButton(
                                 onPressed: () {
                                   gameState.realTimeCommunication.hangUp();
                                   setState(() {
                                     _areYouSure = false;
                                   });
                                 },
-                                child: Text("Yes"));
+                                buttonText: "Yes");
                           }),
-                          ElevatedButton(
+                          BasicUserInterfaceButton(
                               onPressed: () {
                                 setState(() {
                                   _areYouSure = false;
