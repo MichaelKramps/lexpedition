@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
-import 'package:logging/logging.dart';
 
 class ObserverBlastDirectionWidget extends StatelessWidget {
   final GameState gameState;
@@ -11,7 +10,6 @@ class ObserverBlastDirectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    new Logger('observerBlastDirection').info('building krampust: ' + gameState.getTheirGrid()!.blastDirection.name);
     return InkResponse(
       onTap: () => {},
       child: Image.asset(

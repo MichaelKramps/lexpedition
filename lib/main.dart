@@ -12,6 +12,7 @@ import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart
 import 'package:lexpedition/src/party/join_party_screen.dart';
 import 'package:lexpedition/src/party/party_screen.dart';
 import 'package:lexpedition/src/party/start_party_screen.dart';
+import 'package:lexpedition/src/tutorial/tutorial_game_instance.dart';
 import 'firebase_options.dart';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -158,8 +159,7 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                     path: 'session/:level',
                     builder: (context, state) {
-                      return VideoCallWrapperWidget(screen: OnePlayerPlaySessionScreen(
-                          winRoute: '/tutorial/won'));
+                      return VideoCallWrapperWidget(screen: TutorialGameInstance());
                     },
                   ),
                   GoRoute(

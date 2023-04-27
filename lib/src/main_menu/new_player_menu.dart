@@ -9,6 +9,7 @@ class NewPlayerMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox.expand(
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
             onPressed: () {

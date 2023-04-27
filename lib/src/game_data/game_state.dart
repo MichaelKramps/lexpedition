@@ -10,12 +10,15 @@ import 'package:lexpedition/src/game_data/word_helper.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/real_time_communication.dart';
 import 'package:lexpedition/src/tutorial/tutorial_levels.dart';
+import 'package:lexpedition/src/tutorial/tutorial_window.dart';
 import 'package:logging/logging.dart';
 
 class GameState extends ChangeNotifier {
   GameLevel level = GameLevel(gridCode: blankGrid);
   LetterGrid primaryLetterGrid = LetterGrid.blankGrid();
   LetterGrid? secondaryLetterGrid;
+  List<List<TutorialWindow>> tutorialSteps = [];
+  int currentTutorialStep = 0;
   RealTimeCommunication realTimeCommunication = RealTimeCommunication();
   List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guessList = [];
@@ -53,6 +56,9 @@ class GameState extends ChangeNotifier {
     if (tutorialNumber != null) {
       GameLevel tutorialLevel = GameLevel.copy(tutorialLevels[tutorialNumber]);
       level = tutorialLevel;
+      if (level.tutorialSteps != null) {
+        this.tutorialSteps = level.tutorialSteps!;
+      }
       primaryLetterGrid = tutorialLevel.letterGrid;
     } else if (databaseId != null) {
       //get the specific level in the database
@@ -195,6 +201,23 @@ class GameState extends ChangeNotifier {
     levelCompleted = false;
     celebrating = false;
     showBadGuess = false;
+  }
+
+  bool currentTutorialStepExists() {
+    return currentTutorialStep < tutorialSteps.length;
+  }
+
+  void incrementTutorialStep() {
+    ++currentTutorialStep;
+    notifyListeners();
+  }
+
+  List<TutorialWindow> getCurrentTutorialStep() {
+    if (currentTutorialStepExists()) {
+      return tutorialSteps[currentTutorialStep];
+    } else {
+      return [];
+    }
   }
 
   LetterGrid? getMyGrid() {
@@ -435,7 +458,8 @@ class GameState extends ChangeNotifier {
     if (getMyGrid() != null) {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
       myGrid.changeBlastDirection();
-      realTimeCommunication.sendUpdatedGameDataToPeer(myGrid.encodedGridToString());
+      realTimeCommunication
+          .sendUpdatedGameDataToPeer(myGrid.encodedGridToString());
       notifyAllPlayers();
     }
   }

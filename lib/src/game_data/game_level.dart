@@ -1,6 +1,7 @@
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
+import 'package:lexpedition/src/tutorial/tutorial_window.dart';
 
 class GameLevel {
   final String? name;
@@ -11,6 +12,7 @@ class GameLevel {
   late LetterGrid letterGrid;
   LetterGrid? letterGridB;
   int tutorialNumber = 100;
+  List<List<TutorialWindow>>? tutorialSteps;
   int attempts = 0;
   int attemptsFinished = 0;
   int bestAttempt = 100;
@@ -23,6 +25,7 @@ class GameLevel {
       this.puzzleId,
       this.gameLevelCode,
       this.tutorialNumber = 100,
+      this.tutorialSteps,
       this.attempts = 0,
       this.attemptsFinished = 0,
       this.averageGuesses = 100,
@@ -41,11 +44,11 @@ class GameLevel {
         levelText.split(Constants.rtcLoadLevelDataSplitter);
 
     return GameLevel(
-      gridCode: splitLevelText[0].split(','),
-      gridCodeB: splitLevelText[1] == 'null' ? null : splitLevelText[1].split(','),
-      averageGuesses: double.parse(splitLevelText[2]),
-      bestAttempt: int.parse(splitLevelText[3])
-    );
+        gridCode: splitLevelText[0].split(','),
+        gridCodeB:
+            splitLevelText[1] == 'null' ? null : splitLevelText[1].split(','),
+        averageGuesses: double.parse(splitLevelText[2]),
+        bestAttempt: int.parse(splitLevelText[3]));
   }
 
   factory GameLevel.copy(GameLevel levelToCopy) {
@@ -55,6 +58,7 @@ class GameLevel {
         name: levelToCopy.name,
         puzzleId: levelToCopy.puzzleId,
         tutorialNumber: levelToCopy.tutorialNumber,
+        tutorialSteps: levelToCopy.tutorialSteps,
         attempts: levelToCopy.attempts,
         attemptsFinished: levelToCopy.attemptsFinished,
         averageGuesses: levelToCopy.averageGuesses,

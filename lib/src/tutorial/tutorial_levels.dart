@@ -1,4 +1,5 @@
 import 'package:lexpedition/src/game_data/game_level.dart';
+import 'package:lexpedition/src/tutorial/tutorial_window.dart';
 
 // Copyright 2022, the Flutter project authors. Please see the AUTHORS file
 // for details. All rights reserved. Use of this source code is governed by a
@@ -30,7 +31,12 @@ var tutorialLevels = [
     null,
     null,
     null
-  ]),
+  ],
+  tutorialSteps: [
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 9)],
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 8), TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 14), TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 15)],
+  ]
+  ),
   GameLevel(name: "Multiple Charges", averageGuesses: 3, bestAttempt: 3, tutorialNumber: 2, gridCode: [
     null,
     null,
