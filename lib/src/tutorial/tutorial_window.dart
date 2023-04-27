@@ -16,11 +16,11 @@ class TutorialWindow {
   }
 
   double getHeight() {
-    return Constants.tileSize;
+    return Constants().tileSize();
   }
 
   double getWidth() {
-    return Constants.tileSize;
+    return Constants().tileSize();
   }
 
   void handleTap(GameState gameState) {

@@ -11,6 +11,6 @@ class ObstacleWidget extends StatelessWidget {
     return Visibility(
         visible: visible,
         child: Image.asset('assets/images/butterfly-icon.png',
-            height: Constants.tileSize, width: Constants.tileSize));
+            height: Constants().tileSize(), width: Constants().tileSize()));
   }
 }

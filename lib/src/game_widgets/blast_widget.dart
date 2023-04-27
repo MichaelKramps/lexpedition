@@ -24,7 +24,7 @@ class _BlastWidgetState extends State<BlastWidget> {
         visible: widget.beginBlastAnimation,
         maintainAnimation: false,
         child: Image.asset('assets/images/blast.png',
-            height: Constants.tileSize, width: Constants.tileSize));
+            height: Constants().tileSize(), width: Constants().tileSize()));
   }
 
   void determineNewOffset() {

@@ -14,8 +14,8 @@ class BlastDirectionWidget extends StatelessWidget {
       onTap: () => {gameState.changeBlastDirectionAndNotify()},
       child: Image.asset(
         determineImage(),
-        height: Constants.tileSize,
-        width: Constants.tileSize,
+        height: Constants().tileSize(),
+        width: Constants().tileSize(),
         semanticLabel: 'blast Direction',
       ),
     );

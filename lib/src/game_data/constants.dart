@@ -1,19 +1,80 @@
-class Constants {
-  static double tileSize = 64;
-  static double tileMargin = tileSize * 0.025;
+import 'package:flutter/material.dart';
 
-  static int tileOneStart = (tileMargin).ceil();
-  static int tileOneEnd = (tileSize + tileMargin).floor();
-  static int tileTwoStart = (tileSize + (tileMargin * 3)).ceil();
-  static int tileTwoEnd = ((tileSize * 2) + (tileMargin * 4)).floor();
-  static int tileThreeStart = ((tileSize * 2) + (tileMargin * 5)).ceil();
-  static int tileThreeEnd = ((tileSize * 3) + (tileMargin * 6)).floor();
-  static int tileFourStart = ((tileSize * 3) + (tileMargin * 7)).ceil();
-  static int tileFourEnd = ((tileSize * 4) + (tileMargin * 8)).floor();
-  static int tileFiveStart = ((tileSize * 4) + (tileMargin * 9)).ceil();
-  static int tileFiveEnd = ((tileSize * 5) + (tileMargin * 10)).floor();
-  static int tileSixStart = ((tileSize * 5) + (tileMargin * 11)).ceil();
-  static int tileSixEnd = ((tileSize * 6) + (tileMargin * 12)).floor();
+class Constants {
+  double screenWidth = 10;
+  double screenHeight = 10;
+  bool initialized = false;
+  static Constants instance = Constants.blank();
+
+  Constants.initialize({required BuildContext context}) {
+    Size screenSize = MediaQuery.of(context).size;
+    instance.screenWidth = screenSize.width;
+    instance.screenWidth = screenSize.height;
+    instance.initialized = true;
+    instance = this;
+  }
+
+  Constants.blank() {}
+
+  factory Constants() {
+    return instance;
+  }
+
+  double tileSize() {
+    return 64;
+  }
+
+  double tileMargin() {
+    return tileSize() * 0.025;
+  }
+
+  int tileOneStart() {
+    return tileMargin().ceil();
+  }
+
+  int tileOneEnd() {
+    return (tileSize() + tileMargin()).floor();
+  }
+
+  int tileTwoStart() {
+    return (tileSize() + (tileMargin() * 3)).ceil();
+  }
+
+  int tileTwoEnd() {
+    return ((tileSize() * 2) + (tileMargin() * 4)).floor();
+  }
+
+  int tileThreeStart() {
+    return ((tileSize() * 2) + (tileMargin() * 5)).ceil();
+  }
+
+  int tileThreeEnd() {
+    return ((tileSize() * 3) + (tileMargin() * 6)).floor();
+  }
+
+  int tileFourStart() {
+    return ((tileSize() * 3) + (tileMargin() * 7)).ceil();
+  }
+
+  int tileFourEnd() {
+    return ((tileSize() * 4) + (tileMargin() * 8)).floor();
+  }
+
+  int tileFiveStart() {
+    return ((tileSize() * 4) + (tileMargin() * 9)).ceil();
+  }
+
+  int tileFiveEnd() {
+    return ((tileSize() * 5) + (tileMargin() * 10)).floor();
+  }
+
+  int tileSixStart() {
+    return ((tileSize() * 5) + (tileMargin() * 11)).ceil();
+  }
+
+  int tileSixEnd() {
+    return ((tileSize() * 6) + (tileMargin() * 12)).floor();
+  }
 
   static double bigFont = 42;
   static double smallFont = 24;

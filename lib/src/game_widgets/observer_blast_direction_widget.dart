@@ -14,8 +14,8 @@ class ObserverBlastDirectionWidget extends StatelessWidget {
       onTap: () => {},
       child: Image.asset(
         determineImage(),
-        height: Constants.tileSize,
-        width: Constants.tileSize,
+        height: Constants().tileSize(),
+        width: Constants().tileSize(),
         semanticLabel: 'blast Direction',
       ),
     );

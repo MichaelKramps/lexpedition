@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/main_menu/new_player_menu.dart';
 import 'package:lexpedition/src/main_menu/tutorial_complete_player_menu.dart';
 import 'package:lexpedition/src/player_progress/player_progress.dart';
@@ -30,6 +31,9 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!Constants().initialized) {
+      Constants.initialize(context: context);
+    }
     final palette = context.watch<Palette>();
     //final settingsController = context.watch<SettingsController>();
     //final audioController = context.watch<AudioController>();

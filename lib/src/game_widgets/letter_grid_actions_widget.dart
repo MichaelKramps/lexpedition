@@ -17,15 +17,15 @@ class LetterGridActionsWidget extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       BlastDirectionWidget(gameState: gameState),
       Container(
-          width: Constants.tileSize * 3.5,
-          margin: EdgeInsets.all(Constants.tileMargin * 2),
+          width: Constants().tileSize() * 3.5,
+          margin: EdgeInsets.all(Constants().tileMargin() * 2),
           child: Text(gameState.getCurrentGuess(),
               style: TextStyle(
-                  fontSize: Constants.tileSize * 0.4,
+                  fontSize: Constants().tileSize() * 0.4,
                   backgroundColor: Colors.white.withOpacity(0.3),
                   color: gameState.showBadGuess ? Colors.red : Colors.black))),
       Container(
-          margin: EdgeInsets.all(Constants.tileMargin * 2),
+          margin: EdgeInsets.all(Constants().tileMargin() * 2),
           child: ElevatedButton(
               style: buttonStyle,
               onPressed: () => gameState.submitGuess(),

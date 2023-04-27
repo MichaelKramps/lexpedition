@@ -70,7 +70,8 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
               onPointerMove: (event) => {
                     handleMouseEvent(event.position.dx, event.position.dy, true)
                   },
-              child: LetterGridWidget(letterGrid: widget.gameState.getMyGrid() as LetterGrid))
+              child: LetterGridWidget(
+                  letterGrid: widget.gameState.getMyGrid() as LetterGrid))
         ]),
         Expanded(child: determineColumn(widget.rightColumn))
       ])
@@ -109,37 +110,38 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
     int row = -1;
     int column = -1;
 
-    if (yDistance > (Constants.tileOneStart + shrink) &&
-        yDistance < (Constants.tileOneEnd - shrink)) {
+    Constants constants = Constants();
+    if (yDistance > (constants.tileOneStart() + shrink) &&
+        yDistance < (constants.tileOneEnd() - shrink)) {
       row = 0;
-    } else if (yDistance > (Constants.tileTwoStart + shrink) &&
-        yDistance < (Constants.tileTwoEnd - shrink)) {
+    } else if (yDistance > (constants.tileTwoStart() + shrink) &&
+        yDistance < (constants.tileTwoEnd() - shrink)) {
       row = 1;
-    } else if (yDistance > (Constants.tileThreeStart + shrink) &&
-        yDistance < (Constants.tileThreeEnd - shrink)) {
+    } else if (yDistance > (constants.tileThreeStart() + shrink) &&
+        yDistance < (constants.tileThreeEnd() - shrink)) {
       row = 2;
-    } else if (yDistance > (Constants.tileFourStart + shrink) &&
-        yDistance < (Constants.tileFourEnd - shrink)) {
+    } else if (yDistance > (constants.tileFourStart() + shrink) &&
+        yDistance < (constants.tileFourEnd() - shrink)) {
       row = 3;
     }
 
-    if (xDistance > (Constants.tileOneStart + shrink) &&
-        xDistance < (Constants.tileOneEnd - shrink)) {
+    if (xDistance > (constants.tileOneStart() + shrink) &&
+        xDistance < (constants.tileOneEnd() - shrink)) {
       column = 0;
-    } else if (xDistance > (Constants.tileTwoStart + shrink) &&
-        xDistance < (Constants.tileTwoEnd - shrink)) {
+    } else if (xDistance > (constants.tileTwoStart() + shrink) &&
+        xDistance < (constants.tileTwoEnd() - shrink)) {
       column = 1;
-    } else if (xDistance > (Constants.tileThreeStart + shrink) &&
-        xDistance < (Constants.tileThreeEnd - shrink)) {
+    } else if (xDistance > (constants.tileThreeStart() + shrink) &&
+        xDistance < (constants.tileThreeEnd() - shrink)) {
       column = 2;
-    } else if (xDistance > (Constants.tileFourStart + shrink) &&
-        xDistance < (Constants.tileFourEnd - shrink)) {
+    } else if (xDistance > (constants.tileFourStart() + shrink) &&
+        xDistance < (constants.tileFourEnd() - shrink)) {
       column = 3;
-    } else if (xDistance > (Constants.tileFiveStart + shrink) &&
-        xDistance < (Constants.tileFiveEnd - shrink)) {
+    } else if (xDistance > (constants.tileFiveStart() + shrink) &&
+        xDistance < (constants.tileFiveEnd() - shrink)) {
       column = 4;
-    } else if (xDistance > (Constants.tileSixStart + shrink) &&
-        xDistance < (Constants.tileSixEnd - shrink)) {
+    } else if (xDistance > (constants.tileSixStart() + shrink) &&
+        xDistance < (constants.tileSixEnd() - shrink)) {
       column = 5;
     }
 

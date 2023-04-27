@@ -213,37 +213,38 @@ class _BuildTwoPlayerPuzzleWidgetState
     int row = -1;
     int column = -1;
 
-    if (yDistance > Constants.tileOneStart &&
-        yDistance < Constants.tileOneEnd) {
+    Constants constants = Constants();
+    if (yDistance > constants.tileOneStart() &&
+        yDistance < constants.tileOneEnd()) {
       row = 0;
-    } else if (yDistance > Constants.tileTwoStart &&
-        yDistance < Constants.tileTwoEnd) {
+    } else if (yDistance > constants.tileTwoStart() &&
+        yDistance < constants.tileTwoEnd()) {
       row = 1;
-    } else if (yDistance > Constants.tileThreeStart &&
-        yDistance < Constants.tileThreeEnd) {
+    } else if (yDistance > constants.tileThreeStart() &&
+        yDistance < constants.tileThreeEnd()) {
       row = 2;
-    } else if (yDistance > Constants.tileFourStart &&
-        yDistance < Constants.tileFourEnd) {
+    } else if (yDistance > constants.tileFourStart() &&
+        yDistance < constants.tileFourEnd()) {
       row = 3;
     }
 
-    if (xDistance > Constants.tileOneStart &&
-        xDistance < Constants.tileOneEnd) {
+    if (xDistance > constants.tileOneStart() &&
+        xDistance < constants.tileOneEnd()) {
       column = 0;
-    } else if (xDistance > Constants.tileTwoStart &&
-        xDistance < Constants.tileTwoEnd) {
+    } else if (xDistance > constants.tileTwoStart() &&
+        xDistance < constants.tileTwoEnd()) {
       column = 1;
-    } else if (xDistance > Constants.tileThreeStart &&
-        xDistance < Constants.tileThreeEnd) {
+    } else if (xDistance > constants.tileThreeStart() &&
+        xDistance < constants.tileThreeEnd()) {
       column = 2;
-    } else if (xDistance > Constants.tileFourStart &&
-        xDistance < Constants.tileFourEnd) {
+    } else if (xDistance > constants.tileFourStart() &&
+        xDistance < constants.tileFourEnd()) {
       column = 3;
-    } else if (xDistance > Constants.tileFiveStart &&
-        xDistance < Constants.tileFiveEnd) {
+    } else if (xDistance > constants.tileFiveStart() &&
+        xDistance < constants.tileFiveEnd()) {
       column = 4;
-    } else if (xDistance > Constants.tileSixStart &&
-        xDistance < Constants.tileSixEnd) {
+    } else if (xDistance > constants.tileSixStart() &&
+        xDistance < constants.tileSixEnd()) {
       column = 5;
     }
 
@@ -276,7 +277,7 @@ class _BuildTwoPlayerPuzzleWidgetState
     return ElevatedButton(
         onPressed: () => {setLetterTile(tileType: type)},
         child: Image.asset('assets/images/' + path + '.png',
-            width: Constants.tileSize, height: Constants.tileSize));
+            width: Constants().tileSize(), height: Constants().tileSize()));
   }
 
   Widget buildLetterButton(String letter) {

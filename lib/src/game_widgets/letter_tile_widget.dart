@@ -17,13 +17,13 @@ class LetterTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (letterTile.tileType != TileType.empty) {
       final ButtonStyle style = TextButton.styleFrom(
-          fixedSize: Size.square(Constants.tileSize),
+          fixedSize: Size.square(Constants().tileSize()),
           backgroundColor: Colors.black.withOpacity(0.0),
           side: determineTileBorder(letterTile));
 
       return Stack(children: [
         Container(
-            margin: EdgeInsets.all(Constants.tileMargin),
+            margin: EdgeInsets.all(Constants().tileMargin()),
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage(determineTileImage(letterTile)),
@@ -40,9 +40,9 @@ class LetterTileWidget extends StatelessWidget {
     } else {
       return Stack(children: [
         Container(
-            margin: EdgeInsets.all(Constants.tileMargin),
-            width: Constants.tileSize,
-            height: Constants.tileSize,
+            margin: EdgeInsets.all(Constants().tileMargin()),
+            width: Constants().tileSize(),
+            height: Constants().tileSize(),
             decoration: BoxDecoration(
               border: determineEmptyBorder(letterTile),
               color: determineEmptyColor(letterTile)
