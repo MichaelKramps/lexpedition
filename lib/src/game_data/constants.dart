@@ -25,7 +25,7 @@ class Constants {
   }
 
   double gridWidth() {
-    return (_tileSize * 6) + (_tileMargin * 5);
+    return (_tileSize * 6) + (_tileMargin * 12);
   }
 
   double gridXStart() {
@@ -33,7 +33,7 @@ class Constants {
   }
 
   double gridYStart() {
-    return tileSize() + tileMargin() * 2;
+    return tileSize() + tileMargin();
   }
 
   double tileMargin() {

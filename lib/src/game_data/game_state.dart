@@ -201,6 +201,7 @@ class GameState extends ChangeNotifier {
     levelCompleted = false;
     celebrating = false;
     showBadGuess = false;
+    currentTutorialStep = 0;
   }
 
   bool currentTutorialStepExists() {
