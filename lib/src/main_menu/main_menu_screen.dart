@@ -32,7 +32,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   @override
   Widget build(BuildContext context) {
     if (!Constants().initialized) {
-      Constants.initialize(context: context);
+      Size screenSize = MediaQuery.of(context).size;
+      Constants.initialize(screenHeight: screenSize.height, screenWidth: screenSize.width);
     }
     final palette = context.watch<Palette>();
     //final settingsController = context.watch<SettingsController>();

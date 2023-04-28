@@ -1,16 +1,16 @@
-import 'package:flutter/material.dart';
-
 class Constants {
   double screenWidth = 10;
   double screenHeight = 10;
+  late double _tileSize = 64;
+  late double _tileMargin = 1.5;
   bool initialized = false;
   static Constants instance = Constants.blank();
 
-  Constants.initialize({required BuildContext context}) {
-    Size screenSize = MediaQuery.of(context).size;
-    instance.screenWidth = screenSize.width;
-    instance.screenWidth = screenSize.height;
-    instance.initialized = true;
+  Constants.initialize(
+      {required this.screenWidth, required this.screenHeight}) {
+    this.initialized = true;
+    _tileSize = (screenHeight / 5) - 3;
+    _tileMargin = _tileSize * 0.025;
     instance = this;
   }
 
@@ -21,11 +21,23 @@ class Constants {
   }
 
   double tileSize() {
-    return 64;
+    return _tileSize;
+  }
+
+  double gridWidth() {
+    return (_tileSize * 6) + (_tileMargin * 5);
+  }
+
+  double gridXStart() {
+    return (screenWidth - gridWidth()) / 2;
+  }
+
+  double gridYStart() {
+    return tileSize() + tileMargin() * 2;
   }
 
   double tileMargin() {
-    return tileSize() * 0.025;
+    return _tileMargin;
   }
 
   int tileOneStart() {
