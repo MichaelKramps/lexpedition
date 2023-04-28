@@ -1,6 +1,5 @@
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
-import 'package:logging/logging.dart';
 
 class TutorialWindow {
   TutorialWindowType windowType;
@@ -14,7 +13,8 @@ class TutorialWindow {
       return constants.gridYStart() +
           ((constants.tileSize() + constants.tileMargin() * 2) * getRow());
     } else if (windowType == TutorialWindowType.submit ||
-        windowType == TutorialWindowType.clear) {
+        windowType == TutorialWindowType.clear ||
+        windowType == TutorialWindowType.answerBox) {
       return 10;
     }
     return 0;
@@ -29,6 +29,8 @@ class TutorialWindow {
       return leftAlignmentAtColumn(5);
     } else if (windowType == TutorialWindowType.blastDirection) {
       return leftAlignmentAtColumn(0);
+    } else if (windowType == TutorialWindowType.answerBox) {
+      return leftAlignmentAtColumn(1);
     }
     return 0;
   }
@@ -45,7 +47,8 @@ class TutorialWindow {
         windowType == TutorialWindowType.blastDirection) {
       return Constants().tileSize();
     } else if (windowType == TutorialWindowType.submit ||
-        windowType == TutorialWindowType.clear) {
+        windowType == TutorialWindowType.clear || 
+        windowType == TutorialWindowType.answerBox) {
       return constants.tileSize() - 20;
     }
     return 10;
@@ -58,6 +61,8 @@ class TutorialWindow {
     } else if (windowType == TutorialWindowType.submit ||
         windowType == TutorialWindowType.clear) {
       return constants.tileSize() + constants.tileMargin() * 2;
+    } else if (windowType == TutorialWindowType.answerBox) {
+      return constants.tileSize() * 3 + constants.tileMargin() * 6;
     }
     return 10;
   }
@@ -81,4 +86,4 @@ class TutorialWindow {
   }
 }
 
-enum TutorialWindowType { tile, submit, clear, blastDirection, text }
+enum TutorialWindowType { tile, submit, clear, blastDirection, answerBox, text }

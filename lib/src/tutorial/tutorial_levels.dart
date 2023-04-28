@@ -38,6 +38,7 @@ var tutorialLevels = [
     [TutorialWindow(windowType: TutorialWindowType.clear)],
     [TutorialWindow(windowType: TutorialWindowType.submit)],
     [TutorialWindow(windowType: TutorialWindowType.blastDirection)],
+    [TutorialWindow(windowType: TutorialWindowType.answerBox)],
   ]
   ),
   GameLevel(name: "Multiple Charges", averageGuesses: 3, bestAttempt: 3, tutorialNumber: 2, gridCode: [
