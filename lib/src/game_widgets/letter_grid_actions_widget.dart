@@ -17,7 +17,7 @@ class LetterGridActionsWidget extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       BlastDirectionWidget(gameState: gameState),
       Container(
-          width: Constants().tileSize() * 3.5,
+          width: Constants().tileSize() * 3,
           margin: EdgeInsets.all(Constants().tileMargin() * 2),
           child: Text(gameState.getCurrentGuess(),
               style: TextStyle(
