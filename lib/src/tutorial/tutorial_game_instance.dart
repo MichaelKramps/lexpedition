@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/play_session/one_player_play_session_screen.dart';
 import 'package:lexpedition/src/tutorial/tutorial_window.dart';
@@ -46,7 +47,7 @@ class TutorialGameInstance extends StatelessWidget {
 
   Widget createMaskWindow(TutorialWindow tutorialWindow, GameState gameState) {
     if (tutorialWindow.windowType == TutorialWindowType.text) {
-      return Container();
+      return SizedBox.shrink();
     } else {
       return GestureDetector(
         onTap: () => tutorialWindow.handleTap(gameState),
@@ -70,10 +71,15 @@ class TutorialGameInstance extends StatelessWidget {
   Widget createTutorialText(TutorialWindow tutorialWindow) {
     if (tutorialWindow.windowType == TutorialWindowType.text) {
       return IgnorePointer(
-        child: Text('hello', style: TextStyle(color: Colors.white, decoration: TextDecoration.none))
+        child: Container(
+          margin: EdgeInsets.only(
+                top: tutorialWindow.getTopAlignment(),
+                left: tutorialWindow.getLeftAlignment()),
+          child: Text(tutorialWindow.getText(), style: TextStyle(color: Colors.white, decoration: TextDecoration.none, fontSize: Constants.mediumFont))
+        )
       );
     } else {
-      return Container();
+      return SizedBox.shrink();
     }
   }
 }

@@ -89,6 +89,7 @@ class Constants {
   }
 
   static double bigFont = 42;
+  static double mediumFont = 32;
   static double smallFont = 24;
   static double verySmallFont = 14;
 

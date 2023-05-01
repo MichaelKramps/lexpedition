@@ -4,12 +4,20 @@ import 'package:lexpedition/src/game_data/game_state.dart';
 class TutorialWindow {
   TutorialWindowType windowType;
   int tileIndex;
+  String? text;
+  TutorialTextPosition? position;
   Constants constants = Constants();
 
-  TutorialWindow({required this.windowType, this.tileIndex = -1});
+  TutorialWindow(
+      {required this.windowType,
+      this.tileIndex = -1,
+      this.text,
+      this.position});
 
   double getTopAlignment() {
-    if (windowType == TutorialWindowType.tile) {
+    if (windowType == TutorialWindowType.text) {
+      return getTextTopAlignment();
+    } else if (windowType == TutorialWindowType.tile) {
       return constants.gridYStart() +
           ((constants.tileSize() + constants.tileMargin() * 2) * getRow());
     } else if (windowType == TutorialWindowType.submit ||
@@ -20,8 +28,29 @@ class TutorialWindow {
     return 0;
   }
 
+  double getTextTopAlignment() {
+    switch (position) {
+      case TutorialTextPosition.topLeft:
+      case TutorialTextPosition.topMiddle:
+      case TutorialTextPosition.topRight:
+        return 10;
+      case TutorialTextPosition.middleLeft:
+      case TutorialTextPosition.middle:
+      case TutorialTextPosition.middleRight:
+        return constants.gridYStart() + constants.tileSize();
+      case TutorialTextPosition.bottomLeft:
+      case TutorialTextPosition.bottomMiddle:
+      case TutorialTextPosition.bottomRight:
+        return constants.gridYStart() + constants.tileSize() * 3;
+      default:
+        return 10;
+    }
+  }
+
   double getLeftAlignment() {
-    if (windowType == TutorialWindowType.tile) {
+    if (windowType == TutorialWindowType.text) {
+      return getTextLeftAlignment();
+    } else if (windowType == TutorialWindowType.tile) {
       return leftAlignmentAtColumn(getColumn());
     } else if (windowType == TutorialWindowType.submit) {
       return leftAlignmentAtColumn(4);
@@ -33,6 +62,25 @@ class TutorialWindow {
       return leftAlignmentAtColumn(1);
     }
     return 0;
+  }
+
+  double getTextLeftAlignment() {
+    switch (position) {
+      case TutorialTextPosition.topLeft:
+      case TutorialTextPosition.middle:
+      case TutorialTextPosition.bottomLeft:
+        return 10;
+      case TutorialTextPosition.topMiddle:
+      case TutorialTextPosition.middle:
+      case TutorialTextPosition.bottomMiddle:
+        return constants.gridXStart();
+      case TutorialTextPosition.topRight:
+      case TutorialTextPosition.middleRight:
+      case TutorialTextPosition.bottomRight:
+        return constants.gridXStart() * 2;
+      default:
+        return 10;
+    }
   }
 
   double leftAlignmentAtColumn(int row) {
@@ -47,7 +95,7 @@ class TutorialWindow {
         windowType == TutorialWindowType.blastDirection) {
       return Constants().tileSize();
     } else if (windowType == TutorialWindowType.submit ||
-        windowType == TutorialWindowType.clear || 
+        windowType == TutorialWindowType.clear ||
         windowType == TutorialWindowType.answerBox) {
       return constants.tileSize() - 20;
     }
@@ -65,6 +113,14 @@ class TutorialWindow {
       return constants.tileSize() * 3 + constants.tileMargin() * 6;
     }
     return 10;
+  }
+
+  String getText() {
+    if (text != null) {
+      return text!;
+    } else {
+      return 'no text set';
+    }
   }
 
   int getRow() {
@@ -87,3 +143,15 @@ class TutorialWindow {
 }
 
 enum TutorialWindowType { tile, submit, clear, blastDirection, answerBox, text }
+
+enum TutorialTextPosition {
+  topLeft,
+  topMiddle,
+  topRight,
+  middleLeft,
+  middle,
+  middleRight,
+  bottomLeft,
+  bottomMiddle,
+  bottomRight
+}
