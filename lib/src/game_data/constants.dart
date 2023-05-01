@@ -28,6 +28,10 @@ class Constants {
     return (_tileSize * 6) + (_tileMargin * 12);
   }
 
+  double gridHeight() {
+    return (_tileSize * 4) + (_tileMargin * 8);
+  }
+
   double gridXStart() {
     return (screenWidth - gridWidth()) / 2;
   }

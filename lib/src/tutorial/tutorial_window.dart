@@ -23,6 +23,8 @@ class TutorialWindow {
       case TutorialWindowType.tile:
         return constants.gridYStart() +
             ((constants.tileSize() + constants.tileMargin() * 2) * getRow());
+      case TutorialWindowType.letterGrid:
+        return constants.gridYStart();
       case TutorialWindowType.submit:
       case TutorialWindowType.clear:
       case TutorialWindowType.answerBox:
@@ -37,7 +39,7 @@ class TutorialWindow {
       case TutorialTextPosition.topLeft:
       case TutorialTextPosition.topMiddle:
       case TutorialTextPosition.topRight:
-        return 10;
+        return 30;
       case TutorialTextPosition.middleLeft:
       case TutorialTextPosition.middle:
       case TutorialTextPosition.middleRight:
@@ -45,7 +47,7 @@ class TutorialWindow {
       case TutorialTextPosition.bottomLeft:
       case TutorialTextPosition.bottomMiddle:
       case TutorialTextPosition.bottomRight:
-        return constants.gridYStart() + constants.tileSize() * 3;
+        return constants.gridYStart() + constants.tileSize() * 3 + constants.tileMargin() * 3;
       default:
         return 10;
     }
@@ -65,6 +67,10 @@ class TutorialWindow {
         return leftAlignmentAtColumn(0);
       case TutorialWindowType.answerBox:
         return leftAlignmentAtColumn(1);
+      case TutorialWindowType.gameBoard:
+      case TutorialWindowType.infoPanel:
+      case TutorialWindowType.letterGrid:
+        return constants.gridXStart();
       default:
         return 0;
     }
@@ -75,7 +81,7 @@ class TutorialWindow {
       case TutorialTextPosition.topLeft:
       case TutorialTextPosition.middleLeft:
       case TutorialTextPosition.bottomLeft:
-        return 10;
+        return 30;
       case TutorialTextPosition.topMiddle:
       case TutorialTextPosition.middle:
       case TutorialTextPosition.bottomMiddle:
@@ -105,6 +111,12 @@ class TutorialWindow {
       case TutorialWindowType.clear:
       case TutorialWindowType.answerBox:
         return constants.tileSize() - 20;
+      case TutorialWindowType.gameBoard:
+        return constants.screenHeight;
+      case TutorialWindowType.infoPanel:
+        return constants.tileSize() + (constants.tileMargin() * 2);
+      case TutorialWindowType.letterGrid:
+        return constants.gridHeight();
       default:
         return 10;
     }
@@ -122,6 +134,10 @@ class TutorialWindow {
         return constants.tileSize() + constants.tileMargin() * 2;
       case TutorialWindowType.answerBox:
         return constants.tileSize() * 3 + constants.tileMargin() * 6;
+      case TutorialWindowType.gameBoard:
+      case TutorialWindowType.infoPanel:
+      case TutorialWindowType.letterGrid:
+        return constants.gridWidth();
       default:
         return 10;
     }
@@ -131,7 +147,7 @@ class TutorialWindow {
     if (text != null) {
       return text!;
     } else {
-      return 'no text set';
+      return 'no text is set';
     }
   }
 
@@ -170,7 +186,17 @@ class TutorialWindow {
   }
 }
 
-enum TutorialWindowType { tile, submit, clear, blastDirection, answerBox, text }
+enum TutorialWindowType {
+  tile,
+  submit,
+  clear,
+  blastDirection,
+  answerBox,
+  text,
+  gameBoard,
+  infoPanel,
+  letterGrid
+}
 
 enum TutorialTextPosition {
   topLeft,

@@ -6,7 +6,7 @@ import 'package:lexpedition/src/tutorial/tutorial_window.dart';
 // BSD-style license that can be found in the LICENSE file.
 
 var tutorialLevels = [
-  GameLevel(name: "Basic Tile", averageGuesses: 2, bestAttempt: 1, tutorialNumber: 1, gridCode: [
+  GameLevel(name: "The Game Board", averageGuesses: 1, bestAttempt: 1, tutorialNumber: 1, gridCode: [
     null,
     null,
     null,
@@ -33,9 +33,15 @@ var tutorialLevels = [
     null
   ],
   tutorialSteps: [
-    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 9), TutorialWindow(windowType: TutorialWindowType.text, text: "Tap on a tile to select it", position: TutorialTextPosition.bottomMiddle)],
-    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 8), TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 14), TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 15), TutorialWindow(windowType: TutorialWindowType.text, text: "Now select any tile touching that tile", position: TutorialTextPosition.topMiddle)],
+    [TutorialWindow(windowType: TutorialWindowType.gameBoard), TutorialWindow(windowType: TutorialWindowType.text, text: "The game board is a 6x4 grid which can hold up to 24 letter tiles", position: TutorialTextPosition.topLeft, ignorePointer: false)],
+    [TutorialWindow(windowType: TutorialWindowType.infoPanel), TutorialWindow(windowType: TutorialWindowType.text, text: "The top of the board has several items that we will learn about as you progress through the tutorials", position: TutorialTextPosition.middleLeft, ignorePointer: false)],
+    [TutorialWindow(windowType: TutorialWindowType.letterGrid), TutorialWindow(windowType: TutorialWindowType.text, text: "The grid is where you create words by selecting letter tiles", position: TutorialTextPosition.topLeft, ignorePointer: false)],
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 9), TutorialWindow(windowType: TutorialWindowType.text, text: "Tap on a tile to select it", position: TutorialTextPosition.topMiddle)],
     [TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: "The answer box shows your current guess", position: TutorialTextPosition.middle, ignorePointer: false)],
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 15), TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: "Now select the letter tile with the \"O\"", position: TutorialTextPosition.bottomMiddle)],
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 14), TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: "Next select the letter tile with the \"A\"", position: TutorialTextPosition.bottomMiddle)],
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 8), TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: "Finally, select the letter tile with the \"T\"", position: TutorialTextPosition.bottomMiddle)],
+    [TutorialWindow(windowType: TutorialWindowType.submit), TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: 'Tap the submit button to submit your current guess', position: TutorialTextPosition.middle, ignorePointer: false)],
   ]
   ),
   GameLevel(name: "Multiple Charges", averageGuesses: 3, bestAttempt: 3, tutorialNumber: 2, gridCode: [

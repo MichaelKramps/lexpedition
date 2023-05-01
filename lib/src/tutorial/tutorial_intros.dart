@@ -74,7 +74,7 @@ class TutorialIntroWidget extends StatelessWidget {
 
     if (levelNumber == 1) {
       text =
-          'Use touching letter tiles to make words. Words must be at least 3 letters long. Charge all the letter tiles to beat the level!';
+          'Let\'s learn the basics of the board and how to select letters and submit answers.';
     } else if (levelNumber == 2) {
       text =
           'To charge a letter tile, it may need to be used multiple times! The dots on the tile indicate the required number of uses!';
