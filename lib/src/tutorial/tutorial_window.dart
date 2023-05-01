@@ -6,13 +6,15 @@ class TutorialWindow {
   int tileIndex;
   String? text;
   TutorialTextPosition? position;
+  bool ignorePointer;
   Constants constants = Constants();
 
   TutorialWindow(
       {required this.windowType,
       this.tileIndex = -1,
       this.text,
-      this.position});
+      this.position,
+      this.ignorePointer = true});
 
   double getTopAlignment() {
     switch (windowType) {

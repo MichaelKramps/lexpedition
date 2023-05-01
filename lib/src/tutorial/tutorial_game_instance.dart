@@ -38,7 +38,7 @@ class TutorialGameInstance extends StatelessWidget {
           ),
           for (TutorialWindow window
                       in gameState.getCurrentTutorialStep()) ...[
-            createTutorialText(window)
+            createTutorialText(window, gameState)
           ]
         ],
       );
@@ -68,18 +68,22 @@ class TutorialGameInstance extends StatelessWidget {
     }
   }
 
-  Widget createTutorialText(TutorialWindow tutorialWindow) {
+  Widget createTutorialText(TutorialWindow tutorialWindow, GameState gameState) {
     if (tutorialWindow.windowType == TutorialWindowType.text) {
       return IgnorePointer(
-        child: Container(
-          margin: EdgeInsets.only(
-                top: tutorialWindow.getTopAlignment(),
-                left: tutorialWindow.getLeftAlignment()),
-          child: Text(tutorialWindow.getText(), 
-            style: TextStyle(
-              color: Colors.white, 
-              decoration: TextDecoration.none, 
-              fontSize: Constants.mediumFont))
+        ignoring: tutorialWindow.ignorePointer,
+        child: GestureDetector(
+          onTap: () => tutorialWindow.handleTap(gameState),
+          child: Container(
+            margin: EdgeInsets.only(
+                  top: tutorialWindow.getTopAlignment(),
+                  left: tutorialWindow.getLeftAlignment()),
+            child: Text(tutorialWindow.getText(), 
+              style: TextStyle(
+                color: Colors.white, 
+                decoration: TextDecoration.none, 
+                fontSize: Constants.mediumFont))
+          )
         )
       );
     } else {
