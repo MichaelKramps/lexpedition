@@ -33,12 +33,9 @@ var tutorialLevels = [
     null
   ],
   tutorialSteps: [
-    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 9), TutorialWindow(windowType: TutorialWindowType.text, text: "Tap on a tile to select it", position: TutorialTextPosition.topMiddle)],
-    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 8), TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 14), TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 15), TutorialWindow(windowType: TutorialWindowType.text, text: "Now select any tile touching that tile", position: TutorialTextPosition.topMiddle)],
-    [TutorialWindow(windowType: TutorialWindowType.clear)],
-    [TutorialWindow(windowType: TutorialWindowType.submit)],
-    [TutorialWindow(windowType: TutorialWindowType.blastDirection)],
-    [TutorialWindow(windowType: TutorialWindowType.answerBox)],
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 9), TutorialWindow(windowType: TutorialWindowType.text, text: "Tap on a tile to select it", position: TutorialTextPosition.bottomMiddle)],
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 8), TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 14), TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 15), TutorialWindow(windowType: TutorialWindowType.text, text: "Now select any tile touching that tile", position: TutorialTextPosition.bottomMiddle)],
+    [TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: "The answer box shows your current guess", position: TutorialTextPosition.middle)],
   ]
   ),
   GameLevel(name: "Multiple Charges", averageGuesses: 3, bestAttempt: 3, tutorialNumber: 2, gridCode: [

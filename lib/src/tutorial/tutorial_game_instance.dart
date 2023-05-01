@@ -75,7 +75,11 @@ class TutorialGameInstance extends StatelessWidget {
           margin: EdgeInsets.only(
                 top: tutorialWindow.getTopAlignment(),
                 left: tutorialWindow.getLeftAlignment()),
-          child: Text(tutorialWindow.getText(), style: TextStyle(color: Colors.white, decoration: TextDecoration.none, fontSize: Constants.mediumFont))
+          child: Text(tutorialWindow.getText(), 
+            style: TextStyle(
+              color: Colors.white, 
+              decoration: TextDecoration.none, 
+              fontSize: Constants.mediumFont))
         )
       );
     } else {
