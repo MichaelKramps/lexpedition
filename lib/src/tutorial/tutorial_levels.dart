@@ -33,9 +33,9 @@ var tutorialLevels = [
     null
   ],
   tutorialSteps: [
-    [TutorialWindow(windowType: TutorialWindowType.gameBoard), TutorialWindow(windowType: TutorialWindowType.text, text: "The game board is a 6x4 grid which can hold up to 24 letter tiles", position: TutorialTextPosition.topLeft, ignorePointer: false)],
-    [TutorialWindow(windowType: TutorialWindowType.infoPanel), TutorialWindow(windowType: TutorialWindowType.text, text: "The top of the board has several items that we will learn about as you progress through the tutorials", position: TutorialTextPosition.middleLeft, ignorePointer: false)],
-    [TutorialWindow(windowType: TutorialWindowType.letterGrid), TutorialWindow(windowType: TutorialWindowType.text, text: "The grid is where you create words by selecting letter tiles", position: TutorialTextPosition.topLeft, ignorePointer: false)],
+    [TutorialWindow(windowType: TutorialWindowType.gameBoard), TutorialWindow(windowType: TutorialWindowType.text, text: "The game board is a\n6x4 grid which can hold\nup to 24 letter tiles", position: TutorialTextPosition.topLeft, ignorePointer: false)],
+    [TutorialWindow(windowType: TutorialWindowType.infoPanel), TutorialWindow(windowType: TutorialWindowType.text, text: "The top of the board has several items\nthat we will learn about as you\nprogress through the tutorials", position: TutorialTextPosition.middleLeft, ignorePointer: false)],
+    [TutorialWindow(windowType: TutorialWindowType.letterGrid), TutorialWindow(windowType: TutorialWindowType.text, text: "The grid is where you create words\nby selecting letter tiles", position: TutorialTextPosition.topLeft, ignorePointer: false)],
     [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 9), TutorialWindow(windowType: TutorialWindowType.text, text: "Tap on a tile to select it", position: TutorialTextPosition.topMiddle)],
     [TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: "The answer box shows your current guess", position: TutorialTextPosition.middle, ignorePointer: false)],
     [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 15), TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: "Now select the letter tile with the \"O\"", position: TutorialTextPosition.bottomMiddle)],

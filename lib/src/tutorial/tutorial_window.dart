@@ -39,7 +39,7 @@ class TutorialWindow {
       case TutorialTextPosition.topLeft:
       case TutorialTextPosition.topMiddle:
       case TutorialTextPosition.topRight:
-        return 30;
+        return 20;
       case TutorialTextPosition.middleLeft:
       case TutorialTextPosition.middle:
       case TutorialTextPosition.middleRight:
