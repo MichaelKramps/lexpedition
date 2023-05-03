@@ -1,12 +1,8 @@
 import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/tutorial/tutorial_window.dart';
 
-// Copyright 2022, the Flutter project authors. Please see the AUTHORS file
-// for details. All rights reserved. Use of this source code is governed by a
-// BSD-style license that can be found in the LICENSE file.
-
-var tutorialLevels = [
-  GameLevel(name: "The Game Board", averageGuesses: 1, bestAttempt: 1, tutorialNumber: 1, gridCode: [
+var fullTutorialLevels = [
+  GameLevel(name: "The Game Board", averageGuesses: 1, bestAttempt: 1, tutorialKey: 201, gridCode: [
     null,
     null,
     null,
@@ -44,7 +40,7 @@ var tutorialLevels = [
     [TutorialWindow(windowType: TutorialWindowType.submit), TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: 'Tap the submit button to submit your current guess', position: TutorialTextPosition.middle, ignorePointer: false)],
   ]
   ),
-  GameLevel(name: "Multiple Charges", averageGuesses: 3, bestAttempt: 3, tutorialNumber: 2, gridCode: [
+  GameLevel(name: "Multiple Charges", averageGuesses: 3, bestAttempt: 3, tutorialKey: 202, gridCode: [
     null,
     null,
     null,
@@ -70,7 +66,7 @@ var tutorialLevels = [
     null,
     null
   ]),
-  GameLevel(name: "Start Tile", averageGuesses: 3, bestAttempt: 2, tutorialNumber: 3, gridCode: [
+  GameLevel(name: "Start Tile", averageGuesses: 3, bestAttempt: 2, tutorialKey: 203, gridCode: [
       null,
       null,
       null,
@@ -97,7 +93,7 @@ var tutorialLevels = [
       null
     ],
   ),
-  GameLevel(name: "End Tile", averageGuesses: 3, bestAttempt: 2, tutorialNumber: 4, gridCode: [
+  GameLevel(name: "End Tile", averageGuesses: 3, bestAttempt: 2, tutorialKey: 204, gridCode: [
     null,
     null,
     null,
@@ -123,7 +119,7 @@ var tutorialLevels = [
     null,
     null
   ]),
-  GameLevel(name: "All 3 Tile Types", averageGuesses: 5, bestAttempt: 3, tutorialNumber: 5, gridCode: [
+  GameLevel(name: "All 3 Tile Types", averageGuesses: 5, bestAttempt: 3, tutorialKey: 205, gridCode: [
     null,
     'e210',
     't220',
@@ -149,7 +145,7 @@ var tutorialLevels = [
     null,
     null
   ]),
-  GameLevel(name: "Magic Blast", averageGuesses: 2, bestAttempt: 2, tutorialNumber: 6, gridCode: [
+  GameLevel(name: "Magic Blast", averageGuesses: 2, bestAttempt: 2, tutorialKey: 206, gridCode: [
     't110',
     'r010',
     'e010',
@@ -175,7 +171,7 @@ var tutorialLevels = [
     't210',
     null
   ]),
-  GameLevel(name: "Obstacles", averageGuesses: 2, bestAttempt: 2, tutorialNumber: 7, gridCode: [
+  GameLevel(name: "Obstacles", averageGuesses: 2, bestAttempt: 2, tutorialKey: 207, gridCode: [
     null,
     null,
     null,

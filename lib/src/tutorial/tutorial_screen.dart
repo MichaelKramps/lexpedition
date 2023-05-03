@@ -12,7 +12,7 @@ import '../audio/sounds.dart';
 import '../player_progress/player_progress.dart';
 import '../style/palette.dart';
 import '../style/responsive_screen.dart';
-import 'tutorial_levels.dart';
+import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
 
 class TutorialScreen extends StatelessWidget {
   const TutorialScreen({super.key});
@@ -42,21 +42,22 @@ class TutorialScreen extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
-                    for (final level in tutorialLevels)
+                    for (final level in fullTutorialLevels)
                       ListTile(
-                        enabled: playerProgress.highestLevelReached >=
-                            level.tutorialNumber - 1,
+                        enabled: shouldEnableLevel(
+                            level.tutorialKey, playerProgress),
                         onTap: () {
                           final audioController =
                               context.read<AudioController>();
                           audioController.playSfx(SfxType.buttonTap);
 
-                          gameState.loadOnePlayerPuzzle(tutorialNumber: level.tutorialNumber - 1);
+                          gameState.loadOnePlayerPuzzle(
+                              tutorialKey: level.tutorialKey);
 
                           GoRouter.of(context)
-                              .push('/tutorial/intro/${level.tutorialNumber}');
+                              .push('/tutorial/intro/${level.tutorialKey}');
                         },
-                        leading: Text(level.tutorialNumber.toString()),
+                        leading: Text(level.tutorialKey.toString()),
                         title: Text('${level.name}'),
                       )
                   ],
@@ -73,5 +74,13 @@ class TutorialScreen extends StatelessWidget {
         ),
       );
     });
+  }
+
+  bool shouldEnableLevel(int tutorialKey, PlayerProgress playerProgress) {
+    if (tutorialKey == 101 || tutorialKey == 201) {
+      return true;
+    } else {
+      return playerProgress.highestLevelReached >= tutorialKey - 1;
+    }
   }
 }

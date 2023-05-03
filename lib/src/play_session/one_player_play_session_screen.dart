@@ -12,6 +12,7 @@ import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
@@ -34,7 +35,6 @@ class OnePlayerPlaySessionScreen extends StatefulWidget {
 
 class _OnePlayerPlaySessionScreenState
     extends State<OnePlayerPlaySessionScreen> {
-
   @override
   Widget build(BuildContext context) {
     final palette = context.watch<Palette>();
@@ -95,7 +95,7 @@ class _OnePlayerPlaySessionScreenState
     }
 
     final playerProgress = context.read<PlayerProgress>();
-    playerProgress.setLevelReached(gameState.level.tutorialNumber);
+    playerProgress.setLevelReached(gameState.level.tutorialKey);
 
     // Let the player see the game just after winning for a bit.
     await Future<void>.delayed(Constants.preCelebrationDuration);

@@ -11,7 +11,7 @@ class GameLevel {
   final List<String?>? gridCodeB;
   late LetterGrid letterGrid;
   LetterGrid? letterGridB;
-  int tutorialNumber = 100;
+  int tutorialKey = 0;
   List<List<TutorialWindow>>? tutorialSteps;
   int attempts = 0;
   int attemptsFinished = 0;
@@ -24,7 +24,7 @@ class GameLevel {
       this.name,
       this.puzzleId,
       this.gameLevelCode,
-      this.tutorialNumber = 100,
+      this.tutorialKey = 0,
       this.tutorialSteps,
       this.attempts = 0,
       this.attemptsFinished = 0,
@@ -57,7 +57,7 @@ class GameLevel {
         gridCodeB: levelToCopy.gridCodeB,
         name: levelToCopy.name,
         puzzleId: levelToCopy.puzzleId,
-        tutorialNumber: levelToCopy.tutorialNumber,
+        tutorialKey: levelToCopy.tutorialKey,
         tutorialSteps: levelToCopy.tutorialSteps,
         attempts: levelToCopy.attempts,
         attemptsFinished: levelToCopy.attemptsFinished,

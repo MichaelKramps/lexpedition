@@ -9,7 +9,8 @@ import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/real_time_communication.dart';
-import 'package:lexpedition/src/tutorial/tutorial_levels.dart';
+import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
+import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
 import 'package:lexpedition/src/tutorial/tutorial_window.dart';
 import 'package:logging/logging.dart';
 
@@ -19,6 +20,8 @@ class GameState extends ChangeNotifier {
   LetterGrid? secondaryLetterGrid;
   List<List<TutorialWindow>> tutorialSteps = [];
   int currentTutorialStep = 0;
+  int currentNumberTutorials =
+      0; //this number will be different depending on the tutorial path chosen
   RealTimeCommunication realTimeCommunication = RealTimeCommunication();
   List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guessList = [];
@@ -29,8 +32,6 @@ class GameState extends ChangeNotifier {
   bool blasting = false;
   ErrorDefinition errorDefinition = ErrorDefinition.noError;
   Logger _logger = new Logger('game state');
-
-  //toString() method and GameState.fromString() constructor maybe??
 
   GameState({required this.level}) {
     primaryLetterGrid = level.letterGrid;
@@ -50,16 +51,24 @@ class GameState extends ChangeNotifier {
   }
 
   Future<void> loadOnePlayerPuzzle(
-      {int? tutorialNumber, int? databaseId}) async {
+      {int? tutorialKey, int? databaseId}) async {
     _logger.info('loading a new puzzle');
     resetPuzzle();
-    if (tutorialNumber != null) {
-      GameLevel tutorialLevel = GameLevel.copy(tutorialLevels[tutorialNumber]);
-      level = tutorialLevel;
+    if (tutorialKey != null) {
+      if (tutorialKey < 200) { // 102 denotes quick tutorial level 2
+        GameLevel tutorialLevel =
+          GameLevel.copy(quickTutorialLevels[tutorialKey - 101]);
+          level = tutorialLevel;
+      } else { // 204 denotes full tutorial level 4
+        GameLevel tutorialLevel =
+          GameLevel.copy(fullTutorialLevels[tutorialKey - 201]);
+          level = tutorialLevel;
+      }
+      
       if (level.tutorialSteps != null) {
         this.tutorialSteps = level.tutorialSteps!;
       }
-      primaryLetterGrid = tutorialLevel.letterGrid;
+      primaryLetterGrid = level.letterGrid;
     } else if (databaseId != null) {
       //get the specific level in the database
     } else {
@@ -80,7 +89,8 @@ class GameState extends ChangeNotifier {
     secondaryLetterGrid = null;
     resetPuzzle();
     if (tutorialNumber != null) {
-      GameLevel tutorialLevel = GameLevel.copy(tutorialLevels[tutorialNumber]);
+      GameLevel tutorialLevel =
+          GameLevel.copy(fullTutorialLevels[tutorialNumber]);
       level = tutorialLevel;
       primaryLetterGrid = tutorialLevel.letterGrid;
     } else if (databaseId != null) {
@@ -202,6 +212,7 @@ class GameState extends ChangeNotifier {
     celebrating = false;
     showBadGuess = false;
     currentTutorialStep = 0;
+    currentNumberTutorials = 0;
     tutorialSteps = [];
   }
 

@@ -139,19 +139,22 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
           path: '/',
-          builder: (context, state) =>
-              VideoCallWrapperWidget(screen: MainMenuScreen(key: Key('main menu'))),
+          builder: (context, state) => VideoCallWrapperWidget(
+              screen: MainMenuScreen(key: Key('main menu'))),
           routes: [
             GoRoute(
                 path: 'tutorial',
                 pageBuilder: (context, state) => buildMyTransition<void>(
-                      child: VideoCallWrapperWidget(screen: TutorialScreen(key: Key('tutorial'))),
+                      child: VideoCallWrapperWidget(
+                          screen: TutorialScreen(key: Key('tutorial'))),
                       color: context.watch<Palette>().backgroundLevelSelection,
                     ),
                 routes: [
                   GoRoute(
                     path: 'intro/:level',
                     builder: (context, state) {
+                      new Logger('main').info('krampes');
+                      new Logger('main').info(state.params);
                       final levelNumber = int.parse(state.params['level']!);
                       return TutorialIntroWidget(levelNumber: levelNumber);
                     },
@@ -159,7 +162,8 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                     path: 'session/:level',
                     builder: (context, state) {
-                      return VideoCallWrapperWidget(screen: TutorialGameInstance());
+                      return VideoCallWrapperWidget(
+                          screen: TutorialGameInstance());
                     },
                   ),
                   GoRoute(
@@ -174,30 +178,34 @@ class MyApp extends StatelessWidget {
                 ]),
             GoRoute(
               path: 'settings',
-              builder: (context, state) =>
-                  VideoCallWrapperWidget(screen: SettingsScreen(key: Key('settings'))),
+              builder: (context, state) => VideoCallWrapperWidget(
+                  screen: SettingsScreen(key: Key('settings'))),
             ),
             GoRoute(
               path: 'moremenu',
-              builder: (context, state) => VideoCallWrapperWidget(screen: MoreMenu(key: Key('moremenu'))),
+              builder: (context, state) => VideoCallWrapperWidget(
+                  screen: MoreMenu(key: Key('moremenu'))),
             ),
             GoRoute(
                 path: 'freeplay',
-                builder: (context, state) => VideoCallWrapperWidget(screen: FreePlay(key: UniqueKey())),
+                builder: (context, state) =>
+                    VideoCallWrapperWidget(screen: FreePlay(key: UniqueKey())),
                 routes: [
                   GoRoute(
                       path: 'oneplayer',
                       builder: (context, state) {
-                        return VideoCallWrapperWidget(screen: OnePlayerPlaySessionScreen(
-                            winRoute: '/freeplaywon'));
+                        return VideoCallWrapperWidget(
+                            screen: OnePlayerPlaySessionScreen(
+                                winRoute: '/freeplaywon'));
                       }),
                   GoRoute(
                       path: 'twoplayer',
                       builder: (context, state) {
                         return Consumer<GameState>(
                             builder: (context, gameState, child) {
-                          return VideoCallWrapperWidget(screen: TwoPlayerPlaySessionScreen(
-                              gameState: gameState));
+                          return VideoCallWrapperWidget(
+                              screen: TwoPlayerPlaySessionScreen(
+                                  gameState: gameState));
                         });
                       })
                 ]),
@@ -229,8 +237,8 @@ class MyApp extends StatelessWidget {
                 ]),
             GoRoute(
                 path: 'buildpuzzle',
-                builder: (context, state) =>
-                    VideoCallWrapperWidget(screen: BuildPuzzleScreen(key: Key('build puzzle'))),
+                builder: (context, state) => VideoCallWrapperWidget(
+                    screen: BuildPuzzleScreen(key: Key('build puzzle'))),
                 routes: [
                   GoRoute(
                       path: '1player',
@@ -245,17 +253,17 @@ class MyApp extends StatelessWidget {
                 ]),
             GoRoute(
                 path: 'party',
-                builder: (context, state) =>
-                    VideoCallWrapperWidget(screen: PartyScreen(key: Key('party'))),
+                builder: (context, state) => VideoCallWrapperWidget(
+                    screen: PartyScreen(key: Key('party'))),
                 routes: [
                   GoRoute(
                       path: 'join',
-                      builder: (context, state) =>
-                          VideoCallWrapperWidget(screen: JoinPartyScreen(key: Key('join party')))),
+                      builder: (context, state) => VideoCallWrapperWidget(
+                          screen: JoinPartyScreen(key: Key('join party')))),
                   GoRoute(
                       path: 'start',
-                      builder: (context, state) =>
-                          VideoCallWrapperWidget(screen: StartPartyScreen(key: Key('start party'))))
+                      builder: (context, state) => VideoCallWrapperWidget(
+                          screen: StartPartyScreen(key: Key('start party'))))
                 ]),
           ]),
     ],

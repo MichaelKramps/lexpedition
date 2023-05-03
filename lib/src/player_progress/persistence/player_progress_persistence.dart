@@ -8,6 +8,8 @@
 /// local preferences to cloud saves.
 abstract class PlayerProgressPersistence {
   Future<int> getHighestLevelReached();
+  Future<bool> getTutorialPassed();
 
   Future<void> saveHighestLevelReached(int level);
+  Future<void> saveTutorialPassed(bool passed);
 }

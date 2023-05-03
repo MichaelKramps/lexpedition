@@ -8,6 +8,7 @@ import 'player_progress_persistence.dart';
 /// Useful for testing.
 class MemoryOnlyPlayerProgressPersistence implements PlayerProgressPersistence {
   int level = 0;
+  bool passed = false;
 
   @override
   Future<int> getHighestLevelReached() async {
@@ -16,8 +17,20 @@ class MemoryOnlyPlayerProgressPersistence implements PlayerProgressPersistence {
   }
 
   @override
+  Future<bool> getTutorialPassed() async {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    return passed;
+  }
+
+  @override
   Future<void> saveHighestLevelReached(int level) async {
     await Future<void>.delayed(const Duration(milliseconds: 500));
     this.level = level;
+  }
+
+  @override
+  Future<void> saveTutorialPassed(bool passed) async {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    this.passed = passed;
   }
 }

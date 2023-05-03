@@ -5,6 +5,8 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
+import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
 
 import 'persistence/player_progress_persistence.dart';
 
@@ -15,6 +17,7 @@ class PlayerProgress extends ChangeNotifier {
   final PlayerProgressPersistence _store;
 
   int _highestLevelReached = 0;
+  bool _tutorialPassed = false;
 
   /// Creates an instance of [PlayerProgress] backed by an injected
   /// persistence [store].
@@ -22,15 +25,24 @@ class PlayerProgress extends ChangeNotifier {
 
   /// The highest level that the player has reached so far.
   int get highestLevelReached => _highestLevelReached;
+  bool get tutorialPassed => _tutorialPassed;
 
   /// Fetches the latest data from the backing persistence store.
   Future<void> getLatestFromStore() async {
     final level = await _store.getHighestLevelReached();
+    final bool passed = await _store.getTutorialPassed();
     if (level > _highestLevelReached) {
       _highestLevelReached = level;
       notifyListeners();
     } else if (level < _highestLevelReached) {
       await _store.saveHighestLevelReached(_highestLevelReached);
+    }
+
+    if (passed) {
+      _tutorialPassed = passed;
+      notifyListeners();
+    } else if (_tutorialPassed) {
+      await _store.saveTutorialPassed(_tutorialPassed);
     }
   }
 
@@ -38,8 +50,10 @@ class PlayerProgress extends ChangeNotifier {
   /// playing the game for the first time.
   void reset() {
     _highestLevelReached = 0;
+    _tutorialPassed = false;
     notifyListeners();
     _store.saveHighestLevelReached(_highestLevelReached);
+    _store.saveTutorialPassed(_tutorialPassed);
   }
 
   /// Registers [level] as reached.
@@ -50,8 +64,26 @@ class PlayerProgress extends ChangeNotifier {
     if (level > _highestLevelReached) {
       _highestLevelReached = level;
       notifyListeners();
+      if (level > 100 && level < 200) {
+        if ((level - 100) >= quickTutorialLevels.length) {
+          setTutorialPassed(true);
+        }
+      } else if (level > 200) {
+        if ((level - 200) >= fullTutorialLevels.length) {
+          setTutorialPassed(true);
+        }
+      }
 
       unawaited(_store.saveHighestLevelReached(level));
+    }
+  }
+
+  void setTutorialPassed(bool passed) {
+    if (passed && !_tutorialPassed) {
+      _tutorialPassed = passed;
+      notifyListeners();
+
+      unawaited(_store.saveTutorialPassed(passed));
     }
   }
 }

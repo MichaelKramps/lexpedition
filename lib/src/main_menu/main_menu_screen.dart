@@ -8,7 +8,6 @@ import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/main_menu/new_player_menu.dart';
 import 'package:lexpedition/src/main_menu/tutorial_complete_player_menu.dart';
 import 'package:lexpedition/src/player_progress/player_progress.dart';
-import 'package:lexpedition/src/tutorial/tutorial_levels.dart';
 import 'package:provider/provider.dart';
 
 import '../style/palette.dart';
@@ -46,7 +45,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
   }
 
   Widget determineCorrectMenuToUse(PlayerProgress playerProgress) {
-    if (playerProgress.highestLevelReached >= tutorialLevels.length) {
+    if (playerProgress.tutorialPassed) {
       return TutorialCompletePlayerMenu();
     } else {
       return NewPlayerMenu();

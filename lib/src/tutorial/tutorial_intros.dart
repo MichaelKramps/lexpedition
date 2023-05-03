@@ -5,7 +5,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
-import 'package:lexpedition/src/tutorial/tutorial_levels.dart';
+import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
+import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
@@ -28,7 +29,7 @@ class TutorialIntroWidget extends StatelessWidget {
 
     const gap = SizedBox(height: 10);
 
-    GameLevel level = tutorialLevels[levelNumber - 1];
+    GameLevel level = levelNumber < 200 ? quickTutorialLevels[levelNumber - 101] : fullTutorialLevels[levelNumber - 201];
 
     return Scaffold(
       backgroundColor: palette.backgroundPlaySession,
@@ -68,35 +69,48 @@ class TutorialIntroWidget extends StatelessWidget {
   }
 
   Widget determineTutorialInfo(int levelNumber) {
-    String text = 'Oops!';
+    String text;
 
     TextStyle textStyle = const TextStyle(fontSize: 20);
 
-    if (levelNumber == 1) {
-      text =
-          'Let\'s learn the basics of the board and how to select letters and submit answers.';
-    } else if (levelNumber == 2) {
-      text =
-          'To charge a letter tile, it may need to be used multiple times! The dots on the tile indicate the required number of uses!';
-    } else if (levelNumber == 3) {
-      text =
-          'To charge Green triangle tiles, use them at the beginning of a word!';
-    } else if (levelNumber == 4) {
-      text = 'To charge Red pentagon tiles, use them at the end of a word!';
-    } else if (levelNumber == 5) {
-      text = 'Now try a level using all three types of tiles!';
-    } else if (levelNumber == 6) {
-      // need more complicated widget
-      return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-        Text(
-            'When you make a word of 5+ letters, a magic blast will fire from the last letter tile in the word. The magic blast can charge letter tiles!',
-            style: textStyle),
-        Image.asset('assets/images/staveup.png'),
-        Text('Click on the stave to change the direction of the magic blast!',
-            style: textStyle)
-      ]);
-    } else if (levelNumber == 7) {
-      text = 'Clear obstacles from tiles using the magic blast!';
+    switch (levelNumber) {
+      case 101:
+        text =
+            'Use touching letter tiles to make words. Words must be at least 3 letters long. Charge all the letter tiles to beat the level!';
+        break;
+      case 102:
+        text =
+            'To charge a letter tile, it may need to be used multiple times! The dots on the tile indicate the required number of uses!';
+        break;
+      case 103:
+        text =
+            'To charge Green triangle tiles, use them at the beginning of a word!';
+        break;
+      case 104:
+        text = 'To charge Red pentagon tiles, use them at the end of a word!';
+        break;
+      case 105:
+        text = 'Now try a level using all three types of tiles!';
+        break;
+      case 106:
+        // need more complicated widget
+        return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          Text(
+              'When you make a word of 5+ letters, a magic blast will fire from the last letter tile in the word. The magic blast can charge letter tiles!',
+              style: textStyle),
+          Image.asset('assets/images/staveup.png'),
+          Text('Click on the stave to change the direction of the magic blast!',
+              style: textStyle)
+        ]);
+      case 107:
+        text = 'Clear obstacles from tiles using the magic blast!';
+        break;
+      case 201:
+        text =
+            'Let\'s learn the basics of the board and how to select letters and submit answers.';
+        break;
+      default:
+        text = 'No intro text has been set for this level yet';
     }
 
     return Text(

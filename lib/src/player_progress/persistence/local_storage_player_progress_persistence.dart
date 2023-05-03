@@ -19,8 +19,20 @@ class LocalStoragePlayerProgressPersistence extends PlayerProgressPersistence {
   }
 
   @override
+  Future<bool> getTutorialPassed() async {
+    final prefs = await instanceFuture;
+    return prefs.getBool('tutorialPassed') ?? false;
+  }
+
+  @override
   Future<void> saveHighestLevelReached(int level) async {
     final prefs = await instanceFuture;
     await prefs.setInt('highestLevelReached', level);
+  }
+  
+  @override
+  Future<void> saveTutorialPassed(bool passed) async {
+    final prefs = await instanceFuture;
+    await prefs.setBool('tutorialPassed', passed);
   }
 }
