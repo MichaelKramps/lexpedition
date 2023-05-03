@@ -10,23 +10,27 @@ class TileInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (letterTile.tileType != TileType.empty) {
-      String letter = letterTile.letter.toUpperCase();
       return Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Text(letter,
+        Text(determineTileText(letterTile),
             style: TextStyle(
+                fontFamily: "anything",
                 fontSize: Constants.bigFont,
                 height: 0.85,
                 color: determineTextColor(
                     letterTile.requiredCharges, letterTile.currentCharges))),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          for (int charge = 0;
-              charge < (letterTile.requiredCharges - letterTile.currentCharges);
+          for (int charge = 1;
+              charge <= letterTile.requiredCharges;
               charge++) ...[
-            Text('.',
+            Text(charge <= letterTile.currentCharges ? '\u25A0' : '\u25A1',
                 style: TextStyle(
-                    fontSize: Constants.smallFont,
-                    height: 0.01,
-                    color: Colors.white))
+                    fontFamily: "anything",
+                    fontWeight: FontWeight.w600,
+                    fontSize: Constants.verySmallFont,
+                    height: 0.4,
+                    color: charge <= letterTile.currentCharges
+                        ? Colors.green
+                        : Colors.black))
           ]
         ])
       ]);
@@ -36,10 +40,23 @@ class TileInfoWidget extends StatelessWidget {
   }
 
   Color determineTextColor(int requiredCharges, int currentCharges) {
-    if (currentCharges < requiredCharges) {
+    /*if (currentCharges < requiredCharges) {
       return Colors.white;
-    } else {
+    } else {*/
       return Colors.black;
+    //}
+  }
+
+  String determineTileText(LetterTile letterTile) {
+    String letter = letterTile.letter.toUpperCase();
+
+    switch (letterTile.tileType) {
+      case TileType.start:
+        return letter + '-';
+      case TileType.end:
+        return '-' + letter;
+      default:
+        return letter;
     }
   }
 }

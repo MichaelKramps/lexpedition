@@ -16,8 +16,6 @@ class BlastWidget extends StatefulWidget {
 }
 
 class _BlastWidgetState extends State<BlastWidget> {
-  Offset _offset = Offset.zero;
-
   @override
   Widget build(BuildContext context) {
     return Visibility(
@@ -25,11 +23,5 @@ class _BlastWidgetState extends State<BlastWidget> {
         maintainAnimation: false,
         child: Image.asset('assets/images/blast.png',
             height: Constants().tileSize(), width: Constants().tileSize()));
-  }
-
-  void determineNewOffset() {
-    setState(() {
-      _offset = Offset(_offset.dx - 50, _offset.dy);
-    });
   }
 }

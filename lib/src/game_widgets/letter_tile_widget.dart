@@ -24,10 +24,10 @@ class LetterTileWidget extends StatelessWidget {
       return Stack(children: [
         Container(
             margin: EdgeInsets.all(Constants().tileMargin()),
-            decoration: BoxDecoration(
+            /*decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage(determineTileImage(letterTile)),
-                    fit: BoxFit.cover)),
+                    fit: BoxFit.cover)),*/
             child: TextButton(
                 onPressed: () {},
                 style: style,
