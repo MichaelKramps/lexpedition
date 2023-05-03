@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Constants {
   double screenWidth = 10;
   double screenHeight = 10;
@@ -113,4 +115,12 @@ class Constants {
 
   static const String rtcMessageSplitter = ':;:!:';
   static const String rtcLoadLevelDataSplitter = ':';
+
+  //User Interface Constants
+  static const double buttonWidth = 240;
+  static const double buttonDepth = 3;
+  static const double buttonBorderRadiusAmount = 5;
+  static const BorderRadiusGeometry buttonBorderRadius = BorderRadius.all(Radius.circular(Constants.buttonBorderRadiusAmount));
+  static const Duration buttonPressAnimationDuration = Duration(milliseconds: 75); 
+  static const String buttonUIFont = 'Black Han Sans';
 }
