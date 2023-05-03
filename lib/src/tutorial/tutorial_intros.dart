@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
 import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
@@ -51,7 +52,7 @@ class TutorialIntroWidget extends StatelessWidget {
             Center(
               child: Text(
                 level.getName(),
-                style: TextStyle(fontFamily: 'Permanent Marker', fontSize: 50),
+                style: TextStyle(fontSize: Constants.bigFont),
               ),
             ),
             gap,
@@ -74,7 +75,7 @@ class TutorialIntroWidget extends StatelessWidget {
   Widget determineTutorialInfo(int levelNumber) {
     String text;
 
-    TextStyle textStyle = const TextStyle(fontSize: 20);
+    TextStyle textStyle = TextStyle(fontSize: Constants.smallFont);
 
     switch (levelNumber) {
       case 101:

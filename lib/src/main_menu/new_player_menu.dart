@@ -20,6 +20,12 @@ class _NewPlayerMenuState extends State<NewPlayerMenu> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        Container(
+          decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage(Constants.backgroundImagePath),
+              fit: BoxFit.cover),
+        )),
         SizedBox.expand(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:provider/provider.dart';
 
 import '../in_app_purchase/in_app_purchase.dart';
@@ -29,12 +30,11 @@ class SettingsScreen extends StatelessWidget {
         squarishMainArea: ListView(
           children: [
             _gap,
-            const Text(
+            Text(
               'Settings',
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontFamily: 'Permanent Marker',
-                fontSize: 55,
+                fontSize: Constants.bigFont,
                 height: 1,
               ),
             ),
@@ -130,18 +130,16 @@ class _NameChangeLine extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(title,
-                style: const TextStyle(
-                  fontFamily: 'Permanent Marker',
-                  fontSize: 30,
+                style: TextStyle(
+                  fontSize: Constants.smallFont,
                 )),
             const Spacer(),
             ValueListenableBuilder(
               valueListenable: settings.playerName,
               builder: (context, name, child) => Text(
                 '‘$name’',
-                style: const TextStyle(
-                  fontFamily: 'Permanent Marker',
-                  fontSize: 30,
+                style: TextStyle(
+                  fontSize: Constants.smallFont,
                 ),
               ),
             ),
@@ -172,9 +170,8 @@ class _SettingsLine extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(title,
-                style: const TextStyle(
-                  fontFamily: 'Permanent Marker',
-                  fontSize: 30,
+                style: TextStyle(
+                  fontSize: Constants.smallFont,
                 )),
             const Spacer(),
             icon,

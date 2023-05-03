@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
@@ -17,7 +18,7 @@ import '../style/responsive_screen.dart';
 import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
 
 class TutorialScreen extends StatelessWidget {
-  String tutorialPath;
+  final String tutorialPath;
 
   TutorialScreen({super.key, required this.tutorialPath});
 
@@ -34,13 +35,13 @@ class TutorialScreen extends StatelessWidget {
         body: ResponsiveScreen(
           squarishMainArea: Column(
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.all(16),
                 child: Center(
                   child: Text(
                     'Tutorial Levels',
                     style:
-                        TextStyle(fontFamily: 'Permanent Marker', fontSize: 30),
+                        TextStyle(fontSize: Constants.smallFont),
                   ),
                 ),
               ),
@@ -63,7 +64,7 @@ class TutorialScreen extends StatelessWidget {
                           GoRouter.of(context)
                               .push(level.tutorialKey < 200 ? '/tutorial/quick/intro/${level.tutorialKey}' : '/tutorial/full/intro/${level.tutorialKey}');
                         },
-                        leading: Text(level.tutorialKey.toString()),
+                        leading: Text(level.tutorialKey < 200 ? (level.tutorialKey - 100).toString() : (level.tutorialKey - 200).toString()),
                         title: Text('${level.name}'),
                       )
                   ],

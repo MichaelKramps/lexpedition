@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:provider/provider.dart';
 
@@ -45,11 +46,11 @@ class WinGameScreen extends StatelessWidget {
                 ),
               ],
               gap,
-              const Center(
+              Center(
                 child: Text(
                   'You won!',
                   style:
-                      TextStyle(fontFamily: 'Permanent Marker', fontSize: 50),
+                      TextStyle(fontSize: Constants.bigFont),
                 ),
               ),
               gap,
@@ -58,8 +59,7 @@ class WinGameScreen extends StatelessWidget {
                   'Average Score: ${gameState.level.averageGuesses.round()}\n'
                   'Best Score: ${gameState.level.bestAttempt}\n'
                   'My Score: ${gameState.guessList.length}',
-                  style: const TextStyle(
-                      fontFamily: 'Permanent Marker', fontSize: 20),
+                  style: TextStyle(fontSize: Constants.smallFont),
                 ),
               ),
             ],
