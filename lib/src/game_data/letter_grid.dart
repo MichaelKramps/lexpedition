@@ -251,8 +251,14 @@ class LetterGrid {
 
   void blastFromIndex(int index) {
     assert(index >= 0 && index < 24);
-    late List<int> indexesToBlast;
+    List<int> indexesToBlast = LetterGrid.indexesToBlast(index, blastDirection);
 
+    for (int index in indexesToBlast) {
+      letterTiles[index].blast();
+    }
+  }
+
+  static List<int> indexesToBlast(int index, BlastDirection blastDirection) {
     List<List<int>> rows = [
       [0, 1, 2, 3, 4, 5],
       [6, 7, 8, 9, 10, 11],
@@ -272,20 +278,17 @@ class LetterGrid {
     if (blastDirection == BlastDirection.horizontal) {
       for (List<int> row in rows) {
         if (row.contains(index)) {
-          indexesToBlast = row;
+          return row;
         }
       }
     } else {
       for (List<int> column in columns) {
         if (column.contains(index)) {
-          indexesToBlast = column;
+          return column;
         }
       }
     }
-
-    for (int index in indexesToBlast) {
-      letterTiles[index].blast();
-    }
+    return [];
   }
 
   void unblast() {

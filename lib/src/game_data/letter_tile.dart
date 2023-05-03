@@ -25,6 +25,7 @@ class LetterTile {
   LetterTile.fromEncodedString(String? encodedString, int index) {
     if (encodedString == null || encodedString == 'null') {
       this.tileType = TileType.empty;
+      this.index = index;
     } else {
       if (encodedString.length == 4) {
         //represents starting tile
@@ -43,7 +44,8 @@ class LetterTile {
         this.blastFrom = encodedString[7] == '1' ? true : false;
         try {
           this.primedForBlast = encodedString[8] == '1' ? true : false;
-          this.primedForBlastFromPartner = encodedString[9] == '1' ? true : false;
+          this.primedForBlastFromPartner =
+              encodedString[9] == '1' ? true : false;
         } catch (e) {
           this.primedForBlast = false;
           this.primedForBlastFromPartner = false;
