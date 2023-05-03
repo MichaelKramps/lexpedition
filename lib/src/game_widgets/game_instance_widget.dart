@@ -71,7 +71,8 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
                     handleMouseEvent(event.position.dx, event.position.dy, true)
                   },
               child: LetterGridWidget(
-                  letterGrid: widget.gameState.getMyGrid() as LetterGrid))
+                  gameState: widget.gameState,
+                  letterGrid: widget.gameState.getMyGrid()!))
         ]),
         Expanded(child: determineColumn(widget.rightColumn))
       ])

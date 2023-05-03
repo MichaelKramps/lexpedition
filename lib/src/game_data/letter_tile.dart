@@ -149,9 +149,8 @@ class LetterTile {
   }
 
   bool allowedToSelect(LetterTile nextSelection) {
+    //cannot select same tile twice
     if (!nextSelection.selected) {
-      //cannot select same tile twice
-      //cannot select a tile with an obstacle on it
       for (int allowedIndex in this.adjacentIndexes()) {
         if (allowedIndex == nextSelection.index) {
           return true;

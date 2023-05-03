@@ -345,7 +345,7 @@ class GameState extends ChangeNotifier {
       if (currentGuess.length >= Constants.guessLengthToActivateBlast + 1) {
         currentGuess[currentGuess.length - 2].unprimeForBlast();
       }
-    } else if (!isSlideEvent && letterTile == currentGuess.last) {
+    } else if (!isSlideEvent && currentGuess.length > 0 && letterTile == currentGuess.last) {
       // unselect tile, unprime it and remove from current guess
       letterTile.unselect();
       letterTile.unprimeForBlast();

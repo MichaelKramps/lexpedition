@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_widgets/letter_tile_widget.dart';
@@ -148,6 +149,7 @@ class _BuildOnePlayerPuzzleWidgetState
                     for (var letterTile in row) ...[
                       LetterTileWidget(
                           letterTile: letterTile,
+                          gameState: new GameState.emptyState(),
                           blastDirection: _grid.blastDirection)
                     ]
                   ])

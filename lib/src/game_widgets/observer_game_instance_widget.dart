@@ -36,7 +36,8 @@ class ObserverGameInstanceWidget extends StatelessWidget {
             children: [
               ObserverBlastDirectionWidget(gameState: gameState),
               LetterGridWidget(
-                  letterGrid: gameState.getTheirGrid() as LetterGrid),
+                  gameState: gameState,
+                  letterGrid: gameState.getTheirGrid()!),
           ]),
           Expanded(child: determineColumn(rightColumn))
       ]),
