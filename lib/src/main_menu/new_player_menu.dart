@@ -44,50 +44,48 @@ class _NewPlayerMenuState extends State<NewPlayerMenu> {
           visible: _showTutorialBox,
           child: AlertDialog(
               content: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    'Which Tutorial path will you take?',
-                    style: TextStyle(fontSize: Constants.mediumFont),
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                Text(
+                  'Which Tutorial path will you take?',
+                  style: TextStyle(fontSize: Constants.mediumFont),
+                ),
+                SizedBox(height: 24),
+                Row(children: [
+                  BasicUserInterfaceButton(
+                    buttonText: 'Full Tutorial',
+                    onPressed: () {
+                      GoRouter.of(context).push('/tutorial/full');
+                    },
                   ),
-                  SizedBox(height: 24),
-                  Row(
-                    children: [
-                      BasicUserInterfaceButton(
-                        buttonText: 'Full Tutorial',
-                        onPressed: () {},
-                      ),
-                      SizedBox(width: 16),
-                      BasicUserInterfaceButton(
-                        buttonText: 'Quick Tutorial',
-                        onPressed: () {},
-                      )
-                    ]
-                  ),
-                  Row(
-                    children: [
-                      BasicUserInterfaceButton(
-                        buttonText: 'Skip Tutorial',
-                        onPressed: () {
-                          final playerProgress = context.read<PlayerProgress>();
-                          playerProgress.setLevelReached(299);
-                          GoRouter.of(context).push('/');
-                        },
-                      ),
-                      SizedBox(width: 16),
-                      BasicUserInterfaceButton(
-                        buttonText: 'Cancel',
-                        onPressed: () {
-                          setState(() {
-                            _showTutorialBox = false;
-                          });
-                        },
-                      ),
-                    ]
+                  SizedBox(width: 16),
+                  BasicUserInterfaceButton(
+                    buttonText: 'Quick Tutorial',
+                    onPressed: () {
+                      GoRouter.of(context).push('/tutorial/quick');
+                    },
                   )
-                ]
-              )
-          ),
+                ]),
+                Row(children: [
+                  BasicUserInterfaceButton(
+                    buttonText: 'Skip Tutorial',
+                    onPressed: () {
+                      final playerProgress = context.read<PlayerProgress>();
+                      playerProgress.setLevelReached(299);
+                      GoRouter.of(context).push('/');
+                    },
+                  ),
+                  SizedBox(width: 16),
+                  BasicUserInterfaceButton(
+                    buttonText: 'Cancel',
+                    onPressed: () {
+                      setState(() {
+                        _showTutorialBox = false;
+                      });
+                    },
+                  ),
+                ])
+              ])),
         )
       ],
     );

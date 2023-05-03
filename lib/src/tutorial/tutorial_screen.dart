@@ -4,7 +4,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
 import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';
@@ -15,7 +17,9 @@ import '../style/responsive_screen.dart';
 import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
 
 class TutorialScreen extends StatelessWidget {
-  const TutorialScreen({super.key});
+  String tutorialPath;
+
+  TutorialScreen({super.key, required this.tutorialPath});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +27,8 @@ class TutorialScreen extends StatelessWidget {
     final playerProgress = context.watch<PlayerProgress>();
 
     return Consumer<GameState>(builder: (context, gameState, child) {
+      List<GameLevel> chosenTutorialList = tutorialPath == 'full' ? fullTutorialLevels : quickTutorialLevels;
+
       return Scaffold(
         backgroundColor: palette.backgroundLevelSelection,
         body: ResponsiveScreen(
@@ -42,7 +48,7 @@ class TutorialScreen extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
-                    for (final level in fullTutorialLevels)
+                    for (final level in chosenTutorialList)
                       ListTile(
                         enabled: shouldEnableLevel(
                             level.tutorialKey, playerProgress),
@@ -55,7 +61,7 @@ class TutorialScreen extends StatelessWidget {
                               tutorialKey: level.tutorialKey);
 
                           GoRouter.of(context)
-                              .push('/tutorial/intro/${level.tutorialKey}');
+                              .push(level.tutorialKey < 200 ? '/tutorial/quick/intro/${level.tutorialKey}' : '/tutorial/full/intro/${level.tutorialKey}');
                         },
                         leading: Text(level.tutorialKey.toString()),
                         title: Text('${level.name}'),

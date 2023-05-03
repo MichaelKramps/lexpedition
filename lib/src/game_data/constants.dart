@@ -122,5 +122,5 @@ class Constants {
   static const double buttonBorderRadiusAmount = 5;
   static const BorderRadiusGeometry buttonBorderRadius = BorderRadius.all(Radius.circular(Constants.buttonBorderRadiusAmount));
   static const Duration buttonPressAnimationDuration = Duration(milliseconds: 75); 
-  static const String buttonUIFont = 'Black Han Sans';
+  static const String buttonUIFont = 'Syne Mono';
 }

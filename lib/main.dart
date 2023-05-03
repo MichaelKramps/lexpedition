@@ -7,7 +7,6 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/main_menu/more_menu.dart';
-import 'package:lexpedition/src/party/video_call_wrapper_widget.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:lexpedition/src/party/join_party_screen.dart';
 import 'package:lexpedition/src/party/party_screen.dart';
@@ -139,73 +138,105 @@ class MyApp extends StatelessWidget {
     routes: [
       GoRoute(
           path: '/',
-          builder: (context, state) => VideoCallWrapperWidget(
-              screen: MainMenuScreen(key: Key('main menu'))),
+          builder: (context, state) =>
+              const MainMenuScreen(key: Key('main menu')),
           routes: [
             GoRoute(
                 path: 'tutorial',
                 pageBuilder: (context, state) => buildMyTransition<void>(
-                      child: VideoCallWrapperWidget(
-                          screen: TutorialScreen(key: Key('tutorial'))),
+                      child: TutorialScreen(key: Key('tutorial'), tutorialPath: 'full'),
                       color: context.watch<Palette>().backgroundLevelSelection,
                     ),
                 routes: [
                   GoRoute(
-                    path: 'intro/:level',
-                    builder: (context, state) {
-                      new Logger('main').info('krampes');
-                      new Logger('main').info(state.params);
-                      final levelNumber = int.parse(state.params['level']!);
-                      return TutorialIntroWidget(levelNumber: levelNumber);
-                    },
+                    path: 'full',
+                    pageBuilder: (context, state) => buildMyTransition<void>(
+                      child: TutorialScreen(key: Key('tutorial'), tutorialPath: 'full'),
+                      color: context.watch<Palette>().backgroundLevelSelection,
+                    ),
+                    routes: [
+                      GoRoute(
+                        path: 'session/:level',
+                        builder: (context, state) {
+                          return TutorialGameInstance(tutorialPath: 'full');
+                        },
+                      ),
+                      GoRoute(
+                        path: 'won',
+                        builder: (context, state) {
+                          return WinGameScreen(
+                            continueRoute: '/tutorial/full',
+                            key: const Key('tutorial win'),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: 'intro/:level',
+                        builder: (context, state) {
+                          final levelNumber = int.parse(state.params['level']!);
+                          return TutorialIntroWidget(levelNumber: levelNumber, tutorialPath: 'full');
+                        },
+                      )
+                    ]
                   ),
                   GoRoute(
-                    path: 'session/:level',
-                    builder: (context, state) {
-                      return VideoCallWrapperWidget(
-                          screen: TutorialGameInstance());
-                    },
+                    path: 'quick',
+                    pageBuilder: (context, state) => buildMyTransition<void>(
+                      child: TutorialScreen(key: Key('tutorial'), tutorialPath: 'quick'),
+                      color: context.watch<Palette>().backgroundLevelSelection,
+                    ),
+                    routes: [
+                      GoRoute(
+                        path: 'session/:level',
+                        builder: (context, state) {
+                          return TutorialGameInstance(tutorialPath: 'quick');
+                        },
+                      ),
+                      GoRoute(
+                        path: 'won',
+                        builder: (context, state) {
+                          return WinGameScreen(
+                            continueRoute: '/tutorial/quick',
+                            key: const Key('tutorial win'),
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        path: 'intro/:level',
+                        builder: (context, state) {
+                          final levelNumber = int.parse(state.params['level']!);
+                          return TutorialIntroWidget(levelNumber: levelNumber, tutorialPath: 'quick');
+                        },
+                      )
+                    ]
                   ),
-                  GoRoute(
-                    path: 'won',
-                    builder: (context, state) {
-                      return WinGameScreen(
-                        continueRoute: '/tutorial',
-                        key: const Key('tutorial win'),
-                      );
-                    },
-                  )
                 ]),
             GoRoute(
               path: 'settings',
-              builder: (context, state) => VideoCallWrapperWidget(
-                  screen: SettingsScreen(key: Key('settings'))),
+              builder: (context, state) =>
+                  const SettingsScreen(key: Key('settings')),
             ),
             GoRoute(
               path: 'moremenu',
-              builder: (context, state) => VideoCallWrapperWidget(
-                  screen: MoreMenu(key: Key('moremenu'))),
+              builder: (context, state) => const MoreMenu(key: Key('moremenu')),
             ),
             GoRoute(
                 path: 'freeplay',
-                builder: (context, state) =>
-                    VideoCallWrapperWidget(screen: FreePlay(key: UniqueKey())),
+                builder: (context, state) => FreePlay(key: UniqueKey()),
                 routes: [
                   GoRoute(
                       path: 'oneplayer',
                       builder: (context, state) {
-                        return VideoCallWrapperWidget(
-                            screen: OnePlayerPlaySessionScreen(
-                                winRoute: '/freeplaywon'));
+                        return OnePlayerPlaySessionScreen(
+                            winRoute: '/freeplaywon');
                       }),
                   GoRoute(
                       path: 'twoplayer',
                       builder: (context, state) {
                         return Consumer<GameState>(
                             builder: (context, gameState, child) {
-                          return VideoCallWrapperWidget(
-                              screen: TwoPlayerPlaySessionScreen(
-                                  gameState: gameState));
+                          return TwoPlayerPlaySessionScreen(
+                              gameState: gameState);
                         });
                       })
                 ]),
@@ -237,8 +268,8 @@ class MyApp extends StatelessWidget {
                 ]),
             GoRoute(
                 path: 'buildpuzzle',
-                builder: (context, state) => VideoCallWrapperWidget(
-                    screen: BuildPuzzleScreen(key: Key('build puzzle'))),
+                builder: (context, state) =>
+                    const BuildPuzzleScreen(key: Key('build puzzle')),
                 routes: [
                   GoRoute(
                       path: '1player',
@@ -253,17 +284,35 @@ class MyApp extends StatelessWidget {
                 ]),
             GoRoute(
                 path: 'party',
-                builder: (context, state) => VideoCallWrapperWidget(
-                    screen: PartyScreen(key: Key('party'))),
+                builder: (context, state) =>
+                    const PartyScreen(key: Key('party')),
                 routes: [
                   GoRoute(
                       path: 'join',
-                      builder: (context, state) => VideoCallWrapperWidget(
-                          screen: JoinPartyScreen(key: Key('join party')))),
+                      builder: (context, state) =>
+                          const JoinPartyScreen(key: Key('join party'))),
                   GoRoute(
                       path: 'start',
-                      builder: (context, state) => VideoCallWrapperWidget(
-                          screen: StartPartyScreen(key: Key('start party'))))
+                      builder: (context, state) =>
+                          const StartPartyScreen(key: Key('start party')))
+                ]),
+            GoRoute(
+                path: 'lexpedition',
+                builder: (context, state) =>
+                    Container(),
+                routes:[
+                    GoRoute (
+                      path: 'oneplayer',
+                      builder: (context, state) =>
+                          Container()),
+                    GoRoute (
+                      path: 'twoplayer',
+                      builder: (context, state) => 
+                          Container()),
+                    GoRoute (
+                      path: 'backlog',
+                      builder: (context, state) => 
+                          Container())
                 ]),
           ]),
     ],
@@ -338,7 +387,8 @@ class MyApp extends StatelessWidget {
 
           return MaterialApp.router(
             title: 'Lexpedition',
-            theme: ThemeData.from(
+            theme: ThemeData(
+              fontFamily: 'Syne Mono',
               colorScheme: ColorScheme.fromSeed(
                 seedColor: palette.darkPen,
                 background: palette.backgroundMain,

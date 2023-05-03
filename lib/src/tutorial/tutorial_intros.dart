@@ -17,8 +17,9 @@ import '../style/responsive_screen.dart';
 
 class TutorialIntroWidget extends StatelessWidget {
   final int levelNumber;
+  final String tutorialPath;
 
-  const TutorialIntroWidget({super.key, required this.levelNumber});
+  const TutorialIntroWidget({super.key, required this.levelNumber, required this.tutorialPath});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,9 @@ class TutorialIntroWidget extends StatelessWidget {
 
     const gap = SizedBox(height: 10);
 
-    GameLevel level = levelNumber < 200 ? quickTutorialLevels[levelNumber - 101] : fullTutorialLevels[levelNumber - 201];
+    GameLevel level = levelNumber < 200
+        ? quickTutorialLevels[levelNumber - 101]
+        : fullTutorialLevels[levelNumber - 201];
 
     return Scaffold(
       backgroundColor: palette.backgroundPlaySession,
@@ -60,7 +63,7 @@ class TutorialIntroWidget extends StatelessWidget {
         rectangularMenuArea: ElevatedButton(
           onPressed: () {
             GoRouter.of(context)
-                .push('/tutorial/session/' + levelNumber.toString());
+                .push('/tutorial/' + tutorialPath + '/session/' + levelNumber.toString());
           },
           child: const Text('Play'),
         ),

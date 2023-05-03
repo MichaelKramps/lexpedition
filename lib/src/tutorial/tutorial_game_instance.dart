@@ -6,7 +6,9 @@ import 'package:lexpedition/src/tutorial/tutorial_window.dart';
 import 'package:provider/provider.dart';
 
 class TutorialGameInstance extends StatelessWidget {
-  const TutorialGameInstance({super.key});
+  final String tutorialPath;
+
+  TutorialGameInstance({super.key, required this.tutorialPath});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +16,7 @@ class TutorialGameInstance extends StatelessWidget {
       return Stack(
         fit: StackFit.expand,
         children: [
-          OnePlayerPlaySessionScreen(winRoute: '/tutorial/won'),
+          OnePlayerPlaySessionScreen(winRoute: '/tutorial/' + tutorialPath + '/won'),
           Visibility(
             visible: gameState.currentTutorialStepExists(),
             child: ColorFiltered(
@@ -36,8 +38,7 @@ class TutorialGameInstance extends StatelessWidget {
               ),
             ),
           ),
-          for (TutorialWindow window
-                      in gameState.getCurrentTutorialStep()) ...[
+          for (TutorialWindow window in gameState.getCurrentTutorialStep()) ...[
             createTutorialText(window, gameState)
           ]
         ],
@@ -68,24 +69,22 @@ class TutorialGameInstance extends StatelessWidget {
     }
   }
 
-  Widget createTutorialText(TutorialWindow tutorialWindow, GameState gameState) {
+  Widget createTutorialText(
+      TutorialWindow tutorialWindow, GameState gameState) {
     if (tutorialWindow.windowType == TutorialWindowType.text) {
       return IgnorePointer(
-        ignoring: tutorialWindow.ignorePointer,
-        child: GestureDetector(
-          onTap: () => tutorialWindow.handleTap(gameState),
-          child: Container(
-            margin: EdgeInsets.only(
-                  top: tutorialWindow.getTopAlignment(),
-                  left: tutorialWindow.getLeftAlignment()),
-            child: Text(tutorialWindow.getText(), 
-              style: TextStyle(
-                color: Colors.white, 
-                decoration: TextDecoration.none, 
-                fontSize: Constants.mediumFont))
-          )
-        )
-      );
+          ignoring: tutorialWindow.ignorePointer,
+          child: GestureDetector(
+              onTap: () => tutorialWindow.handleTap(gameState),
+              child: Container(
+                  margin: EdgeInsets.only(
+                      top: tutorialWindow.getTopAlignment(),
+                      left: tutorialWindow.getLeftAlignment()),
+                  child: Text(tutorialWindow.getText(),
+                      style: TextStyle(
+                          color: Colors.white,
+                          decoration: TextDecoration.none,
+                          fontSize: Constants.mediumFont)))));
     } else {
       return SizedBox.shrink();
     }
