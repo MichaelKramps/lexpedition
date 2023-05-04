@@ -43,20 +43,21 @@ class TileInfoWidget extends StatelessWidget {
     /*if (currentCharges < requiredCharges) {
       return Colors.white;
     } else {*/
-      return Colors.black;
+    return Colors.black;
     //}
   }
 
   String determineTileText(LetterTile letterTile) {
     String letter = letterTile.letter.toUpperCase();
 
-    switch (letterTile.tileType) {
+    /*switch (letterTile.tileType) {
       case TileType.start:
         return letter + '-';
       case TileType.end:
         return '-' + letter;
       default:
         return letter;
-    }
+    }*/
+    return letter;
   }
 }

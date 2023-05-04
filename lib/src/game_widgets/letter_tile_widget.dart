@@ -7,7 +7,6 @@ import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_widgets/obstacle_widget.dart';
 import 'package:lexpedition/src/game_widgets/blast_widget.dart';
 import 'package:lexpedition/src/game_widgets/tile_info_widget.dart';
-import 'package:logging/logging.dart';
 
 class LetterTileWidget extends StatelessWidget {
   final LetterTile letterTile;
@@ -30,7 +29,7 @@ class LetterTileWidget extends StatelessWidget {
       return Stack(children: [
         Container(
             margin: EdgeInsets.all(Constants().tileMargin()),
-            decoration: BoxDecoration(color: determineBackgroundColor()),
+            decoration: determineTileBackground(),
             child: TextButton(
                 onPressed: () {},
                 style: style,
@@ -56,32 +55,29 @@ class LetterTileWidget extends StatelessWidget {
     }
   }
 
-  String determineTileImage(LetterTile? letterTile) {
-    String imagePath = 'assets/images/';
-
-    if (letterTile != null && letterTile.isCharged()) {
-      switch (letterTile.tileType) {
-        case (TileType.start):
-          return imagePath + 'yellow-start.png';
-        case (TileType.end):
-          return imagePath + 'yellow-end.png';
-        default:
-          return imagePath + 'yellow-basic.png';
-      }
+  Decoration? determineTileBackground() {
+    switch (letterTile.tileType) {
+      case (TileType.start):
+        return BoxDecoration(
+          color: determineBackgroundColor(),
+          image: DecorationImage(
+            image: AssetImage("assets/images/circle.png"),
+            fit: BoxFit.cover,
+          ),
+        );
+      case (TileType.end):
+        return BoxDecoration(
+          color: determineBackgroundColor(),
+          image: DecorationImage(
+            image: AssetImage("assets/images/square.png"),
+            fit: BoxFit.fill,
+          ),
+        );
+      default:
+        return BoxDecoration(
+          color: determineBackgroundColor(),
+        );
     }
-
-    if (letterTile != null) {
-      switch (letterTile.tileType) {
-        case (TileType.start):
-          return imagePath + 'green-start.png';
-        case (TileType.end):
-          return imagePath + 'red-end.png';
-        default:
-          return imagePath + 'blue-basic.png';
-      }
-    }
-
-    return imagePath + 'blue-basic.png';
   }
 
   BorderSide determineTileBorder() {
@@ -131,7 +127,8 @@ class LetterTileWidget extends StatelessWidget {
       return false;
     } else {
       List<int> indexesToBeBlasted = LetterGrid.indexesToBlast(
-          gameState.currentGuess.last.index, gameState.primaryLetterGrid.blastDirection);
+          gameState.currentGuess.last.index,
+          gameState.primaryLetterGrid.blastDirection);
       return indexesToBeBlasted.contains(letterTile.index);
     }
   }
