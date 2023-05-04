@@ -9,3 +9,11 @@ BlastDirection? determineBlastDirection(num? index) {
     return BlastDirection.horizontal;
   }
 }
+
+String determineBlastImagePath(BlastDirection blastDirection) {
+  if (blastDirection == BlastDirection.horizontal) {
+    return 'assets/images/brush-stroke.png';
+  } else {
+    return 'assets/images/brush-stroke-vertical.png';
+  }
+}

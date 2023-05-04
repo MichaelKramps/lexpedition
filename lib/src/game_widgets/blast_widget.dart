@@ -21,7 +21,7 @@ class _BlastWidgetState extends State<BlastWidget> {
     return Visibility(
         visible: widget.beginBlastAnimation,
         maintainAnimation: false,
-        child: Image.asset('assets/images/blast.png',
+        child: Image.asset(determineBlastImagePath(widget.blastDirection),
             height: Constants().tileSize(), width: Constants().tileSize()));
   }
 }

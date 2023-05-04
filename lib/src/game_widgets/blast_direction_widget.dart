@@ -13,28 +13,11 @@ class BlastDirectionWidget extends StatelessWidget {
     return InkResponse(
       onTap: () => {gameState.changeBlastDirectionAndNotify()},
       child: Image.asset(
-        determineImage(),
+        determineBlastImagePath(gameState.getMyGrid()!.blastDirection),
         height: Constants().tileSize(),
         width: Constants().tileSize(),
         semanticLabel: 'blast Direction',
       ),
     );
-  }
-
-  String determineImage() {
-    String path = 'assets/images/';
-
-    switch (gameState.getMyGrid()?.blastDirection) {
-      case (BlastDirection.horizontal):
-        path += 'staveright';
-        break;
-      default:
-        path += 'staveup';
-        break;
-    }
-
-    path += '.png';
-
-    return path;
   }
 }

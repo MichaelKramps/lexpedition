@@ -8,9 +8,18 @@ class ObstacleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-        visible: visible,
-        child: Image.asset('assets/images/butterfly-icon.png',
-            height: Constants().tileSize(), width: Constants().tileSize()));
+    return Positioned.fill(
+      child: Align(
+        alignment: Alignment.center,
+        child: Visibility(
+            visible: visible,
+            child: Container(
+              height: Constants().tileSize() * 0.85,
+              width: Constants().tileSize() * 0.85,
+              color: Colors.black.withOpacity(0.7),
+            )
+        )
+      )
+    );
   }
 }
