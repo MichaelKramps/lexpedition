@@ -11,14 +11,15 @@ import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/real_time_communication.dart';
 import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
 import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
-import 'package:lexpedition/src/tutorial/tutorial_window.dart';
+import 'package:lexpedition/src/tutorial/tutorial_directive.dart';
+import 'package:lexpedition/src/tutorial/tutorial_step.dart';
 import 'package:logging/logging.dart';
 
 class GameState extends ChangeNotifier {
   GameLevel level = GameLevel(gridCode: blankGrid);
   LetterGrid primaryLetterGrid = LetterGrid.blankGrid();
   LetterGrid? secondaryLetterGrid;
-  List<List<TutorialWindow>> tutorialSteps = [];
+  List<TutorialStep> tutorialSteps = [];
   int currentTutorialStep = 0;
   int currentNumberTutorials =
       0; //this number will be different depending on the tutorial path chosen
@@ -50,21 +51,22 @@ class GameState extends ChangeNotifier {
         updateGuessListFromPeerUpdate: updateGuessListFromPeerUpdate);
   }
 
-  Future<void> loadOnePlayerPuzzle(
-      {int? tutorialKey, int? databaseId}) async {
+  Future<void> loadOnePlayerPuzzle({int? tutorialKey, int? databaseId}) async {
     _logger.info('loading a new puzzle');
     resetPuzzle();
     if (tutorialKey != null) {
-      if (tutorialKey < 200) { // 102 denotes quick tutorial level 2
+      if (tutorialKey < 200) {
+        // 102 denotes quick tutorial level 2
         GameLevel tutorialLevel =
-          GameLevel.copy(quickTutorialLevels[tutorialKey - 101]);
-          level = tutorialLevel;
-      } else { // 204 denotes full tutorial level 4
+            GameLevel.copy(quickTutorialLevels[tutorialKey - 101]);
+        level = tutorialLevel;
+      } else {
+        // 204 denotes full tutorial level 4
         GameLevel tutorialLevel =
-          GameLevel.copy(fullTutorialLevels[tutorialKey - 201]);
-          level = tutorialLevel;
+            GameLevel.copy(fullTutorialLevels[tutorialKey - 201]);
+        level = tutorialLevel;
       }
-      
+
       if (level.tutorialSteps != null) {
         this.tutorialSteps = level.tutorialSteps!;
       }
@@ -225,11 +227,11 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<TutorialWindow> getCurrentTutorialStep() {
+  TutorialStep getCurrentTutorialStep() {
     if (currentTutorialStepExists()) {
       return tutorialSteps[currentTutorialStep];
     } else {
-      return [];
+      return TutorialStep();
     }
   }
 
@@ -345,7 +347,9 @@ class GameState extends ChangeNotifier {
       if (currentGuess.length >= Constants.guessLengthToActivateBlast + 1) {
         currentGuess[currentGuess.length - 2].unprimeForBlast();
       }
-    } else if (!isSlideEvent && currentGuess.length > 0 && letterTile == currentGuess.last) {
+    } else if (!isSlideEvent &&
+        currentGuess.length > 0 &&
+        letterTile == currentGuess.last) {
       // unselect tile, unprime it and remove from current guess
       letterTile.unselect();
       letterTile.unprimeForBlast();

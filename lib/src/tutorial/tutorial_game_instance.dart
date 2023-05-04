@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/play_session/one_player_play_session_screen.dart';
-import 'package:lexpedition/src/tutorial/tutorial_window.dart';
+import 'package:lexpedition/src/tutorial/tutorial_directive.dart';
 import 'package:provider/provider.dart';
 
 class TutorialGameInstance extends StatelessWidget {
@@ -16,7 +16,8 @@ class TutorialGameInstance extends StatelessWidget {
       return Stack(
         fit: StackFit.expand,
         children: [
-          OnePlayerPlaySessionScreen(winRoute: '/tutorial/' + tutorialPath + '/won'),
+          OnePlayerPlaySessionScreen(
+              winRoute: '/tutorial/' + tutorialPath + '/won'),
           Visibility(
             visible: gameState.currentTutorialStepExists(),
             child: ColorFiltered(
@@ -30,15 +31,16 @@ class TutorialGameInstance extends StatelessWidget {
                         color: Colors.black,
                         backgroundBlendMode: BlendMode.dstOut),
                   ),
-                  for (TutorialWindow window
-                      in gameState.getCurrentTutorialStep()) ...[
+                  for (TutorialDirective window
+                      in gameState.getCurrentTutorialStep().tutorialWindows) ...[
                     createMaskWindow(window, gameState)
                   ]
                 ],
               ),
             ),
           ),
-          for (TutorialWindow window in gameState.getCurrentTutorialStep()) ...[
+          for (TutorialDirective window
+              in gameState.getCurrentTutorialStep().tutorialInstructions) ...[
             createTutorialTopLayer(window, gameState)
           ]
         ],
@@ -46,8 +48,9 @@ class TutorialGameInstance extends StatelessWidget {
     });
   }
 
-  Widget createMaskWindow(TutorialWindow tutorialWindow, GameState gameState) {
-    if (tutorialWindow.windowType == TutorialWindowType.text) {
+  Widget createMaskWindow(
+      TutorialDirective tutorialWindow, GameState gameState) {
+    if (tutorialWindow.windowType == TutorialDirectiveType.text) {
       return SizedBox.shrink();
     } else {
       return GestureDetector(
@@ -70,8 +73,8 @@ class TutorialGameInstance extends StatelessWidget {
   }
 
   Widget createTutorialTopLayer(
-      TutorialWindow tutorialWindow, GameState gameState) {
-    if (tutorialWindow.windowType == TutorialWindowType.text) {
+      TutorialDirective tutorialWindow, GameState gameState) {
+    if (tutorialWindow.windowType == TutorialDirectiveType.text) {
       return IgnorePointer(
           ignoring: tutorialWindow.ignorePointer,
           child: GestureDetector(
@@ -82,27 +85,25 @@ class TutorialGameInstance extends StatelessWidget {
                       left: tutorialWindow.getLeftAlignment()),
                   child: Stack(
                     children: [
-                      Text(tutorialWindow.getText(),//to put a black outline on the text
+                      Text(
+                          tutorialWindow
+                              .getText(), //to put a black outline on the text
                           style: TextStyle(
-                            fontSize: Constants.mediumFont,
-                            decoration: TextDecoration.none,
-                            foreground: Paint()
-                              ..style = PaintingStyle.stroke
-                              ..strokeWidth = 3
-                              ..color = Colors.black
-                          )
-                      ),
+                              fontSize: Constants.mediumFont,
+                              decoration: TextDecoration.none,
+                              foreground: Paint()
+                                ..style = PaintingStyle.stroke
+                                ..strokeWidth = 3
+                                ..color = Colors.black)),
                       Text(tutorialWindow.getText(),
                           style: TextStyle(
                               color: Colors.white,
                               decoration: TextDecoration.none,
                               fontSize: Constants.mediumFont)),
                     ],
-                  )
-              )
-          )
-      );
-    } else if (tutorialWindow.windowType == TutorialWindowType.tileHighlight) {
+                  ))));
+    } else if (tutorialWindow.windowType ==
+        TutorialDirectiveType.tileHighlight) {
       return IgnorePointer(
           ignoring: true,
           child: GestureDetector(
@@ -116,15 +117,13 @@ class TutorialGameInstance extends StatelessWidget {
                 height: tutorialWindow.getHeight(),
                 width: tutorialWindow.getWidth(),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                      color: Color.fromARGB(255, 255, 176, 41),
-                      width: 3,
-                      style: BorderStyle.solid)
-                ),
+                    border: Border.all(
+                        color: Color.fromARGB(255, 255, 176, 41),
+                        width: 3,
+                        style: BorderStyle.solid)),
               ),
             ),
-          )
-      );
+          ));
     } else {
       return SizedBox.shrink();
     }

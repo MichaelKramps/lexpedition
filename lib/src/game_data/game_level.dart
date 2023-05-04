@@ -1,7 +1,7 @@
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
-import 'package:lexpedition/src/tutorial/tutorial_window.dart';
+import 'package:lexpedition/src/tutorial/tutorial_step.dart';
 
 class GameLevel {
   final String? name;
@@ -12,7 +12,7 @@ class GameLevel {
   late LetterGrid letterGrid;
   LetterGrid? letterGridB;
   int tutorialKey = 0;
-  List<List<TutorialWindow>>? tutorialSteps;
+  List<TutorialStep>? tutorialSteps;
   int attempts = 0;
   int attemptsFinished = 0;
   int bestAttempt = 100;

@@ -1,8 +1,8 @@
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 
-class TutorialWindow {
-  TutorialWindowType windowType;
+class TutorialDirective {
+  TutorialDirectiveType windowType;
   int tileIndex;
   String? text;
   TutorialTextPosition? position;
@@ -10,7 +10,7 @@ class TutorialWindow {
   bool preventTapAction;
   Constants constants = Constants();
 
-  TutorialWindow(
+  TutorialDirective(
       {required this.windowType,
       this.tileIndex = -1,
       this.text,
@@ -20,17 +20,17 @@ class TutorialWindow {
 
   double getTopAlignment() {
     switch (windowType) {
-      case TutorialWindowType.text:
+      case TutorialDirectiveType.text:
         return getTextTopAlignment();
-      case TutorialWindowType.tile:
-      case TutorialWindowType.tileHighlight:
+      case TutorialDirectiveType.tile:
+      case TutorialDirectiveType.tileHighlight:
         return constants.gridYStart() +
             ((constants.tileSize() + constants.tileMargin() * 2) * getRow());
-      case TutorialWindowType.letterGrid:
+      case TutorialDirectiveType.letterGrid:
         return constants.gridYStart();
-      case TutorialWindowType.submit:
-      case TutorialWindowType.clear:
-      case TutorialWindowType.answerBox:
+      case TutorialDirectiveType.submit:
+      case TutorialDirectiveType.clear:
+      case TutorialDirectiveType.answerBox:
         return 10;
       default:
         return 0;
@@ -60,22 +60,22 @@ class TutorialWindow {
 
   double getLeftAlignment() {
     switch (windowType) {
-      case TutorialWindowType.text:
+      case TutorialDirectiveType.text:
         return getTextLeftAlignment();
-      case TutorialWindowType.tile:
-      case TutorialWindowType.tileHighlight:
+      case TutorialDirectiveType.tile:
+      case TutorialDirectiveType.tileHighlight:
         return leftAlignmentAtColumn(getColumn());
-      case TutorialWindowType.submit:
+      case TutorialDirectiveType.submit:
         return leftAlignmentAtColumn(4);
-      case TutorialWindowType.clear:
+      case TutorialDirectiveType.clear:
         return leftAlignmentAtColumn(5);
-      case TutorialWindowType.blastDirection:
+      case TutorialDirectiveType.blastDirection:
         return leftAlignmentAtColumn(0);
-      case TutorialWindowType.answerBox:
+      case TutorialDirectiveType.answerBox:
         return leftAlignmentAtColumn(1);
-      case TutorialWindowType.gameBoard:
-      case TutorialWindowType.infoPanel:
-      case TutorialWindowType.letterGrid:
+      case TutorialDirectiveType.gameBoard:
+      case TutorialDirectiveType.infoPanel:
+      case TutorialDirectiveType.letterGrid:
         return constants.gridXStart();
       default:
         return 0;
@@ -110,19 +110,19 @@ class TutorialWindow {
 
   double getHeight() {
     switch (windowType) {
-      case TutorialWindowType.tile:
-      case TutorialWindowType.tileHighlight:
-      case TutorialWindowType.blastDirection:
+      case TutorialDirectiveType.tile:
+      case TutorialDirectiveType.tileHighlight:
+      case TutorialDirectiveType.blastDirection:
         return constants.tileSize();
-      case TutorialWindowType.submit:
-      case TutorialWindowType.clear:
-      case TutorialWindowType.answerBox:
+      case TutorialDirectiveType.submit:
+      case TutorialDirectiveType.clear:
+      case TutorialDirectiveType.answerBox:
         return constants.tileSize() - 20;
-      case TutorialWindowType.gameBoard:
+      case TutorialDirectiveType.gameBoard:
         return constants.screenHeight;
-      case TutorialWindowType.infoPanel:
+      case TutorialDirectiveType.infoPanel:
         return constants.tileSize() + (constants.tileMargin() * 2);
-      case TutorialWindowType.letterGrid:
+      case TutorialDirectiveType.letterGrid:
         return constants.gridHeight();
       default:
         return 10;
@@ -131,20 +131,20 @@ class TutorialWindow {
 
   double getWidth() {
     switch (windowType) {
-      case TutorialWindowType.text:
+      case TutorialDirectiveType.text:
         return constants.tileSize() * 6;
-      case TutorialWindowType.tile:
-      case TutorialWindowType.tileHighlight:
-      case TutorialWindowType.blastDirection:
+      case TutorialDirectiveType.tile:
+      case TutorialDirectiveType.tileHighlight:
+      case TutorialDirectiveType.blastDirection:
         return constants.tileSize();
-      case TutorialWindowType.submit:
-      case TutorialWindowType.clear:
+      case TutorialDirectiveType.submit:
+      case TutorialDirectiveType.clear:
         return constants.tileSize() + constants.tileMargin() * 2;
-      case TutorialWindowType.answerBox:
+      case TutorialDirectiveType.answerBox:
         return constants.tileSize() * 3 + constants.tileMargin() * 6;
-      case TutorialWindowType.gameBoard:
-      case TutorialWindowType.infoPanel:
-      case TutorialWindowType.letterGrid:
+      case TutorialDirectiveType.gameBoard:
+      case TutorialDirectiveType.infoPanel:
+      case TutorialDirectiveType.letterGrid:
         return constants.gridWidth();
       default:
         return 10;
@@ -179,17 +179,17 @@ class TutorialWindow {
     }
 
     switch (windowType) {
-      case TutorialWindowType.tile:
-      case TutorialWindowType.tileHighlight:
+      case TutorialDirectiveType.tile:
+      case TutorialDirectiveType.tileHighlight:
         gameState.clickTileAtIndex(tileIndex, false);
         break;
-      case TutorialWindowType.blastDirection:
+      case TutorialDirectiveType.blastDirection:
         gameState.changeBlastDirectionAndNotify();
         break;
-      case TutorialWindowType.clear:
+      case TutorialDirectiveType.clear:
         gameState.clearGuessAndNotify();
         break;
-      case TutorialWindowType.submit:
+      case TutorialDirectiveType.submit:
         gameState.submitGuess();
         break;
       default:
@@ -199,7 +199,7 @@ class TutorialWindow {
   }
 }
 
-enum TutorialWindowType {
+enum TutorialDirectiveType {
   tile,
   submit,
   clear,
