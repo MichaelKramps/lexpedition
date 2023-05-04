@@ -32,15 +32,51 @@ var fullTutorialLevels = [
     [TutorialWindow(windowType: TutorialWindowType.gameBoard), TutorialWindow(windowType: TutorialWindowType.text, text: "The game board is a\n6x4 grid which can hold\nup to 24 letter tiles", position: TutorialTextPosition.topLeft, ignorePointer: false)],
     [TutorialWindow(windowType: TutorialWindowType.infoPanel), TutorialWindow(windowType: TutorialWindowType.text, text: "The top of the board has several items\nthat we will learn about as you\nprogress through the tutorials", position: TutorialTextPosition.middleLeft, ignorePointer: false)],
     [TutorialWindow(windowType: TutorialWindowType.letterGrid), TutorialWindow(windowType: TutorialWindowType.text, text: "The grid is where you create words\nby selecting letter tiles", position: TutorialTextPosition.topLeft, ignorePointer: false)],
-    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 9), TutorialWindow(windowType: TutorialWindowType.text, text: "Tap on a tile to select it", position: TutorialTextPosition.topMiddle)],
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 9), TutorialWindow(windowType: TutorialWindowType.text, text: "Tap on a tile to select it", position: TutorialTextPosition.topMiddle), TutorialWindow(windowType: TutorialWindowType.tileHighlight, tileIndex: 9)],
     [TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: "The answer box shows your current guess", position: TutorialTextPosition.middle, ignorePointer: false)],
-    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 15), TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: "Now select the letter tile with the \"O\"", position: TutorialTextPosition.bottomMiddle)],
-    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 14), TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: "Next select the letter tile with the \"A\"", position: TutorialTextPosition.bottomMiddle)],
-    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 8), TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: "Finally, select the letter tile with the \"T\"", position: TutorialTextPosition.bottomMiddle)],
-    [TutorialWindow(windowType: TutorialWindowType.submit), TutorialWindow(windowType: TutorialWindowType.answerBox), TutorialWindow(windowType: TutorialWindowType.text, text: 'Tap the submit button to submit your current guess', position: TutorialTextPosition.middle, ignorePointer: false)],
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 15), TutorialWindow(windowType: TutorialWindowType.answerBox, preventTapAction: true), TutorialWindow(windowType: TutorialWindowType.text, text: "Now select the letter tile with the \"O\"", position: TutorialTextPosition.bottomMiddle), TutorialWindow(windowType: TutorialWindowType.tileHighlight, tileIndex: 15)],
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 14), TutorialWindow(windowType: TutorialWindowType.answerBox, preventTapAction: true), TutorialWindow(windowType: TutorialWindowType.text, text: "Next select the letter tile with the \"A\"", position: TutorialTextPosition.bottomMiddle), TutorialWindow(windowType: TutorialWindowType.tileHighlight, tileIndex: 14)],
+    [TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 8), TutorialWindow(windowType: TutorialWindowType.answerBox, preventTapAction: true), TutorialWindow(windowType: TutorialWindowType.text, text: "Finally, select the letter tile with the \"T\"", position: TutorialTextPosition.bottomMiddle), TutorialWindow(windowType: TutorialWindowType.tileHighlight, tileIndex: 8)],
+    [TutorialWindow(windowType: TutorialWindowType.submit), TutorialWindow(windowType: TutorialWindowType.answerBox, preventTapAction: true), TutorialWindow(windowType: TutorialWindowType.text, text: 'Tap the submit button to submit your current guess', position: TutorialTextPosition.middle, ignorePointer: false)],
   ]
   ),
-  GameLevel(name: "Multiple Charges", averageGuesses: 3, bestAttempt: 3, tutorialKey: 202, gridCode: [
+   GameLevel(name: "The Clear Button", averageGuesses: 1, bestAttempt: 1, tutorialKey: 202, gridCode: [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    'e010',
+    'r010',
+    null,
+    null,
+    null,
+    null,
+    'a010',
+    't010',
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  tutorialSteps: [
+    [TutorialWindow(windowType: TutorialWindowType.text, text: "Take a look at the puzzle", ignorePointer: false), TutorialWindow(windowType: TutorialWindowType.gameBoard)],
+    [TutorialWindow(windowType: TutorialWindowType.text, text: "To start, click on the \"T\""), TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 15), TutorialWindow(windowType: TutorialWindowType.tileHighlight, tileIndex: 15)],
+    [TutorialWindow(windowType: TutorialWindowType.text, text: "And now the \"R\""), TutorialWindow(windowType: TutorialWindowType.tile, tileIndex: 9), TutorialWindow(windowType: TutorialWindowType.tileHighlight, tileIndex: 9)],
+    [TutorialWindow(windowType: TutorialWindowType.text, text: "After starting a guess, you may realize that you want to start over", position: TutorialTextPosition.middleLeft, ignorePointer: false), TutorialWindow(windowType: TutorialWindowType.answerBox)],
+    [TutorialWindow(windowType: TutorialWindowType.text, text: "To clear your guess, click the \"Clear\" button", position: TutorialTextPosition.middleLeft), TutorialWindow(windowType: TutorialWindowType.answerBox, preventTapAction: true), TutorialWindow(windowType: TutorialWindowType.clear)],
+    [TutorialWindow(windowType: TutorialWindowType.text, text: "Notice that your answer has been cleared from the answer box", position: TutorialTextPosition.middleLeft, ignorePointer: false), TutorialWindow(windowType: TutorialWindowType.answerBox)],
+    [TutorialWindow(windowType: TutorialWindowType.text, text: "Now enter the word \"TEAR\" and tap the \"Submit\" button", position: TutorialTextPosition.middleLeft, ignorePointer: false)],
+  ]
+  ),
+  GameLevel(name: "Multiple Charges", averageGuesses: 3, bestAttempt: 3, tutorialKey: 203, gridCode: [
     null,
     null,
     null,
@@ -66,7 +102,7 @@ var fullTutorialLevels = [
     null,
     null
   ]),
-  GameLevel(name: "Start Tile", averageGuesses: 3, bestAttempt: 2, tutorialKey: 203, gridCode: [
+  GameLevel(name: "Start Tile", averageGuesses: 3, bestAttempt: 2, tutorialKey: 204, gridCode: [
       null,
       null,
       null,
@@ -93,7 +129,7 @@ var fullTutorialLevels = [
       null
     ],
   ),
-  GameLevel(name: "End Tile", averageGuesses: 3, bestAttempt: 2, tutorialKey: 204, gridCode: [
+  GameLevel(name: "End Tile", averageGuesses: 3, bestAttempt: 2, tutorialKey: 205, gridCode: [
     null,
     null,
     null,

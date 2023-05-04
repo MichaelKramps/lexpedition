@@ -7,6 +7,7 @@ class TutorialWindow {
   String? text;
   TutorialTextPosition? position;
   bool ignorePointer;
+  bool preventTapAction;
   Constants constants = Constants();
 
   TutorialWindow(
@@ -14,6 +15,7 @@ class TutorialWindow {
       this.tileIndex = -1,
       this.text,
       this.position,
+      this.preventTapAction = false,
       this.ignorePointer = true});
 
   double getTopAlignment() {
@@ -21,6 +23,7 @@ class TutorialWindow {
       case TutorialWindowType.text:
         return getTextTopAlignment();
       case TutorialWindowType.tile:
+      case TutorialWindowType.tileHighlight:
         return constants.gridYStart() +
             ((constants.tileSize() + constants.tileMargin() * 2) * getRow());
       case TutorialWindowType.letterGrid:
@@ -47,7 +50,9 @@ class TutorialWindow {
       case TutorialTextPosition.bottomLeft:
       case TutorialTextPosition.bottomMiddle:
       case TutorialTextPosition.bottomRight:
-        return constants.gridYStart() + constants.tileSize() * 3 + constants.tileMargin() * 3;
+        return constants.gridYStart() +
+            constants.tileSize() * 3 +
+            constants.tileMargin() * 3;
       default:
         return 10;
     }
@@ -58,6 +63,7 @@ class TutorialWindow {
       case TutorialWindowType.text:
         return getTextLeftAlignment();
       case TutorialWindowType.tile:
+      case TutorialWindowType.tileHighlight:
         return leftAlignmentAtColumn(getColumn());
       case TutorialWindowType.submit:
         return leftAlignmentAtColumn(4);
@@ -105,6 +111,7 @@ class TutorialWindow {
   double getHeight() {
     switch (windowType) {
       case TutorialWindowType.tile:
+      case TutorialWindowType.tileHighlight:
       case TutorialWindowType.blastDirection:
         return constants.tileSize();
       case TutorialWindowType.submit:
@@ -127,6 +134,7 @@ class TutorialWindow {
       case TutorialWindowType.text:
         return constants.tileSize() * 6;
       case TutorialWindowType.tile:
+      case TutorialWindowType.tileHighlight:
       case TutorialWindowType.blastDirection:
         return constants.tileSize();
       case TutorialWindowType.submit:
@@ -166,8 +174,13 @@ class TutorialWindow {
   }
 
   void handleTap(GameState gameState) {
+    if (preventTapAction) {
+      return;
+    }
+
     switch (windowType) {
       case TutorialWindowType.tile:
+      case TutorialWindowType.tileHighlight:
         gameState.clickTileAtIndex(tileIndex, false);
         break;
       case TutorialWindowType.blastDirection:
@@ -193,6 +206,7 @@ enum TutorialWindowType {
   blastDirection,
   answerBox,
   text,
+  tileHighlight,
   gameBoard,
   infoPanel,
   letterGrid

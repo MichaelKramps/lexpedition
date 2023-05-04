@@ -7,7 +7,6 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
 import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
-import 'package:logging/logging.dart';
 
 import 'persistence/player_progress_persistence.dart';
 

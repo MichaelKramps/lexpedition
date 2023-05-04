@@ -39,7 +39,7 @@ class TutorialGameInstance extends StatelessWidget {
             ),
           ),
           for (TutorialWindow window in gameState.getCurrentTutorialStep()) ...[
-            createTutorialText(window, gameState)
+            createTutorialTopLayer(window, gameState)
           ]
         ],
       );
@@ -69,7 +69,7 @@ class TutorialGameInstance extends StatelessWidget {
     }
   }
 
-  Widget createTutorialText(
+  Widget createTutorialTopLayer(
       TutorialWindow tutorialWindow, GameState gameState) {
     if (tutorialWindow.windowType == TutorialWindowType.text) {
       return IgnorePointer(
@@ -80,11 +80,51 @@ class TutorialGameInstance extends StatelessWidget {
                   margin: EdgeInsets.only(
                       top: tutorialWindow.getTopAlignment(),
                       left: tutorialWindow.getLeftAlignment()),
-                  child: Text(tutorialWindow.getText(),
-                      style: TextStyle(
-                          color: Colors.white,
-                          decoration: TextDecoration.none,
-                          fontSize: Constants.mediumFont)))));
+                  child: Stack(
+                    children: [
+                      Text(tutorialWindow.getText(),//to put a black outline on the text
+                          style: TextStyle(
+                            fontSize: Constants.mediumFont,
+                            decoration: TextDecoration.none,
+                            foreground: Paint()
+                              ..style = PaintingStyle.stroke
+                              ..strokeWidth = 3
+                              ..color = Colors.black
+                          )
+                      ),
+                      Text(tutorialWindow.getText(),
+                          style: TextStyle(
+                              color: Colors.white,
+                              decoration: TextDecoration.none,
+                              fontSize: Constants.mediumFont)),
+                    ],
+                  )
+              )
+          )
+      );
+    } else if (tutorialWindow.windowType == TutorialWindowType.tileHighlight) {
+      return IgnorePointer(
+          ignoring: true,
+          child: GestureDetector(
+            onTap: () => tutorialWindow.handleTap(gameState),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                margin: EdgeInsets.only(
+                    top: tutorialWindow.getTopAlignment(),
+                    left: tutorialWindow.getLeftAlignment()),
+                height: tutorialWindow.getHeight(),
+                width: tutorialWindow.getWidth(),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                      color: Color.fromARGB(255, 255, 176, 41),
+                      width: 3,
+                      style: BorderStyle.solid)
+                ),
+              ),
+            ),
+          )
+      );
     } else {
       return SizedBox.shrink();
     }
