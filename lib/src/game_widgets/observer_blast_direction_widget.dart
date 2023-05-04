@@ -12,29 +12,15 @@ class ObserverBlastDirectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkResponse(
       onTap: () => {},
-      child: Image.asset(
-        determineImage(),
-        height: Constants().tileSize(),
-        width: Constants().tileSize(),
-        semanticLabel: 'blast Direction',
+      child: RotatedBox(
+        quarterTurns: gameState.getTheirGrid()?.blastDirection == BlastDirection.horizontal ? 0 : 1,
+        child: Image.asset(
+          Constants.blastImage,
+          height: Constants().tileSize(),
+          width: Constants().tileSize(),
+          semanticLabel: 'blast Direction',
+        ),
       ),
     );
-  }
-
-  String determineImage() {
-    String path = 'assets/images/';
-
-    switch (gameState.getTheirGrid()?.blastDirection) {
-      case (BlastDirection.horizontal):
-        path += 'staveright';
-        break;
-      default:
-        path += 'staveup';
-        break;
-    }
-
-    path += '.png';
-
-    return path;
   }
 }

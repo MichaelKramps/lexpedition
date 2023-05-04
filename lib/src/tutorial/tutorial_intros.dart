@@ -100,10 +100,10 @@ class TutorialIntroWidget extends StatelessWidget {
         // need more complicated widget
         return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Text(
-              'When you make a word of 5+ letters, a magic blast will fire from the last letter tile in the word. The magic blast can charge letter tiles!',
+              'When you make a word of 5+ letters, a blast will fire from the last letter tile in the word. The blast charges letter tiles!',
               style: textStyle),
-          Image.asset('assets/images/staveup.png'),
-          Text('Click on the stave to change the direction of the magic blast!',
+          Image.asset(Constants.blastImage),
+          Text('Click on the blast direction indicator to change the direction of the answer blast!',
               style: textStyle)
         ]);
       case 107:

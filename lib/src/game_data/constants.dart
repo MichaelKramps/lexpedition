@@ -102,6 +102,7 @@ class Constants {
   static String assetsPath = 'assets';
   static String imagePath = assetsPath + '/images';
   static String backgroundImagePath = imagePath + '/crumpled-paper.png';
+  static String blastImage = imagePath + '/brush-stroke.png';
 
   static const celebrationDuration = Duration(milliseconds: 2000);
   static const preCelebrationDuration = Duration(milliseconds: 500);

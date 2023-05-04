@@ -12,11 +12,14 @@ class BlastDirectionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkResponse(
       onTap: () => {gameState.changeBlastDirectionAndNotify()},
-      child: Image.asset(
-        determineBlastImagePath(gameState.getMyGrid()!.blastDirection),
-        height: Constants().tileSize(),
-        width: Constants().tileSize(),
-        semanticLabel: 'blast Direction',
+      child: RotatedBox(
+        quarterTurns: gameState.getMyGrid()!.blastDirection == BlastDirection.horizontal ? 0 : 1,
+        child: Image.asset(
+          Constants.blastImage,
+          height: Constants().tileSize(),
+          width: Constants().tileSize(),
+          semanticLabel: 'blast Direction',
+        ),
       ),
     );
   }

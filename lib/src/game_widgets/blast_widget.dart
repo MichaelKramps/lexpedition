@@ -21,7 +21,12 @@ class _BlastWidgetState extends State<BlastWidget> {
     return Visibility(
         visible: widget.beginBlastAnimation,
         maintainAnimation: false,
-        child: Image.asset(determineBlastImagePath(widget.blastDirection),
-            height: Constants().tileSize(), width: Constants().tileSize()));
+        child: RotatedBox(
+          quarterTurns: widget.blastDirection == BlastDirection.horizontal ? 0 : 1,
+          child: Image.asset(Constants.blastImage,
+              height: Constants().tileSize(), 
+              width: Constants().tileSize()
+          ),
+        ));
   }
 }
