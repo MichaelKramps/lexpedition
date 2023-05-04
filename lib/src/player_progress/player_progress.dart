@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
 import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
+import 'package:logging/logging.dart';
 
 import 'persistence/player_progress_persistence.dart';
 
@@ -64,17 +65,18 @@ class PlayerProgress extends ChangeNotifier {
     if (level > _highestLevelReached) {
       _highestLevelReached = level;
       notifyListeners();
-      if (level > 100 && level < 200) {
-        if ((level - 100) >= quickTutorialLevels.length) {
-          setTutorialPassed(true);
-        }
-      } else if (level > 200) {
-        if ((level - 200) >= fullTutorialLevels.length) {
-          setTutorialPassed(true);
-        }
-      }
 
       unawaited(_store.saveHighestLevelReached(level));
+    }
+    
+    if (level > 100 && level < 200) {
+      if ((level - 100) >= quickTutorialLevels.length) {
+        setTutorialPassed(true);
+      }
+    } else if (level > 200) {
+      if ((level - 200) >= fullTutorialLevels.length) {
+        setTutorialPassed(true);
+      }
     }
   }
 
