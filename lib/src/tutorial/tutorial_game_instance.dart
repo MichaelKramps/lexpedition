@@ -112,8 +112,7 @@ class TutorialGameInstance extends StatelessWidget {
                               fontSize: Constants.mediumFont)),
                     ],
                   ))));
-    } else if (tutorialWindow.windowType ==
-        TutorialDirectiveType.tileHighlight) {
+    } else {
       return IgnorePointer(
           ignoring: true,
           child: GestureDetector(
@@ -134,8 +133,6 @@ class TutorialGameInstance extends StatelessWidget {
               ),
             ),
           ));
-    } else {
-      return SizedBox.shrink();
     }
   }
 }

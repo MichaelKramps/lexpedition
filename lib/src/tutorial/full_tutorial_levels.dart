@@ -301,7 +301,7 @@ var fullTutorialLevels = [
         'm010'
       ]),
       GameLevel(
-      name: "Multiple use",
+      name: "Multiple Uses",
       averageGuesses: 4,
       bestAttempt: 4,
       tutorialKey: 206,
@@ -403,13 +403,255 @@ var fullTutorialLevels = [
       ],
       tutorialSteps: [
         TutorialStep.fullScreenClick()
+          .withLetterGrid()
+          .withTopText(text: 'These letters are different. Their boxes will only turn green if they are used at the beginning of a word.'),
+        TutorialStep()
+          .withDisabledTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withHighlightedTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'Let\'s spell the word "TAR"'),
+        TutorialStep()
+          .withHighlightedTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'Now tap the "A"'),
+        TutorialStep()
+          .withDisabledTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withHighlightedTile(index: 15)
+          .withTopText(text: 'Now "R"'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 8)
+          .withTile(index: 9)
+          .withTile(index: 14)
+          .withTile(index: 15)
+          .withTopText(text: 'Notice the "A" and "R" have a red select color, while the "T" has a green select color'),
+        TutorialStep()
+          .withDisabledAnswerBox()
+          .withSubmit()
+          .withMiddleText(text: 'Now submit the guess'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 8)
+          .withTile(index: 9)
+          .withTile(index: 14)
+          .withTile(index: 15)
+          .withTopText(text: 'Now notice that the "T" got a green box, but the "A" and "R" did not'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 8)
+          .withTile(index: 9)
+          .withTile(index: 14)
+          .withTile(index: 15)
+          .withTopText(text: 'This is because start letters will only get a green box when used at the start of a word'),
+        TutorialStep.fullScreenClick()
+          .withLetterGrid()
+          .withTopText(text: 'Now find three more words, each starting with a different letter, to finish the puzzle')
       ]
       ),
+      GameLevel(
+      name: "End Letters",
+      averageGuesses: 4,
+      bestAttempt: 4,
+      tutorialKey: 208,
+      gridCode: [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        'e210',
+        'a210',
+        null,
+        null,
+        null,
+        null,
+        'r210',
+        't210',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      tutorialSteps: [
+        TutorialStep.fullScreenClick()
+          .withLetterGrid()
+          .withTopText(text: 'And here we have another new type of letter called "End Letters"'),
+        TutorialStep()
+          .withDisabledTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withHighlightedTile(index: 15)
+          .withTopText(text: 'Let\'s spell the word "TEA"'),
+        TutorialStep()
+          .withHighlightedTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'Now tap the "E"'),
+        TutorialStep()
+          .withDisabledTile(index: 8)
+          .withHighlightedTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'And the "A"'),
+        TutorialStep.fullScreenClick()
+          .withDisabledTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'Again, notice the "T" and "E" have a red select color, indicating they will not get a green box with this guess'),
+        TutorialStep()
+          .withDisabledAnswerBox()
+          .withSubmit()
+          .withMiddleText(text: 'Now submit your guess'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 8)
+          .withTile(index: 9)
+          .withTile(index: 14)
+          .withTile(index: 15)
+          .withTopText(text: 'As we expected, the "A" got a green box, but the "T" and "E" did not'),
+        TutorialStep.fullScreenClick()
+          .withDisabledTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'This is of course because "End Letters" will only get a green box if used at the end of a word'),
+        TutorialStep.fullScreenClick()
+          .withMiddleText(text: 'Now find three more words, each ending with a different letter, to complete this puzzle')
+      ]
+      ),
+      GameLevel(
+      name: "The Three Letter Types",
+      averageGuesses: 3,
+      bestAttempt: 3,
+      tutorialKey: 209,
+      gridCode: [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        'l110',
+        'e220',
+        null,
+        null,
+        null,
+        null,
+        'a030',
+        't010',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      tutorialSteps: [
+        TutorialStep.fullScreenClick()
+          .withMiddleText(text: 'Now you\'ve seen all the letter types, so let\'s see them all together'),
+        TutorialStep.fullScreenClick()
+          .withLetterGrid()
+          .withTopText(text: 'Here we have start, end and normal letters all in the same puzzle'),
+        TutorialStep.fullScreenClick()
+          .withDisabledTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'The "L" is a start letter, the "E" is an end letter, and the "A" and "T" are normal letters'),
+        TutorialStep()
+          .withDisabledTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withHighlightedTile(index: 15)
+          .withTopText(text: 'Let\'s spell "TALE"'),
+        TutorialStep()
+          .withDisabledTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withHighlightedTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'Tap the "A" and keep an eye on the selection colors'),
+        TutorialStep()
+          .withHighlightedTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'Now the "L"'),
+        TutorialStep()
+          .withDisabledTile(index: 8)
+          .withHighlightedTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'And the "E"'),
+        TutorialStep.fullScreenClick()
+          .withDisabledTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'So it looks like only the "L" will not get a green box here'),
+        TutorialStep()
+          .withAnswerBox()
+          .withSubmit()
+          .withMiddleText(text: 'Go ahead and submit the guess'),
+        TutorialStep.fullScreenClick()
+          .withDisabledTile(index: 8)
+          .withDisabledTile(index: 9)
+          .withDisabledTile(index: 14)
+          .withDisabledTile(index: 15)
+          .withTopText(text: 'Just what we expected'),
+        TutorialStep.fullScreenClick()
+          .withMiddleText(text: 'Now find more words to complete the puzzle. The selection colors will help guide you.')
+      ]
+      ),
+      GameLevel(
+      name: "Check Point #2",
+      averageGuesses: 7,
+      bestAttempt: 6,
+      tutorialKey: 210,
+      gridCode: [
+        'r210',
+        'u010',
+        null,
+        'n210',
+        'i010',
+        'f110',
+        'p110',
+        'o010',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        'l020',
+        'e210',
+        'n110',
+        'o020',
+        't210',
+        null,
+        'i010',
+        'm010'
+      ]),
       GameLevel(
       name: "Multiple Charges",
       averageGuesses: 3,
       bestAttempt: 3,
-      tutorialKey: 208,
+      tutorialKey: 211,
       gridCode: [
         null,
         null,

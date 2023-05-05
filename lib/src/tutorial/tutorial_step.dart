@@ -45,14 +45,26 @@ class TutorialStep {
     return this;
   }
 
+  TutorialStep withDisabledTile({required int index}) {
+    tutorialWindows.add(TutorialDirective(
+        windowType: TutorialDirectiveType.tile,
+        tileIndex: index,
+        preventTapAction: true));
+    return this;
+  }
+
   TutorialStep withSubmit() {
     tutorialWindows
+        .add(TutorialDirective(windowType: TutorialDirectiveType.submit));
+    tutorialInstructions
         .add(TutorialDirective(windowType: TutorialDirectiveType.submit));
     return this;
   }
 
   TutorialStep withClear() {
     tutorialWindows
+        .add(TutorialDirective(windowType: TutorialDirectiveType.clear));
+    tutorialInstructions
         .add(TutorialDirective(windowType: TutorialDirectiveType.clear));
     return this;
   }
@@ -70,8 +82,8 @@ class TutorialStep {
   }
 
   TutorialStep withDisabledAnswerBox() {
-    tutorialWindows
-        .add(TutorialDirective(windowType: TutorialDirectiveType.answerBox, preventTapAction: true));
+    tutorialWindows.add(TutorialDirective(
+        windowType: TutorialDirectiveType.answerBox, preventTapAction: true));
     return this;
   }
 
