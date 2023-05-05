@@ -270,10 +270,146 @@ var fullTutorialLevels = [
       ]
       ),
   GameLevel(
+      name: "Check Point #1",
+      averageGuesses: 5,
+      bestAttempt: 4,
+      tutorialKey: 205,
+      gridCode: [
+        'f010',
+        'a010',
+        null,
+        'b010',
+        'i010',
+        'g010',
+        'r010',
+        'e010',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        'a010',
+        'e010',
+        'b010',
+        'e010',
+        't010',
+        null,
+        'g010',
+        'm010'
+      ]),
+      GameLevel(
+      name: "Multiple use",
+      averageGuesses: 4,
+      bestAttempt: 4,
+      tutorialKey: 206,
+      gridCode: [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        'b020',
+        'a030',
+        null,
+        null,
+        null,
+        null,
+        'e020',
+        'r010',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      tutorialSteps: [
+        TutorialStep.fullScreenClick()
+          .withTile(index: 8)
+          .withTile(index: 9)
+          .withTile(index: 14)
+          .withTile(index: 15)
+          .withTopText(text: 'Letters have boxes under them to indicate how many times they must be used to complete the puzzle'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 9)
+          .withTopText(text: 'This tile must be used in three different words'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 15)
+          .withTopText(text: 'While this one must be used in only one word'),
+        TutorialStep()
+          .withHighlightedTile(index: 8)
+          .withTopText(text: 'Tap the "B"'),
+        TutorialStep()
+          .withHighlightedTile(index: 14)
+          .withTopText(text: 'Now the "E"'),
+        TutorialStep()
+          .withHighlightedTile(index: 9)
+          .withTopText(text: 'The "A"'),
+        TutorialStep()
+          .withHighlightedTile(index: 15)
+          .withTopText(text: 'Finally the "R"'),
+        TutorialStep()
+          .withDisabledAnswerBox()
+          .withSubmit()
+          .withMiddleText(text: 'And submit your answer'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 8)
+          .withTile(index: 9)
+          .withTile(index: 14)
+          .withTile(index: 15)
+          .withTopText(text: 'A green box means a letter was successfully used, and a black box means you still need to use the letter again'),
+        TutorialStep.fullScreenClick()
+          .withMiddleText(text: 'Now find some more words to finish this puzzle')
+      ]
+      ),
+      GameLevel(
+      name: "Start Letters",
+      averageGuesses: 4,
+      bestAttempt: 4,
+      tutorialKey: 207,
+      gridCode: [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        'a110',
+        'c110',
+        null,
+        null,
+        null,
+        null,
+        't110',
+        'r110',
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      tutorialSteps: [
+        TutorialStep.fullScreenClick()
+      ]
+      ),
+      GameLevel(
       name: "Multiple Charges",
       averageGuesses: 3,
       bestAttempt: 3,
-      tutorialKey: 205,
+      tutorialKey: 208,
       gridCode: [
         null,
         null,
