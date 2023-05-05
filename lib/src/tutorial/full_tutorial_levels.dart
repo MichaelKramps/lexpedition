@@ -1,5 +1,4 @@
 import 'package:lexpedition/src/game_data/game_level.dart';
-import 'package:lexpedition/src/tutorial/tutorial_directive.dart';
 import 'package:lexpedition/src/tutorial/tutorial_step.dart';
 
 var fullTutorialLevels = [
@@ -37,75 +36,35 @@ var fullTutorialLevels = [
       tutorialSteps: [
         TutorialStep.fullScreenClick()
           .withGameBoard()
-          .withText(text: "The game board is a\n6x4 grid which can hold\nup to 24 letter tiles"),
+          .withTopText(text: "The game board is a\n6x4 grid which can hold\nup to 24 letter tiles"),
         TutorialStep.fullScreenClick()
           .withInfoPanel()
-          .withText(text: "The top of the board has several items\nthat we will learn about as you\nprogress through the tutorials", position: TutorialTextPosition.middleLeft),
+          .withMiddleText(text: "The top of the board has several items\nthat we will learn about as you\nprogress through the tutorials"),
         TutorialStep.fullScreenClick()
           .withLetterGrid()
-          .withText(text: "The grid is where you create words\nby selecting letter tiles"),
+          .withTopText(text: "The grid is where you create words\nby selecting letter tiles"),
         TutorialStep()
           .withHighlightedTile(index: 9)
-          .withText(text: "Tap on a tile to select it"),
-        
-        [
-          TutorialDirective(windowType: TutorialDirectiveType.answerBox),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text: "The answer box shows your current guess",
-              position: TutorialTextPosition.middle,
-              ignorePointer: false)
-        ],
-        [
-          TutorialDirective(
-              windowType: TutorialDirectiveType.tile, tileIndex: 15),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.answerBox,
-              preventTapAction: true),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text: "Now select the letter tile with the \"O\"",
-              position: TutorialTextPosition.bottomMiddle),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.tileHighlight, tileIndex: 15)
-        ],
-        [
-          TutorialDirective(
-              windowType: TutorialDirectiveType.tile, tileIndex: 14),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.answerBox,
-              preventTapAction: true),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text: "Next select the letter tile with the \"A\"",
-              position: TutorialTextPosition.bottomMiddle),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.tileHighlight, tileIndex: 14)
-        ],
-        [
-          TutorialDirective(
-              windowType: TutorialDirectiveType.tile, tileIndex: 8),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.answerBox,
-              preventTapAction: true),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text: "Finally, select the letter tile with the \"T\"",
-              position: TutorialTextPosition.bottomMiddle),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.tileHighlight, tileIndex: 8)
-        ],
-        [
-          TutorialDirective(windowType: TutorialDirectiveType.submit),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.answerBox,
-              preventTapAction: true),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text: 'Tap the submit button to submit your current guess',
-              position: TutorialTextPosition.middle,
-              ignorePointer: false)
-        ],
+          .withTopText(text: "Tap on a tile to select it"),
+        TutorialStep.fullScreenClick()
+          .withAnswerBox()
+          .withMiddleText(text: "The answer box shows your current guess"),
+        TutorialStep()
+          .withHighlightedTile(index: 15)
+          .withDisabledAnswerBox()
+          .withBottomText(text: "Now select the letter tile with the \"O\""),
+        TutorialStep()
+          .withHighlightedTile(index: 14)
+          .withDisabledAnswerBox()
+          .withBottomText(text: "Next select the letter tile with the \"A\""),
+        TutorialStep()
+          .withHighlightedTile(index: 8)
+          .withDisabledAnswerBox()
+          .withBottomText(text: "Finally, select the letter tile with the \"T\""),
+        TutorialStep()
+          .withDisabledAnswerBox()
+          .withSubmit()
+          .withMiddleText(text: 'Tap the submit button to submit your current guess')
       ]),
   GameLevel(
       name: "The Clear Button",
@@ -139,72 +98,182 @@ var fullTutorialLevels = [
         null
       ],
       tutorialSteps: [
-        [
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text: "Take a look at the puzzle",
-              ignorePointer: false),
-          TutorialDirective(windowType: TutorialDirectiveType.gameBoard)
-        ],
-        [
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text: "To start, click on the \"T\""),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.tile, tileIndex: 15),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.tileHighlight, tileIndex: 15)
-        ],
-        [
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text: "And now the \"R\""),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.tile, tileIndex: 9),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.tileHighlight, tileIndex: 9)
-        ],
-        [
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text:
-                  "After starting a guess, you may realize that you want to start over",
-              position: TutorialTextPosition.middleLeft,
-              ignorePointer: false),
-          TutorialDirective(windowType: TutorialDirectiveType.answerBox)
-        ],
-        [
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text: "To clear your guess, click the \"Clear\" button",
-              position: TutorialTextPosition.middleLeft),
-          TutorialDirective(
-              windowType: TutorialDirectiveType.answerBox,
-              preventTapAction: true),
-          TutorialDirective(windowType: TutorialDirectiveType.clear)
-        ],
-        [
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text:
-                  "Notice that your answer has been cleared from the answer box",
-              position: TutorialTextPosition.middleLeft,
-              ignorePointer: false),
-          TutorialDirective(windowType: TutorialDirectiveType.answerBox)
-        ],
-        [
-          TutorialDirective(
-              windowType: TutorialDirectiveType.text,
-              text: "Now enter the word \"TEAR\" and tap the \"Submit\" button",
-              position: TutorialTextPosition.middleLeft,
-              ignorePointer: false)
-        ],
+        TutorialStep.fullScreenClick()
+          .withTopText(text: "Take a look at the puzzle")
+          .withGameBoard(),
+        TutorialStep()
+          .withHighlightedTile(index: 15)
+          .withTopText(text: "To start, click on the \"T\""),
+        TutorialStep()
+          .withHighlightedTile(index: 9)
+          .withTopText(text: "And now the \"R\""),
+        TutorialStep.fullScreenClick()
+          .withAnswerBox()
+          .withMiddleText(text: "After starting a guess, you may realize that you want to start over"),
+        TutorialStep()
+          .withMiddleText(text: "To clear your guess, click the \"Clear\" button")
+          .withDisabledAnswerBox()
+          .withClear(),
+        TutorialStep.fullScreenClick()
+          .withAnswerBox()
+          .withMiddleText(text: "Notice that your answer has been cleared from the answer box"),
+        TutorialStep.fullScreenClick()
+          .withMiddleText(text: "Now enter the word \"TEAR\" and tap the \"Submit\" button")
       ]),
+      GameLevel(
+      name: "Letter Selection Choices",
+      averageGuesses: 3,
+      bestAttempt: 3,
+      tutorialKey: 203,
+      gridCode: [
+        't010',
+        'o010',
+        null,
+        null,
+        'r010',
+        'e010',
+        'n010',
+        'e010',
+        null,
+        null,
+        'b010',
+        'a010',
+        null,
+        null,
+        'v010',
+        'e010',
+        null,
+        null,
+        null,
+        null,
+        'a010',
+        's010',
+        null,
+        null
+      ],
+      tutorialSteps: [
+        TutorialStep.fullScreenClick()
+          .withGameBoard()
+          .withTopText(text: 'There are rules regarding which tiles can be selected at a given time'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 0)
+          .withTile(index: 1)
+          .withTile(index: 4)
+          .withTile(index: 5)
+          .withTile(index: 6)
+          .withTile(index: 7)
+          .withTile(index: 10)
+          .withTile(index: 11)
+          .withTile(index: 14)
+          .withTile(index: 15)
+          .withTile(index: 20)
+          .withTile(index: 21)
+          .withTopText(text: 'When starting a new guess, you may select any letter'),
+        TutorialStep()
+          .withHighlightedTile(index: 0)
+          .withBottomText(text: 'Select the "T"'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 1)
+          .withTile(index: 6)
+          .withTile(index: 7)
+          .withBottomText(text: 'After selecting a letter, next you may select any letter touching it'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 4)
+          .withTile(index: 5)
+          .withTile(index: 10)
+          .withTile(index: 11)
+          .withTile(index: 14)
+          .withTile(index: 15)
+          .withTile(index: 20)
+          .withTile(index: 21)
+          .withTopText(text: 'Which means none of these letters can be selected'),
+        TutorialStep()
+          .withHighlightedTile(index: 1)
+          .withBottomText(text: 'Now go ahead and select the "O"'),
+        TutorialStep.fullScreenClick()
+          .withAnswerBox()
+          .withTile(index: 0)
+          .withTile(index: 1)
+          .withTile(index: 6)
+          .withTile(index: 7)
+          .withBottomText(text: 'You may see the word "TOTE" but letters can only be selected once per guess'),
+        TutorialStep()
+          .withHighlightedTile(index: 6)
+          .withAnswerBox()
+          .withBottomText(text: 'So go ahead and select the "N"'),
+        TutorialStep()
+          .withHighlightedTile(index: 7)
+          .withAnswerBox()
+          .withBottomText(text: 'And the "E"'),
+        TutorialStep()
+          .withAnswerBox()
+          .withSubmit()
+          .withMiddleText(text: 'And submit the guess'),
+        TutorialStep.fullScreenClick()
+          .withMiddleText(text: 'Great! Now find words using the letters that we haven\'t used yet and finish the level.')
+      ]
+      ),
+      GameLevel(
+      name: "Diagonal Selections",
+      averageGuesses: 3,
+      bestAttempt: 3,
+      tutorialKey: 204,
+      gridCode: [
+        null,
+        null,
+        'w010',
+        null,
+        'd010',
+        null,
+        null,
+        'o010',
+        null,
+        'e010',
+        null,
+        'm010',
+        'w010',
+        null,
+        'e010',
+        null,
+        'o010',
+        null,
+        null,
+        'd010',
+        null,
+        'm010',
+        null,
+        null
+      ],
+      tutorialSteps: [
+        TutorialStep.fullScreenClick()
+          .withGameBoard()
+          .withTopText(text: 'Letters may look like they don\'t touch, but they actually do'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 2)
+          .withTile(index: 7)
+          .withTile(index: 12)
+          .withTopText(text: 'You can make the word "WOW" here'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 4)
+          .withTile(index: 9)
+          .withTile(index: 14)
+          .withTile(index: 19)
+          .withTopText(text: 'And here is "DEED"'),
+        TutorialStep.fullScreenClick()
+          .withTile(index: 11)
+          .withTile(index: 16)
+          .withTile(index: 21)
+          .withTopText(text: 'And "MOM"'),
+        TutorialStep.fullScreenClick()
+          .withGameBoard()
+          .withMiddleText(text: 'Now go ahead and finish this tricky puzzle')
+      ]
+      ),
   GameLevel(
       name: "Multiple Charges",
       averageGuesses: 3,
       bestAttempt: 3,
-      tutorialKey: 203,
+      tutorialKey: 205,
       gridCode: [
         null,
         null,
@@ -231,160 +300,4 @@ var fullTutorialLevels = [
         null,
         null
       ]),
-  GameLevel(
-    name: "Start Tile",
-    averageGuesses: 3,
-    bestAttempt: 2,
-    tutorialKey: 204,
-    gridCode: [
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      't020',
-      'e110',
-      null,
-      null,
-      null,
-      null,
-      'a020',
-      'm110',
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null
-    ],
-  ),
-  GameLevel(
-      name: "End Tile",
-      averageGuesses: 3,
-      bestAttempt: 2,
-      tutorialKey: 205,
-      gridCode: [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        'e210',
-        't210',
-        null,
-        null,
-        null,
-        null,
-        'a020',
-        'r010',
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]),
-  GameLevel(
-      name: "All 3 Tile Types",
-      averageGuesses: 5,
-      bestAttempt: 3,
-      tutorialKey: 205,
-      gridCode: [
-        null,
-        'e210',
-        't220',
-        's010',
-        null,
-        null,
-        null,
-        'a020',
-        'r110',
-        'o020',
-        null,
-        null,
-        null,
-        'l010',
-        'p120',
-        'd010',
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]),
-  GameLevel(
-      name: "Magic Blast",
-      averageGuesses: 2,
-      bestAttempt: 2,
-      tutorialKey: 206,
-      gridCode: [
-        't110',
-        'r010',
-        'e010',
-        null,
-        'x010',
-        null,
-        null,
-        'a010',
-        't010',
-        null,
-        null,
-        'x010',
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        'b110',
-        'e010',
-        'a010',
-        's010',
-        't210',
-        null
-      ]),
-  GameLevel(
-      name: "Obstacles",
-      averageGuesses: 2,
-      bestAttempt: 2,
-      tutorialKey: 207,
-      gridCode: [
-        null,
-        null,
-        null,
-        null,
-        'j111',
-        null,
-        null,
-        null,
-        null,
-        null,
-        'o011',
-        null,
-        null,
-        null,
-        null,
-        null,
-        'b211',
-        null,
-        'g110',
-        'r010',
-        'e010',
-        'a010',
-        't220',
-        null
-      ])
 ];

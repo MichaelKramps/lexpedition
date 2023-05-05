@@ -19,6 +19,18 @@ class TutorialStep {
     return this;
   }
 
+  TutorialStep withTopText({required String text}) {
+    return withText(text: text);
+  }
+
+  TutorialStep withMiddleText({required String text}) {
+    return withText(text: text, position: TutorialTextPosition.middleLeft);
+  }
+
+  TutorialStep withBottomText({required String text}) {
+    return withText(text: text, position: TutorialTextPosition.bottomLeft);
+  }
+
   TutorialStep withHighlightedTile({required int index}) {
     tutorialWindows.add(TutorialDirective(
         windowType: TutorialDirectiveType.tile, tileIndex: index));
@@ -54,6 +66,12 @@ class TutorialStep {
   TutorialStep withAnswerBox() {
     tutorialWindows
         .add(TutorialDirective(windowType: TutorialDirectiveType.answerBox));
+    return this;
+  }
+
+  TutorialStep withDisabledAnswerBox() {
+    tutorialWindows
+        .add(TutorialDirective(windowType: TutorialDirectiveType.answerBox, preventTapAction: true));
     return this;
   }
 
