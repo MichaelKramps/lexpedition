@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 
 class Constants {
   double screenWidth = 10;
@@ -11,7 +12,14 @@ class Constants {
   Constants.initialize(
       {required this.screenWidth, required this.screenHeight}) {
     this.initialized = true;
-    _tileSize = (screenHeight / 5) - 3;
+    new Logger('krampees').info(
+        this.screenHeight.toString() + ' : ' + this.screenWidth.toString());
+    if (screenHeight > screenWidth) {
+      double copyHeight = screenHeight;
+      screenHeight = screenWidth;
+      screenWidth = copyHeight;
+    }
+    _tileSize = (screenHeight / 5) - 5;
     _tileMargin = _tileSize * 0.025;
     instance = this;
   }
@@ -35,7 +43,7 @@ class Constants {
   }
 
   double gridXStart() {
-    return (screenWidth - gridWidth()) / 2;
+    return ((screenWidth - gridWidth()) / 2);
   }
 
   double gridYStart() {
@@ -121,7 +129,9 @@ class Constants {
   static const double buttonWidth = 240;
   static const double buttonDepth = 3;
   static const double buttonBorderRadiusAmount = 5;
-  static const BorderRadiusGeometry buttonBorderRadius = BorderRadius.all(Radius.circular(Constants.buttonBorderRadiusAmount));
-  static const Duration buttonPressAnimationDuration = Duration(milliseconds: 75); 
+  static const BorderRadiusGeometry buttonBorderRadius =
+      BorderRadius.all(Radius.circular(Constants.buttonBorderRadiusAmount));
+  static const Duration buttonPressAnimationDuration =
+      Duration(milliseconds: 75);
   static const String buttonUIFont = 'Syne Mono';
 }
