@@ -80,34 +80,36 @@ class TutorialIntroWidget extends StatelessWidget {
     switch (levelNumber) {
       case 101:
         text =
-            'Use touching letter tiles to make words. Words must be at least 3 letters long. Charge all the letter tiles to beat the level!';
+            'Use touching letters to make words. Words must be at least 3 letters long. Charge all the letters to beat the level!';
         break;
       case 102:
         text =
-            'To charge a letter tile, it may need to be used multiple times! The dots on the tile indicate the required number of uses!';
+            'To charge a letter, it may need to be used multiple times! The dots on the tile indicate the required number of uses!';
         break;
       case 103:
         text =
-            'To charge Green triangle tiles, use them at the beginning of a word!';
+            'To charge a start letter, use them at the beginning of a word!';
         break;
       case 104:
-        text = 'To charge Red pentagon tiles, use them at the end of a word!';
+        text = 'To charge end letters, use them at the end of a word!';
         break;
       case 105:
-        text = 'Now try a level using all three types of tiles!';
+        text = 'Now try a level using all three types of letters!';
         break;
       case 106:
         // need more complicated widget
         return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Text(
-              'When you make a word of 5+ letters, a blast will fire from the last letter tile in the word. The blast charges letter tiles!',
+              'When you make a word of 5+ letters, a blast will fire from the last letter in the word. The blast charges letter tiles!',
               style: textStyle),
-          Image.asset(Constants.blastImage),
-          Text('Click on the blast direction indicator to change the direction of the answer blast!',
+          RotatedBox(
+            quarterTurns: 1, 
+            child: Image.asset(Constants.blastImage, height: Constants().tileSize(), width: Constants().tileSize(),)),
+          Text('Click on the blast direction indicator to change the direction of the blast!',
               style: textStyle)
         ]);
       case 107:
-        text = 'Clear obstacles from tiles using the magic blast!';
+        text = 'Blocked letters can be cleared with the magic blast!';
         break;
       case 201:
         text =

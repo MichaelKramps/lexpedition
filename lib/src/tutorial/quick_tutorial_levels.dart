@@ -107,23 +107,11 @@ var quickTutorialLevels = [
     null,
     null
   ]),
-  GameLevel(name: "All 3 Tile Types", averageGuesses: 5, bestAttempt: 3, tutorialKey: 105, gridCode: [
-    null,
-    'e210',
-    't220',
+  GameLevel(name: "All 3 Tile Types", averageGuesses: 5, bestAttempt: 4, tutorialKey: 105, gridCode: [
+    't210',
     's010',
-    null,
-    null,
-    null,
-    'a020',
+    'e010',
     'r110',
-    'o020',
-    null,
-    null,
-    null,
-    'l010',
-    'p120',
-    'd010',
     null,
     null,
     null,
@@ -131,7 +119,19 @@ var quickTutorialLevels = [
     null,
     null,
     null,
-    null
+    't210',
+    'b110',
+    'a010',
+    null,
+    null,
+    'e110',
+    'a010',
+    'o010',
+    't210',
+    null,
+    null,
+    null,
+    'h010'
   ]),
   GameLevel(name: "Magic Blast", averageGuesses: 2, bestAttempt: 2, tutorialKey: 106, gridCode: [
     't110',
@@ -159,7 +159,7 @@ var quickTutorialLevels = [
     't210',
     null
   ]),
-  GameLevel(name: "Obstacles", averageGuesses: 2, bestAttempt: 2, tutorialKey: 107, gridCode: [
+  GameLevel(name: "Blocked Letters", averageGuesses: 2, bestAttempt: 2, tutorialKey: 107, gridCode: [
     null,
     null,
     null,
