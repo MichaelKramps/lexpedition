@@ -23,7 +23,7 @@ class TutorialGameInstance extends StatelessWidget {
             visible: gameState.currentTutorialStepExists(),
             child: ColorFiltered(
               colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.8), BlendMode.srcOut),
+                  Colors.black.withOpacity(0.7), BlendMode.srcOut),
               child: Stack(
                 fit: StackFit.expand,
                 children: [

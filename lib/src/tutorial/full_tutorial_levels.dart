@@ -373,7 +373,7 @@ var fullTutorialLevels = [
       GameLevel(
       name: "Start Letters",
       averageGuesses: 4,
-      bestAttempt: 4,
+      bestAttempt: 3,
       tutorialKey: 207,
       gridCode: [
         null,
@@ -601,7 +601,7 @@ var fullTutorialLevels = [
           .withDisabledTile(index: 9)
           .withDisabledTile(index: 14)
           .withDisabledTile(index: 15)
-          .withTopText(text: 'So it looks like only the "L" will not get a green box here'),
+          .withTopText(text: 'So it looks like all the letters will get a green box here except "L"'),
         TutorialStep()
           .withAnswerBox()
           .withSubmit()

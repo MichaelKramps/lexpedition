@@ -115,6 +115,58 @@ class TutorialIntroWidget extends StatelessWidget {
         text =
             'Let\'s learn the basics of the board and how to select letters and submit answers.';
         break;
+      case 202:
+        text =
+            'Now let\'s learn how to clear a guess if you select the wrong letters.';
+        break;
+      case 203:
+        text =
+            'Now we will see which letters can be selected during a guess.';
+        break;
+      case 204:
+        text =
+            'Sometimes letters CAN be selected when it may look like they cannot be selected.';
+        break;
+      case 205:
+        text =
+            'Now complete a puzzle on your own.';
+        break;
+      case 206:
+        text =
+            'Letters may need to be used more than once to complete a puzzle.';
+        break;
+      case 207:
+        text =
+            'Some letters are intended to be used at the beginning of a word.';
+        break;
+      case 208:
+        text =
+            'Other letters are intended to be used at the end of a word.';
+        break;
+      case 209:
+        text =
+            'More than one type of letter can be used in the same puzzle.';
+        break;
+      case 210:
+        text =
+            'Now complete a puzzle on your own that has all types of letters.';
+        break;
+      case 211:
+        text =
+            'Long words will grant you an extra benefit.';
+        break;
+      case 212:
+        text =
+            'The blast can be made to go vertically or horizontally.';
+        break;
+      case 213:
+        text =
+            'Letters can be blocked. They can\'t be used until they are unblocked.';
+        break;
+      case 214:
+        text =
+            'Now complete a puzzle that uses everything you have learned.';
+        break;
       default:
         text = 'No intro text has been set for this level yet';
     }
