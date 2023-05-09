@@ -199,7 +199,7 @@ class GameState extends ChangeNotifier {
     notifyAllPlayers();
   }
 
-  void resetPuzzle() {
+  void resetPuzzle({bool notify = false}) {
     primaryLetterGrid = level.letterGrid;
     primaryLetterGrid.resetGrid();
 
@@ -216,6 +216,10 @@ class GameState extends ChangeNotifier {
     currentTutorialStep = 0;
     currentNumberTutorials = 0;
     tutorialSteps = [];
+
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   bool currentTutorialStepExists() {

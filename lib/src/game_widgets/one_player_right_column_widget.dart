@@ -21,7 +21,7 @@ class OnePlayerRightColumnWidget extends StatelessWidget {
       ),
       ElevatedButton(
         onPressed: () {
-          gameState.resetPuzzle();
+          gameState.resetPuzzle(notify: true);
           logPuzzleQuit();
         },
         child: const Text('Restart'),

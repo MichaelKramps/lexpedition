@@ -84,7 +84,6 @@ class TutorialGameInstance extends StatelessWidget {
 
   Widget createTutorialTopLayer(
       TutorialDirective tutorialWindow, GameState gameState) {
-    new Logger('krampis').info(tutorialWindow.windowType);
     if (tutorialWindow.windowType == TutorialDirectiveType.text) {
       return IgnorePointer(
           ignoring: tutorialWindow.ignorePointer,
