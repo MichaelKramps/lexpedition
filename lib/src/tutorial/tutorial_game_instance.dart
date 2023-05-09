@@ -44,15 +44,15 @@ class TutorialGameInstance extends StatelessWidget {
             createTutorialTopLayer(window, gameState)
           ],
           IgnorePointer(
-            ignoring: !gameState.getCurrentTutorialStep().fullScreenClick,
-            child: GestureDetector(
-              onTap: () {
-                gameState.incrementTutorialStep();
-              },
-              child: SizedBox.expand(
-                child: Container(color: Colors.white.withOpacity(0.0)),
-              ),
-            ))
+              ignoring: !gameState.getCurrentTutorialStep().fullScreenClick,
+              child: GestureDetector(
+                onTap: () {
+                  gameState.incrementTutorialStep();
+                },
+                child: SizedBox.expand(
+                  child: Container(color: Colors.white.withOpacity(0.0)),
+                ),
+              ))
         ],
       );
     });
@@ -84,6 +84,7 @@ class TutorialGameInstance extends StatelessWidget {
 
   Widget createTutorialTopLayer(
       TutorialDirective tutorialWindow, GameState gameState) {
+    new Logger('krampis').info(tutorialWindow.windowType);
     if (tutorialWindow.windowType == TutorialDirectiveType.text) {
       return IgnorePointer(
           ignoring: tutorialWindow.ignorePointer,
@@ -107,7 +108,7 @@ class TutorialGameInstance extends StatelessWidget {
                                 ..color = Colors.black)),
                       Text(tutorialWindow.getText(),
                           style: TextStyle(
-                              color: Colors.white,
+                              color: Color.fromARGB(255, 255, 217, 104),
                               decoration: TextDecoration.none,
                               fontSize: Constants.mediumFont)),
                     ],

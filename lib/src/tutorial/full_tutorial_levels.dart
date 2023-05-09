@@ -649,126 +649,248 @@ var fullTutorialLevels = [
       ]),
       GameLevel(
       name: "5+ Letter Words",
-      averageGuesses: 3,
-      bestAttempt: 3,
+      averageGuesses: 2,
+      bestAttempt: 2,
       tutorialKey: 211,
       gridCode: [
+        'b110',
+        'l010',
+        'a010',
+        's010',
+        't210',
         null,
         null,
         null,
         null,
         null,
-        null,
-        null,
-        null,
-        'b020',
-        'r020',
-        null,
-        null,
-        null,
-        null,
-        'a030',
-        'e010',
+        'x210',
         null,
         null,
         null,
         null,
         null,
+        'x110',
         null,
+        'y010',
+        'a010',
+        'y010',
         null,
+        'x010',
         null
-      ]),
+      ],
+      tutorialSteps: [
+        TutorialStep.fullScreenClick()
+          .withLetterGrid()
+          .withTopText(text: 'If you make a word that is 5 or more letters long, a special charge will blast from the last letter in the word.'),
+        TutorialStep()
+          .withHighlightedTile(index: 0)
+          .withMiddleText(text: 'Let\'s make the 5 letter word "BLAST"'),
+        TutorialStep()
+          .withHighlightedTile(index: 1)
+          .withDisabledAnswerBox()
+          .withMiddleText(text: 'Now tap the "L"'),
+        TutorialStep()
+          .withHighlightedTile(index: 2)
+          .withDisabledAnswerBox()
+          .withMiddleText(text: 'The "A"'),
+        TutorialStep()
+          .withHighlightedTile(index: 3)
+          .withDisabledAnswerBox()
+          .withMiddleText(text: 'The "S"'),
+        TutorialStep()
+          .withHighlightedTile(index: 4)
+          .withDisabledAnswerBox()
+          .withMiddleText(text: 'And the "T"'),
+        TutorialStep.fullScreenClick()
+          .withLetterGrid()
+          .withTopText(text: 'Notice the 3 "X" letters that are currently highlighted, and all need to be used once'),
+        TutorialStep()
+          .withDisabledAnswerBox()
+          .withSubmit()
+          .withDisabledLetterGrid()
+          .withMiddleText(text: 'Now submit your answer to see what happens'),
+        TutorialStep.fullScreenClick()
+          .withLetterGrid(),
+        TutorialStep.fullScreenClick()
+          .withMiddleText(text: 'The blast used the letters that were highlighted. They no longer need to be used.'),
+        TutorialStep.fullScreenClick()
+          .withMiddleText(text: 'Now finish up the level')
+        
+      ]
+      ),
       GameLevel(
       name: "Blast Direction",
-      averageGuesses: 3,
-      bestAttempt: 3,
+      averageGuesses: 2,
+      bestAttempt: 2,
       tutorialKey: 212,
       gridCode: [
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        'b020',
-        'r020',
-        null,
-        null,
-        null,
-        null,
-        'a030',
+        't110',
+        'r010',
         'e010',
         null,
+        'x110',
+        null,
+        null,
+        'a010',
+        't210',
+        null,
+        null,
+        'x210',
         null,
         null,
         null,
         null,
         null,
         null,
+        'e110',
+        'r010',
+        'u010',
+        'p010',
+        't210',
         null
-      ]),
+      ],
+      tutorialSteps: [
+        TutorialStep.fullScreenClick()
+          .withDisabledLetterGrid()
+          .withTopText(text: 'There is also a way to change the direction of the blast, which we will need to beat this level'),
+        TutorialStep()
+          .withHighlightedTile(index: 18)
+          .withMiddleText(text: 'First, let\'s spell the word "ERUPT"'),
+        TutorialStep()
+          .withHighlightedTile(index: 19)
+          .withDisabledAnswerBox()
+          .withMiddleText(text: 'Now tap the "R"'),
+        TutorialStep()
+          .withHighlightedTile(index: 20)
+          .withDisabledAnswerBox()
+          .withMiddleText(text: 'The "U"'),
+        TutorialStep()
+          .withHighlightedTile(index: 21)
+          .withDisabledAnswerBox()
+          .withMiddleText(text: 'The "P"'),
+        TutorialStep()
+          .withHighlightedTile(index: 22)
+          .withDisabledAnswerBox()
+          .withMiddleText(text: 'And the "T"'),
+        TutorialStep.fullScreenClick()
+          .withDisabledLetterGrid()
+          .withTopText(text: 'This answer should allow us to charge one of the "X" letters'),
+        TutorialStep()
+          .withDisabledLetterGrid()
+          .withDisabledAnswerBox()
+          .withSubmit(),
+        TutorialStep.fullScreenClick()
+          .withDisabledLetterGrid(),
+        TutorialStep()
+          .withHighlightedTile(index: 0)
+          .withBottomText(text: 'Now, let\'s spell the word "TREAT"'),
+        TutorialStep()
+          .withHighlightedTile(index: 1)
+          .withDisabledAnswerBox()
+          .withBottomText(text: 'Now tap the "R"'),
+        TutorialStep()
+          .withHighlightedTile(index: 2)
+          .withDisabledAnswerBox()
+          .withBottomText(text: 'The "E"'),
+        TutorialStep()
+          .withHighlightedTile(index: 7)
+          .withDisabledAnswerBox()
+          .withBottomText(text: 'The "A"'),
+        TutorialStep()
+          .withHighlightedTile(index: 8)
+          .withDisabledAnswerBox()
+          .withBottomText(text: 'And the "T"'),
+        TutorialStep.fullScreenClick()
+          .withDisabledLetterGrid()
+          .withTopText(text: 'Right now we aren\'t going to use the other "X"'),
+        TutorialStep()
+          .withBlastDirection()
+          .withDisabledLetterGrid()
+          .withBottomText(text: 'In order to hit it, we need to change the blast direction'),
+        TutorialStep()
+          .withDisabledLetterGrid()
+          .withInfoPanel()
+          .withSubmit()
+          .withBottomText(text: 'That\'s better, now submit the answer')
+      ]
+      ),
       GameLevel(
       name: "Blocked Letters",
-      averageGuesses: 3,
-      bestAttempt: 3,
+      averageGuesses: 2,
+      bestAttempt: 2,
       tutorialKey: 213,
       gridCode: [
         null,
         null,
         null,
         null,
+        'j111',
         null,
         null,
         null,
         null,
-        'b020',
-        'r020',
+        null,
+        'o011',
         null,
         null,
         null,
         null,
-        'a030',
+        null,
+        'b211',
+        null,
+        'g110',
+        'r010',
         'e010',
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
+        'a010',
+        't210',
         null
-      ]),
+      ],
+      tutorialSteps: [
+        TutorialStep.fullScreenClick()
+          .withDisabledLetterGrid()
+          .withHighlightedTile(index: 4)
+          .withHighlightedTile(index: 10)
+          .withHighlightedTile(index: 16)
+          .withTopText(text: 'Letters can be blocked'),
+        TutorialStep.fullScreenClick()
+          .withDisabledLetterGrid()
+          .withMiddleText(text: 'While blocked, letters cannot be used in a guess'),
+        TutorialStep.fullScreenClick()
+          .withDisabledLetterGrid()
+          .withBottomText(text: 'But they are unblocked when hit with a blast'),
+        TutorialStep.fullScreenClick()
+          .withMiddleText(text: 'So use the blast to unblock the three letters and finish the puzzle')
+      ]
+      ),
       GameLevel(
       name: "Final Check Point",
       averageGuesses: 3,
       bestAttempt: 3,
       tutorialKey: 214,
       gridCode: [
+        't110',
+        'r010',
+        'u010',
+        's010',
+        't220',
+        'x010',
         null,
         null,
         null,
         null,
         null,
         null,
-        null,
-        null,
-        'b020',
-        'r020',
-        null,
-        null,
-        null,
-        null,
-        'a030',
+        'q010',
+        't210',
+        'n010',
         'e010',
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
+        'v010',
+        'e110',
+        'p110',
+        'u010',
+        'z010',
+        'z010',
+        'l011',
+        'e210'
       ]),
 ];

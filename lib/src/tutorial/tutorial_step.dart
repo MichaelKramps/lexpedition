@@ -72,6 +72,8 @@ class TutorialStep {
   TutorialStep withBlastDirection() {
     tutorialWindows.add(
         TutorialDirective(windowType: TutorialDirectiveType.blastDirection));
+    tutorialInstructions.add(
+        TutorialDirective(windowType: TutorialDirectiveType.blastDirection));
     return this;
   }
 
@@ -95,13 +97,19 @@ class TutorialStep {
 
   TutorialStep withInfoPanel() {
     tutorialWindows
-        .add(TutorialDirective(windowType: TutorialDirectiveType.infoPanel));
+        .add(TutorialDirective(windowType: TutorialDirectiveType.infoPanel, preventTapAction: true));
     return this;
   }
 
   TutorialStep withLetterGrid() {
     tutorialWindows
         .add(TutorialDirective(windowType: TutorialDirectiveType.letterGrid));
+    return this;
+  }
+
+  TutorialStep withDisabledLetterGrid() {
+    tutorialWindows
+        .add(TutorialDirective(windowType: TutorialDirectiveType.letterGrid, preventTapAction: true));
     return this;
   }
 }

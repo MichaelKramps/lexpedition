@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
 
 class Constants {
   double screenWidth = 10;
@@ -12,8 +11,6 @@ class Constants {
   Constants.initialize(
       {required this.screenWidth, required this.screenHeight}) {
     this.initialized = true;
-    new Logger('krampees').info(
-        this.screenHeight.toString() + ' : ' + this.screenWidth.toString());
     if (screenHeight > screenWidth) {
       double copyHeight = screenHeight;
       screenHeight = screenWidth;
