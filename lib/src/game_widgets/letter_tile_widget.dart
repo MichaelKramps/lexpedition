@@ -32,8 +32,8 @@ class LetterTileWidget extends StatelessWidget {
       ]);
     } else {
       return Stack(children: [
-          determineTileAnimation(getBaseEmptyWidget()),
-          BlastWidget(
+        determineTileAnimation(getBaseEmptyWidget()),
+        BlastWidget(
             blastDirection: blastDirection,
             beginBlastAnimation: letterTile.blastFrom)
       ]);
@@ -44,11 +44,21 @@ class LetterTileWidget extends StatelessWidget {
     if (letterTile.blastFrom) {
       return baseWidget;
     } else if (letterTile.primedForBlast) {
-      return baseWidget
+      if (gameState.showBadGuess) {
+        return baseWidget.animate().shakeX(duration: 400.ms);
+      } else {
+        return baseWidget
           .animate(onPlay: (controller) => controller.repeat())
-          .shake(rotation: 0, offset: Offset(0.5, 0.5), hz: 12);
+          .shake(rotation: 0.03, hz: 10);
+      }
     } else if (letterTile.selected) {
-      return baseWidget.animate().shake(duration: 350.ms, rotation: 0.03);
+      if (gameState.showBadGuess) {
+        // shake letters in the bad guess
+        return baseWidget.animate().shakeX(duration: 400.ms);
+      } else {
+        // shake letter when selected
+        return baseWidget.animate().shake(duration: 350.ms, rotation: 0.03);
+      }
     } else {
       return baseWidget;
     }
@@ -122,7 +132,11 @@ class LetterTileWidget extends StatelessWidget {
 
   Color determineBackgroundColor() {
     if (qualifiesToBeCharged()) {
-      return Colors.green.shade300.withOpacity(0.3);
+      if (gameState.showBadGuess) {
+        return Colors.orange.shade900.withOpacity(0.3);
+      } else {
+        return Colors.green.shade300.withOpacity(0.3);
+      }
     } else if (letterTile.selected) {
       return Colors.orange.shade900.withOpacity(0.3);
     } else {

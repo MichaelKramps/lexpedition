@@ -81,7 +81,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   }
 
   double determineHz() {
-    return 3 + (_random.nextDouble() * 4);
+    return 5 + (_random.nextDouble() * 3);
   }
 
   Widget getBaseGameBoard() {
