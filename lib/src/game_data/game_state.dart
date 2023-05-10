@@ -11,7 +11,6 @@ import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:lexpedition/src/party/real_time_communication.dart';
 import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
 import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
-import 'package:lexpedition/src/tutorial/tutorial_directive.dart';
 import 'package:lexpedition/src/tutorial/tutorial_step.dart';
 import 'package:logging/logging.dart';
 
@@ -410,7 +409,10 @@ class GameState extends ChangeNotifier {
   Future<void> blastTilesAndNotify(int index) async {
     if (getMyGrid() != null) {
       _logger.info('blasting my grid from ' + index.toString());
-      LetterGrid myGrid = getMyGrid() as LetterGrid;
+      if (!blasting) {
+        blasting = true;
+      }
+      LetterGrid myGrid = getMyGrid()!;
 
       myGrid.blastFromIndex(index);
       realTimeCommunication.sendBlastIndexDataToPeer(index);
@@ -422,6 +424,7 @@ class GameState extends ChangeNotifier {
 
       await Future<void>.delayed(Constants.blastDuration);
       myGrid.unblast();
+      blasting = false;
     }
   }
 

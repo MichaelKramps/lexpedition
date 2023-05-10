@@ -8,7 +8,6 @@ import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_widgets/obstacle_widget.dart';
 import 'package:lexpedition/src/game_widgets/blast_widget.dart';
 import 'package:lexpedition/src/game_widgets/tile_info_widget.dart';
-import 'package:logging/logging.dart';
 
 class LetterTileWidget extends StatelessWidget {
   final LetterTile letterTile;
@@ -25,7 +24,7 @@ class LetterTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (letterTile.tileType != TileType.empty) {
       return Stack(children: [
-        determineTileAnimation(),
+        determineTileAnimation(getBaseTileWidget()),
         ObstacleWidget(visible: !letterTile.clearOfObstacles()),
         BlastWidget(
             blastDirection: blastDirection,
@@ -33,27 +32,25 @@ class LetterTileWidget extends StatelessWidget {
       ]);
     } else {
       return Stack(children: [
-        Container(
-            margin: EdgeInsets.all(Constants().tileMargin()),
-            width: Constants().tileSize(),
-            height: Constants().tileSize(),
-            decoration: BoxDecoration(
-                border: determineEmptyBorder(),
-                color: determineBackgroundColor())),
-        BlastWidget(
+          determineTileAnimation(getBaseEmptyWidget()),
+          BlastWidget(
             blastDirection: blastDirection,
             beginBlastAnimation: letterTile.blastFrom)
       ]);
     }
   }
 
-  Widget determineTileAnimation() {
-    if (letterTile.primedForBlast) {
-      return getBaseTileWidget().animate(onPlay: (controller) => controller.repeat()).shake();
+  Widget determineTileAnimation(Widget baseWidget) {
+    if (letterTile.blastFrom) {
+      return baseWidget;
+    } else if (letterTile.primedForBlast) {
+      return baseWidget
+          .animate(onPlay: (controller) => controller.repeat())
+          .shake(rotation: 0, offset: Offset(0.5, 0.5), hz: 12);
     } else if (letterTile.selected) {
-      return getBaseTileWidget().animate().shake(duration: 200.ms);
+      return baseWidget.animate().shake(duration: 350.ms, rotation: 0.03);
     } else {
-      return getBaseTileWidget();
+      return baseWidget;
     }
   }
 
@@ -68,6 +65,15 @@ class LetterTileWidget extends StatelessWidget {
             onPressed: () {},
             style: style,
             child: TileInfoWidget(letterTile: letterTile)));
+  }
+
+  Widget getBaseEmptyWidget() {
+    return Container(
+        margin: EdgeInsets.all(Constants().tileMargin()),
+        width: Constants().tileSize(),
+        height: Constants().tileSize(),
+        decoration: BoxDecoration(
+            border: determineEmptyBorder(), color: determineBackgroundColor()));
   }
 
   Decoration? determineTileBackground() {

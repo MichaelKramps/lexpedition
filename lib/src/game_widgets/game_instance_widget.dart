@@ -1,7 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
-import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_actions_widget.dart';
@@ -34,6 +36,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   late Offset gridPosition = renderBox.localToGlobal(Offset.zero);
   late double _gridx = gridPosition.dx;
   late double _gridy = gridPosition.dy;
+  Random _random = new Random();
 
   @override
   void initState() {
@@ -57,25 +60,46 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
             image: AssetImage(Constants.backgroundImagePath),
             fit: BoxFit.cover),
       )),
-      Row(children: [
-        Expanded(child: determineColumn(widget.leftColumn)),
-        Column(children: [
-          LetterGridActionsWidget(gameState: widget.gameState),
-          Listener(
-              key: gridKey,
-              onPointerDown: (event) => {
-                    handleMouseEvent(
-                        event.position.dx, event.position.dy, false)
-                  },
-              onPointerMove: (event) => {
-                    handleMouseEvent(event.position.dx, event.position.dy, true)
-                  },
-              child: LetterGridWidget(
-                  gameState: widget.gameState,
-                  letterGrid: widget.gameState.getMyGrid()!))
-        ]),
-        Expanded(child: determineColumn(widget.rightColumn))
-      ])
+      determineAnimationForGameBoard()
+    ]);
+  }
+
+  Widget determineAnimationForGameBoard() {
+    if (widget.gameState.blasting) {
+      return getBaseGameBoard()
+          .animate()
+          .shake(rotation: 0, offset: determineOffset(), hz: determineHz());
+    } else {
+      return getBaseGameBoard();
+    }
+  }
+
+  Offset determineOffset() {
+    double dx = _random.nextDouble() * 2;
+    double dy = _random.nextDouble() * 2;
+    return Offset(dx, dy);
+  }
+
+  double determineHz() {
+    return 3 + (_random.nextDouble() * 4);
+  }
+
+  Widget getBaseGameBoard() {
+    return Row(children: [
+      Expanded(child: determineColumn(widget.leftColumn)),
+      Column(children: [
+        LetterGridActionsWidget(gameState: widget.gameState),
+        Listener(
+            key: gridKey,
+            onPointerDown: (event) =>
+                {handleMouseEvent(event.position.dx, event.position.dy, false)},
+            onPointerMove: (event) =>
+                {handleMouseEvent(event.position.dx, event.position.dy, true)},
+            child: LetterGridWidget(
+                gameState: widget.gameState,
+                letterGrid: widget.gameState.getMyGrid()!))
+      ]),
+      Expanded(child: determineColumn(widget.rightColumn))
     ]);
   }
 
