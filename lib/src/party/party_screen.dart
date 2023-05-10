@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:provider/provider.dart';
 
 class PartyScreen extends StatelessWidget {
@@ -20,17 +21,17 @@ class PartyScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ElevatedButton(
+              BasicUserInterfaceButton(
                   onPressed: () => GoRouter.of(context).push('/party/join'),
-                  child: Text('Enter Code')),
+                  buttonText: 'Enter Code'),
               SizedBox(width: Constants.smallFont),
-              ElevatedButton(
+              BasicUserInterfaceButton(
                   onPressed: () => GoRouter.of(context).push('/party/start'),
-                  child: Text('Invite Friend')),
+                  buttonText: 'Invite Friend'),
               SizedBox(width: Constants.smallFont),
-              ElevatedButton(
+              BasicUserInterfaceButton(
                   onPressed: () => GoRouter.of(context).pop(),
-                  child: Text('Back'))
+                  buttonText: 'Back')
             ])
       ]));
     });

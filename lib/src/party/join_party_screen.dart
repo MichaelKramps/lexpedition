@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:provider/provider.dart';
 import 'package:wakelock/wakelock.dart';
 
@@ -47,7 +48,7 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             labelText: "Party Code"))),
-                ElevatedButton(
+                BasicUserInterfaceButton(
                     onPressed: () async {
                       String partyCode = _textController.text.toUpperCase();
 
@@ -64,7 +65,7 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
                         });
                       } */
                     },
-                    child: Text('Join'))
+                    buttonText: 'Join')
               ]),
               Visibility(
                   visible: _error,

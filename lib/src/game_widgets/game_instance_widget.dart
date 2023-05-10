@@ -54,12 +54,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
-      Container(
-          decoration: BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage(Constants.backgroundImagePath),
-            fit: BoxFit.cover),
-      )),
+      Constants.defaultBackground,
       determineAnimationForGameBoard()
     ]);
   }

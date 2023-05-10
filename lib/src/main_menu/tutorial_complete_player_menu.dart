@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
+import 'package:lexpedition/src/user_interface/featured_user_interface_button.dart';
 import 'package:provider/provider.dart';
 
 class TutorialCompletePlayerMenu extends StatefulWidget {
@@ -19,31 +21,32 @@ class _TutorialCompletePlayerMenuState
   @override
   Widget build(BuildContext context) {
     return Stack(children: [
+      Constants.defaultBackground,
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         checkToDisplayPartyCode(),
         determinePartyButton(context),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ElevatedButton(
+            BasicUserInterfaceButton(
               onPressed: () {
                 GoRouter.of(context).push('/lexpedition');
               },
-              child: const Text('Lexpedition'),
+              buttonText: 'Lexpedition',
             ),
             SizedBox(width: Constants.smallFont),
-            ElevatedButton(
+            BasicUserInterfaceButton(
               onPressed: () {
                 GoRouter.of(context).push('/freeplay');
               },
-              child: const Text('Free Play'),
+              buttonText: 'Free Play',
             ),
             SizedBox(width: Constants.smallFont),
-            ElevatedButton(
+            BasicUserInterfaceButton(
               onPressed: () {
                 GoRouter.of(context).push('/moremenu');
               },
-              child: const Text('More...'),
+              buttonText: 'More...',
             )
           ],
         )
@@ -64,22 +67,22 @@ class _TutorialCompletePlayerMenuState
                         children: [
                           Consumer<GameState>(
                               builder: (context, gameState, child) {
-                            return ElevatedButton(
+                            return BasicUserInterfaceButton(
                                 onPressed: () {
                                   gameState.realTimeCommunication.hangUp();
                                   setState(() {
                                     _areYouSure = false;
                                   });
                                 },
-                                child: Text("Yes"));
+                                buttonText: "Yes");
                           }),
-                          ElevatedButton(
+                          BasicUserInterfaceButton(
                               onPressed: () {
                                 setState(() {
                                   _areYouSure = false;
                                 });
                               },
-                              child: Text("No"))
+                              buttonText: "No")
                         ],
                       )
                     ],
@@ -90,24 +93,21 @@ class _TutorialCompletePlayerMenuState
   Widget determinePartyButton(BuildContext context) {
     return Consumer<GameState>(builder: (context, gameState, child) {
       if (!gameState.realTimeCommunication.isConnected) {
-        final ButtonStyle buttonStyle =
-            TextButton.styleFrom(backgroundColor: Colors.amber);
 
-        return ElevatedButton(
+        return FeaturedUserInterfaceButton(
           onPressed: () {
             GoRouter.of(context).push('/party');
           },
-          style: buttonStyle,
-          child: const Text('Play with a Friend'),
+          buttonText: 'Play with a Friend',
         );
       } else {
-        return ElevatedButton(
+        return BasicUserInterfaceButton(
           onPressed: () {
             setState(() {
               _areYouSure = true;
             });
           },
-          child: const Text('Play Solo'),
+          buttonText: 'Play Solo',
         );
       }
     });

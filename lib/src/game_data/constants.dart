@@ -115,9 +115,9 @@ class Constants {
   static double smallFont = 24;
   static double verySmallFont = 14;
 
-  static String assetsPath = 'assets';
-  static String imagePath = assetsPath + '/images';
-  static String backgroundImagePath = imagePath + '/crumpled-paper.png';
+  static const String assetsPath = 'assets';
+  static const String imagePath = assetsPath + '/images';
+  static const String backgroundImagePath = imagePath + '/crumpled-paper.png';
   static String blastImage = imagePath + '/brush-stroke.png';
 
   static const celebrationDuration = Duration(milliseconds: 2000);
@@ -142,4 +142,10 @@ class Constants {
   static const Duration buttonPressAnimationDuration =
       Duration(milliseconds: 75);
   static const String buttonUIFont = 'Syne Mono';
+
+  static Widget defaultBackground = Container(
+          decoration: BoxDecoration(
+          image: const DecorationImage(
+            image: AssetImage(Constants.backgroundImagePath),
+            fit: BoxFit.cover)));
 }

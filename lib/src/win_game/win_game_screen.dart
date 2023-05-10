@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
@@ -64,11 +65,11 @@ class WinGameScreen extends StatelessWidget {
               ),
             ],
           ),
-          rectangularMenuArea: ElevatedButton(
+          rectangularMenuArea: BasicUserInterfaceButton(
             onPressed: () {
               GoRouter.of(context).push(continueRoute);
             },
-            child: const Text('Continue'),
+            buttonText: 'Continue',
           ),
         ),
       );

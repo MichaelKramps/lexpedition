@@ -8,6 +8,7 @@ import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
 import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
@@ -61,12 +62,12 @@ class TutorialIntroWidget extends StatelessWidget {
             ),
           ],
         ),
-        rectangularMenuArea: ElevatedButton(
+        rectangularMenuArea: BasicUserInterfaceButton(
           onPressed: () {
             GoRouter.of(context)
                 .push('/tutorial/' + tutorialPath + '/session/' + levelNumber.toString());
           },
-          child: const Text('Play'),
+          buttonText: 'Play',
         ),
       ),
     );

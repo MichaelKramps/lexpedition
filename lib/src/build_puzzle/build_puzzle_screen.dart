@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 
 class BuildPuzzleScreen extends StatelessWidget {
   const BuildPuzzleScreen({super.key});
@@ -12,19 +13,19 @@ class BuildPuzzleScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ElevatedButton(
+          BasicUserInterfaceButton(
               onPressed: () =>
                   GoRouter.of(context).push('/buildpuzzle/1player'),
-              child: Text('Build Solo Puzzle')),
+              buttonText: 'Build Solo Puzzle'),
           SizedBox(width: Constants.smallFont),
-          ElevatedButton(
+          BasicUserInterfaceButton(
               onPressed: () =>
                   GoRouter.of(context).push('/buildpuzzle/2player'),
-              child: Text('Build Cooperative Puzzle')),
+              buttonText: 'Build Cooperative Puzzle'),
           SizedBox(width: Constants.smallFont),
-          ElevatedButton(
+          BasicUserInterfaceButton(
                 onPressed: () => GoRouter.of(context).pop(),
-                child: Text('Back'))
+                buttonText: 'Back')
         ]
       ))
     );

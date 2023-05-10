@@ -8,6 +8,7 @@ import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';
@@ -72,11 +73,11 @@ class TutorialScreen extends StatelessWidget {
               ),
             ],
           ),
-          rectangularMenuArea: ElevatedButton(
+          rectangularMenuArea: BasicUserInterfaceButton(
             onPressed: () {
               GoRouter.of(context).push('/');
             },
-            child: const Text('Back'),
+            buttonText: 'Back',
           ),
         ),
       );

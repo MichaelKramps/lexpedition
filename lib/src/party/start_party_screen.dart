@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:provider/provider.dart';
 
 class StartPartyScreen extends StatefulWidget {
@@ -36,7 +37,7 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
         children: [
           Consumer<GameState>(
               builder: (context, gameState, child) {
-            return ElevatedButton(
+            return BasicUserInterfaceButton(
                 onPressed: () async {
                   String newPartyCode = buildPartyCode();
 
@@ -48,7 +49,7 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
                   await gameState.realTimeCommunication.openUserMedia();
                   await gameState.realTimeCommunication.createRoom();
                 },
-                child: Text('Get Code'));
+                buttonText: 'Get Code');
           }),
           SizedBox(width: 25),
           Text(_partyCode, style: getTextStyle())
@@ -60,11 +61,11 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
             Text(
                 'You must give this share code to you partner. They will enter it on the "Join Party" page.',
                 style: getTextStyle()),
-            ElevatedButton(
+            BasicUserInterfaceButton(
                 onPressed: () {
                   GoRouter.of(context).pop();
                 },
-                child: Text('Back')),
+                buttonText: 'Back'),
           ]))
     ]));
   }

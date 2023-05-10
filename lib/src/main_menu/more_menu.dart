@@ -18,33 +18,34 @@ class _MoreMenuState extends State<MoreMenu> {
     return Scaffold(
         body: Stack(
         children: [
+          Constants.defaultBackground,
           SizedBox.expand(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
+                BasicUserInterfaceButton(
                   onPressed: () {
                     GoRouter.of(context).push('/buildpuzzle');
                   },
-                  child: const Text('Puzzle Builder'),
+                  buttonText: 'Puzzle Builder',
                 ),
                 SizedBox(width: Constants.smallFont),
-                ElevatedButton(
+                BasicUserInterfaceButton(
                   onPressed: () {
                   setState(() {
                       _showTutorialBox = true;
                     });
                   },
-                  child: const Text('Tutorial'),
+                  buttonText: 'Tutorial',
                 ),
                 SizedBox(width: Constants.smallFont),
-                ElevatedButton(
+                BasicUserInterfaceButton(
                   onPressed: () => GoRouter.of(context).push('/settings'),
-                  child: const Text('Settings'),
+                  buttonText: 'Settings',
                 ),
                 SizedBox(width: Constants.smallFont),
-                ElevatedButton(
-                    onPressed: () => GoRouter.of(context).pop(), child: Text('Back'))
+                BasicUserInterfaceButton(
+                    onPressed: () => GoRouter.of(context).pop(), buttonText: 'Back')
               ],
             ),
           ),

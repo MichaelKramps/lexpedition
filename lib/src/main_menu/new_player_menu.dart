@@ -20,6 +20,7 @@ class _NewPlayerMenuState extends State<NewPlayerMenu> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        Constants.defaultBackground,
         Container(
           decoration: BoxDecoration(
           image: DecorationImage(
