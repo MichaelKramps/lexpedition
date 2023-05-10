@@ -5,6 +5,7 @@ class Constants {
   double screenHeight = 10;
   late double _tileSize = 64;
   late double _tileMargin = 1.5;
+  late double _gridXStart = 0;
   bool initialized = false;
   static Constants instance = Constants.blank();
 
@@ -18,6 +19,12 @@ class Constants {
     }
     _tileSize = (screenHeight / 5) - 5;
     _tileMargin = _tileSize * 0.025;
+    _gridXStart = ((screenWidth - gridWidth()) / 2);
+    if (_tileSize < 30 || _tileSize > 150) {
+      _tileSize = 64;
+      _tileMargin = 1.5;
+      _gridXStart = 0;
+    }
     instance = this;
   }
 
@@ -40,7 +47,11 @@ class Constants {
   }
 
   double gridXStart() {
-    return ((screenWidth - gridWidth()) / 2);
+    return _gridXStart;
+  }
+
+  void setGridXStart(double gridXStart) {
+    this._gridXStart = gridXStart;
   }
 
   double gridYStart() {

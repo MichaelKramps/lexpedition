@@ -75,13 +75,13 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   }
 
   Offset determineOffset() {
-    double dx = _random.nextDouble() * 2;
-    double dy = _random.nextDouble() * 2;
+    double dx = (_random.nextDouble() * 4) - 2;//between -2 and 2
+    double dy = (_random.nextDouble() * 4) - 2;//between -2 and 2
     return Offset(dx, dy);
   }
 
   double determineHz() {
-    return 5 + (_random.nextDouble() * 3);
+    return 5 + (_random.nextDouble() * 3);//between 5 and 8
   }
 
   Widget getBaseGameBoard() {
