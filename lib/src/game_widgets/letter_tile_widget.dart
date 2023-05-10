@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
@@ -7,6 +8,7 @@ import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_widgets/obstacle_widget.dart';
 import 'package:lexpedition/src/game_widgets/blast_widget.dart';
 import 'package:lexpedition/src/game_widgets/tile_info_widget.dart';
+import 'package:logging/logging.dart';
 
 class LetterTileWidget extends StatelessWidget {
   final LetterTile letterTile;
@@ -22,18 +24,8 @@ class LetterTileWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (letterTile.tileType != TileType.empty) {
-      final ButtonStyle style = TextButton.styleFrom(
-          fixedSize: Size.square(Constants().tileSize()),
-          side: determineTileBorder());
-
       return Stack(children: [
-        Container(
-            margin: EdgeInsets.all(Constants().tileMargin()),
-            decoration: determineTileBackground(),
-            child: TextButton(
-                onPressed: () {},
-                style: style,
-                child: TileInfoWidget(letterTile: letterTile))),
+        determineTileAnimation(),
         ObstacleWidget(visible: !letterTile.clearOfObstacles()),
         BlastWidget(
             blastDirection: blastDirection,
@@ -53,6 +45,29 @@ class LetterTileWidget extends StatelessWidget {
             beginBlastAnimation: letterTile.blastFrom)
       ]);
     }
+  }
+
+  Widget determineTileAnimation() {
+    if (letterTile.primedForBlast) {
+      return getBaseTileWidget().animate(onPlay: (controller) => controller.repeat()).shake();
+    } else if (letterTile.selected) {
+      return getBaseTileWidget().animate().shake(duration: 200.ms);
+    } else {
+      return getBaseTileWidget();
+    }
+  }
+
+  Widget getBaseTileWidget() {
+    final ButtonStyle style = TextButton.styleFrom(
+        fixedSize: Size.square(Constants().tileSize()),
+        side: determineTileBorder());
+    return Container(
+        margin: EdgeInsets.all(Constants().tileMargin()),
+        decoration: determineTileBackground(),
+        child: TextButton(
+            onPressed: () {},
+            style: style,
+            child: TileInfoWidget(letterTile: letterTile)));
   }
 
   Decoration? determineTileBackground() {
