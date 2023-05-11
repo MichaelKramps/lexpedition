@@ -9,6 +9,9 @@ class GenericButton extends StatefulWidget {
   final Color primaryButtonShadow;
   final Color textColor;
   final String buttonText;
+  final double fontSize;
+  final double? width;
+  final bool muted;
   final void Function() onPressed;
 
   GenericButton(
@@ -17,7 +20,10 @@ class GenericButton extends StatefulWidget {
       required this.primaryButtonShadow,
       required this.buttonText,
       required this.onPressed,
-      this.textColor = Colors.white});
+      this.textColor = Colors.white,
+      this.fontSize = Constants.smallFont,
+      this.muted = false,
+      this.width});
 
   @override
   State<GenericButton> createState() => _GenericButtonState();
@@ -58,7 +64,7 @@ class _GenericButtonState extends State<GenericButton> {
                       child: Text(widget.buttonText.toUpperCase(),
                           style: TextStyle(
                               fontFamily: Constants.buttonUIFont,
-                              fontSize: Constants.smallFont,
+                              fontSize: widget.fontSize,
                               color: widget.textColor))),
                 ))
           ]))),
@@ -66,6 +72,16 @@ class _GenericButtonState extends State<GenericButton> {
   }
 
   double calculateButtonWidth() {
+    if (widget.width != null) {
+      return widget.width!;
+    }
+    if (widget.fontSize == Constants.verySmallFont) {
+      return calculateVerySmallFontButtonWidth();
+    }
+    return calculateSmallFontButtonWidth();
+  }
+
+  double calculateSmallFontButtonWidth() {
     if (widget.buttonText.length < 10) {
       return widget.buttonText.length * 18;
     } else if (widget.buttonText.length < 16) {
@@ -77,12 +93,26 @@ class _GenericButtonState extends State<GenericButton> {
     }
   }
 
+  double calculateVerySmallFontButtonWidth() {
+    if (widget.buttonText.length < 10) {
+      return widget.buttonText.length * 14;
+    } else if (widget.buttonText.length < 16) {
+      return widget.buttonText.length * 13;
+    } else if (widget.buttonText.length < 20) {
+      return widget.buttonText.length * 12;
+    } else {
+      return widget.buttonText.length * 11;
+    }
+  }
+
   void pressButton() async {
     setState(() {
       _pressed = true;
     });
-    final audioController = context.read<AudioController>();
-    audioController.playSfx(SfxType.tapButton);
+    if (widget.muted) {
+      final audioController = context.read<AudioController>();
+      audioController.playSfx(SfxType.tapButton);
+    }
     await Future.delayed(Constants.buttonPressAnimationDuration);
     widget.onPressed();
     setState(() {

@@ -110,13 +110,13 @@ class Constants {
     return ((tileSize() * 6) + (tileMargin() * 12)).floor();
   }
 
-  static double headerFontSize = 48;
-  static double bigFont = 42;
-  static double bigMediumFont = 36;
-  static double mediumFont = 32;
-  static double smallMediumFont = 28;
-  static double smallFont = 24;
-  static double verySmallFont = 14;
+  static const double headerFontSize = 48;
+  static const double bigFont = 42;
+  static const double bigMediumFont = 36;
+  static const double mediumFont = 32;
+  static const double smallMediumFont = 28;
+  static const double smallFont = 24;
+  static const double verySmallFont = 14;
 
   static const String assetsPath = 'assets';
   static const String imagePath = assetsPath + '/images';

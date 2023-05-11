@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/user_interface/basic_game_button.dart';
 
 class GuessesInformationWidget extends StatefulWidget {
   final int currentGuesses;
@@ -30,26 +31,28 @@ class _GuessesInformationWidgetState extends State<GuessesInformationWidget> {
     if (_menuOpen) {
       return Column(
         children: [
-          Text('Mine: ' + widget.currentGuesses.toString(), style: textStyle),
-          Text('Average: ' + widget.averageGuesses.toString(), style: textStyle),
-          Text('Best: ' + widget.bestAttempt.toString(), style: textStyle),
-          ElevatedButton(
+          BasicGameButton(
               onPressed: () {
                 setState(() {
                   _menuOpen = false;
                 });
               },
-              child: Text('-'))
+              fontSize: Constants.mediumFont,
+              buttonText: '-'),
+          Text('Mine: ' + widget.currentGuesses.toString(), style: textStyle),
+          Text('Average: ' + widget.averageGuesses.toString(), style: textStyle),
+          Text('Best: ' + widget.bestAttempt.toString(), style: textStyle)
         ],
       );
     } else {
-      return ElevatedButton(
+      return BasicGameButton(
           onPressed: () {
             setState(() {
               _menuOpen = true;
             });
           },
-          child: Text('+'));
+          fontSize: Constants.mediumFont,
+          buttonText: '+');
     }
   }
 }

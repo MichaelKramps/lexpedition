@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/level_info/level_db_connection.dart';
+import 'package:lexpedition/src/user_interface/basic_game_button.dart';
 
 class OnePlayerRightColumnWidget extends StatelessWidget {
   final GameState gameState;
@@ -19,20 +20,20 @@ class OnePlayerRightColumnWidget extends StatelessWidget {
           semanticLabel: 'Settings',
         ),
       ),
-      ElevatedButton(
+      BasicGameButton(
         onPressed: () {
           gameState.resetPuzzle(notify: true);
           logPuzzleQuit();
         },
-        child: const Text('Restart'),
+        buttonText: 'Restart',
       ),
       SizedBox(height: 10),
-      ElevatedButton(
+      BasicGameButton(
         onPressed: () {
           logPuzzleQuit();
           GoRouter.of(context).push('/');
         },
-        child: const Text('Home'),
+        buttonText: 'Home',
       )
     ]);
   }
