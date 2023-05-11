@@ -9,25 +9,39 @@ class BuildPuzzleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SizedBox.expand(child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      body: Stack(
         children: [
-          BasicUserInterfaceButton(
-              onPressed: () =>
-                  GoRouter.of(context).push('/buildpuzzle/1player'),
-              buttonText: 'Build Solo Puzzle'),
-          SizedBox(width: Constants.smallFont),
-          BasicUserInterfaceButton(
-              onPressed: () =>
-                  GoRouter.of(context).push('/buildpuzzle/2player'),
-              buttonText: 'Build Cooperative Puzzle'),
-          SizedBox(width: Constants.smallFont),
-          BasicUserInterfaceButton(
-                onPressed: () => GoRouter.of(context).pop(),
-                buttonText: 'Back')
-        ]
-      ))
+          Constants.defaultBackground,
+          SizedBox.expand(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Build a Puzzle', style: TextStyle(fontSize: Constants.headerFontSize)),
+                SizedBox(height: 48),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    BasicUserInterfaceButton(
+                        onPressed: () =>
+                            GoRouter.of(context).push('/buildpuzzle/1player'),
+                        buttonText: 'Build Solo Puzzle'),
+                    SizedBox(width: Constants.smallFont),
+                    BasicUserInterfaceButton(
+                        onPressed: () =>
+                            GoRouter.of(context).push('/buildpuzzle/2player'),
+                        buttonText: 'Build Cooperative Puzzle'),
+                    SizedBox(width: Constants.smallFont),
+                    BasicUserInterfaceButton(
+                          onPressed: () => GoRouter.of(context).pop(),
+                          buttonText: 'Back')
+                  ]
+                ),
+              ],
+            )
+          ),
+        ],
+      )
     );
   }
 }

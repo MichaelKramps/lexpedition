@@ -26,88 +26,93 @@ class SettingsScreen extends StatelessWidget {
     final palette = context.watch<Palette>();
 
     return Scaffold(
-      backgroundColor: palette.backgroundSettings,
-      body: ResponsiveScreen(
-        squarishMainArea: ListView(
-          children: [
-            _gap,
-            Text(
-              'Settings',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: Constants.bigFont,
-                height: 1,
-              ),
-            ),
-            _gap,
-            const _NameChangeLine(
-              'Name',
-            ),
-            ValueListenableBuilder<bool>(
-              valueListenable: settings.soundsOn,
-              builder: (context, soundsOn, child) => _SettingsLine(
-                'Sound FX',
-                Icon(soundsOn ? Icons.graphic_eq : Icons.volume_off),
-                onSelected: () => settings.toggleSoundsOn(),
-              ),
-            ),
-            ValueListenableBuilder<bool>(
-              valueListenable: settings.musicOn,
-              builder: (context, musicOn, child) => _SettingsLine(
-                'Music',
-                Icon(musicOn ? Icons.music_note : Icons.music_off),
-                onSelected: () => settings.toggleMusicOn(),
-              ),
-            ),
-            Consumer<InAppPurchaseController?>(
-                builder: (context, inAppPurchase, child) {
-              if (inAppPurchase == null) {
-                // In-app purchases are not supported yet.
-                // Go to lib/main.dart and uncomment the lines that create
-                // the InAppPurchaseController.
-                return const SizedBox.shrink();
-              }
+      backgroundColor: palette.backgroundMain,
+      body: Stack(
+        children: [
+          Constants.defaultBackground,
+          ResponsiveScreen(
+            squarishMainArea: ListView(
+              children: [
+                _gap,
+                Text(
+                  'Settings',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: Constants.bigFont,
+                    height: 1,
+                  ),
+                ),
+                _gap,
+                const _NameChangeLine(
+                  'Name',
+                ),
+                ValueListenableBuilder<bool>(
+                  valueListenable: settings.soundsOn,
+                  builder: (context, soundsOn, child) => _SettingsLine(
+                    'Sound FX',
+                    Icon(soundsOn ? Icons.graphic_eq : Icons.volume_off),
+                    onSelected: () => settings.toggleSoundsOn(),
+                  ),
+                ),
+                ValueListenableBuilder<bool>(
+                  valueListenable: settings.musicOn,
+                  builder: (context, musicOn, child) => _SettingsLine(
+                    'Music',
+                    Icon(musicOn ? Icons.music_note : Icons.music_off),
+                    onSelected: () => settings.toggleMusicOn(),
+                  ),
+                ),
+                Consumer<InAppPurchaseController?>(
+                    builder: (context, inAppPurchase, child) {
+                  if (inAppPurchase == null) {
+                    // In-app purchases are not supported yet.
+                    // Go to lib/main.dart and uncomment the lines that create
+                    // the InAppPurchaseController.
+                    return const SizedBox.shrink();
+                  }
 
-              Widget icon;
-              VoidCallback? callback;
-              if (inAppPurchase.adRemoval.active) {
-                icon = const Icon(Icons.check);
-              } else if (inAppPurchase.adRemoval.pending) {
-                icon = const CircularProgressIndicator();
-              } else {
-                icon = const Icon(Icons.ad_units);
-                callback = () {
-                  inAppPurchase.buy();
-                };
-              }
-              return _SettingsLine(
-                'Remove ads',
-                icon,
-                onSelected: callback,
-              );
-            }),
-            _SettingsLine(
-              'Reset progress',
-              const Icon(Icons.delete),
-              onSelected: () {
-                context.read<PlayerProgress>().reset();
+                  Widget icon;
+                  VoidCallback? callback;
+                  if (inAppPurchase.adRemoval.active) {
+                    icon = const Icon(Icons.check);
+                  } else if (inAppPurchase.adRemoval.pending) {
+                    icon = const CircularProgressIndicator();
+                  } else {
+                    icon = const Icon(Icons.ad_units);
+                    callback = () {
+                      inAppPurchase.buy();
+                    };
+                  }
+                  return _SettingsLine(
+                    'Remove ads',
+                    icon,
+                    onSelected: callback,
+                  );
+                }),
+                _SettingsLine(
+                  'Reset progress',
+                  const Icon(Icons.delete),
+                  onSelected: () {
+                    context.read<PlayerProgress>().reset();
 
-                final messenger = ScaffoldMessenger.of(context);
-                messenger.showSnackBar(
-                  const SnackBar(
-                      content: Text('Player progress has been reset.')),
-                );
+                    final messenger = ScaffoldMessenger.of(context);
+                    messenger.showSnackBar(
+                      const SnackBar(
+                          content: Text('Player progress has been reset.')),
+                    );
+                  },
+                ),
+                _gap,
+              ],
+            ),
+            rectangularMenuArea: BasicUserInterfaceButton(
+              onPressed: () {
+                GoRouter.of(context).pop();
               },
+              buttonText: 'Back',
             ),
-            _gap,
-          ],
-        ),
-        rectangularMenuArea: BasicUserInterfaceButton(
-          onPressed: () {
-            GoRouter.of(context).pop();
-          },
-          buttonText: 'Back',
-        ),
+          ),
+        ],
       ),
     );
   }

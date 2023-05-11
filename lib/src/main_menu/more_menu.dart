@@ -20,32 +20,39 @@ class _MoreMenuState extends State<MoreMenu> {
         children: [
           Constants.defaultBackground,
           SizedBox.expand(
-            child: Row(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                BasicUserInterfaceButton(
-                  onPressed: () {
-                    GoRouter.of(context).push('/buildpuzzle');
-                  },
-                  buttonText: 'Puzzle Builder',
+                Text('More Features', style: TextStyle(fontSize: Constants.headerFontSize)),
+                SizedBox(height: 48),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    BasicUserInterfaceButton(
+                      onPressed: () {
+                        GoRouter.of(context).push('/buildpuzzle');
+                      },
+                      buttonText: 'Puzzle Builder',
+                    ),
+                    SizedBox(width: Constants.smallFont),
+                    BasicUserInterfaceButton(
+                      onPressed: () {
+                      setState(() {
+                          _showTutorialBox = true;
+                        });
+                      },
+                      buttonText: 'Tutorial',
+                    ),
+                    SizedBox(width: Constants.smallFont),
+                    BasicUserInterfaceButton(
+                      onPressed: () => GoRouter.of(context).push('/settings'),
+                      buttonText: 'Settings',
+                    ),
+                    SizedBox(width: Constants.smallFont),
+                    BasicUserInterfaceButton(
+                        onPressed: () => GoRouter.of(context).pop(), buttonText: 'Back')
+                  ],
                 ),
-                SizedBox(width: Constants.smallFont),
-                BasicUserInterfaceButton(
-                  onPressed: () {
-                  setState(() {
-                      _showTutorialBox = true;
-                    });
-                  },
-                  buttonText: 'Tutorial',
-                ),
-                SizedBox(width: Constants.smallFont),
-                BasicUserInterfaceButton(
-                  onPressed: () => GoRouter.of(context).push('/settings'),
-                  buttonText: 'Settings',
-                ),
-                SizedBox(width: Constants.smallFont),
-                BasicUserInterfaceButton(
-                    onPressed: () => GoRouter.of(context).pop(), buttonText: 'Back')
               ],
             ),
           ),

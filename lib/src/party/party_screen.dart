@@ -12,28 +12,37 @@ class PartyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<GameState>(builder: (context, gameState, child) {
       return Scaffold(
-          body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Visibility(
-            visible: gameState.realTimeCommunication.roomId != '',
-            child: Text(
-                'Your partner code is ' + gameState.realTimeCommunication.roomId)),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+          body: Stack(
             children: [
-              BasicUserInterfaceButton(
-                  onPressed: () => GoRouter.of(context).push('/party/join'),
-                  buttonText: 'Enter Code'),
-              SizedBox(width: Constants.smallFont),
-              BasicUserInterfaceButton(
-                  onPressed: () => GoRouter.of(context).push('/party/start'),
-                  buttonText: 'Invite Friend'),
-              SizedBox(width: Constants.smallFont),
-              BasicUserInterfaceButton(
-                  onPressed: () => GoRouter.of(context).pop(),
-                  buttonText: 'Back')
-            ])
-      ]));
+              Constants.defaultBackground,
+              Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text('Play with a Friend', style: TextStyle(fontSize: Constants.headerFontSize)),
+                SizedBox(height: 48),
+                Visibility(
+                  visible: gameState.realTimeCommunication.roomId != '',
+                  child: Text(
+                      'Your partner code is ' + gameState.realTimeCommunication.roomId,
+                      style: TextStyle(fontSize: Constants.mediumFont, color: Colors.green),)),
+                SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    BasicUserInterfaceButton(
+                        onPressed: () => GoRouter.of(context).push('/party/start'),
+                        buttonText: 'Invite Friend'),
+                    SizedBox(width: Constants.smallFont),
+                    BasicUserInterfaceButton(
+                        onPressed: () => GoRouter.of(context).push('/party/join'),
+                        buttonText: 'Join Friend'),
+                    SizedBox(width: Constants.smallFont),
+                    BasicUserInterfaceButton(
+                        onPressed: () => GoRouter.of(context).pop(),
+                        buttonText: 'Back')
+                ])
+              ]),
+            ],
+          ));
     });
   }
 }

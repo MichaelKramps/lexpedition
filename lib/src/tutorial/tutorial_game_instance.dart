@@ -3,7 +3,6 @@ import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/play_session/one_player_play_session_screen.dart';
 import 'package:lexpedition/src/tutorial/tutorial_directive.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 class TutorialGameInstance extends StatelessWidget {
@@ -99,7 +98,7 @@ class TutorialGameInstance extends StatelessWidget {
                           tutorialWindow
                               .getText(), //to put a black outline on the text
                           style: TextStyle(
-                              fontSize: Constants.mediumFont,
+                              fontSize: Constants.smallMediumFont,
                               decoration: TextDecoration.none,
                               foreground: Paint()
                                 ..style = PaintingStyle.stroke
@@ -109,7 +108,7 @@ class TutorialGameInstance extends StatelessWidget {
                           style: TextStyle(
                               color: Color.fromARGB(255, 255, 217, 104),
                               decoration: TextDecoration.none,
-                              fontSize: Constants.mediumFont)),
+                              fontSize: Constants.smallMediumFont)),
                     ],
                   ))));
     } else {

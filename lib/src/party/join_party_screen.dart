@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
@@ -36,42 +38,56 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
         return TwoPlayerPlaySessionScreen(gameState: gameState);
       } else {
         return Scaffold(
-            body: SizedBox.expand(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                SizedBox(
-                    width: 300,
-                    child: TextField(
-                        controller: _textController,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: "Party Code"))),
-                BasicUserInterfaceButton(
-                    onPressed: () async {
-                      String partyCode = _textController.text.toUpperCase();
+            body: Stack(
+              children: [
+                Constants.defaultBackground,
+                SizedBox.expand(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Enter Share Code from Friend', style: TextStyle(fontSize: Constants.bigFont)),
+                          SizedBox(height: 48),
+                          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                            SizedBox(
+                                width: 300,
+                                child: TextField(
+                                    controller: _textController,
+                                    decoration: InputDecoration(
+                                        border: OutlineInputBorder(),
+                                        labelText: "Party Code"))),
+                            SizedBox(width: 12),
+                            BasicUserInterfaceButton(
+                                onPressed: () async {
+                                  String partyCode = _textController.text.toUpperCase();
 
-                      setState(() {
-                        _error = false;
-                      });
+                                  setState(() {
+                                    _error = false;
+                                  });
 
-                      gameState.realTimeCommunication.addRoomId(partyCode);
-                      await gameState.realTimeCommunication.openUserMedia();
-                      await gameState.realTimeCommunication.joinRoom();
-                      /* if (!gameState.realTimeCommunication.isConnected) {
-                        setState(() {
-                          _error = true;
-                        });
-                      } */
-                    },
-                    buttonText: 'Join')
-              ]),
-              Visibility(
-                  visible: _error,
-                  child: Text(
-                      'Failed to join a party, please check your code and try again.'))
-            ])));
+                                  gameState.realTimeCommunication.addRoomId(partyCode);
+                                  await gameState.realTimeCommunication.openUserMedia();
+                                  await gameState.realTimeCommunication.joinRoom();
+                                  /* if (!gameState.realTimeCommunication.isConnected) {
+                                    setState(() {
+                                      _error = true;
+                                    });
+                                  } */
+                                },
+                                buttonText: 'Join'),
+                            SizedBox(width: 12),
+                            BasicUserInterfaceButton(
+                              buttonText: 'Back', 
+                              onPressed: () => {GoRouter.of(context).pop()})
+                          ]),
+                          Visibility(
+                              visible: _error,
+                              child: Text(
+                                  'Failed to join a party, please check your code and try again.'))
+                        ]
+                    )
+                  ),
+              ],
+            ));
       }
     });
   }

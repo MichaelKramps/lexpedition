@@ -30,48 +30,57 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Consumer<GameState>(
-              builder: (context, gameState, child) {
-            return BasicUserInterfaceButton(
-                onPressed: () async {
-                  String newPartyCode = buildPartyCode();
+        body: Stack(
+          children: [
+            Constants.defaultBackground,
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center, 
+              children: [
+                Text('Invite My Friend to Play', style: TextStyle(fontSize: Constants.headerFontSize)),
+                SizedBox(height: 48),
+                Visibility(
+                  visible: _partyCode.length > 0,
+                  child: Column(children: [
+                    Text('My share code: ' + _partyCode, style: TextStyle(fontSize: Constants.mediumFont, color: Colors.green)),
+                    Text(
+                        'You must give this share code to you partner.\nThey will enter it on the "Join Friend" page.',
+                        style: TextStyle(fontSize: Constants.smallFont, color: Colors.black)),
+                  ])),
+                SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Consumer<GameState>(
+                        builder: (context, gameState, child) {
+                      return BasicUserInterfaceButton(
+                          onPressed: () async {
+                            String newPartyCode = buildPartyCode();
 
-                  setState(() {
-                    _partyCode = newPartyCode;
-                  });
+                            setState(() {
+                              _partyCode = newPartyCode;
+                            });
 
-                  gameState.realTimeCommunication.addRoomId(newPartyCode);
-                  await gameState.realTimeCommunication.openUserMedia();
-                  await gameState.realTimeCommunication.createRoom();
-                },
-                buttonText: 'Get Code');
-          }),
-          SizedBox(width: 25),
-          Text(_partyCode, style: getTextStyle())
-        ],
-      ),
-      Visibility(
-          visible: _partyCode.length > 0,
-          child: Column(children: [
-            Text(
-                'You must give this share code to you partner. They will enter it on the "Join Party" page.',
-                style: getTextStyle()),
-            BasicUserInterfaceButton(
-                onPressed: () {
-                  GoRouter.of(context).pop();
-                },
-                buttonText: 'Back'),
-          ]))
-    ]));
+                            gameState.realTimeCommunication.addRoomId(newPartyCode);
+                            await gameState.realTimeCommunication.openUserMedia();
+                            await gameState.realTimeCommunication.createRoom();
+                          },
+                          buttonText: 'Get a Share Code');
+                    }),
+                    SizedBox(width: 25),
+                    BasicUserInterfaceButton(
+                      onPressed: () {
+                        GoRouter.of(context).pop();
+                      },
+                      buttonText: 'Back'),
+                  ],
+                )
+    ]),
+          ],
+        ));
   }
 
   TextStyle getTextStyle() {
-    return TextStyle(fontSize: Constants.smallFont, color: Colors.black);
+    return TextStyle(fontSize: Constants.smallFont, color: Colors.green);
   }
 
   String buildPartyCode() {

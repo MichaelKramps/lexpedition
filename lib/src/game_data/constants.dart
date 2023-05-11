@@ -110,8 +110,11 @@ class Constants {
     return ((tileSize() * 6) + (tileMargin() * 12)).floor();
   }
 
+  static double headerFontSize = 48;
   static double bigFont = 42;
+  static double bigMediumFont = 36;
   static double mediumFont = 32;
+  static double smallMediumFont = 28;
   static double smallFont = 24;
   static double verySmallFont = 14;
 

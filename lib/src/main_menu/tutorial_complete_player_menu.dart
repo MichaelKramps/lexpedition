@@ -95,7 +95,8 @@ class _TutorialCompletePlayerMenuState
 
   Widget determinePartyButton(BuildContext context) {
     return Consumer<GameState>(builder: (context, gameState, child) {
-      if (!gameState.realTimeCommunication.isConnected) {
+      if (!gameState.realTimeCommunication.isConnected ||
+          gameState.realTimeCommunication.roomId != '') {
 
         return FeaturedUserInterfaceButton(
           onPressed: () {
@@ -119,7 +120,8 @@ class _TutorialCompletePlayerMenuState
   Widget checkToDisplayPartyCode() {
     return Consumer<GameState>(builder: (context, gameState, child) {
       if (!gameState.realTimeCommunication.isConnected ||
-          !gameState.realTimeCommunication.isPartyLeader) {
+          !gameState.realTimeCommunication.isPartyLeader ||
+          gameState.realTimeCommunication.roomId != '') {
         return SizedBox();
       } else {
         return Text(

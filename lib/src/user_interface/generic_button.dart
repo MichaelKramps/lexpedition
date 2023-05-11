@@ -63,7 +63,15 @@ class _GenericButtonState extends State<GenericButton> {
   }
 
   double calculateButtonWidth() {
-    return widget.buttonText.length * 20;
+    if (widget.buttonText.length < 10) {
+      return widget.buttonText.length * 18;
+    } else if (widget.buttonText.length < 16) {
+      return widget.buttonText.length * 17;
+    } else if (widget.buttonText.length < 20) {
+      return widget.buttonText.length * 16;
+    } else {
+      return widget.buttonText.length * 15;
+    }
   }
 
   void pressButton() async {
