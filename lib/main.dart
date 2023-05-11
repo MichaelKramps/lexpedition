@@ -7,6 +7,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/main_menu/more_menu.dart';
+import 'package:lexpedition/src/party/video_call_wrapper_widget.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
 import 'package:lexpedition/src/party/join_party_screen.dart';
 import 'package:lexpedition/src/party/party_screen.dart';
@@ -214,56 +215,56 @@ class MyApp extends StatelessWidget {
             GoRoute(
               path: 'settings',
               builder: (context, state) =>
-                  const SettingsScreen(key: Key('settings')),
+                  VideoCallWrapperWidget(screen: SettingsScreen(key: Key('settings'))),
             ),
             GoRoute(
               path: 'moremenu',
-              builder: (context, state) => const MoreMenu(key: Key('moremenu')),
+              builder: (context, state) => VideoCallWrapperWidget(screen: MoreMenu(key: Key('moremenu'))),
             ),
             GoRoute(
                 path: 'freeplay',
-                builder: (context, state) => FreePlay(key: UniqueKey()),
+                builder: (context, state) => VideoCallWrapperWidget(screen: FreePlay(key: UniqueKey())),
                 routes: [
                   GoRoute(
                       path: 'oneplayer',
                       builder: (context, state) {
-                        return OnePlayerPlaySessionScreen(
-                            winRoute: '/freeplaywon');
+                        return VideoCallWrapperWidget(screen: OnePlayerPlaySessionScreen(
+                            winRoute: '/freeplaywon'));
                       }),
                   GoRoute(
                       path: 'twoplayer',
                       builder: (context, state) {
-                        return Consumer<GameState>(
+                        return VideoCallWrapperWidget(screen: Consumer<GameState>(
                             builder: (context, gameState, child) {
                           return TwoPlayerPlaySessionScreen(
                               gameState: gameState);
-                        });
+                        }));
                       })
                 ]),
             GoRoute(
                 path: 'freeplaywon',
                 builder: (context, state) {
-                  return WinGameScreen(
+                  return VideoCallWrapperWidget(screen: WinGameScreen(
                     continueRoute: '/freeplay',
                     key: const Key('freeplay win'),
-                  );
+                  ));
                 },
                 routes: [
                   GoRoute(
                       path: 'leader',
                       builder: (context, state) {
-                        return WinGameScreen(
+                        return VideoCallWrapperWidget(screen: WinGameScreen(
                           continueRoute: '/freeplay',
                           key: const Key('freeplay win'),
-                        );
+                        ));
                       }),
                   GoRoute(
                       path: 'joiner',
                       builder: (context, state) {
-                        return WinGameScreen(
+                        return VideoCallWrapperWidget(screen: WinGameScreen(
                           continueRoute: '/party/join',
                           key: const Key('freeplay win'),
-                        );
+                        ));
                       })
                 ]),
             GoRoute(
@@ -285,16 +286,16 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 path: 'party',
                 builder: (context, state) =>
-                    const PartyScreen(key: Key('party')),
+                    VideoCallWrapperWidget(screen: PartyScreen(key: Key('party'))),
                 routes: [
                   GoRoute(
                       path: 'join',
                       builder: (context, state) =>
-                          const JoinPartyScreen(key: Key('join party'))),
+                          VideoCallWrapperWidget(screen: JoinPartyScreen(key: Key('join party')))),
                   GoRoute(
                       path: 'start',
                       builder: (context, state) =>
-                          const StartPartyScreen(key: Key('start party')))
+                          VideoCallWrapperWidget(screen: StartPartyScreen(key: Key('start party'))))
                 ]),
             GoRoute(
                 path: 'lexpedition',
