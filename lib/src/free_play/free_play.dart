@@ -17,33 +17,39 @@ class FreePlay extends StatelessWidget {
           body: Stack(
             children: [
               Constants.defaultBackground,
-              SizedBox.expand(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    BasicUserInterfaceButton(
-                        onPressed: () async {
-                          await gameState.loadOnePlayerPuzzle();
-                          if (gameState.errorDefinition == ErrorDefinition.noError) {
-                            GoRouter.of(context).push('/freeplay/oneplayer');
-                          }            
-                        },
-                        buttonText: 'One Player'),
-                    SizedBox(width: Constants.smallFont),
-                    BasicUserInterfaceButton(
-                        onPressed: () async {
-                          await gameState.loadTwoPlayerPuzzle();
-                          if (gameState.errorDefinition == ErrorDefinition.noError){
-                            GoRouter.of(context).push('/freeplay/twoplayer');
-                          }                   
-                        },
-                        buttonText: 'Two Player'),
-                    SizedBox(width: Constants.smallFont),
-                    BasicUserInterfaceButton(
-                        onPressed: () => GoRouter.of(context).push('/'), buttonText: 'Back')
-                ],     
-            )), 
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Free Play', style: TextStyle(fontSize: Constants.headerFontSize)),
+                  SizedBox(height: 48),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      BasicUserInterfaceButton(
+                          onPressed: () async {
+                            await gameState.loadOnePlayerPuzzle();
+                            if (gameState.errorDefinition == ErrorDefinition.noError) {
+                              GoRouter.of(context).push('/freeplay/oneplayer');
+                            }            
+                          },
+                          buttonText: 'Solo Puzzle'),
+                      SizedBox(width: Constants.smallFont),
+                      BasicUserInterfaceButton(
+                          onPressed: () async {
+                            await gameState.loadTwoPlayerPuzzle();
+                            if (gameState.errorDefinition == ErrorDefinition.noError){
+                              GoRouter.of(context).push('/freeplay/twoplayer');
+                            }                   
+                          },
+                          buttonText: 'Cooperative Puzzle'),
+                      SizedBox(width: Constants.smallFont),
+                      BasicUserInterfaceButton(
+                          onPressed: () => GoRouter.of(context).push('/'), buttonText: 'Back')
+                    ],     
+                  ),
+                ],
+              ), 
             GameStateErrorDisplay()
         ])
       );

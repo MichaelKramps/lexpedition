@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/error_definitions.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:lexpedition/src/user_interface/featured_user_interface_button.dart';
@@ -28,31 +29,40 @@ class _TutorialCompletePlayerMenuState
         checkToDisplayPartyCode(),
         determinePartyButton(context),
         SizedBox(height: 24),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BasicUserInterfaceButton(
-              onPressed: () {
-                GoRouter.of(context).push('/lexpedition');
-              },
-              buttonText: 'Lexpedition',
-            ),
-            SizedBox(width: Constants.smallFont),
-            BasicUserInterfaceButton(
-              onPressed: () {
-                GoRouter.of(context).push('/freeplay');
-              },
-              buttonText: 'Free Play',
-            ),
-            SizedBox(width: Constants.smallFont),
-            BasicUserInterfaceButton(
-              onPressed: () {
-                GoRouter.of(context).push('/moremenu');
-              },
-              buttonText: 'More...',
-            )
-          ],
-        )
+        Consumer<GameState>(builder: (context, gameState, child) { 
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              BasicUserInterfaceButton(
+                onPressed: () {
+                  GoRouter.of(context).push('/lexpedition');
+                },
+                buttonText: 'Lexpedition',
+              ),
+              SizedBox(width: Constants.smallFont),
+              BasicUserInterfaceButton(
+                onPressed: () async {
+                  if (gameState.realTimeCommunication.isConnected) {
+                    GoRouter.of(context).push('/freeplay');
+                  } else {
+                    await gameState.loadOnePlayerPuzzle();
+                    if (gameState.errorDefinition == ErrorDefinition.noError) {
+                      GoRouter.of(context).push('/freeplay/oneplayer');
+                    } 
+                  }
+                },
+                buttonText: 'Free Play',
+              ),
+              SizedBox(width: Constants.smallFont),
+              BasicUserInterfaceButton(
+                onPressed: () {
+                  GoRouter.of(context).push('/moremenu');
+                },
+                buttonText: 'More...',
+              )
+            ],
+          );
+        })
       ]),
       Visibility(
           visible: _areYouSure,
