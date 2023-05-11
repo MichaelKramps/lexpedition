@@ -118,6 +118,7 @@ class Constants {
   static const String assetsPath = 'assets';
   static const String imagePath = assetsPath + '/images';
   static const String backgroundImagePath = imagePath + '/crumpled-paper.png';
+  static const String logoImagePath = imagePath + '/lexpedition-logo.gif';
   static String blastImage = imagePath + '/brush-stroke.png';
 
   static const celebrationDuration = Duration(milliseconds: 2000);

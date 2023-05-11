@@ -23,9 +23,11 @@ class _TutorialCompletePlayerMenuState
     return Stack(children: [
       Constants.defaultBackground,
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Image.asset(Constants.logoImagePath),
+        SizedBox(height: 12),
         checkToDisplayPartyCode(),
         determinePartyButton(context),
-        SizedBox(height: 36),
+        SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
