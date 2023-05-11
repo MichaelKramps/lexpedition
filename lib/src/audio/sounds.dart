@@ -5,19 +5,19 @@
 List<String> soundTypeToFilename(SfxType type) {
   switch (type) {
     case SfxType.tapLetter:
-      return const ['tap-letter-1.wav'];
-    case SfxType.tapButton:
-      return const ['correct-guess-2.mp3'];
+      return const ['tap-letter.wav'];
     case SfxType.correctGuess:
-      return const ['correct-guess-1.wav'];
+      return const ['correct-guess.mp3'];
     case SfxType.incorrectGuess:
-      return const ['wrong-guess-1.mp3'];
+      return const ['wrong-guess.mp3'];
+    case SfxType.wonLevel:
+      return const ['win-level-2.wav'];
     case SfxType.blast:
       return const [
-        'blast-1.mp3',
+        'blast.mp3',
       ];
     default:
-      return const ['tap-letter-1.wav'];
+      return const ['tap-letter.wav'];
   }
 }
 
@@ -28,6 +28,8 @@ double soundTypeToVolume(SfxType type) {
       return 1.2;
     case SfxType.tapButton:
       return 1.0;
+    case SfxType.blast:
+      return 0.6;
     default:
       return 0.8;
   }

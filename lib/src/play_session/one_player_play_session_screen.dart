@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
@@ -19,7 +20,6 @@ import '../audio/audio_controller.dart';
 import '../audio/sounds.dart';
 import '../in_app_purchase/in_app_purchase.dart';
 import '../player_progress/player_progress.dart';
-import '../style/confetti.dart';
 import '../style/palette.dart';
 
 class OnePlayerPlaySessionScreen extends StatefulWidget {
@@ -46,28 +46,27 @@ class _OnePlayerPlaySessionScreenState
       return IgnorePointer(
           ignoring: gameState.celebrating,
           child: Scaffold(
-            backgroundColor: palette.backgroundPlaySession,
-            body: Stack(
-              children: [
-                GameInstanceWidget(
-                  gameState: gameState,
-                  leftColumn: GameColumn.onePlayerLeftColumn,
-                  rightColumn: GameColumn.onePlayerRightColumn,
-                ),
-                SizedBox.expand(
-                  child: Visibility(
-                    visible: gameState.celebrating,
-                    child: IgnorePointer(
-                      child: Confetti(
-                        isStopped: !gameState.celebrating,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ));
+              backgroundColor: palette.backgroundPlaySession,
+              body: determineAnimatedGameBoard(gameState)));
     });
+  }
+
+  Widget determineAnimatedGameBoard(GameState gameState) {
+    if (gameState.celebrating) {
+      return getBaseGameBoard(gameState)
+          .animate()
+          .color(end: Colors.green, duration: Constants.celebrationAnimationDuration);
+    } else {
+      return getBaseGameBoard(gameState);
+    }
+  }
+
+  Widget getBaseGameBoard(GameState gameState) {
+    return GameInstanceWidget(
+      gameState: gameState,
+      leftColumn: GameColumn.onePlayerLeftColumn,
+      rightColumn: GameColumn.onePlayerRightColumn,
+    );
   }
 
   @override

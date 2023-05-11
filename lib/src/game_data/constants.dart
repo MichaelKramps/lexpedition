@@ -125,6 +125,7 @@ class Constants {
   static String blastImage = imagePath + '/brush-stroke.png';
 
   static const celebrationDuration = Duration(milliseconds: 2000);
+  static const celebrationAnimationDuration = Duration(milliseconds: 1200);
   static const preCelebrationDuration = Duration(milliseconds: 500);
   static const waitForWinScreenDuration = Duration(milliseconds: 3000);
 
@@ -148,8 +149,8 @@ class Constants {
   static const String buttonUIFont = 'Syne Mono';
 
   static Widget defaultBackground = Container(
-          decoration: BoxDecoration(
+      decoration: BoxDecoration(
           image: const DecorationImage(
-            image: AssetImage(Constants.backgroundImagePath),
-            fit: BoxFit.cover)));
+              image: AssetImage(Constants.backgroundImagePath),
+              fit: BoxFit.cover)));
 }
