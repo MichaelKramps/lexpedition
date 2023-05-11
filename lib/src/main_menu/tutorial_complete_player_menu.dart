@@ -25,6 +25,7 @@ class _TutorialCompletePlayerMenuState
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         checkToDisplayPartyCode(),
         determinePartyButton(context),
+        SizedBox(height: 36),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

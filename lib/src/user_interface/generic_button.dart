@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
-import 'package:logging/logging.dart';
 
 class GenericButton extends StatefulWidget {
   final Color primaryButtonColor;
   final Color primaryButtonShadow;
+  final Color textColor;
   final String buttonText;
   final void Function() onPressed;
 
@@ -13,7 +13,8 @@ class GenericButton extends StatefulWidget {
       required this.primaryButtonColor,
       required this.primaryButtonShadow,
       required this.buttonText,
-      required this.onPressed});
+      required this.onPressed,
+      this.textColor = Colors.white});
 
   @override
   State<GenericButton> createState() => _GenericButtonState();
@@ -53,9 +54,9 @@ class _GenericButtonState extends State<GenericButton> {
                   child: Center(
                       child: Text(widget.buttonText.toUpperCase(),
                           style: TextStyle(
-                            fontFamily: Constants.buttonUIFont,
+                              fontFamily: Constants.buttonUIFont,
                               fontSize: Constants.smallFont,
-                              color: Colors.white))),
+                              color: widget.textColor))),
                 ))
           ]))),
     );
