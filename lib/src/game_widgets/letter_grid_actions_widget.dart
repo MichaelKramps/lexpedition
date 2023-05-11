@@ -28,7 +28,7 @@ class LetterGridActionsWidget extends StatelessWidget {
           margin: EdgeInsets.all(Constants().tileMargin() * 2),
           child: ElevatedButton(
               style: buttonStyle,
-              onPressed: () => gameState.submitGuess(),
+              onPressed: () => gameState.submitGuess(context),
               child: Text('Submit'))),
       ElevatedButton(
           style: buttonStyle,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:lexpedition/src/audio/audio_controller.dart';
+import 'package:lexpedition/src/audio/sounds.dart';
 import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/accepted_guess.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
@@ -13,6 +15,7 @@ import 'package:lexpedition/src/tutorial/full_tutorial_levels.dart';
 import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
 import 'package:lexpedition/src/tutorial/tutorial_step.dart';
 import 'package:logging/logging.dart';
+import 'package:provider/provider.dart';
 
 class GameState extends ChangeNotifier {
   GameLevel level = GameLevel(gridCode: blankGrid);
@@ -390,14 +393,23 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  void handleAcceptedGuess() async {
+  void handleAcceptedGuess(BuildContext? context) async {
     guessList.add(AcceptedGuess(guess: getCurrentGuess()));
     getMyGrid()?.addGuess(getCurrentGuess());
     chargeTilesFromGuess();
+    bool activateBlast = currentGuess.length >= Constants.guessLengthToActivateBlast;
+    if (context != null) {
+      final AudioController audioController = context.read<AudioController>();
+      if (activateBlast) {
+        audioController.playSfx(SfxType.blast);
+      } else {
+        audioController.playSfx(SfxType.correctGuess);
+      }
+    }
     // check for win condition
     if (isLevelWon()) {
       levelCompleted = true;
-    } else if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
+    } else if (activateBlast) {
       //clearGuess() at end of this method will fire notifyAllPlayers
       //before blastTiles() unblasts the tiles
       await blastTilesAndNotify(currentGuess.last.index);
@@ -459,20 +471,28 @@ class GameState extends ChangeNotifier {
     clearGuessAndNotify();
   }
 
-  void submitGuess() {
+  void submitGuess(BuildContext? context) {
     if (currentGuess.length < 3 || !currentGuessIsValid()) {
+      if (context != null) {
+        final AudioController audioController = context.read<AudioController>();
+        audioController.playSfx(SfxType.incorrectGuess);
+      }
       flipBadGuess();
     } else {
       realTimeCommunication.sendAcceptedGuessToPeer(getCurrentGuess());
-      handleAcceptedGuess();
+      handleAcceptedGuess(context);
     }
   }
 
-  void clickTileAtIndex(int clickedTileIndex, bool isSlideEvent) {
+  void clickTileAtIndex(int clickedTileIndex, bool isSlideEvent, BuildContext? context) {
     if (getMyGrid() != null) {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
       LetterTile clickedTile = myGrid.letterTiles[clickedTileIndex];
       if (clickedTile.tileType != TileType.empty) {
+        if (context != null && !clickedTile.selected) {
+          final AudioController audioController = context.read<AudioController>();
+          audioController.playSfx(SfxType.tapLetter);
+        }
         updateGuessAndNotify(clickedTile, isSlideEvent);
       }
     }

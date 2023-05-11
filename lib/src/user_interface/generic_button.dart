@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lexpedition/src/audio/audio_controller.dart';
+import 'package:lexpedition/src/audio/sounds.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:provider/provider.dart';
 
 class GenericButton extends StatefulWidget {
   final Color primaryButtonColor;
@@ -78,6 +81,8 @@ class _GenericButtonState extends State<GenericButton> {
     setState(() {
       _pressed = true;
     });
+    final audioController = context.read<AudioController>();
+    audioController.playSfx(SfxType.tapButton);
     await Future.delayed(Constants.buttonPressAnimationDuration);
     widget.onPressed();
     setState(() {

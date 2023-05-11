@@ -57,7 +57,7 @@ class TutorialScreen extends StatelessWidget {
                         onTap: () {
                           final audioController =
                               context.read<AudioController>();
-                          audioController.playSfx(SfxType.buttonTap);
+                          audioController.playSfx(SfxType.tapButton);
 
                           gameState.loadOnePlayerPuzzle(
                               tutorialKey: level.tutorialKey);

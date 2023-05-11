@@ -181,7 +181,7 @@ class TutorialDirective {
     switch (windowType) {
       case TutorialDirectiveType.tile:
       case TutorialDirectiveType.tileHighlight:
-        gameState.clickTileAtIndex(tileIndex, false);
+        gameState.clickTileAtIndex(tileIndex, false, null);
         break;
       case TutorialDirectiveType.blastDirection:
         gameState.changeBlastDirectionAndNotify();
@@ -190,7 +190,7 @@ class TutorialDirective {
         gameState.clearGuessAndNotify();
         break;
       case TutorialDirectiveType.submit:
-        gameState.submitGuess();
+        gameState.submitGuess(null);
         break;
       default:
       //do nothing

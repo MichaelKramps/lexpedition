@@ -37,7 +37,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   late double _gridx = gridPosition.dx;
   late double _gridy = gridPosition.dy;
   Random _random = new Random();
-
+                          
   @override
   void initState() {
     super.initState();
@@ -119,7 +119,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
         determineTileIndex(pointerx, pointery, shrinkClickableSpace);
 
     if (selectedIndex > -1) {
-      widget.gameState.clickTileAtIndex(selectedIndex, isSlideEvent);
+      widget.gameState.clickTileAtIndex(selectedIndex, isSlideEvent, context);
     }
   }
 
