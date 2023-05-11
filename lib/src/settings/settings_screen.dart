@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:provider/provider.dart';
 
 import '../in_app_purchase/in_app_purchase.dart';
@@ -101,11 +102,11 @@ class SettingsScreen extends StatelessWidget {
             _gap,
           ],
         ),
-        rectangularMenuArea: ElevatedButton(
+        rectangularMenuArea: BasicUserInterfaceButton(
           onPressed: () {
             GoRouter.of(context).pop();
           },
-          child: const Text('Back'),
+          buttonText: 'Back',
         ),
       ),
     );

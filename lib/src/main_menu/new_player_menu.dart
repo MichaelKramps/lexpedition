@@ -28,22 +28,29 @@ class _NewPlayerMenuState extends State<NewPlayerMenu> {
               fit: BoxFit.cover),
         )),
         SizedBox.expand(
-          child: Row(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              BasicUserInterfaceButton(
-                onPressed: () {
-                  setState(() {
-                    _showTutorialBox = true;
-                  });
-                },
-                buttonText: 'Tutorial',
+              Image.asset(Constants.logoImagePath),
+              SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  BasicUserInterfaceButton(
+                    onPressed: () {
+                      setState(() {
+                        _showTutorialBox = true;
+                      });
+                    },
+                    buttonText: 'Tutorial',
+                  ),
+                  SizedBox(width: Constants.smallFont),
+                  BasicUserInterfaceButton(
+                    onPressed: () => GoRouter.of(context).push('/settings'),
+                    buttonText: 'Settings',
+                  )
+                ],
               ),
-              SizedBox(width: Constants.smallFont),
-              BasicUserInterfaceButton(
-                onPressed: () => GoRouter.of(context).push('/settings'),
-                buttonText: 'Settings',
-              )
             ],
           ),
         ),
