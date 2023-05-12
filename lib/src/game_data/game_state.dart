@@ -397,7 +397,8 @@ class GameState extends ChangeNotifier {
     guessList.add(AcceptedGuess(guess: getCurrentGuess()));
     getMyGrid()?.addGuess(getCurrentGuess());
     chargeTilesFromGuess();
-    bool activateBlast = currentGuess.length >= Constants.guessLengthToActivateBlast;
+    bool activateBlast =
+        currentGuess.length >= Constants.guessLengthToActivateBlast;
     if (context != null) {
       final AudioController audioController = context.read<AudioController>();
       if (activateBlast) {
@@ -484,13 +485,15 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  void clickTileAtIndex(int clickedTileIndex, bool isSlideEvent, BuildContext? context) {
+  void clickTileAtIndex(
+      int clickedTileIndex, bool isSlideEvent, BuildContext? context) {
     if (getMyGrid() != null) {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
       LetterTile clickedTile = myGrid.letterTiles[clickedTileIndex];
       if (clickedTile.tileType != TileType.empty) {
         if (context != null && !clickedTile.selected) {
-          final AudioController audioController = context.read<AudioController>();
+          final AudioController audioController =
+              context.read<AudioController>();
           audioController.playSfx(SfxType.tapLetter);
         }
         updateGuessAndNotify(clickedTile, isSlideEvent);
@@ -500,10 +503,12 @@ class GameState extends ChangeNotifier {
 
   void changeBlastDirectionAndNotify() {
     if (getMyGrid() != null) {
+      _logger.info('krampysy');
       LetterGrid myGrid = getMyGrid() as LetterGrid;
       myGrid.changeBlastDirection();
       realTimeCommunication
           .sendUpdatedGameDataToPeer(myGrid.encodedGridToString());
+      _logger.info('krampysy22: ' + myGrid.blastDirection.toString());
       notifyAllPlayers();
     }
   }

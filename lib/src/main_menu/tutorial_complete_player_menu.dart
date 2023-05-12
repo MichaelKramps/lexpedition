@@ -105,8 +105,7 @@ class _TutorialCompletePlayerMenuState
 
   Widget determinePartyButton(BuildContext context) {
     return Consumer<GameState>(builder: (context, gameState, child) {
-      if (!gameState.realTimeCommunication.isConnected ||
-          gameState.realTimeCommunication.roomId != '') {
+      if (!gameState.realTimeCommunication.isConnected) {
 
         return FeaturedUserInterfaceButton(
           onPressed: () {

@@ -8,6 +8,7 @@ import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_widgets/obstacle_widget.dart';
 import 'package:lexpedition/src/game_widgets/blast_widget.dart';
 import 'package:lexpedition/src/game_widgets/tile_info_widget.dart';
+import 'package:logging/logging.dart';
 
 class LetterTileWidget extends StatelessWidget {
   final LetterTile letterTile;
@@ -48,8 +49,8 @@ class LetterTileWidget extends StatelessWidget {
         return baseWidget.animate().shakeX(duration: 400.ms);
       } else {
         return baseWidget
-          .animate(onPlay: (controller) => controller.repeat())
-          .shake(rotation: 0.03, hz: 10);
+            .animate(onPlay: (controller) => controller.repeat())
+            .shake(rotation: 0.03, hz: 10);
       }
     } else if (letterTile.selected) {
       if (gameState.showBadGuess) {
@@ -112,6 +113,7 @@ class LetterTileWidget extends StatelessWidget {
   }
 
   BorderSide determineTileBorder() {
+    new Logger('krampis').info(letterTile.index.toString() + ' : ' + qualifiesToBeBlasted().toString());
     if (qualifiesToBeBlasted() || letterTile.primedForBlastFromPartner) {
       return BorderSide(width: 3, color: Color.fromARGB(255, 63, 181, 150));
     } else {
@@ -163,7 +165,7 @@ class LetterTileWidget extends StatelessWidget {
     } else {
       List<int> indexesToBeBlasted = LetterGrid.indexesToBlast(
           gameState.currentGuess.last.index,
-          gameState.primaryLetterGrid.blastDirection);
+          blastDirection);
       return indexesToBeBlasted.contains(letterTile.index);
     }
   }

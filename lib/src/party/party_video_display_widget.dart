@@ -20,9 +20,9 @@ class _PartyVideoDisplayWidgetState extends State<PartyVideoDisplayWidget> {
         builder: (context, gameState, child) {
       if (gameState.realTimeCommunication.roomId.length > 0) {
         return SizedBox.expand(
-            child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               GestureDetector(
                 onTap: () {
