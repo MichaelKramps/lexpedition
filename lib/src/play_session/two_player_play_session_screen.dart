@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/audio/audio_controller.dart';
 import 'package:lexpedition/src/audio/sounds.dart';
@@ -12,9 +13,7 @@ import 'package:lexpedition/src/level_info/level_db_connection.dart';
 import 'package:provider/provider.dart';
 
 class TwoPlayerPlaySessionScreen extends StatefulWidget {
-  final GameState gameState;
-
-  const TwoPlayerPlaySessionScreen({super.key, required this.gameState});
+  const TwoPlayerPlaySessionScreen({super.key});
 
   @override
   State<TwoPlayerPlaySessionScreen> createState() =>
@@ -23,7 +22,6 @@ class TwoPlayerPlaySessionScreen extends StatefulWidget {
 
 class _TwoPlayerPlaySessionScreenState
     extends State<TwoPlayerPlaySessionScreen> {
-
   @override
   void initState() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -33,14 +31,16 @@ class _TwoPlayerPlaySessionScreenState
 
   @override
   Widget build(BuildContext context) {
-    if (widget.gameState.levelCompleted && !widget.gameState.celebrating) {
-      widget.gameState.celebrating = true;
-      _playerWon(widget.gameState);
-    }
-    return Scaffold(
-        body: IgnorePointer(
-            ignoring: widget.gameState.celebrating,
-            child: determineVisibleGrid(widget.gameState)));
+    return Consumer<GameState>(builder: (context, gameState, child) {
+      if (gameState.levelCompleted && !gameState.celebrating) {
+        gameState.celebrating = true;
+        _playerWon(gameState);
+      }
+      return Scaffold(
+          body: IgnorePointer(
+              ignoring: gameState.celebrating,
+              child: determineVisibleGrid(gameState)));
+    });
   }
 
   Widget determineVisibleGrid(GameState gameState) {
@@ -55,16 +55,36 @@ class _TwoPlayerPlaySessionScreenState
         children: [Text(waitingText)],
       ));
     } else if (gameState.getMyGrid() != null && gameState.viewingMyScreen) {
-      return GameInstanceWidget(
-          gameState: gameState,
-          leftColumn: GameColumn.twoPlayerLeftColumn,
-          rightColumn: GameColumn.twoPlayerRightColumn);
+      return determineMyAnimatedGameBoard(gameState, true);
     } else {
-      return ObserverGameInstanceWidget(
-          gameState: gameState,
-          leftColumn: GameColumn.twoPlayerLeftColumn,
-          rightColumn: GameColumn.twoPlayerRightColumn);
+      return determineMyAnimatedGameBoard(gameState, false);
     }
+  }
+
+  Widget determineMyAnimatedGameBoard(GameState gameState, bool myBoard) {
+    Widget boardToAnimate = myBoard
+        ? getBaseGameBoard(gameState)
+        : getObservingBaseGameBoard(gameState);
+    if (gameState.celebrating) {
+      return boardToAnimate.animate().color(
+          end: Colors.green, duration: Constants.celebrationAnimationDuration);
+    } else {
+      return boardToAnimate;
+    }
+  }
+
+  Widget getBaseGameBoard(GameState gameState) {
+    return GameInstanceWidget(
+        gameState: gameState,
+        leftColumn: GameColumn.twoPlayerLeftColumn,
+        rightColumn: GameColumn.twoPlayerRightColumn);
+  }
+
+  Widget getObservingBaseGameBoard(GameState gameState) {
+    return ObserverGameInstanceWidget(
+        gameState: gameState,
+        leftColumn: GameColumn.twoPlayerLeftColumn,
+        rightColumn: GameColumn.twoPlayerRightColumn);
   }
 
   Future<void> _playerWon(GameState gameState) async {

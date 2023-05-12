@@ -234,11 +234,7 @@ class MyApp extends StatelessWidget {
                   GoRoute(
                       path: 'twoplayer',
                       builder: (context, state) {
-                        return VideoCallWrapperWidget(screen: Consumer<GameState>(
-                            builder: (context, gameState, child) {
-                          return TwoPlayerPlaySessionScreen(
-                              gameState: gameState);
-                        }));
+                        return VideoCallWrapperWidget(screen: TwoPlayerPlaySessionScreen());
                       })
                 ]),
             GoRoute(

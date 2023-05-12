@@ -35,7 +35,7 @@ class _JoinPartyScreenState extends State<JoinPartyScreen> {
   Widget build(BuildContext context) {
     return Consumer<GameState>(builder: (context, gameState, child) {
       if (gameState.realTimeCommunication.roomId != '') {
-        return TwoPlayerPlaySessionScreen(gameState: gameState);
+        return TwoPlayerPlaySessionScreen();
       } else {
         return Scaffold(
             body: Stack(
