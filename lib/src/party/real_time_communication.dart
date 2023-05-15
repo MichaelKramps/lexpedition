@@ -261,17 +261,12 @@ class RealTimeCommunication {
     };
 
     peerConnection?.onTrack = (RTCTrackEvent event) {
-      _log.info('Got remote track: ' + event.streams[0].toString());
-      _log.info(
-          'connection state: ' + peerConnection!.connectionState.toString());
       event.streams[0].getTracks().forEach((track) {
-        _log.info('Add track to remote stream: ' + track.toString());
         remoteStream?.addTrack(track);
       });
     };
 
     peerConnection?.onConnectionState = (RTCPeerConnectionState state) {
-      _log.info('Connection state change: ' + state.toString());
       if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
         this.isConnected = true;
       }

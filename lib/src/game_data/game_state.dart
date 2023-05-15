@@ -3,6 +3,7 @@ import 'package:lexpedition/src/audio/audio_controller.dart';
 import 'package:lexpedition/src/audio/sounds.dart';
 import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/accepted_guess.dart';
+import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/error_definitions.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
@@ -272,18 +273,15 @@ class GameState extends ChangeNotifier {
 
   void setMyGridFromTheirs(LetterGrid theirGrid) {
     if (getMyGrid() != null && getTheirGrid() != null) {
-      LetterGrid myGrid = getMyGrid() as LetterGrid;
+      LetterGrid myGrid = getMyGrid()!;
       for (int index = 0;
           index < primaryLetterGrid.letterTiles.length;
           index++) {
         LetterTile myTile = myGrid.letterTiles[index];
         LetterTile theirTile = theirGrid.letterTiles[index];
-        if (theirTile.primedForBlast) {
-          myTile.primeForBlastFromPartner();
-        } else {
-          myTile.unprimeForBlastFromPartner();
-        }
+        myTile.primedForBlastFromPartner = theirTile.primedForBlast;
       }
+      setQualifiesValuesForTiles();
     }
   }
 
@@ -334,6 +332,7 @@ class GameState extends ChangeNotifier {
         tile.unprimeForBlast();
       }
     }
+    setQualifiesValuesForTiles();
     notifyAllPlayers();
   }
 
@@ -343,8 +342,8 @@ class GameState extends ChangeNotifier {
         (currentGuess.length == 0 ||
             currentGuess.last.allowedToSelect(letterTile))) {
       //select this tile and add to current guess
-      letterTile.select();
       currentGuess.add(letterTile);
+      letterTile.select(); // must run after adding lettertile to current guess
       //if this tile could fire a magic blast, prime for blast
       if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
         letterTile.primeForBlast();
@@ -353,6 +352,7 @@ class GameState extends ChangeNotifier {
       if (currentGuess.length >= Constants.guessLengthToActivateBlast + 1) {
         currentGuess[currentGuess.length - 2].unprimeForBlast();
       }
+      setQualifiesValuesForTiles(); //sets qualifiesToBeCharged and qualifiesToBeBlasted
     } else if (!isSlideEvent &&
         currentGuess.length > 0 &&
         letterTile == currentGuess.last) {
@@ -366,6 +366,64 @@ class GameState extends ChangeNotifier {
       }
     }
     notifyAllPlayers();
+  }
+
+  void setQualifiesValuesForTiles() {
+    // notifyListeners is called elsewhere
+    List<LetterTile> tiles = [];
+    BlastDirection blastDirection = BlastDirection.horizontal;
+    int? blastFromPartner = null;
+    if (getMyGrid() != null) {
+      tiles = getMyGrid()!.letterTiles;
+      blastDirection = getMyGrid()!.blastDirection;
+    }
+    for (int tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
+      LetterTile thisTile = tiles[tileIndex];
+      thisTile.qualifiesToBeBlasted = false;
+      // set qualifiesToBeCharged
+      if (currentGuess.contains(thisTile)) {
+        switch (thisTile.tileType) {
+          case TileType.basic:
+            thisTile.qualifiesToBeCharged = true;
+            break;
+          case TileType.start:
+            thisTile.qualifiesToBeCharged =
+                thisTile.index == currentGuess.first.index;
+            break;
+          case TileType.end:
+            thisTile.qualifiesToBeCharged =
+                thisTile.index == currentGuess.last.index;
+            break;
+          default:
+            thisTile.qualifiesToBeCharged = false;
+        }
+      } else {
+        thisTile.qualifiesToBeCharged = false;
+      }
+
+      //check if primedFromPartner
+      if (thisTile.primedForBlastFromPartner) {
+        blastFromPartner = thisTile.index;
+        _logger.info('krampees: ' + thisTile.index.toString());
+      }
+    }
+    // set qualifiesToBeBlasted from my guess
+    List<int> indexesToBeBlasted = [];
+    if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
+      indexesToBeBlasted.addAll(
+          LetterGrid.indexesToBlast(currentGuess.last.index, blastDirection));
+    }
+    if (blastFromPartner != null) {
+      indexesToBeBlasted.addAll(
+          LetterGrid.indexesToBlast(blastFromPartner, blastDirection));
+    }
+    if (tiles.length > 0) {
+      for (int i = 0; i < indexesToBeBlasted.length; i++) {
+        int thisIndex = indexesToBeBlasted[i];
+        tiles[thisIndex].qualifiesToBeBlasted = true;
+        // all tiles set to false earlier
+      }
+    }
   }
 
   bool currentGuessIsValid() {
@@ -503,12 +561,11 @@ class GameState extends ChangeNotifier {
 
   void changeBlastDirectionAndNotify() {
     if (getMyGrid() != null) {
-      _logger.info('krampysy');
       LetterGrid myGrid = getMyGrid() as LetterGrid;
       myGrid.changeBlastDirection();
+      setQualifiesValuesForTiles();
       realTimeCommunication
           .sendUpdatedGameDataToPeer(myGrid.encodedGridToString());
-      _logger.info('krampysy22: ' + myGrid.blastDirection.toString());
       notifyAllPlayers();
     }
   }
