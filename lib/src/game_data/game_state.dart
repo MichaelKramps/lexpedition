@@ -123,6 +123,11 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setError(ErrorDefinition errorDefinition) {
+    this.errorDefinition = errorDefinition;
+    notifyListeners();
+  }
+
   void loadPuzzleFromPeerUpdate(GameLevel level) {
     resetPuzzle();
     this.level = level;
@@ -414,8 +419,8 @@ class GameState extends ChangeNotifier {
           LetterGrid.indexesToBlast(currentGuess.last.index, blastDirection));
     }
     if (blastFromPartner != null) {
-      indexesToBeBlasted.addAll(
-          LetterGrid.indexesToBlast(blastFromPartner, blastDirection));
+      indexesToBeBlasted
+          .addAll(LetterGrid.indexesToBlast(blastFromPartner, blastDirection));
     }
     if (tiles.length > 0) {
       for (int i = 0; i < indexesToBeBlasted.length; i++) {

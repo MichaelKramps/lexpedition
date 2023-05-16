@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:lexpedition/src/main_menu/main_menu_screen.dart';
 import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:provider/provider.dart';
 
@@ -29,58 +30,64 @@ class _StartPartyScreenState extends State<StartPartyScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Stack(
+    return Consumer<GameState>(builder: (context, gameState, child) {
+      if (gameState.realTimeCommunication.isConnected) {
+        return MainMenuScreen();
+      } else {
+        return Scaffold(
+            body: Stack(
           children: [
             Constants.defaultBackground,
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center, 
-              children: [
-                Text('Invite My Friend to Play', style: TextStyle(fontSize: Constants.headerFontSize)),
-                SizedBox(height: 48),
-                Visibility(
+            Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text('Invite My Friend to Play',
+                  style: TextStyle(fontSize: Constants.headerFontSize)),
+              SizedBox(height: 48),
+              Visibility(
                   visible: _partyCode.length > 0,
                   child: Column(children: [
-                    Text('My share code: ' + _partyCode, style: TextStyle(fontSize: Constants.mediumFont, color: Colors.green)),
+                    Text('My share code: ' + _partyCode,
+                        style: TextStyle(
+                            fontSize: Constants.mediumFont,
+                            color: Colors.green)),
                     Text(
                         'You must give this share code to you partner.\nThey will enter it on the "Join Friend" page.',
-                        style: TextStyle(fontSize: Constants.smallFont, color: Colors.black)),
+                        style: TextStyle(
+                            fontSize: Constants.smallFont,
+                            color: Colors.black)),
                   ])),
-                SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Consumer<GameState>(
-                        builder: (context, gameState, child) {
-                      return BasicUserInterfaceButton(
-                          onPressed: () async {
-                            String newPartyCode = buildPartyCode();
+              SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Consumer<GameState>(builder: (context, gameState, child) {
+                    return BasicUserInterfaceButton(
+                        onPressed: () async {
+                          String newPartyCode = buildPartyCode();
 
-                            setState(() {
-                              _partyCode = newPartyCode;
-                            });
+                          setState(() {
+                            _partyCode = newPartyCode;
+                          });
 
-                            gameState.realTimeCommunication.addRoomId(newPartyCode);
-                            await gameState.realTimeCommunication.openUserMedia();
-                            await gameState.realTimeCommunication.createRoom();
-                          },
-                          buttonText: 'Get a Share Code');
-                    }),
-                    SizedBox(width: 25),
-                    BasicUserInterfaceButton(
+                          gameState.realTimeCommunication
+                              .addRoomId(newPartyCode);
+                          await gameState.realTimeCommunication.openUserMedia();
+                          await gameState.realTimeCommunication.createRoom();
+                        },
+                        buttonText: 'Get a Share Code');
+                  }),
+                  SizedBox(width: 25),
+                  BasicUserInterfaceButton(
                       onPressed: () {
                         GoRouter.of(context).pop();
                       },
                       buttonText: 'Back'),
-                  ],
-                )
-    ]),
+                ],
+              )
+            ]),
           ],
         ));
-  }
-
-  TextStyle getTextStyle() {
-    return TextStyle(fontSize: Constants.smallFont, color: Colors.green);
+      }
+    });
   }
 
   String buildPartyCode() {

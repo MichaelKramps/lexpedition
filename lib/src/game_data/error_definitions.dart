@@ -1,6 +1,7 @@
 enum ErrorDefinition { 
   noError,
-  levelFetchError
+  levelFetchError,
+  peerConnectionError
 }
 
 String getErrorMessage(ErrorDefinition error) {

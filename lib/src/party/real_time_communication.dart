@@ -36,7 +36,6 @@ class RealTimeCommunication {
   int numberLocalIceCandidates = 0;
   StreamStateCallback? onAddRemoteStream;
   late DatabaseReference roomDbReference;
-  Logger _log = new Logger('RTC class');
 
   RealTimeCommunication() {
     localRenderer.initialize();
@@ -81,12 +80,12 @@ class RealTimeCommunication {
     RTCSessionDescription offer = await peerConnection!.createOffer();
     await peerConnection!.setLocalDescription(offer);
 
-    _log.info('updating database with offer');
+    //updating database with offer
     await roomDbReference.child('offer').update(offer.toMap());
 
     //listen for remote session description
     roomDbReference.child('answer').onValue.listen((DatabaseEvent event) {
-      _log.info('Got updated room: ');
+      //Got updated room
       try {
         DataSnapshot answerSnapshot = event.snapshot;
         if (answerSnapshot.value != null) {
@@ -95,7 +94,7 @@ class RealTimeCommunication {
               answerSnapshot.child('type').value as String));
         }
       } catch (e) {
-        _log.info('problem updating room on remote update');
+        //problem updating room on remote update
       }
     });
 
@@ -189,7 +188,6 @@ class RealTimeCommunication {
         } catch (e) {}
 
         if (candidate != null && sdpMid != null && sdpMLineIndex != null) {
-          _log.info('adding candidate');
           peerConnection!
               .addCandidate(RTCIceCandidate(candidate, sdpMid, sdpMLineIndex));
         }
@@ -244,7 +242,7 @@ class RealTimeCommunication {
 
   void registerPeerConnectionListeners() {
     peerConnection?.onIceGatheringState = (RTCIceGatheringState state) {
-      _log.info('ICE gathering state change: ' + state.toString());
+      //ICE gathering state change
     };
 
     peerConnection?.onIceCandidate = (RTCIceCandidate candidate) {
@@ -268,20 +266,25 @@ class RealTimeCommunication {
 
     peerConnection?.onConnectionState = (RTCPeerConnectionState state) {
       if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
+        new Logger('krampyys').info(state.toString());
         this.isConnected = true;
+        notifyListeners();
+      } else {
+        new Logger('krampys').info(state.toString());
+        this.isConnected = false;
+        notifyListeners();
       }
     };
 
     peerConnection?.onSignalingState = (RTCSignalingState state) {
-      _log.info('Signaling state change: ' + state.toString());
+      //Signaling state change
     };
 
     peerConnection?.onIceConnectionState = (RTCIceConnectionState state) {
-      _log.info('ICE connection state change: ' + state.toString());
+      //'ICE connection state change
     };
 
     peerConnection?.onAddStream = (MediaStream remoteStream) {
-      _log.info('Add remote stream');
       this.remoteStream = remoteStream;
       remoteRenderer.srcObject = this.remoteStream;
       notifyListeners();
