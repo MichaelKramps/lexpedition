@@ -26,12 +26,15 @@ double soundTypeToVolume(SfxType type) {
   switch (type) {
     case SfxType.tapLetter:
       return 1.2;
+    case SfxType.correctGuess:
+    case SfxType.wonLevel:
+      return 2.0;
     case SfxType.tapButton:
       return 1.0;
     case SfxType.blast:
-      return 0.6;
+      return 0.4;
     default:
-      return 0.8;
+      return 1.0;
   }
 }
 
