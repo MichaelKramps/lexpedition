@@ -27,32 +27,15 @@ class _TutorialCompletePlayerMenuState
         Image.asset(Constants.logoImagePath),
         SizedBox(height: 12),
         checkToDisplayPartyCode(),
-        determinePartyButton(context),
+        determinePartyButton(context, true),
         SizedBox(height: 24),
-        Consumer<GameState>(builder: (context, gameState, child) { 
+        Consumer<GameState>(builder: (context, gameState, child) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              BasicUserInterfaceButton(
-                onPressed: () {
-                  GoRouter.of(context).push('/lexpedition');
-                },
-                buttonText: 'Lexpedition',
-              ),
+              determineLexpeditionButton(gameState),
               SizedBox(width: Constants.smallFont),
-              BasicUserInterfaceButton(
-                onPressed: () async {
-                  if (gameState.realTimeCommunication.isConnected) {
-                    GoRouter.of(context).push('/freeplay');
-                  } else {
-                    await gameState.loadOnePlayerPuzzle();
-                    if (gameState.errorDefinition == ErrorDefinition.noError) {
-                      GoRouter.of(context).push('/freeplay/oneplayer');
-                    } 
-                  }
-                },
-                buttonText: 'Free Play',
-              ),
+              determineFreePlayButton(gameState),
               SizedBox(width: Constants.smallFont),
               BasicUserInterfaceButton(
                 onPressed: () {
@@ -62,7 +45,9 @@ class _TutorialCompletePlayerMenuState
               )
             ],
           );
-        })
+        }),
+        SizedBox(height: 24),
+        determinePartyButton(context, false),
       ]),
       Visibility(
           visible: _areYouSure,
@@ -103,17 +88,66 @@ class _TutorialCompletePlayerMenuState
     ]);
   }
 
-  Widget determinePartyButton(BuildContext context) {
-    return Consumer<GameState>(builder: (context, gameState, child) {
-      if (!gameState.realTimeCommunication.isConnected) {
+  Widget determineLexpeditionButton(GameState gameState) {
+    if (gameState.realTimeCommunication.isConnected) {
+      return FeaturedUserInterfaceButton(
+        onPressed: () {
+          GoRouter.of(context).push('/lexpedition');
+        },
+        buttonText: 'Lexpedition',
+      );
+    } else {
+      return BasicUserInterfaceButton(
+        onPressed: () {
+          GoRouter.of(context).push('/lexpedition');
+        },
+        buttonText: 'Lexpedition',
+      );
+    }
+  }
 
+  Widget determineFreePlayButton(GameState gameState) {
+    if (gameState.realTimeCommunication.isConnected) {
+      return FeaturedUserInterfaceButton(
+        onPressed: () async {
+          if (gameState.realTimeCommunication.isConnected) {
+            GoRouter.of(context).push('/freeplay');
+          } else {
+            await gameState.loadOnePlayerPuzzle();
+            if (gameState.errorDefinition == ErrorDefinition.noError) {
+              GoRouter.of(context).push('/freeplay/oneplayer');
+            }
+          }
+        },
+        buttonText: 'Free Play',
+      );
+    } else {
+      return BasicUserInterfaceButton(
+        onPressed: () async {
+          if (gameState.realTimeCommunication.isConnected) {
+            GoRouter.of(context).push('/freeplay');
+          } else {
+            await gameState.loadOnePlayerPuzzle();
+            if (gameState.errorDefinition == ErrorDefinition.noError) {
+              GoRouter.of(context).push('/freeplay/oneplayer');
+            }
+          }
+        },
+        buttonText: 'Free Play',
+      );
+    }
+  }
+
+  Widget determinePartyButton(BuildContext context, bool topButton) {
+    return Consumer<GameState>(builder: (context, gameState, child) {
+      if (!gameState.realTimeCommunication.isConnected && topButton) {
         return FeaturedUserInterfaceButton(
           onPressed: () {
             GoRouter.of(context).push('/party');
           },
           buttonText: 'Play with a Friend',
         );
-      } else {
+      } else if (gameState.realTimeCommunication.isConnected && !topButton) {
         return BasicUserInterfaceButton(
           onPressed: () {
             setState(() {
@@ -122,6 +156,8 @@ class _TutorialCompletePlayerMenuState
           },
           buttonText: 'Play Solo',
         );
+      } else {
+        return SizedBox.shrink();
       }
     });
   }
