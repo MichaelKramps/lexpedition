@@ -29,6 +29,7 @@ class Palette {
   Color get inkFullOpacity => const Color(0xff352b42);
   Color get ink => const Color(0xee352b42);
   Color get backgroundMain => const Color(0xffffffff);
+  Color get backgroundWinGame => const Color(0xff81c784);
   Color get backgroundLevelSelection => const Color(0xffa2dcc7);
   Color get backgroundPlaySession => const Color(0xffffebb5);
   Color get background4 => const Color(0xffffd7ff);

@@ -37,7 +37,7 @@ class TutorialIntroWidget extends StatelessWidget {
         : fullTutorialLevels[levelNumber - 201];
 
     return Scaffold(
-      backgroundColor: palette.backgroundPlaySession,
+      backgroundColor: palette.backgroundMain,
       body: ResponsiveScreen(
         squarishMainArea: Column(
           mainAxisAlignment: MainAxisAlignment.center,

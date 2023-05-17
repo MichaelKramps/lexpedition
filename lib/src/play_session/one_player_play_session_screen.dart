@@ -46,7 +46,7 @@ class _OnePlayerPlaySessionScreenState
       return IgnorePointer(
           ignoring: gameState.celebrating,
           child: Scaffold(
-              backgroundColor: palette.backgroundPlaySession,
+              backgroundColor: palette.backgroundMain,
               body: determineAnimatedGameBoard(gameState)));
     });
   }

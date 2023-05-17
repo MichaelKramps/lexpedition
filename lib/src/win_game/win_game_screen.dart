@@ -36,7 +36,7 @@ class WinGameScreen extends StatelessWidget {
 
     return Consumer<GameState>(builder: (context, gameState, child) {
       return Scaffold(
-        backgroundColor: palette.backgroundPlaySession,
+        backgroundColor: palette.backgroundWinGame,
         body: ResponsiveScreen(
           squarishMainArea: Column(
             mainAxisAlignment: MainAxisAlignment.center,
