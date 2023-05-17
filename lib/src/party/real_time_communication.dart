@@ -3,7 +3,6 @@ import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/party/lexpedition_data_message.dart';
-import 'package:logging/logging.dart';
 
 typedef void StreamStateCallback(MediaStream stream);
 
@@ -266,11 +265,9 @@ class RealTimeCommunication {
 
     peerConnection?.onConnectionState = (RTCPeerConnectionState state) {
       if (state == RTCPeerConnectionState.RTCPeerConnectionStateConnected) {
-        new Logger('krampyys').info(state.toString());
         this.isConnected = true;
         notifyListeners();
       } else {
-        new Logger('krampys').info(state.toString());
         this.isConnected = false;
         notifyListeners();
       }

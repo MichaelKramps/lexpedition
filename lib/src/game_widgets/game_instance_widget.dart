@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
@@ -12,6 +14,7 @@ import 'package:lexpedition/src/game_widgets/one_player_left_column_widget.dart'
 import 'package:lexpedition/src/game_widgets/one_player_right_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_right_column_widget.dart';
+import 'package:logging/logging.dart';
 import 'package:wakelock/wakelock.dart';
 
 class GameInstanceWidget extends StatefulWidget {
@@ -37,12 +40,17 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   late double _gridx = gridPosition.dx;
   late double _gridy = gridPosition.dy;
   Random _random = new Random();
-                          
+
   @override
   void initState() {
     super.initState();
     WordHelper.isValidWord('preload');
     Wakelock.enable();
+    WidgetsBinding.instance.addPersistentFrameCallback((timeStamp) {
+      if (!Constants().setFromGameBoard && Constants().gridXStart() != _gridx) {
+        Constants().setGridXStartFromGameBoard(_gridx);
+      }
+    });
   }
 
   @override
@@ -70,13 +78,13 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   }
 
   Offset determineOffset() {
-    double dx = (_random.nextDouble() * 4) - 2;//between -2 and 2
-    double dy = (_random.nextDouble() * 4) - 2;//between -2 and 2
+    double dx = (_random.nextDouble() * 4) - 2; //between -2 and 2
+    double dy = (_random.nextDouble() * 4) - 2; //between -2 and 2
     return Offset(dx, dy);
   }
 
   double determineHz() {
-    return 5 + (_random.nextDouble() * 3);//between 5 and 8
+    return 5 + (_random.nextDouble() * 3); //between 5 and 8
   }
 
   Widget getBaseGameBoard() {
@@ -124,6 +132,9 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   }
 
   int determineTileIndex(double pointerx, double pointery, int shrink) {
+    if (!Constants().setFromGameBoard) {
+      Constants().setGridXStartFromGameBoard(_gridx);
+    }
     int xDistance = (pointerx - _gridx).round();
     int yDistance = (pointery - _gridy).round();
 

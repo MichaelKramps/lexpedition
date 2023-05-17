@@ -7,6 +7,7 @@ class Constants {
   late double _tileMargin = 1.5;
   late double _gridXStart = 0;
   bool initialized = false;
+  bool setFromGameBoard = false;
   static Constants instance = Constants.blank();
 
   Constants.initialize(
@@ -52,6 +53,11 @@ class Constants {
 
   void setGridXStart(double gridXStart) {
     this._gridXStart = gridXStart;
+  }
+
+  void setGridXStartFromGameBoard(double gridXStart) {
+    setGridXStart(gridXStart);
+    this.setFromGameBoard = true;
   }
 
   double gridYStart() {
