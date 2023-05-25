@@ -109,7 +109,7 @@ class _GenericButtonState extends State<GenericButton> {
     setState(() {
       _pressed = true;
     });
-    if (widget.muted) {
+    if (!widget.muted) {
       final audioController = context.read<AudioController>();
       audioController.playSfx(SfxType.tapButton);
     }

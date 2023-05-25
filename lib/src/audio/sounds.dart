@@ -13,9 +13,7 @@ List<String> soundTypeToFilename(SfxType type) {
     case SfxType.wonLevel:
       return const ['win-level-2.wav'];
     case SfxType.blast:
-      return const [
-        'blast.mp3',
-      ];
+      return const ['blast.mp3'];
     default:
       return const ['tap-letter.wav'];
   }
