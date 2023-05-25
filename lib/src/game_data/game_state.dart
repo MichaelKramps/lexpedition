@@ -342,6 +342,7 @@ class GameState extends ChangeNotifier {
       for (LetterTile tile in myGrid.letterTiles) {
         tile.unselect();
         tile.unprimeForBlast();
+        attemptToUnprimePartnersGrid(tile.index);
       }
     }
     setQualifiesValuesForTiles();
@@ -359,10 +360,13 @@ class GameState extends ChangeNotifier {
       //if this tile could fire a magic blast, prime for blast
       if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
         letterTile.primeForBlast();
+        attemptToPrimePartnersGrid(letterTile.index);
       }
       //if tile another tile was primed for blast, unprime it
       if (currentGuess.length >= Constants.guessLengthToActivateBlast + 1) {
         currentGuess[currentGuess.length - 2].unprimeForBlast();
+        attemptToUnprimePartnersGrid(
+            currentGuess[currentGuess.length - 2].index);
       }
       setQualifiesValuesForTiles(); //sets qualifiesToBeCharged and qualifiesToBeBlasted
     } else if (!isSlideEvent &&
@@ -371,16 +375,35 @@ class GameState extends ChangeNotifier {
       // unselect tile, unprime it and remove from current guess
       letterTile.unselect();
       letterTile.unprimeForBlast();
+      attemptToUnprimePartnersGrid(letterTile.index);
       currentGuess.removeLast();
       //if another tile should be primed for blast, prime it
       if (currentGuess.length >= 5) {
         currentGuess[currentGuess.length - 1].primeForBlast();
+        attemptToPrimePartnersGrid(currentGuess[currentGuess.length - 1].index);
       }
     }
     notifyAllPlayers();
   }
 
+  void attemptToPrimePartnersGrid(int index) {
+    if (realTimeCommunication.isConnected && getTheirGrid() != null) {
+      getTheirGrid()!.letterTiles[index].primeForBlast();
+    }
+  }
+
+  void attemptToUnprimePartnersGrid(int index) {
+    if (realTimeCommunication.isConnected && getTheirGrid() != null) {
+      getTheirGrid()!.letterTiles[index].unprimeForBlast();
+    }
+  }
+
   void setQualifiesValuesForTiles() {
+    setMyQualifiesValuesForTiles();
+    setTheirQualifiesValuesForTiles();
+  }
+
+  void setMyQualifiesValuesForTiles() {
     // notifyListeners is called elsewhere
     List<LetterTile> tiles = [];
     BlastDirection blastDirection = BlastDirection.horizontal;
@@ -416,7 +439,6 @@ class GameState extends ChangeNotifier {
       //check if primedFromPartner
       if (thisTile.primedForBlastFromPartner) {
         blastFromPartner = thisTile.index;
-        _logger.info('krampees: ' + thisTile.index.toString());
       }
     }
     // set qualifiesToBeBlasted from my guess
@@ -435,6 +457,38 @@ class GameState extends ChangeNotifier {
         tiles[thisIndex].qualifiesToBeBlasted = true;
         // all tiles set to false earlier
       }
+    }
+  }
+
+  void setTheirQualifiesValuesForTiles() {
+    // notifyListeners is called elsewhere
+    List<LetterTile> tiles = [];
+    List<int> indexesPrimedForBlast = [];
+    BlastDirection blastDirection = BlastDirection.horizontal;
+    if (getTheirGrid() != null) {
+      tiles = getTheirGrid()!.letterTiles;
+      blastDirection = getTheirGrid()!.blastDirection;
+    }
+    for (int tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
+      LetterTile thisTile = tiles[tileIndex];
+      thisTile.qualifiesToBeBlasted = false;
+      if (thisTile.primedForBlast) {
+        indexesPrimedForBlast.add(thisTile.index);
+      }
+    }
+
+    // set qualifiesToBeBlasted from indexesPrimedForBlast
+    List<int> indexesToBeBlasted = [];
+    for (int i = 0; i < indexesPrimedForBlast.length; i++) {
+      int primedIndex = indexesPrimedForBlast[i];
+      indexesToBeBlasted
+          .addAll(LetterGrid.indexesToBlast(primedIndex, blastDirection));
+    }
+
+    for (int i = 0; i < indexesToBeBlasted.length; i++) {
+      int thisIndex = indexesToBeBlasted[i];
+      tiles[thisIndex].qualifiesToBeBlasted = true;
+      // all tiles set to false earlier
     }
   }
 

@@ -42,7 +42,7 @@ class LetterTileWidget extends StatelessWidget {
   Widget determineTileAnimation(Widget baseWidget) {
     if (letterTile.blastFrom) {
       return baseWidget;
-    } else if (letterTile.primedForBlast) {
+    } else if (letterTile.primedForBlast || letterTile.primedForBlastFromPartner) {
       if (gameState.showBadGuess) {
         return baseWidget.animate().shakeX(duration: 400.ms);
       } else {
