@@ -31,6 +31,7 @@ class GameState extends ChangeNotifier {
   List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guessList = [];
   bool levelCompleted = false;
+  bool loadingLevel = true;
   bool celebrating = false;
   bool showBadGuess = false;
   bool viewingMyScreen = true;
@@ -59,6 +60,7 @@ class GameState extends ChangeNotifier {
   Future<void> loadOnePlayerPuzzle({int? tutorialKey, int? databaseId}) async {
     _logger.info('loading a new puzzle');
     resetPuzzle();
+    loadingLevel = true;
     if (tutorialKey != null) {
       if (tutorialKey < 200) {
         // 102 denotes quick tutorial level 2
@@ -95,6 +97,7 @@ class GameState extends ChangeNotifier {
     _logger.info('loading a new two player puzzle');
     secondaryLetterGrid = null;
     resetPuzzle();
+    loadingLevel = true;
     if (tutorialNumber != null) {
       GameLevel tutorialLevel =
           GameLevel.copy(fullTutorialLevels[tutorialNumber]);
@@ -115,8 +118,11 @@ class GameState extends ChangeNotifier {
     loadPuzzleAndNotify();
   }
 
+  void doneLoading() {
+    loadingLevel = false;
+  }
+
   void updateGameMode(GameMode gameMode) {
-    _logger.info('hi: ' + gameMode.toString());
     this.gameMode = gameMode;
   }
 

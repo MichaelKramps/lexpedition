@@ -40,9 +40,13 @@ class LetterTileWidget extends StatelessWidget {
   }
 
   Widget determineTileAnimation(Widget baseWidget) {
+    if (gameState.loadingLevel) {
+      return baseWidget.animate().flip(delay: determineAmountToDelay());
+    }
     if (letterTile.blastFrom) {
       return baseWidget;
-    } else if (letterTile.primedForBlast || letterTile.primedForBlastFromPartner) {
+    } else if (letterTile.primedForBlast ||
+        letterTile.primedForBlastFromPartner) {
       if (gameState.showBadGuess) {
         return baseWidget.animate().shakeX(duration: 400.ms);
       } else {
@@ -61,6 +65,59 @@ class LetterTileWidget extends StatelessWidget {
     } else {
       return baseWidget;
     }
+  }
+
+  Duration determineAmountToDelay() {
+    Duration delay = 1000.ms;
+
+    switch (letterTile.index) {
+      case 0:
+        delay += 0.ms;
+        break;
+      case 1:
+      case 6:
+        delay += 150.ms;
+        break;
+      case 2:
+      case 7:
+      case 12:
+        delay += 300.ms;
+        break;
+      case 3:
+      case 8:
+      case 13:
+      case 18:
+        delay += 450.ms;
+        break;
+      case 4:
+      case 9:
+      case 14:
+      case 19:
+        delay += 600.ms;
+        break;
+      case 5:
+      case 10:
+      case 15:
+      case 20:
+        delay += 750.ms;
+        break;
+      case 11:
+      case 16:
+      case 21:
+        delay += 900.ms;
+        break;
+      case 17:
+      case 22:
+        delay += 1050.ms;
+        break;
+      case 23:
+        delay += 1200.ms;
+        gameState.doneLoading();
+        break;
+      default:
+    }
+
+    return delay;
   }
 
   Widget getBaseTileWidget() {
