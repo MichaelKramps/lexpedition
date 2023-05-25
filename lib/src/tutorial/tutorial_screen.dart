@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
+import 'package:lexpedition/src/game_data/game_mode.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
 import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';
@@ -29,7 +31,8 @@ class TutorialScreen extends StatelessWidget {
     final playerProgress = context.watch<PlayerProgress>();
 
     return Consumer<GameState>(builder: (context, gameState, child) {
-      List<GameLevel> chosenTutorialList = tutorialPath == 'full' ? fullTutorialLevels : quickTutorialLevels;
+      List<GameLevel> chosenTutorialList =
+          tutorialPath == 'full' ? fullTutorialLevels : quickTutorialLevels;
 
       return Scaffold(
         backgroundColor: palette.backgroundLevelSelection,
@@ -41,8 +44,7 @@ class TutorialScreen extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'Tutorial Levels',
-                    style:
-                        TextStyle(fontSize: Constants.smallFont),
+                    style: TextStyle(fontSize: Constants.smallFont),
                   ),
                 ),
               ),
@@ -62,10 +64,13 @@ class TutorialScreen extends StatelessWidget {
                           gameState.loadOnePlayerPuzzle(
                               tutorialKey: level.tutorialKey);
 
-                          GoRouter.of(context)
-                              .push(level.tutorialKey < 200 ? '/tutorial/quick/intro/${level.tutorialKey}' : '/tutorial/full/intro/${level.tutorialKey}');
+                          GoRouter.of(context).push(level.tutorialKey < 200
+                              ? '/tutorial/quick/intro/${level.tutorialKey}'
+                              : '/tutorial/full/intro/${level.tutorialKey}');
                         },
-                        leading: Text(level.tutorialKey < 200 ? (level.tutorialKey - 100).toString() : (level.tutorialKey - 200).toString()),
+                        leading: Text(level.tutorialKey < 200
+                            ? (level.tutorialKey - 100).toString()
+                            : (level.tutorialKey - 200).toString()),
                         title: Text('${level.name}'),
                       )
                   ],

@@ -7,6 +7,7 @@ import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/error_definitions.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
+import 'package:lexpedition/src/game_data/game_mode.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
 import 'package:lexpedition/src/game_data/word_helper.dart';
@@ -34,6 +35,7 @@ class GameState extends ChangeNotifier {
   bool showBadGuess = false;
   bool viewingMyScreen = true;
   bool blasting = false;
+  GameMode gameMode = GameMode.OnePlayerFreePlay;
   ErrorDefinition errorDefinition = ErrorDefinition.noError;
   Logger _logger = new Logger('game state');
 
@@ -111,6 +113,11 @@ class GameState extends ChangeNotifier {
       }
     }
     loadPuzzleAndNotify();
+  }
+
+  void updateGameMode(GameMode gameMode) {
+    _logger.info('hi: ' + gameMode.toString());
+    this.gameMode = gameMode;
   }
 
   void loadPuzzleAndNotify() {
