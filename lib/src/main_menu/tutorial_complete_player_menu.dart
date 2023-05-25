@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/error_definitions.dart';
+import 'package:lexpedition/src/game_data/game_mode.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:lexpedition/src/user_interface/featured_user_interface_button.dart';
@@ -47,6 +48,7 @@ class _TutorialCompletePlayerMenuState
                   } else {
                     await gameState.loadOnePlayerPuzzle();
                     if (gameState.errorDefinition == ErrorDefinition.noError) {
+                      gameState.updateGameMode(GameMode.OnePlayerFreePlay);
                       GoRouter.of(context).push('/freeplay/oneplayer');
                     } 
                   }

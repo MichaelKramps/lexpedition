@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/error_definitions.dart';
+import 'package:lexpedition/src/game_data/game_mode.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:lexpedition/src/user_interface/featured_user_interface_button.dart';
+import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
@@ -36,7 +38,7 @@ class WinGameScreen extends StatelessWidget {
 
     return Consumer<GameState>(builder: (context, gameState, child) {
       return Scaffold(
-        backgroundColor: palette.backgroundPlaySession,
+        backgroundColor: palette.backgroundMain,
         body: ResponsiveScreen(
           squarishMainArea: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -52,8 +54,7 @@ class WinGameScreen extends StatelessWidget {
               Center(
                 child: Text(
                   'You won!',
-                  style:
-                      TextStyle(fontSize: Constants.bigFont),
+                  style: TextStyle(fontSize: Constants.bigFont),
                 ),
               ),
               gap,
@@ -71,27 +72,34 @@ class WinGameScreen extends StatelessWidget {
             children: [
               FeaturedUserInterfaceButton(
                 onPressed: () async {
-                  if (continueRoute == '/freeplay') {
-                    if (gameState.realTimeCommunication.isConnected) {
-                      GoRouter.of(context).push(continueRoute);
-                    } else {
+                  new Logger('krampus').info('game mode: ' + gameState.gameMode.toString());
+                  switch (gameState.gameMode) {
+                    case GameMode.OnePlayerFreePlay:
                       await gameState.loadOnePlayerPuzzle();
-                      if (gameState.errorDefinition == ErrorDefinition.noError) {
+                      if (gameState.errorDefinition ==
+                          ErrorDefinition.noError) {
                         GoRouter.of(context).push('/freeplay/oneplayer');
-                      } 
-                    }
-                  } else {
-                    GoRouter.of(context).push(continueRoute);
+                      }
+                      break;
+                    case GameMode.TwoPlayerFreePlay:
+                      await gameState.loadOnePlayerPuzzle();
+                      if (gameState.errorDefinition ==
+                          ErrorDefinition.noError) {
+                        GoRouter.of(context).push('/freeplay/oneplayer');
+                      }
+                      break;
+                    default:
+                      GoRouter.of(context).push(continueRoute);
                   }
                 },
-                buttonText: 'Continue',
+                buttonText: 'Play Again',
               ),
               SizedBox(width: 12),
               BasicUserInterfaceButton(
                 onPressed: () {
                   GoRouter.of(context).push('/');
                 },
-                buttonText: 'Home',
+                buttonText: 'Quit',
               ),
             ],
           ),
