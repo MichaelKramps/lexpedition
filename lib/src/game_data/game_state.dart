@@ -151,6 +151,7 @@ class GameState extends ChangeNotifier {
   }
 
   void updatePuzzleFromPeerUpdate(LetterGrid theirLetterGrid) {
+    theirLetterGrid.setChargedFromPartnerTiles();
     setTheirGrid(theirLetterGrid);
     setMyGridFromTheirs(theirLetterGrid);
 
@@ -477,7 +478,7 @@ class GameState extends ChangeNotifier {
     }
     for (int tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
       LetterTile thisTile = tiles[tileIndex];
-      thisTile.qualifiesToBeBlasted = false;
+      thisTile.qualifiesToBeBlasted = thisTile.chargedFromPartner;
       if (thisTile.primedForBlast) {
         indexesPrimedForBlast.add(thisTile.index);
       }

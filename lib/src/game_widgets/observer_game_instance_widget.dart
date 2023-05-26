@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
-import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
-import 'package:lexpedition/src/game_widgets/blast_direction_widget.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_blast_direction_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart';

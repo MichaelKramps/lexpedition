@@ -6,11 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
-import 'package:lexpedition/src/game_data/game_mode.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/tutorial/quick_tutorial_levels.dart';
 import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../audio/audio_controller.dart';

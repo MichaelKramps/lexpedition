@@ -233,6 +233,15 @@ class LetterGrid {
     }
   }
 
+  void setChargedFromPartnerTiles() {
+    for (int i = 0; i < letterTiles.length; i++) {
+      LetterTile thisTile = letterTiles[i];
+      if (thisTile.qualifiesToBeBlasted) {
+        thisTile.chargedFromPartner = true;
+      }
+    }
+  }
+
   void addGuess(String guess) {
     this.guesses.add(AcceptedGuess(guess: guess));
   }
