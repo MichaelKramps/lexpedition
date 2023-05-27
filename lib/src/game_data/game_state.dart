@@ -477,9 +477,6 @@ class GameState extends ChangeNotifier {
     List<int> indexesToBlastFromMe = [];
     List<int> indexesToBlastFromThem = [];
     BlastDirection theirBlastDirection = BlastDirection.horizontal;
-    BlastDirection myBlastDirection = getMyGrid() == null
-        ? BlastDirection.horizontal
-        : getMyGrid()!.blastDirection;
     if (getTheirGrid() != null) {
       tiles = getTheirGrid()!.letterTiles;
       theirBlastDirection = getTheirGrid()!.blastDirection;
@@ -587,6 +584,9 @@ class GameState extends ChangeNotifier {
 
       await Future<void>.delayed(Constants.blastDuration);
       myGrid.unblast();
+      if (getTheirGrid() != null) {
+        getTheirGrid()!.unblast();
+      }
       blasting = false;
     }
   }
