@@ -236,9 +236,24 @@ class LetterGrid {
   void setChargedFromPartnerTiles() {
     for (int i = 0; i < letterTiles.length; i++) {
       LetterTile thisTile = letterTiles[i];
-      if (thisTile.qualifiesToBeBlasted) {
+      if (thisTile.primedForBlast) {
+        thisTile.primedForBlast = false;
+        thisTile.primedForBlastFromPartner = true;
+        thisTile.qualifiesToBeBlasted = false;
         thisTile.qualifiesToBeBlastedFromPartner = true;
+      } else if (thisTile.primedForBlastFromPartner) {
+        thisTile.primedForBlast = true;
+        thisTile.primedForBlastFromPartner = false;
+        thisTile.qualifiesToBeBlasted = true;
+        thisTile.qualifiesToBeBlastedFromPartner = false;
+      } else if (thisTile.qualifiesToBeBlasted) {
+        thisTile.qualifiesToBeBlastedFromPartner = true;
+        thisTile.qualifiesToBeBlasted = false;
+      } else if (thisTile.qualifiesToBeBlastedFromPartner) {
+        thisTile.qualifiesToBeBlasted = true;
+        thisTile.qualifiesToBeBlastedFromPartner = false;
       } else {
+        thisTile.qualifiesToBeBlasted = false;
         thisTile.qualifiesToBeBlastedFromPartner = false;
       }
     }

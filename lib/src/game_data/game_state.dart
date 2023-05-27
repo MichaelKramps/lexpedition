@@ -298,7 +298,7 @@ class GameState extends ChangeNotifier {
           index++) {
         LetterTile myTile = myGrid.letterTiles[index];
         LetterTile theirTile = theirGrid.letterTiles[index];
-        myTile.primedForBlastFromPartner = theirTile.primedForBlast;
+        myTile.primedForBlastFromPartner = theirTile.primedForBlastFromPartner;
       }
       setQualifiesValuesForTiles();
     }
@@ -376,7 +376,7 @@ class GameState extends ChangeNotifier {
             currentGuess[currentGuess.length - 2].index);
       }
       setQualifiesValuesForTiles(); //sets qualifiesToBeCharged and qualifiesToBeBlasted
-    } else if (!isSlideEvent &&
+    } /*else if (!isSlideEvent &&
         currentGuess.length > 0 &&
         letterTile == currentGuess.last) {
       // unselect tile, unprime it and remove from current guess
@@ -389,7 +389,7 @@ class GameState extends ChangeNotifier {
         currentGuess[currentGuess.length - 1].primeForBlast();
         attemptToPrimePartnersGrid(currentGuess[currentGuess.length - 1].index);
       }
-    }
+    }*/
     notifyAllPlayers();
   }
 
@@ -402,14 +402,16 @@ class GameState extends ChangeNotifier {
   void attemptToUnprimePartnersGrid(int index) {
     if (realTimeCommunication.isConnected && getTheirGrid() != null) {
       getTheirGrid()!.letterTiles[index].unprimeForBlast();
-      getTheirGrid()!.letterTiles[index].qualifiesToBeBlastedFromPartner =
-          false;
     }
   }
 
   void setQualifiesValuesForTiles() {
-    setMyQualifiesValuesForTiles();
-    setTheirQualifiesValuesForTiles();
+    if (getMyGrid() != null) {
+      setMyQualifiesValuesForTiles();
+    }
+    if (getTheirGrid() != null) {
+      setTheirQualifiesValuesForTiles();
+    }
   }
 
   void setMyQualifiesValuesForTiles() {
@@ -472,32 +474,40 @@ class GameState extends ChangeNotifier {
   void setTheirQualifiesValuesForTiles() {
     // notifyListeners is called elsewhere
     List<LetterTile> tiles = [];
-    List<int> indexesPrimedForBlast = [];
-    BlastDirection blastDirection = BlastDirection.horizontal;
+    List<int> indexesToBlastFromMe = [];
+    List<int> indexesToBlastFromThem = [];
+    BlastDirection theirBlastDirection = BlastDirection.horizontal;
+    BlastDirection myBlastDirection = getMyGrid() == null
+        ? BlastDirection.horizontal
+        : getMyGrid()!.blastDirection;
     if (getTheirGrid() != null) {
       tiles = getTheirGrid()!.letterTiles;
-      blastDirection = getTheirGrid()!.blastDirection;
+      theirBlastDirection = getTheirGrid()!.blastDirection;
     }
     for (int tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
       LetterTile thisTile = tiles[tileIndex];
-      thisTile.qualifiesToBeBlasted = thisTile.qualifiesToBeBlastedFromPartner;
+      thisTile.qualifiesToBeBlasted = false;
+      thisTile.qualifiesToBeBlastedFromPartner = false;
       if (thisTile.primedForBlast) {
-        indexesPrimedForBlast.add(thisTile.index);
+        indexesToBlastFromMe =
+            LetterGrid.indexesToBlast(thisTile.index, theirBlastDirection);
+      } else if (thisTile.primedForBlastFromPartner) {
+        indexesToBlastFromThem =
+            LetterGrid.indexesToBlast(thisTile.index, theirBlastDirection);
       }
     }
 
-    // set qualifiesToBeBlasted from indexesPrimedForBlast
-    List<int> indexesToBeBlasted = [];
-    for (int i = 0; i < indexesPrimedForBlast.length; i++) {
-      int primedIndex = indexesPrimedForBlast[i];
-      indexesToBeBlasted
-          .addAll(LetterGrid.indexesToBlast(primedIndex, blastDirection));
+    // set qualifiesToBeBlasted
+    for (int i = 0; i < indexesToBlastFromMe.length; i++) {
+      int primedIndex = indexesToBlastFromMe[i];
+      getTheirGrid()!.letterTiles[primedIndex].qualifiesToBeBlasted = true;
     }
 
-    for (int i = 0; i < indexesToBeBlasted.length; i++) {
-      int thisIndex = indexesToBeBlasted[i];
-      tiles[thisIndex].qualifiesToBeBlasted = true;
-      // all tiles set to false earlier
+    // set qualifiesToBeBlastedFromPartner
+    for (int i = 0; i < indexesToBlastFromThem.length; i++) {
+      int primedIndex = indexesToBlastFromThem[i];
+      getTheirGrid()!.letterTiles[primedIndex].qualifiesToBeBlastedFromPartner =
+          true;
     }
   }
 
