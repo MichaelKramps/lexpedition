@@ -72,24 +72,27 @@ class WinGameScreen extends StatelessWidget {
             children: [
               FeaturedUserInterfaceButton(
                 onPressed: () async {
-                  new Logger('krampus').info('game mode: ' + gameState.gameMode.toString());
-                  switch (gameState.gameMode) {
-                    case GameMode.OnePlayerFreePlay:
-                      await gameState.loadOnePlayerPuzzle();
-                      if (gameState.errorDefinition ==
-                          ErrorDefinition.noError) {
-                        GoRouter.of(context).push('/freeplay/oneplayer');
-                      }
-                      break;
-                    case GameMode.TwoPlayerFreePlay:
-                      await gameState.loadOnePlayerPuzzle();
-                      if (gameState.errorDefinition ==
-                          ErrorDefinition.noError) {
-                        GoRouter.of(context).push('/freeplay/oneplayer');
-                      }
-                      break;
-                    default:
-                      GoRouter.of(context).push(continueRoute);
+                  if (gameState.realTimeCommunication.isPartyLeader) {
+                    switch (gameState.gameMode) {
+                      case GameMode.OnePlayerFreePlay:
+                        await gameState.loadOnePlayerPuzzle();
+                        if (gameState.errorDefinition ==
+                            ErrorDefinition.noError) {
+                          GoRouter.of(context).push('/freeplay/oneplayer');
+                        }
+                        break;
+                      case GameMode.TwoPlayerFreePlay:
+                        await gameState.loadOnePlayerPuzzle();
+                        if (gameState.errorDefinition ==
+                            ErrorDefinition.noError) {
+                          GoRouter.of(context).push('/freeplay/oneplayer');
+                        }
+                        break;
+                      default:
+                        GoRouter.of(context).push(continueRoute);
+                    }
+                  } else {
+                    GoRouter.of(context).push(continueRoute);
                   }
                 },
                 buttonText: 'Play Again',
