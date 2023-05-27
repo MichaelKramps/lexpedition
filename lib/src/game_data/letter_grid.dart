@@ -237,9 +237,9 @@ class LetterGrid {
     for (int i = 0; i < letterTiles.length; i++) {
       LetterTile thisTile = letterTiles[i];
       if (thisTile.qualifiesToBeBlasted) {
-        thisTile.chargedFromPartner = true;
+        thisTile.qualifiesToBeBlastedFromPartner = true;
       } else {
-        thisTile.chargedFromPartner = false;
+        thisTile.qualifiesToBeBlastedFromPartner = false;
       }
     }
   }

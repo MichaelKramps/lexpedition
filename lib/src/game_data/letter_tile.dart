@@ -11,7 +11,7 @@ class LetterTile {
   bool qualifiesToBeBlasted = false;
   bool qualifiesToBeCharged = false;
   bool primedForBlastFromPartner = false;
-  bool chargedFromPartner = false;
+  bool qualifiesToBeBlastedFromPartner = false;
   bool blastFrom = false;
 
   LetterTile(String letter, TileType tileType, int requiredCharges,
@@ -51,13 +51,14 @@ class LetterTile {
               encodedString[9] == '1' ? true : false;
           this.qualifiesToBeCharged = encodedString[10] == '1' ? true : false;
           this.qualifiesToBeBlasted = encodedString[11] == '1' ? true : false;
-          this.chargedFromPartner = encodedString[12] == '1' ? true : false;
+          this.qualifiesToBeBlastedFromPartner =
+              encodedString[12] == '1' ? true : false;
         } catch (e) {
           this.primedForBlast = false;
           this.primedForBlastFromPartner = false;
           this.qualifiesToBeCharged = false;
           this.qualifiesToBeBlasted = false;
-          this.chargedFromPartner = false;
+          this.qualifiesToBeBlastedFromPartner = false;
         }
       } else {
         this.tileType = TileType.empty;
@@ -81,7 +82,7 @@ class LetterTile {
     encodedString += this.primedForBlastFromPartner ? '1' : '0';
     encodedString += this.qualifiesToBeCharged ? '1' : '0';
     encodedString += this.qualifiesToBeBlasted ? '1' : '0';
-    encodedString += this.chargedFromPartner ? '1' : '0';
+    encodedString += this.qualifiesToBeBlastedFromPartner ? '1' : '0';
 
     return encodedString;
   }

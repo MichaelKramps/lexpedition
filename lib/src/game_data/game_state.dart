@@ -402,7 +402,8 @@ class GameState extends ChangeNotifier {
   void attemptToUnprimePartnersGrid(int index) {
     if (realTimeCommunication.isConnected && getTheirGrid() != null) {
       getTheirGrid()!.letterTiles[index].unprimeForBlast();
-      getTheirGrid()!.letterTiles[index].chargedFromPartner = false;
+      getTheirGrid()!.letterTiles[index].qualifiesToBeBlastedFromPartner =
+          false;
     }
   }
 
@@ -479,7 +480,7 @@ class GameState extends ChangeNotifier {
     }
     for (int tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
       LetterTile thisTile = tiles[tileIndex];
-      thisTile.qualifiesToBeBlasted = thisTile.chargedFromPartner;
+      thisTile.qualifiesToBeBlasted = thisTile.qualifiesToBeBlastedFromPartner;
       if (thisTile.primedForBlast) {
         indexesPrimedForBlast.add(thisTile.index);
       }
