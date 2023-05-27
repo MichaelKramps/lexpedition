@@ -402,6 +402,7 @@ class GameState extends ChangeNotifier {
   void attemptToUnprimePartnersGrid(int index) {
     if (realTimeCommunication.isConnected && getTheirGrid() != null) {
       getTheirGrid()!.letterTiles[index].unprimeForBlast();
+      getTheirGrid()!.letterTiles[index].chargedFromPartner = false;
     }
   }
 
@@ -560,6 +561,13 @@ class GameState extends ChangeNotifier {
 
       myGrid.blastFromIndex(index);
       realTimeCommunication.sendBlastIndexDataToPeer(index);
+
+      // peer won't update us with new grid
+      // so we should blast their grid
+      if (getTheirGrid() != null) {
+        getTheirGrid()!.blastFromIndex(index);
+      }
+
       notifyListeners();
       if (isLevelWon()) {
         levelCompleted = true;

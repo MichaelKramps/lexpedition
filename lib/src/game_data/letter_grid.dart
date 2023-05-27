@@ -238,6 +238,8 @@ class LetterGrid {
       LetterTile thisTile = letterTiles[i];
       if (thisTile.qualifiesToBeBlasted) {
         thisTile.chargedFromPartner = true;
+      } else {
+        thisTile.chargedFromPartner = false;
       }
     }
   }
