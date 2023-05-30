@@ -198,9 +198,6 @@ class LetterTile {
     if (column == 0) {
       //first column
       columnsToCheck.add(column + 1);
-    } else if (column == 5) {
-      //last column
-      columnsToCheck.add(column - 1);
     } else {
       //middle column
       columnsToCheck.add(column - 1);

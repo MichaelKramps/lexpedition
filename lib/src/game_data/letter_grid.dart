@@ -190,30 +190,32 @@ class LetterGrid {
 
   void updateCurrentColumn() {
     bool updatedCurrentColumn = false;
-    for (int columnIndex = currentColumn;
-        columnIndex < columns.length;
-        columnIndex++) {
-      List<LetterTile> thisColumn = columns[columnIndex];
-      bool columnIsCharged = true;
-      for (LetterTile thisTile in thisColumn) {
-        if (!thisTile.isCharged()) {
-          columnIsCharged = false;
+    if (currentColumn < columns.length - 6) {
+      for (int columnIndex = currentColumn;
+          columnIndex < columns.length;
+          columnIndex++) {
+        List<LetterTile> thisColumn = columns[columnIndex];
+        bool columnIsCharged = true;
+        for (LetterTile thisTile in thisColumn) {
+          if (!thisTile.isCharged()) {
+            columnIsCharged = false;
+            break;
+          }
+        }
+        if (columnIsCharged) {
+          updatedCurrentColumn = true;
+          currentColumn++;
+        } else {
           break;
         }
-      }
-      if (columnIsCharged) {
-        updatedCurrentColumn = true;
-        currentColumn++;
-      } else {
-        break;
       }
     }
 
     if (updatedCurrentColumn) {
       double columnOffset =
-        currentColumn * Constants().tileSize() + Constants().tileMargin() * 2;
+          currentColumn * Constants().tileSize() + Constants().tileMargin() * 2;
       scrollController.animateTo(columnOffset,
-        duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+          duration: Duration(milliseconds: 500), curve: Curves.easeIn);
     }
   }
 
@@ -307,29 +309,32 @@ class LetterGrid {
   }
 
   void blastFromIndex(int index) {
-    assert(index >= 0 && index < 24);
-    List<int> indexesToBlast = LetterGrid.indexesToBlast(index, blastDirection);
+    List<int> indexesToBlast =
+        LetterGrid.indexesToBlast(index: index, blastDirection: blastDirection, currentColumn: currentColumn);
 
     for (int index in indexesToBlast) {
       letterTiles[index].blast();
     }
   }
 
-  static List<int> indexesToBlast(int index, BlastDirection blastDirection) {
+  static List<int> indexesToBlast(
+      {required int index, required BlastDirection blastDirection, int currentColumn = 0}) {
+    int ad = currentColumn * 4; //adjustment for currentColumn
+
     List<List<int>> rows = [
-      [0, 4, 8, 12, 16, 20],
-      [1, 5, 9, 13, 17, 21],
-      [2, 6, 10, 14, 18, 22],
-      [3, 7, 11, 15, 19, 23]
+      [0 + ad, 4 + ad, 8 + ad, 12 + ad, 16 + ad, 20 + ad],
+      [1 + ad, 5 + ad, 9 + ad, 13 + ad, 17 + ad, 21 + ad],
+      [2 + ad, 6 + ad, 10 + ad, 14 + ad, 18 + ad, 22 + ad],
+      [3 + ad, 7 + ad, 11 + ad, 15 + ad, 19 + ad, 23 + ad]
     ];
 
     List<List<int>> columns = [
-      [0, 1, 2, 3],
-      [4, 5, 6, 7],
-      [8, 9, 10, 11],
-      [12, 13, 14, 15],
-      [16, 17, 18, 19],
-      [20, 21, 22, 23]
+      [0 + ad, 1 + ad, 2 + ad, 3 + ad],
+      [4 + ad, 5 + ad, 6 + ad, 7 + ad],
+      [8 + ad, 9 + ad, 10 + ad, 11 + ad],
+      [12 + ad, 13 + ad, 14 + ad, 15 + ad],
+      [16 + ad, 17 + ad, 18 + ad, 19 + ad],
+      [20 + ad, 21 + ad, 22 + ad, 23 + ad]
     ];
 
     if (blastDirection == BlastDirection.horizontal) {

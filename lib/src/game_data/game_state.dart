@@ -457,11 +457,11 @@ class GameState extends ChangeNotifier {
     List<int> indexesToBeBlasted = [];
     if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
       indexesToBeBlasted.addAll(
-          LetterGrid.indexesToBlast(currentGuess.last.index, blastDirection));
+          LetterGrid.indexesToBlast(index: currentGuess.last.index, blastDirection: blastDirection));
     }
     if (blastFromPartner != null) {
       indexesToBeBlasted
-          .addAll(LetterGrid.indexesToBlast(blastFromPartner, blastDirection));
+          .addAll(LetterGrid.indexesToBlast(index: blastFromPartner, blastDirection: blastDirection));
     }
     if (tiles.length > 0) {
       for (int i = 0; i < indexesToBeBlasted.length; i++) {
@@ -488,10 +488,10 @@ class GameState extends ChangeNotifier {
       thisTile.qualifiesToBeBlastedFromPartner = false;
       if (thisTile.primedForBlast) {
         indexesToBlastFromMe =
-            LetterGrid.indexesToBlast(thisTile.index, theirBlastDirection);
+            LetterGrid.indexesToBlast(index: thisTile.index, blastDirection: theirBlastDirection);
       } else if (thisTile.primedForBlastFromPartner) {
         indexesToBlastFromThem =
-            LetterGrid.indexesToBlast(thisTile.index, theirBlastDirection);
+            LetterGrid.indexesToBlast(index: thisTile.index, blastDirection: theirBlastDirection);
       }
     }
 
@@ -639,7 +639,9 @@ class GameState extends ChangeNotifier {
       int clickedTileIndex, bool isSlideEvent, BuildContext? context) {
     if (getMyGrid() != null) {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
-      LetterTile clickedTile = myGrid.letterTiles[clickedTileIndex];
+      int indexAdjustedForCurrentColumn =
+          clickedTileIndex + myGrid.currentColumn * 4;
+      LetterTile clickedTile = myGrid.letterTiles[indexAdjustedForCurrentColumn];
       if (clickedTile.tileType != TileType.empty) {
         if (context != null && !clickedTile.selected) {
           final AudioController audioController =
