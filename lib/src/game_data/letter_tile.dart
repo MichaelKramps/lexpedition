@@ -177,7 +177,7 @@ class LetterTile {
   }
 
   List<int> adjacentIndexes() {
-    int row = (index / 6).floor();
+    int row = index % 4;
     List<int> rowsToCheck = [row];
 
     if (row == 0) {
@@ -192,7 +192,7 @@ class LetterTile {
       rowsToCheck.add(row + 1);
     }
 
-    int column = index % 6;
+    int column = (index / 4).floor();
     List<int> columnsToCheck = [column];
 
     if (column == 0) {
@@ -211,7 +211,7 @@ class LetterTile {
 
     for (int row in rowsToCheck) {
       for (int column in columnsToCheck) {
-        int thisIndex = (row * 6) + column;
+        int thisIndex = (column * 4) + (row);
         if (thisIndex != this.index) {
           adjacentIndexes.add(thisIndex);
         }

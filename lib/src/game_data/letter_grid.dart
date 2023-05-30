@@ -6,7 +6,7 @@ import 'letter_tile.dart';
 class LetterGrid {
   late List<String?> encodedTiles;
   late List<LetterTile> letterTiles;
-  late List<List<LetterTile>> rows;
+  late List<List<LetterTile>> columns;
   BlastDirection blastDirection = BlastDirection.vertical;
   List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guesses = [];
@@ -20,7 +20,7 @@ class LetterGrid {
     }
     this.encodedTiles = gridData;
     this.letterTiles = this.decodeLetterTiles(gridData);
-    this.rows = this.setRows(this.letterTiles);
+    this.columns = this.setColumns(this.letterTiles);
   }
 
   factory LetterGrid.blankGrid() {
@@ -64,26 +64,24 @@ class LetterGrid {
     return decodedLetterTiles;
   }
 
-  List<List<LetterTile>> setRows(List<LetterTile> letterTiles) {
-    List<List<LetterTile>> rows = [];
+  List<List<LetterTile>> setColumns(List<LetterTile> letterTiles) {
+    List<List<LetterTile>> columns = [];
 
-    for (int row = 0; row < 4; row++) {
-      //all grids should be 4x6
-      List<LetterTile> thisRow = [];
+    for (int column = 0; column < (letterTiles.length / 4).floor(); column++) {
+      //all grids have 4 rows
+      List<LetterTile> thisColumn = [];
 
-      int baseIndex = row * 6;
+      int baseIndex = column * 4;
 
-      thisRow.add(letterTiles[baseIndex]);
-      thisRow.add(letterTiles[baseIndex + 1]);
-      thisRow.add(letterTiles[baseIndex + 2]);
-      thisRow.add(letterTiles[baseIndex + 3]);
-      thisRow.add(letterTiles[baseIndex + 4]);
-      thisRow.add(letterTiles[baseIndex + 5]);
+      thisColumn.add(letterTiles[baseIndex]);
+      thisColumn.add(letterTiles[baseIndex + 1]);
+      thisColumn.add(letterTiles[baseIndex + 2]);
+      thisColumn.add(letterTiles[baseIndex + 3]);
 
-      rows.add(thisRow);
+      columns.add(thisColumn);
     }
 
-    return rows;
+    return columns;
   }
 
   bool isBlank() {
@@ -286,19 +284,19 @@ class LetterGrid {
 
   static List<int> indexesToBlast(int index, BlastDirection blastDirection) {
     List<List<int>> rows = [
-      [0, 1, 2, 3, 4, 5],
-      [6, 7, 8, 9, 10, 11],
-      [12, 13, 14, 15, 16, 17],
-      [18, 19, 20, 21, 22, 23]
+      [0, 4, 8, 12, 16, 20],
+      [1, 5, 9, 13, 17, 21],
+      [2, 6, 10, 14, 18, 22],
+      [3, 7, 11, 15, 19, 23]
     ];
 
     List<List<int>> columns = [
-      [0, 6, 12, 18],
-      [1, 7, 13, 19],
-      [2, 8, 14, 20],
-      [3, 9, 15, 21],
-      [4, 10, 16, 22],
-      [5, 11, 17, 23]
+      [0, 1, 2, 3],
+      [4, 5, 6, 7],
+      [8, 9, 10, 11],
+      [12, 13, 14, 15],
+      [16, 17, 18, 19],
+      [20, 21, 22, 23]
     ];
 
     if (blastDirection == BlastDirection.horizontal) {

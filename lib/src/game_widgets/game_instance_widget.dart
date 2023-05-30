@@ -177,6 +177,6 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
       return -1;
     }
 
-    return (row * 6) + (column);
+    return (column * 4) + (row);
   }
 }

@@ -143,10 +143,10 @@ class _BuildOnePlayerPuzzleWidgetState
           Listener(
               key: gridKey,
               onPointerDown: selectTile,
-              child: Column(children: [
-                for (var row in _grid.rows) ...[
-                  Row(children: [
-                    for (var letterTile in row) ...[
+              child: Row(children: [
+                for (var column in _grid.columns) ...[
+                  Column(children: [
+                    for (var letterTile in column) ...[
                       LetterTileWidget(
                           letterTile: letterTile,
                           gameState: new GameState.emptyState(),
@@ -240,7 +240,7 @@ class _BuildOnePlayerPuzzleWidgetState
     if (row < 0 || column < 0) {
       selectedIndex = -1;
     } else {
-      selectedIndex = (row * 6) + (column);
+      selectedIndex = (column * 4) + (row);
     }
 
     if (selectedIndex == _selectedIndex) {
