@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/accepted_guess.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
 
 import 'letter_tile.dart';
 
@@ -7,12 +9,14 @@ class LetterGrid {
   late List<String?> encodedTiles;
   late List<LetterTile> letterTiles;
   late List<List<LetterTile>> columns;
+  ScrollController scrollController = ScrollController();
+  int currentColumn = 0;
   BlastDirection blastDirection = BlastDirection.vertical;
   List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guesses = [];
 
   LetterGrid(List<String?> gridData) {
-    assert(gridData.length == 24 || gridData.length == 25);
+    assert(gridData.length >= 24);
     if (gridData.length == 25) {
       // includes blast direction
       this.blastDirection = BlastDirection.values[int.parse(gridData[24]!)];
@@ -182,6 +186,35 @@ class LetterGrid {
     }
 
     return true;
+  }
+
+  void updateCurrentColumn() {
+    bool updatedCurrentColumn = false;
+    for (int columnIndex = currentColumn;
+        columnIndex < columns.length;
+        columnIndex++) {
+      List<LetterTile> thisColumn = columns[columnIndex];
+      bool columnIsCharged = true;
+      for (LetterTile thisTile in thisColumn) {
+        if (!thisTile.isCharged()) {
+          columnIsCharged = false;
+          break;
+        }
+      }
+      if (columnIsCharged) {
+        updatedCurrentColumn = true;
+        currentColumn++;
+      } else {
+        break;
+      }
+    }
+
+    if (updatedCurrentColumn) {
+      double columnOffset =
+        currentColumn * Constants().tileSize() + Constants().tileMargin() * 2;
+      scrollController.animateTo(columnOffset,
+        duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+    }
   }
 
   void clearCurrentGuess() {

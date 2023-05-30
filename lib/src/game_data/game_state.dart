@@ -199,6 +199,10 @@ class GameState extends ChangeNotifier {
       return false;
     }
 
+    if (getMyGrid() != null) {
+      getMyGrid()!.updateCurrentColumn();
+    }
+
     if (secondaryLetterGrid != null) {
       LetterGrid secondaryGrid = secondaryLetterGrid as LetterGrid;
       return primaryLetterGrid.isFullyCharged() &&

@@ -131,7 +131,15 @@ var quickTutorialLevels = [
     null,
     null,
     null,
-    'h010'
+    'h010',
+    'e010',
+    'a010',
+    'r010',
+    't010',
+    'b010',
+    'e010',
+    'a010',
+    'r010',
   ]),
   GameLevel(name: "Magic Blast", averageGuesses: 2, bestAttempt: 2, tutorialKey: 106, gridCode: [
     't110',

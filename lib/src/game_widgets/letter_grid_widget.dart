@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/game_data/letter_tile.dart';
@@ -12,17 +13,26 @@ class LetterGridWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      for (var column in letterGrid.columns) ...[
-        Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          for (LetterTile letterTile in column) ...[
-            LetterTileWidget(
-                letterTile: letterTile,
-                gameState: gameState,
-                blastDirection: letterGrid.blastDirection)
-          ]
-        ])
-      ]
-    ]);
+    return SizedBox(
+      height: Constants().gridHeight(),
+      width: Constants().gridWidth(),
+      child: ListView(
+        physics: NeverScrollableScrollPhysics(),
+        controller: letterGrid.scrollController,
+        padding: EdgeInsets.all(0),
+        scrollDirection: Axis.horizontal,
+        children: [
+        for (var column in letterGrid.columns) ...[
+          Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            for (LetterTile letterTile in column) ...[
+              LetterTileWidget(
+                  letterTile: letterTile,
+                  gameState: gameState,
+                  blastDirection: letterGrid.blastDirection)
+            ]
+          ])
+        ]
+      ]),
+    );
   }
 }
