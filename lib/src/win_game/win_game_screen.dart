@@ -82,10 +82,10 @@ class WinGameScreen extends StatelessWidget {
                         }
                         break;
                       case GameMode.TwoPlayerFreePlay:
-                        await gameState.loadOnePlayerPuzzle();
+                        await gameState.loadTwoPlayerPuzzle();
                         if (gameState.errorDefinition ==
                             ErrorDefinition.noError) {
-                          GoRouter.of(context).push('/freeplay/oneplayer');
+                          GoRouter.of(context).push('/freeplay/twoplayer');
                         }
                         break;
                       default:
