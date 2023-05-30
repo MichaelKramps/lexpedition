@@ -58,7 +58,6 @@ class GameState extends ChangeNotifier {
   }
 
   Future<void> loadOnePlayerPuzzle({int? tutorialKey, int? databaseId}) async {
-    _logger.info('loading a new puzzle');
     resetPuzzle();
     loadingLevel = true;
     if (tutorialKey != null) {
@@ -94,7 +93,6 @@ class GameState extends ChangeNotifier {
 
   Future<void> loadTwoPlayerPuzzle(
       {int? tutorialNumber, int? databaseId}) async {
-    _logger.info('loading a new two player puzzle');
     secondaryLetterGrid = null;
     resetPuzzle();
     loadingLevel = true;
@@ -179,7 +177,6 @@ class GameState extends ChangeNotifier {
   }
 
   void notifyAllPlayers() {
-    _logger.info('notifyAllPlayers()');
     if (getMyGrid() != null) {
       realTimeCommunication
           .sendUpdatedGameDataToPeer(getMyGrid()!.encodedGridToString());
@@ -561,7 +558,6 @@ class GameState extends ChangeNotifier {
 
   Future<void> blastTilesAndNotify(int index) async {
     if (getMyGrid() != null) {
-      _logger.info('blasting my grid from ' + index.toString());
       if (!blasting) {
         blasting = true;
       }
