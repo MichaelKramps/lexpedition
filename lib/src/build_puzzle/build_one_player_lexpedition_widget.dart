@@ -18,16 +18,9 @@ class BuildOnePlayerLexpeditionWidget extends StatefulWidget {
 
 class _BuildOnePlayerLexpeditionWidgetState
     extends State<BuildOnePlayerLexpeditionWidget> {
-  LetterGrid _grid = new LetterGrid.forLexpedition();
+  LetterGrid _grid = new LetterGrid.forLexpeditionBuilder();
   int _selectedIndex = -1;
   int _step = 0;
-
-  GlobalKey gridKey = GlobalKey();
-  late RenderBox renderBox =
-      gridKey.currentContext?.findRenderObject() as RenderBox;
-  late Offset gridPosition = renderBox.localToGlobal(Offset.zero);
-  late double _gridx = gridPosition.dx;
-  late double _gridy = gridPosition.dy;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +57,6 @@ class _BuildOnePlayerLexpeditionWidgetState
                         },
                     child: Text('+|')),
               ]),
-              SizedBox(height: 20),
               Stack(children: [
                 Visibility(
                     visible: showOptionOnStep(1),
@@ -165,7 +157,7 @@ class _BuildOnePlayerLexpeditionWidgetState
               setState(() {
                 _grid.unselectAll();
               });
-              LevelDatabaseConnection.createOnePlayerLevel(
+              LevelDatabaseConnection.createOnePlayerLexpeditionLevel(
                   _grid.encodedGridToString(), 'michael@kinship.games');
             },
             child: Text('Save'),
@@ -190,6 +182,7 @@ class _BuildOnePlayerLexpeditionWidgetState
   void selectTile(int index) {
     setState(() {
       _grid.unselectAll();
+      _selectedIndex = index;
       _grid.letterTiles[index].select();
     });
   }

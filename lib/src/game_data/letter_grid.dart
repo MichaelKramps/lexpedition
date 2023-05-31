@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/accepted_guess.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
-import 'package:logging/logging.dart';
 
 import 'letter_tile.dart';
 
@@ -28,7 +27,7 @@ class LetterGrid {
     this.columns = this.setColumns(this.letterTiles);
   }
 
-  factory LetterGrid.forLexpedition() {
+  factory LetterGrid.forLexpeditionBuilder() {
     return LetterGrid([
       null,
       null,
@@ -423,7 +422,7 @@ class LetterGrid {
     this.letterTiles.add(tile2);
     this.letterTiles.add(tile3);
     this.letterTiles.add(tile4);
-    
+
     this.columns.add([tile1, tile2, tile3, tile4]);
   }
 }

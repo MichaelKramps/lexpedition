@@ -8,7 +8,7 @@ class LevelDatabaseConnection {
     GameLevel? possibleGameLevel = null;
 
     int puzzleType = new Random().nextInt(4);
-    try{ 
+    try {
       switch (puzzleType) {
         case 0:
           possibleGameLevel =
@@ -16,11 +16,13 @@ class LevelDatabaseConnection {
           break;
         case 1:
           possibleGameLevel =
-              await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(0, 7);
+              await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(
+                  0, 7);
           break;
         case 2:
           possibleGameLevel =
-              await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(5, 10);
+              await LevelDatabaseConnection.getOnePlayerPuzzleInGuessRange(
+                  5, 10);
           break;
         case 3:
           possibleGameLevel =
@@ -38,8 +40,7 @@ class LevelDatabaseConnection {
       } else {
         return LevelDatabaseConnection.getOnePlayerPuzzle();
       }
-    }
-    catch(error){      
+    } catch (error) {
       return possibleGameLevel;
     }
   }
@@ -48,7 +49,7 @@ class LevelDatabaseConnection {
     GameLevel? possibleGameLevel = null;
 
     int puzzleType = new Random().nextInt(4);
-    try{
+    try {
       switch (puzzleType) {
         case 0:
           possibleGameLevel =
@@ -56,11 +57,13 @@ class LevelDatabaseConnection {
           break;
         case 1:
           possibleGameLevel =
-              await LevelDatabaseConnection.getTwoPlayerPuzzleInGuessRange(0, 10);
+              await LevelDatabaseConnection.getTwoPlayerPuzzleInGuessRange(
+                  0, 10);
           break;
         case 2:
           possibleGameLevel =
-              await LevelDatabaseConnection.getTwoPlayerPuzzleInGuessRange(8, 15);
+              await LevelDatabaseConnection.getTwoPlayerPuzzleInGuessRange(
+                  8, 15);
           break;
         case 3:
           possibleGameLevel =
@@ -78,8 +81,7 @@ class LevelDatabaseConnection {
       } else {
         return LevelDatabaseConnection.getTwoPlayerPuzzle();
       }
-    }
-    catch(error){
+    } catch (error) {
       return possibleGameLevel;
     }
   }
@@ -402,6 +404,24 @@ class LevelDatabaseConnection {
     }
   }
 
+  static Future<void> createOnePlayerLexpeditionLevel(
+      String encodedGridString, String author) async {
+    int nextLevelId = await getNextOnePlayerLexpeditionLevelId();
+
+    if (nextLevelId > 0) {
+      FirebaseDatabase.instance
+          .ref('onePlayerLexpeditions/' + nextLevelId.toString())
+          .set({
+        'attempts': 0,
+        'attemptsFinished': 0,
+        'author': author,
+        'averageGuesses': 0,
+        'bestAttempt': 100,
+        'gridCode': encodedGridString
+      });
+    }
+  }
+
   static Future<void> createTwoPlayerLevel(String encodedGridStringA,
       String encodedGridStringB, String author) async {
     int nextLevelId = await getNextTwoPlayerLevelId();
@@ -426,6 +446,25 @@ class LevelDatabaseConnection {
 
     await FirebaseDatabase.instance
         .ref('onePlayerPuzzles')
+        .orderByKey()
+        .limitToLast(1)
+        .once(DatabaseEventType.value)
+        .then((value) {
+      if (value.snapshot.children.length > 0) {
+        DataSnapshot puzzleEntry = value.snapshot.children.last;
+        String puzzleIdString = puzzleEntry.key as String;
+        nextLevelId = puzzleIdString;
+      }
+    });
+
+    return int.parse(nextLevelId) + 1;
+  }
+
+  static Future<int> getNextOnePlayerLexpeditionLevelId() async {
+    String nextLevelId = '-1';
+
+    await FirebaseDatabase.instance
+        .ref('onePlayerLexpeditions')
         .orderByKey()
         .limitToLast(1)
         .once(DatabaseEventType.value)
