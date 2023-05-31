@@ -91,6 +91,23 @@ class GameState extends ChangeNotifier {
     loadPuzzleAndNotify();
   }
 
+  Future<void> loadOnePlayerLexpedition({int? databaseId}) async {
+    resetPuzzle();
+    loadingLevel = true;
+    if (databaseId != null) {
+      //get the specific level in the database
+    } else {
+      GameLevel? newLevel = await LevelDatabaseConnection.getOnePlayerLexpedition();
+      if (newLevel != null) {
+        level = newLevel;
+        primaryLetterGrid = newLevel.letterGrid;
+      } else {
+        errorDefinition = ErrorDefinition.levelFetchError;
+      }
+    }
+    loadPuzzleAndNotify();
+  }
+
   Future<void> loadTwoPlayerPuzzle(
       {int? tutorialNumber, int? databaseId}) async {
     secondaryLetterGrid = null;

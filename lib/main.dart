@@ -313,7 +313,8 @@ class MyApp extends StatelessWidget {
                     GoRoute (
                       path: 'oneplayer',
                       builder: (context, state) =>
-                          Container()),
+                          VideoCallWrapperWidget(screen: OnePlayerPlaySessionScreen(
+                            winRoute: '/freeplaywon'))),
                     GoRoute (
                       path: 'twoplayer',
                       builder: (context, state) => 

@@ -98,8 +98,11 @@ class _TutorialCompletePlayerMenuState
       );
     } else {
       return BasicUserInterfaceButton(
-        onPressed: () {
-          GoRouter.of(context).push('/lexpedition');
+        onPressed: () async {
+          await gameState.loadOnePlayerLexpedition();
+          if (gameState.errorDefinition == ErrorDefinition.noError) {
+            GoRouter.of(context).push('/freeplay/oneplayer');
+          }
         },
         buttonText: 'Lexpedition',
       );
@@ -110,13 +113,9 @@ class _TutorialCompletePlayerMenuState
     if (gameState.realTimeCommunication.isConnected) {
       return FeaturedUserInterfaceButton(
         onPressed: () async {
-          if (gameState.realTimeCommunication.isConnected) {
-            GoRouter.of(context).push('/freeplay');
-          } else {
-            await gameState.loadOnePlayerPuzzle();
-            if (gameState.errorDefinition == ErrorDefinition.noError) {
-              GoRouter.of(context).push('/freeplay/oneplayer');
-            }
+          await gameState.loadOnePlayerPuzzle();
+          if (gameState.errorDefinition == ErrorDefinition.noError) {
+            GoRouter.of(context).push('/freeplay/oneplayer');
           }
         },
         buttonText: 'Free Play',
