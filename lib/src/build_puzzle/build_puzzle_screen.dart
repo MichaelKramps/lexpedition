@@ -37,6 +37,21 @@ class BuildPuzzleScreen extends StatelessWidget {
                           buttonText: 'Back')
                   ]
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    BasicUserInterfaceButton(
+                        onPressed: () =>
+                            GoRouter.of(context).push('/buildpuzzle/1playerlex'),
+                        buttonText: 'Build Solo Lexpedition'),
+                    SizedBox(width: Constants.smallFont),
+                    BasicUserInterfaceButton(
+                        onPressed: () =>
+                            GoRouter.of(context).push('/buildpuzzle/2playerlex'),
+                        buttonText: 'Build Cooperative Lexpedition'),
+                  ]
+                )
               ],
             )
           ),

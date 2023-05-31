@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/accepted_guess.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:logging/logging.dart';
 
 import 'letter_tile.dart';
 
@@ -25,6 +26,39 @@ class LetterGrid {
     this.encodedTiles = gridData;
     this.letterTiles = this.decodeLetterTiles(gridData);
     this.columns = this.setColumns(this.letterTiles);
+  }
+
+  factory LetterGrid.forLexpedition() {
+    return LetterGrid([
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+    ]);
   }
 
   factory LetterGrid.blankGrid() {
@@ -191,7 +225,8 @@ class LetterGrid {
 
   void resetCurrentColumn() {
     currentColumn = 0;
-    scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+    scrollController.animateTo(0,
+        duration: Duration(milliseconds: 500), curve: Curves.easeIn);
   }
 
   void updateCurrentColumn() {
@@ -374,5 +409,21 @@ class LetterGrid {
     for (LetterTile letterTile in letterTiles) {
       letterTile.unselect();
     }
+  }
+
+  void addColumn() {
+    int currentLastIndex = this.letterTiles.last.index;
+
+    LetterTile tile1 = LetterTile.fromEncodedString(null, currentLastIndex + 1);
+    LetterTile tile2 = LetterTile.fromEncodedString(null, currentLastIndex + 2);
+    LetterTile tile3 = LetterTile.fromEncodedString(null, currentLastIndex + 3);
+    LetterTile tile4 = LetterTile.fromEncodedString(null, currentLastIndex + 4);
+
+    this.letterTiles.add(tile1);
+    this.letterTiles.add(tile2);
+    this.letterTiles.add(tile3);
+    this.letterTiles.add(tile4);
+    
+    this.columns.add([tile1, tile2, tile3, tile4]);
   }
 }

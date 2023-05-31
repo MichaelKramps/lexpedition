@@ -5,6 +5,8 @@
 // Uncomment the following lines when enabling Firebase Crashlytics
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:lexpedition/src/build_puzzle/build_one_player_lexpedition_widget.dart';
+import 'package:lexpedition/src/build_puzzle/build_two_player_lexpedition_widget.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/main_menu/more_menu.dart';
 import 'package:lexpedition/src/party/video_call_wrapper_widget.dart';
@@ -277,6 +279,16 @@ class MyApp extends StatelessWidget {
                       path: '2player',
                       builder: (context, state) =>
                           const BuildTwoPlayerPuzzleWidget(
+                              key: Key('build two player puzzle'))),
+                  GoRoute(
+                      path: '1playerlex',
+                      builder: (context, state) =>
+                          const BuildOnePlayerLexpeditionWidget(
+                              key: Key('build one player puzzle'))),
+                  GoRoute(
+                      path: '2playerlex',
+                      builder: (context, state) =>
+                          const BuildTwoPlayerLexpeditionWidget(
                               key: Key('build two player puzzle')))
                 ]),
             GoRoute(
