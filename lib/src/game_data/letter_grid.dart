@@ -176,6 +176,7 @@ class LetterGrid {
     for (var tile in this.letterTiles) {
       tile.resetTile();
     }
+    resetCurrentColumn();
   }
 
   bool isFullyCharged() {
@@ -186,6 +187,11 @@ class LetterGrid {
     }
 
     return true;
+  }
+
+  void resetCurrentColumn() {
+    currentColumn = 0;
+    scrollController.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.easeIn);
   }
 
   void updateCurrentColumn() {
@@ -309,8 +315,10 @@ class LetterGrid {
   }
 
   void blastFromIndex(int index) {
-    List<int> indexesToBlast =
-        LetterGrid.indexesToBlast(index: index, blastDirection: blastDirection, currentColumn: currentColumn);
+    List<int> indexesToBlast = LetterGrid.indexesToBlast(
+        index: index,
+        blastDirection: blastDirection,
+        currentColumn: currentColumn);
 
     for (int index in indexesToBlast) {
       letterTiles[index].blast();
@@ -318,7 +326,9 @@ class LetterGrid {
   }
 
   static List<int> indexesToBlast(
-      {required int index, required BlastDirection blastDirection, int currentColumn = 0}) {
+      {required int index,
+      required BlastDirection blastDirection,
+      int currentColumn = 0}) {
     int ad = currentColumn * 4; //adjustment for currentColumn
 
     List<List<int>> rows = [

@@ -15,7 +15,7 @@ class LetterGridWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: Constants().gridHeight(),
-      width: Constants().gridWidth(),
+      width: Constants().gridWidth() + Constants().tileMargin(),
       child: ListView(
         physics: NeverScrollableScrollPhysics(),
         controller: letterGrid.scrollController,

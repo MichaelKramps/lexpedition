@@ -457,11 +457,11 @@ class GameState extends ChangeNotifier {
     List<int> indexesToBeBlasted = [];
     if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
       indexesToBeBlasted.addAll(
-          LetterGrid.indexesToBlast(index: currentGuess.last.index, blastDirection: blastDirection));
+          LetterGrid.indexesToBlast(index: currentGuess.last.index, blastDirection: blastDirection, currentColumn: getMyGrid()!.currentColumn));
     }
     if (blastFromPartner != null) {
       indexesToBeBlasted
-          .addAll(LetterGrid.indexesToBlast(index: blastFromPartner, blastDirection: blastDirection));
+          .addAll(LetterGrid.indexesToBlast(index: blastFromPartner, blastDirection: blastDirection, currentColumn: getMyGrid()!.currentColumn));
     }
     if (tiles.length > 0) {
       for (int i = 0; i < indexesToBeBlasted.length; i++) {
@@ -488,10 +488,10 @@ class GameState extends ChangeNotifier {
       thisTile.qualifiesToBeBlastedFromPartner = false;
       if (thisTile.primedForBlast) {
         indexesToBlastFromMe =
-            LetterGrid.indexesToBlast(index: thisTile.index, blastDirection: theirBlastDirection);
+            LetterGrid.indexesToBlast(index: thisTile.index, blastDirection: theirBlastDirection, currentColumn: getTheirGrid()!.currentColumn);
       } else if (thisTile.primedForBlastFromPartner) {
         indexesToBlastFromThem =
-            LetterGrid.indexesToBlast(index: thisTile.index, blastDirection: theirBlastDirection);
+            LetterGrid.indexesToBlast(index: thisTile.index, blastDirection: theirBlastDirection, currentColumn: getTheirGrid()!.currentColumn);
       }
     }
 
