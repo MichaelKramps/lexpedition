@@ -161,14 +161,14 @@ class TutorialDirective {
 
   int getRow() {
     if (tileIndex > -1) {
-      return (tileIndex / 6).floor();
+      return tileIndex % 4;
     }
     return 0;
   }
 
   int getColumn() {
     if (tileIndex > -1) {
-      return tileIndex % 6;
+      return (tileIndex / 4).floor();
     }
     return 0;
   }
