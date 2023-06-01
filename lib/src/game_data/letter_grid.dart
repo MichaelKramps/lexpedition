@@ -244,16 +244,20 @@ class LetterGrid {
         }
         if (columnIsCharged) {
           updatedCurrentColumn = true;
-          currentColumn++;
+          if (currentColumn < columns.length - 6) {
+            currentColumn++;
+          }
         } else {
           break;
         }
       }
+    } else {
+      
     }
 
     if (updatedCurrentColumn) {
       double columnOffset =
-          currentColumn * Constants().tileSize() + Constants().tileMargin() * 2;
+          currentColumn * (Constants().tileSize() + Constants().tileMargin() * 2);
       scrollController.animateTo(columnOffset,
           duration: Duration(milliseconds: 500), curve: Curves.easeIn);
     }

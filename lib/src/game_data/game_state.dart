@@ -216,10 +216,6 @@ class GameState extends ChangeNotifier {
       return false;
     }
 
-    if (getMyGrid() != null) {
-      getMyGrid()!.updateCurrentColumn();
-    }
-
     if (secondaryLetterGrid != null) {
       LetterGrid secondaryGrid = secondaryLetterGrid as LetterGrid;
       return primaryLetterGrid.isFullyCharged() &&
@@ -572,6 +568,10 @@ class GameState extends ChangeNotifier {
       //clearGuess() at end of this method will fire notifyAllPlayers
       //before blastTiles() unblasts the tiles
       await blastTilesAndNotify(currentGuess.last.index);
+    }
+    // attempt to update current column for lexpedition puzzles
+    if (getMyGrid() != null) {
+      getMyGrid()!.updateCurrentColumn();
     }
     //notifyAllPlayers() is called here
     clearGuessAndNotify();

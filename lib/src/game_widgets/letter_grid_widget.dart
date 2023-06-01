@@ -31,8 +31,25 @@ class LetterGridWidget extends StatelessWidget {
                   blastDirection: letterGrid.blastDirection)
             ]
           ])
-        ]
+        ],
+        determineEndingColumn()
       ]),
     );
+  }
+
+  Widget determineEndingColumn() {
+    if (letterGrid.columns.length > 6) {
+      return SizedBox(
+        height: Constants().gridHeight() - (2 * Constants().tileMargin()),
+        width: Constants().tileMargin(),
+        child: const DecoratedBox(
+          decoration: const BoxDecoration(
+            color: Colors.red
+          ),
+        ),
+      );
+    } else {
+      return SizedBox.shrink();
+    }
   }
 }
