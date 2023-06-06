@@ -101,7 +101,7 @@ class WinGameScreen extends StatelessWidget {
                     GoRouter.of(context).push(continueRoute);
                   }
                 },
-                buttonText: 'Play Again',
+                buttonText: 'Continue',
               ),
               SizedBox(width: 12),
               BasicUserInterfaceButton(

@@ -43,11 +43,12 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
     super.initState();
     WordHelper.isValidWord('preload');
     Wakelock.enable();
-    WidgetsBinding.instance.addPersistentFrameCallback((timeStamp) {
-      if (!Constants().setFromGameBoard && Constants().gridXStart() != _gridx) {
-        Constants().setGridXStartFromGameBoard(_gridx);
-      }
-    });
+    // following code is causing an error
+    // WidgetsBinding.instance.addPersistentFrameCallback((timeStamp) {
+    //   if (!Constants().setFromGameBoard && Constants().gridXStart() != _gridx) {
+    //     Constants().setGridXStartFromGameBoard(_gridx);
+    //   }
+    // });
   }
 
   @override

@@ -224,8 +224,10 @@ class LetterGrid {
 
   void resetCurrentColumn() {
     currentColumn = 0;
-    scrollController.animateTo(0,
-        duration: Constants.preCelebrationDuration, curve: Curves.easeIn);
+    if (scrollController.positions.isNotEmpty) {
+      scrollController.animateTo(0,
+          duration: Constants.preCelebrationDuration, curve: Curves.easeIn);
+    }
   }
 
   void updateCurrentColumn() {
@@ -251,26 +253,21 @@ class LetterGrid {
           break;
         }
       }
-    } else {
-      
-    }
+    } else {}
 
     if (updatedCurrentColumn) {
-      double columnOffset =
-          currentColumn * (Constants().tileSize() + Constants().tileMargin() * 2);
-      scrollController.animateTo(columnOffset,
-          duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+      double columnOffset = currentColumn *
+          (Constants().tileSize() + Constants().tileMargin() * 2);
+      if (scrollController.positions.isNotEmpty) {
+        scrollController.animateTo(columnOffset,
+            duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+      }
     }
   }
 
   void clearCurrentGuess() {
     this.currentGuess = [];
     clearPrimedForBlast();
-  }
-
-  void removeLastInCurrentGuess() {
-    this.currentGuess.removeLast();
-    attemptToPrimeForBlast();
   }
 
   void updateCurrentGuess(LetterTile letterTile) {
