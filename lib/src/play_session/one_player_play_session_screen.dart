@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
+import 'package:lexpedition/src/game_data/game_mode.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
 import 'package:go_router/go_router.dart';
@@ -88,8 +89,13 @@ class _OnePlayerPlaySessionScreenState
     gameState.celebrating = true;
 
     if (gameState.level.puzzleId != null) {
-      LevelDatabaseConnection.logOnePlayerFinishedPuzzleResults(
-          gameState.level.puzzleId as int, gameState.guessList.length);
+      if (gameState.gameMode == GameMode.OnePlayerFreePlay) {
+        LevelDatabaseConnection.logOnePlayerFinishedPuzzleResults(
+            gameState.level.puzzleId as int, gameState.guessList.length);
+      } else if (gameState.gameMode == GameMode.OnePlayerLexpedition) {
+        LevelDatabaseConnection.logOnePlayerFinishedLexpeditionResults(
+            gameState.level.puzzleId as int, gameState.guessList.length);
+      }
     }
 
     final playerProgress = context.read<PlayerProgress>();

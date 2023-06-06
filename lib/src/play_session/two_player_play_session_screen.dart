@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/audio/audio_controller.dart';
 import 'package:lexpedition/src/audio/sounds.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:lexpedition/src/game_data/game_mode.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
 import 'package:lexpedition/src/game_widgets/game_instance_widget.dart';
@@ -91,8 +92,13 @@ class _TwoPlayerPlaySessionScreenState
     gameState.completeLevel();
 
     if (gameState.level.puzzleId != null) {
-      LevelDatabaseConnection.logTwoPlayerFinishedPuzzleResults(
-          gameState.level.puzzleId as int, gameState.guessList.length);
+      if (gameState.gameMode == GameMode.TwoPlayerFreePlay) {
+        LevelDatabaseConnection.logTwoPlayerFinishedPuzzleResults(
+            gameState.level.puzzleId as int, gameState.guessList.length);
+      } else if (gameState.gameMode == GameMode.TwoPlayerLexpedition) {
+        LevelDatabaseConnection.logTwoPlayerFinishedLexpeditionResults(
+            gameState.level.puzzleId as int, gameState.guessList.length);
+      }
     }
 
     // Let the player see the game just after winning for a bit.

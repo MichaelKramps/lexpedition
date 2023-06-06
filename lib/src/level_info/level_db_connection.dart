@@ -339,6 +339,34 @@ class LevelDatabaseConnection {
     }
   }
 
+  static Future<void> logOnePlayerFinishedLexpeditionResults(
+      int puzzleId, int guesses) async {
+    GameLevel? level =
+        await LevelDatabaseConnection.getOnePlayerLexpeditionFromId(puzzleId);
+
+    bool levelCanBeUpdated = level != null;
+    if (levelCanBeUpdated) {
+      int newBestAttempt =
+          guesses < level.bestAttempt ? guesses : level.bestAttempt;
+
+      int newAttempts = level.attempts + 1;
+      int newAttemptsFinished = level.attemptsFinished + 1;
+      double newAverageGuesses =
+          ((level.attemptsFinished * level.averageGuesses) + guesses) /
+              newAttemptsFinished;
+
+      GameLevel updatedGameLevel = GameLevel(
+          gridCode: level.gridCode,
+          attempts: newAttempts,
+          attemptsFinished: newAttemptsFinished,
+          averageGuesses: newAverageGuesses,
+          bestAttempt: newBestAttempt);
+
+      LevelDatabaseConnection.setOnePlayerLexpeditionFromId(
+          puzzleId, updatedGameLevel);
+    }
+  }
+
   static Future<void> logTwoPlayerFinishedPuzzleResults(
       int puzzleId, int guesses) async {
     GameLevel? level =
@@ -367,6 +395,34 @@ class LevelDatabaseConnection {
     }
   }
 
+  static Future<void> logTwoPlayerFinishedLexpeditionResults(
+      int puzzleId, int guesses) async {
+    GameLevel? level =
+        await LevelDatabaseConnection.getTwoPlayerLexpeditionFromId(puzzleId);
+
+    bool levelCanBeUpdated = level != null;
+    if (levelCanBeUpdated) {
+      int newBestAttempt =
+          guesses < level.bestAttempt ? guesses : level.bestAttempt;
+
+      int newAttempts = level.attempts + 1;
+      int newAttemptsFinished = level.attemptsFinished + 1;
+      double newAverageGuesses =
+          ((level.attemptsFinished * level.averageGuesses) + guesses) /
+              newAttemptsFinished;
+
+      GameLevel updatedGameLevel = GameLevel(
+          gridCode: level.gridCode,
+          attempts: newAttempts,
+          attemptsFinished: newAttemptsFinished,
+          averageGuesses: newAverageGuesses,
+          bestAttempt: newBestAttempt);
+
+      LevelDatabaseConnection.setTwoPlayerLexpeditionFromId(
+          puzzleId, updatedGameLevel);
+    }
+  }
+
   static Future<void> logOnePlayerUnfinishedPuzzleResults(int puzzleId) async {
     GameLevel? level =
         await LevelDatabaseConnection.getOnePlayerLevelFromId(puzzleId);
@@ -379,6 +435,22 @@ class LevelDatabaseConnection {
           GameLevel(gridCode: level.gridCode, attempts: newAttempts);
 
       LevelDatabaseConnection.setOnePlayerLevelFromId(
+          puzzleId, updatedGameLevel);
+    }
+  }
+
+  static Future<void> logOnePlayerUnfinishedLexpeditionResults(int puzzleId) async {
+    GameLevel? level =
+        await LevelDatabaseConnection.getOnePlayerLexpeditionFromId(puzzleId);
+
+    bool levelCanBeUpdated = level != null;
+    if (levelCanBeUpdated) {
+      int newAttempts = level.attempts + 1;
+
+      GameLevel updatedGameLevel =
+          GameLevel(gridCode: level.gridCode, attempts: newAttempts);
+
+      LevelDatabaseConnection.setOnePlayerLexpeditionFromId(
           puzzleId, updatedGameLevel);
     }
   }
@@ -399,6 +471,22 @@ class LevelDatabaseConnection {
     }
   }
 
+  static Future<void> logTwoPlayerUnfinishedLexpeditionResults(int puzzleId) async {
+    GameLevel? level =
+        await LevelDatabaseConnection.getTwoPlayerLexpeditionFromId(puzzleId);
+
+    bool levelCanBeUpdated = level != null;
+    if (levelCanBeUpdated) {
+      int newAttempts = level.attempts + 1;
+
+      GameLevel updatedGameLevel =
+          GameLevel(gridCode: level.gridCode, attempts: newAttempts);
+
+      LevelDatabaseConnection.setTwoPlayerLexpeditionFromId(
+          puzzleId, updatedGameLevel);
+    }
+  }
+
   static Future<GameLevel?> lookUpLevelFromCode(String lookupCode) async {
     if (lookupCode[0] == "1") {
       return await getOnePlayerLevelFromId(int.parse(lookupCode.substring(1)));
@@ -410,6 +498,29 @@ class LevelDatabaseConnection {
   static Future<GameLevel?> getOnePlayerLevelFromId(int puzzleId) async {
     DataSnapshot snapshot = await FirebaseDatabase.instance
         .ref('onePlayerPuzzles/' + puzzleId.toString())
+        .get();
+
+    String gridString = snapshot.child('gridCode').value as String;
+    int attempts = snapshot.child('attempts').value as int;
+    int attemptsFinished = snapshot.child('attemptsFinished').value as int;
+    int bestAttempt = snapshot.child('bestAttempt').value as int;
+    num averageGuesses = snapshot.child('averageGuesses').value as num;
+
+    GameLevel gameLevel = GameLevel(
+        gridCode: gridString.split(','),
+        puzzleId: puzzleId,
+        gameLevelCode: '1' + puzzleId.toString(),
+        attempts: attempts,
+        bestAttempt: bestAttempt,
+        attemptsFinished: attemptsFinished,
+        averageGuesses: averageGuesses.toDouble());
+
+    return gameLevel;
+  }
+
+  static Future<GameLevel?> getOnePlayerLexpeditionFromId(int puzzleId) async {
+    DataSnapshot snapshot = await FirebaseDatabase.instance
+        .ref('onePlayerLexpeditions/' + puzzleId.toString())
         .get();
 
     String gridString = snapshot.child('gridCode').value as String;
@@ -455,6 +566,31 @@ class LevelDatabaseConnection {
     return gameLevel;
   }
 
+  static Future<GameLevel?> getTwoPlayerLexpeditionFromId(int puzzleId) async {
+    DataSnapshot snapshot = await FirebaseDatabase.instance
+        .ref('twoPlayerLexpeditions/' + puzzleId.toString())
+        .get();
+
+    String gridStringA = snapshot.child('gridCodeA').value as String;
+    String gridStringB = snapshot.child('gridCodeB').value as String;
+    int attempts = snapshot.child('attempts').value as int;
+    int attemptsFinished = snapshot.child('attemptsFinished').value as int;
+    int bestAttempt = snapshot.child('bestAttempt').value as int;
+    num averageGuesses = snapshot.child('averageGuesses').value as num;
+
+    GameLevel gameLevel = GameLevel(
+        gridCode: gridStringA.split(','),
+        gridCodeB: gridStringB.split(','),
+        puzzleId: puzzleId,
+        gameLevelCode: '2' + puzzleId.toString(),
+        attempts: attempts,
+        attemptsFinished: attemptsFinished,
+        bestAttempt: bestAttempt,
+        averageGuesses: averageGuesses.toDouble());
+
+    return gameLevel;
+  }
+
   static Future<void> setOnePlayerLevelFromId(
       int puzzleId, GameLevel gameLevel) async {
     late var updateToMake;
@@ -471,6 +607,22 @@ class LevelDatabaseConnection {
         .update(updateToMake);
   }
 
+  static Future<void> setOnePlayerLexpeditionFromId(
+      int puzzleId, GameLevel gameLevel) async {
+    late var updateToMake;
+
+    updateToMake = {
+      "attempts": gameLevel.attempts,
+      "attemptsFinished": gameLevel.attemptsFinished,
+      "averageGuesses": gameLevel.averageGuesses,
+      "bestAttempt": gameLevel.bestAttempt
+    };
+
+    FirebaseDatabase.instance
+        .ref('onePlayerLexpeditions/' + puzzleId.toString())
+        .update(updateToMake);
+  }
+
   static Future<void> setTwoPlayerLevelFromId(
       int puzzleId, GameLevel gameLevel) async {
     late var updateToMake;
@@ -484,6 +636,22 @@ class LevelDatabaseConnection {
 
     FirebaseDatabase.instance
         .ref('twoPlayerPuzzles/' + puzzleId.toString())
+        .update(updateToMake);
+  }
+
+  static Future<void> setTwoPlayerLexpeditionFromId(
+      int puzzleId, GameLevel gameLevel) async {
+    late var updateToMake;
+
+    updateToMake = {
+      "attempts": gameLevel.attempts,
+      "attemptsFinished": gameLevel.attemptsFinished,
+      "averageGuesses": gameLevel.averageGuesses,
+      "bestAttempt": gameLevel.bestAttempt
+    };
+
+    FirebaseDatabase.instance
+        .ref('twoPlayerLexpeditions/' + puzzleId.toString())
         .update(updateToMake);
   }
 

@@ -390,20 +390,7 @@ class GameState extends ChangeNotifier {
             currentGuess[currentGuess.length - 2].index);
       }
       setQualifiesValuesForTiles(); //sets qualifiesToBeCharged and qualifiesToBeBlasted
-    } /*else if (!isSlideEvent &&
-        currentGuess.length > 0 &&
-        letterTile == currentGuess.last) {
-      // unselect tile, unprime it and remove from current guess
-      letterTile.unselect();
-      letterTile.unprimeForBlast();
-      attemptToUnprimePartnersGrid(letterTile.index);
-      currentGuess.removeLast();
-      //if another tile should be primed for blast, prime it
-      if (currentGuess.length >= 5) {
-        currentGuess[currentGuess.length - 1].primeForBlast();
-        attemptToPrimePartnersGrid(currentGuess[currentGuess.length - 1].index);
-      }
-    }*/
+    }
     notifyAllPlayers();
   }
 
