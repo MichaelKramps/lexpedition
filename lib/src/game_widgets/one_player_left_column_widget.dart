@@ -12,17 +12,19 @@ class OnePlayerLeftColumnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start, 
-      children:[
-        GuessesInformationWidget(
-          currentGuesses: gameState.guessList.length,
-          averageGuesses: gameState.level.averageGuesses.round(),
-          bestAttempt: gameState.level.bestAttempt,),
-        for (AcceptedGuess guess in gameState.guessList.reversed) ...[
-          Text(guess.guess, style: TextStyle(fontSize: Constants.smallFont))
+    return Container(
+      margin: EdgeInsets.only(left: 20, top: 12),
+      child: ListView( 
+        children:[
+          GuessesInformationWidget(
+            currentGuesses: gameState.guessList.length,
+            averageGuesses: gameState.level.averageGuesses.round(),
+            bestAttempt: gameState.level.bestAttempt,),
+          for (AcceptedGuess guess in gameState.guessList.reversed) ...[
+            Text(guess.guess, style: TextStyle(fontSize: Constants.smallFont))
+          ]
         ]
-      ]
+      ),
     );
   }
 }
