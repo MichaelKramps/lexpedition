@@ -100,7 +100,7 @@ class _OnePlayerPlaySessionScreenState
     if (!mounted) return;
 
     final audioController = context.read<AudioController>();
-    audioController.playSfx(SfxType.wonLevel);
+    await audioController.playSfx(SfxType.wonLevel);
 
     //final gamesServicesController = context.read<GamesServicesController?>();
     //if (gamesServicesController != null) {

@@ -556,9 +556,9 @@ class GameState extends ChangeNotifier {
     if (context != null) {
       final AudioController audioController = context.read<AudioController>();
       if (activateBlast) {
-        audioController.playSfx(SfxType.blast);
+        await audioController.playSfx(SfxType.blast);
       } else {
-        audioController.playSfx(SfxType.correctGuess);
+        await audioController.playSfx(SfxType.correctGuess);
       }
     }
     // check for win condition

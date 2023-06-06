@@ -111,7 +111,7 @@ class _GenericButtonState extends State<GenericButton> {
     });
     if (!widget.muted) {
       final audioController = context.read<AudioController>();
-      audioController.playSfx(SfxType.tapButton);
+      await audioController.playSfx(SfxType.tapButton);
     }
     await Future.delayed(Constants.buttonPressAnimationDuration);
     widget.onPressed();
