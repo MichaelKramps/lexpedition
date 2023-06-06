@@ -10,7 +10,6 @@ import 'package:lexpedition/src/game_data/game_mode.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:lexpedition/src/user_interface/featured_user_interface_button.dart';
-import 'package:logging/logging.dart';
 import 'package:provider/provider.dart';
 
 import '../ads/ads_controller.dart';
@@ -86,6 +85,13 @@ class WinGameScreen extends StatelessWidget {
                         if (gameState.errorDefinition ==
                             ErrorDefinition.noError) {
                           GoRouter.of(context).push('/freeplay/twoplayer');
+                        }
+                        break;
+                      case GameMode.OnePlayerLexpedition:
+                        await gameState.loadOnePlayerLexpedition();
+                        if (gameState.errorDefinition ==
+                            ErrorDefinition.noError) {
+                          GoRouter.of(context).push('/lexpedition/oneplayer');
                         }
                         break;
                       default:

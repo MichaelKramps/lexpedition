@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/error_definitions.dart';
+import 'package:lexpedition/src/game_data/game_mode.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/user_interface/basic_user_interface_button.dart';
 import 'package:lexpedition/src/user_interface/featured_user_interface_button.dart';
@@ -100,8 +101,9 @@ class _TutorialCompletePlayerMenuState
       return BasicUserInterfaceButton(
         onPressed: () async {
           await gameState.loadOnePlayerLexpedition();
+          gameState.updateGameMode(GameMode.OnePlayerLexpedition);
           if (gameState.errorDefinition == ErrorDefinition.noError) {
-            GoRouter.of(context).push('/freeplay/oneplayer');
+            GoRouter.of(context).push('/lexpedition/oneplayer');
           }
         },
         buttonText: 'Lexpedition',
@@ -114,6 +116,7 @@ class _TutorialCompletePlayerMenuState
       return FeaturedUserInterfaceButton(
         onPressed: () async {
           await gameState.loadOnePlayerPuzzle();
+          gameState.updateGameMode(GameMode.OnePlayerFreePlay);
           if (gameState.errorDefinition == ErrorDefinition.noError) {
             GoRouter.of(context).push('/freeplay/oneplayer');
           }
@@ -127,6 +130,7 @@ class _TutorialCompletePlayerMenuState
             GoRouter.of(context).push('/freeplay');
           } else {
             await gameState.loadOnePlayerPuzzle();
+            gameState.updateGameMode(GameMode.OnePlayerFreePlay);
             if (gameState.errorDefinition == ErrorDefinition.noError) {
               GoRouter.of(context).push('/freeplay/oneplayer');
             }
