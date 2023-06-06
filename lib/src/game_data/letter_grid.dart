@@ -225,7 +225,7 @@ class LetterGrid {
   void resetCurrentColumn() {
     currentColumn = 0;
     scrollController.animateTo(0,
-        duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+        duration: Constants.preCelebrationDuration, curve: Curves.easeIn);
   }
 
   void updateCurrentColumn() {

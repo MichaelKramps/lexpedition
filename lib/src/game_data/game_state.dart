@@ -564,13 +564,16 @@ class GameState extends ChangeNotifier {
     // check for win condition
     if (isLevelWon()) {
       levelCompleted = true;
+      if (getMyGrid() != null) {
+        getMyGrid()!.resetCurrentColumn();
+      }
     } else if (activateBlast) {
       //clearGuess() at end of this method will fire notifyAllPlayers
       //before blastTiles() unblasts the tiles
       await blastTilesAndNotify(currentGuess.last.index);
     }
     // attempt to update current column for lexpedition puzzles
-    if (getMyGrid() != null) {
+    if (getMyGrid() != null && !levelCompleted) {
       getMyGrid()!.updateCurrentColumn();
     }
     //notifyAllPlayers() is called here

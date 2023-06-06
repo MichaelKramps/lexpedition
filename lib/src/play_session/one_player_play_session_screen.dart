@@ -40,7 +40,6 @@ class _OnePlayerPlaySessionScreenState
 
     return Consumer<GameState>(builder: (context, gameState, child) {
       if (gameState.levelCompleted && !gameState.celebrating) {
-        gameState.celebrating = true;
         _playerWon(gameState);
       }
       return IgnorePointer(
@@ -53,9 +52,8 @@ class _OnePlayerPlaySessionScreenState
 
   Widget determineAnimatedGameBoard(GameState gameState) {
     if (gameState.celebrating) {
-      return getBaseGameBoard(gameState)
-          .animate()
-          .color(end: Colors.green, duration: Constants.celebrationAnimationDuration);
+      return getBaseGameBoard(gameState).animate().color(
+          end: Colors.green, duration: Constants.celebrationAnimationDuration);
     } else {
       return getBaseGameBoard(gameState);
     }
@@ -85,7 +83,9 @@ class _OnePlayerPlaySessionScreenState
   }
 
   Future<void> _playerWon(GameState gameState) async {
+    await Future<void>.delayed(Constants.preCelebrationDuration);
     gameState.completeLevel();
+    gameState.celebrating = true;
 
     if (gameState.level.puzzleId != null) {
       LevelDatabaseConnection.logOnePlayerFinishedPuzzleResults(
