@@ -11,18 +11,23 @@ class TwoPlayerLeftColumnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-      GuessesInformationWidget(
-        currentGuesses: gameState.guessList.length,
-        averageGuesses: gameState.level.averageGuesses.round(),
-        bestAttempt: gameState.level.bestAttempt,
-      ),
-      for (AcceptedGuess guess in gameState.getAllGuessesInOrder()) ...[
-        Text(guess.guess.toUpperCase(),
-            style: TextStyle(
-                fontSize: Constants.smallFont,
-                color: guess.fromMe ? Colors.black : Colors.white))
-      ]
-    ]);
+    return Container(
+      margin: EdgeInsets.only(left: 20, top: 12),
+      child: ListView(
+        children: [
+          GuessesInformationWidget(
+            currentGuesses: gameState.guessList.length,
+            averageGuesses: gameState.level.averageGuesses.round(),
+            bestAttempt: gameState.level.bestAttempt,
+          ),
+          for (AcceptedGuess guess in gameState.getAllGuessesInOrder()) ...[
+            Text(guess.guess.toUpperCase(),
+                style: TextStyle(
+                    fontSize: Constants.smallFont,
+                    color: guess.fromMe ? Colors.black : Colors.white))
+          ]
+        ]
+      )
+    );
   }
 }
