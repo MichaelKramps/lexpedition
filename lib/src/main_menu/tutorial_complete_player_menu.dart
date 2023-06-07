@@ -115,25 +115,17 @@ class _TutorialCompletePlayerMenuState
     if (gameState.realTimeCommunication.isConnected) {
       return FeaturedUserInterfaceButton(
         onPressed: () async {
-          await gameState.loadOnePlayerPuzzle();
-          gameState.updateGameMode(GameMode.OnePlayerFreePlay);
-          if (gameState.errorDefinition == ErrorDefinition.noError) {
-            GoRouter.of(context).push('/freeplay/oneplayer');
-          }
+          GoRouter.of(context).push('/freeplay');
         },
         buttonText: 'Free Play',
       );
     } else {
       return BasicUserInterfaceButton(
         onPressed: () async {
-          if (gameState.realTimeCommunication.isConnected) {
-            GoRouter.of(context).push('/freeplay');
-          } else {
-            await gameState.loadOnePlayerPuzzle();
-            gameState.updateGameMode(GameMode.OnePlayerFreePlay);
-            if (gameState.errorDefinition == ErrorDefinition.noError) {
-              GoRouter.of(context).push('/freeplay/oneplayer');
-            }
+          await gameState.loadOnePlayerPuzzle();
+          gameState.updateGameMode(GameMode.OnePlayerFreePlay);
+          if (gameState.errorDefinition == ErrorDefinition.noError) {
+            GoRouter.of(context).push('/freeplay/oneplayer');
           }
         },
         buttonText: 'Free Play',

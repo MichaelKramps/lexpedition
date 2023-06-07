@@ -16,10 +16,10 @@ class LetterGrid {
   List<AcceptedGuess> guesses = [];
 
   LetterGrid(List<String?> gridData) {
-    assert(gridData.length >= 24);
-    if (gridData.length == 25) {
+    assert(gridData.length >= 24 && gridData.length <= 201);
+    if (gridData.length % 4 == 1) {
       // includes blast direction
-      this.blastDirection = BlastDirection.values[int.parse(gridData[24]!)];
+      this.blastDirection = BlastDirection.values[int.parse(gridData.last!)];
       gridData.removeLast();
     }
     this.encodedTiles = gridData;

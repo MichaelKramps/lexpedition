@@ -67,7 +67,8 @@ class WinGameScreen extends StatelessWidget {
               ),
             ],
           ),
-          rectangularMenuArea: Row(
+          rectangularMenuArea: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FeaturedUserInterfaceButton(
                 onPressed: () async {
@@ -103,7 +104,7 @@ class WinGameScreen extends StatelessWidget {
                 },
                 buttonText: 'Continue',
               ),
-              SizedBox(width: 8),
+              SizedBox(height: 8),
               BasicUserInterfaceButton(
                 onPressed: () {
                   GoRouter.of(context).push('/');
