@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/accepted_guess.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
+import 'package:logging/logging.dart';
 
 import 'letter_tile.dart';
 
@@ -87,6 +88,14 @@ class LetterGrid {
       null,
       null
     ]);
+  }
+
+  void updateGrid(LetterGrid newGrid) {
+    this.letterTiles = newGrid.letterTiles;
+    this.columns = newGrid.columns;
+    this.blastDirection = newGrid.blastDirection;
+    this.currentGuess = newGrid.currentGuess;
+    this.guesses = newGrid.guesses;
   }
 
   List<LetterTile> decodeLetterTiles(List<String?> encodedTiles) {

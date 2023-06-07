@@ -198,11 +198,11 @@ class GameState extends ChangeNotifier {
       }
     }
 
+    notifyListeners();
+
     if (getTheirGrid() != null && !levelCompleted) {
       getTheirGrid()!.updateCurrentColumn();
     }
-
-    notifyListeners();
   }
 
   void blastPuzzleFromPeerUpdate(int blastIndex) {
@@ -215,12 +215,11 @@ class GameState extends ChangeNotifier {
       }
     }
 
+    notifyListeners();
+
     if (getTheirGrid() != null && !levelCompleted) {
-      _logger.info('kramprs');
       getTheirGrid()!.updateCurrentColumn();
     }
-
-    notifyListeners();
   }
 
   void updateGuessListFromPeerUpdate(String acceptedGuess) {
@@ -370,9 +369,9 @@ class GameState extends ChangeNotifier {
 
   void setTheirGrid(LetterGrid newGrid) {
     if (realTimeCommunication.isPartyLeader) {
-      secondaryLetterGrid = newGrid;
+      secondaryLetterGrid?.updateGrid(newGrid);
     } else {
-      primaryLetterGrid = newGrid;
+      primaryLetterGrid.updateGrid(newGrid);
     }
   }
 
