@@ -172,7 +172,7 @@ class _BuildTwoPlayerLexpeditionWidgetState
                 _grid.unselectAll();
                 _gridB.unselectAll();
               });
-              LevelDatabaseConnection.createTwoPlayerLevel(
+              LevelDatabaseConnection.createTwoPlayerLexpeditionLevel(
                   _grid.encodedGridToString(),
                   _gridB.encodedGridToString(),
                   'michael@kinship.games');

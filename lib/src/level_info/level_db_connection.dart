@@ -439,7 +439,8 @@ class LevelDatabaseConnection {
     }
   }
 
-  static Future<void> logOnePlayerUnfinishedLexpeditionResults(int puzzleId) async {
+  static Future<void> logOnePlayerUnfinishedLexpeditionResults(
+      int puzzleId) async {
     GameLevel? level =
         await LevelDatabaseConnection.getOnePlayerLexpeditionFromId(puzzleId);
 
@@ -471,7 +472,8 @@ class LevelDatabaseConnection {
     }
   }
 
-  static Future<void> logTwoPlayerUnfinishedLexpeditionResults(int puzzleId) async {
+  static Future<void> logTwoPlayerUnfinishedLexpeditionResults(
+      int puzzleId) async {
     GameLevel? level =
         await LevelDatabaseConnection.getTwoPlayerLexpeditionFromId(puzzleId);
 
@@ -710,6 +712,25 @@ class LevelDatabaseConnection {
     }
   }
 
+  static Future<void> createTwoPlayerLexpeditionLevel(String encodedGridStringA,
+      String encodedGridStringB, String author) async {
+    int nextLevelId = await getNextTwoPlayerLexpeditionId();
+
+    if (nextLevelId > 0) {
+      FirebaseDatabase.instance
+          .ref('twoPlayerLexpeditions/' + nextLevelId.toString())
+          .set({
+        'attempts': 0,
+        'attemptsFinished': 0,
+        'author': author,
+        'averageGuesses': 0,
+        'bestAttempt': 100,
+        'gridCodeA': encodedGridStringA,
+        'gridCodeB': encodedGridStringB
+      });
+    }
+  }
+
   static Future<int> getNextOnePlayerLevelId() async {
     String nextLevelId = '-1';
 
@@ -753,6 +774,25 @@ class LevelDatabaseConnection {
 
     await FirebaseDatabase.instance
         .ref('twoPlayerPuzzles')
+        .orderByKey()
+        .limitToLast(1)
+        .once(DatabaseEventType.value)
+        .then((value) {
+      if (value.snapshot.children.length > 0) {
+        DataSnapshot puzzleEntry = value.snapshot.children.last;
+        String puzzleIdString = puzzleEntry.key as String;
+        nextLevelId = puzzleIdString;
+      }
+    });
+
+    return int.parse(nextLevelId) + 1;
+  }
+
+  static Future<int> getNextTwoPlayerLexpeditionId() async {
+    String nextLevelId = '-1';
+
+    await FirebaseDatabase.instance
+        .ref('twoPlayerLexpeditions')
         .orderByKey()
         .limitToLast(1)
         .once(DatabaseEventType.value)
