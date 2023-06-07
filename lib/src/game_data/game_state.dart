@@ -97,7 +97,8 @@ class GameState extends ChangeNotifier {
     if (databaseId != null) {
       //get the specific level in the database
     } else {
-      GameLevel? newLevel = await LevelDatabaseConnection.getOnePlayerLexpedition();
+      GameLevel? newLevel =
+          await LevelDatabaseConnection.getOnePlayerLexpedition();
       if (newLevel != null) {
         level = newLevel;
         primaryLetterGrid = newLevel.letterGrid;
@@ -122,6 +123,26 @@ class GameState extends ChangeNotifier {
       //get the specific level in the database
     } else {
       GameLevel? newLevel = await LevelDatabaseConnection.getTwoPlayerPuzzle();
+      if (newLevel != null) {
+        level = newLevel;
+        primaryLetterGrid = newLevel.letterGrid;
+        secondaryLetterGrid = newLevel.letterGridB;
+      } else {
+        errorDefinition = ErrorDefinition.levelFetchError;
+      }
+    }
+    loadPuzzleAndNotify();
+  }
+
+  Future<void> loadTwoPlayerLexpedition({int? databaseId}) async {
+    secondaryLetterGrid = null;
+    resetPuzzle();
+    loadingLevel = true;
+    if (databaseId != null) {
+      //get the specific level in the database
+    } else {
+      GameLevel? newLevel =
+          await LevelDatabaseConnection.getTwoPlayerLexpedition();
       if (newLevel != null) {
         level = newLevel;
         primaryLetterGrid = newLevel.letterGrid;
@@ -172,6 +193,13 @@ class GameState extends ChangeNotifier {
 
     if (isLevelWon()) {
       levelCompleted = true;
+      if (getTheirGrid() != null) {
+        getTheirGrid()!.resetCurrentColumn();
+      }
+    }
+
+    if (getTheirGrid() != null && !levelCompleted) {
+      getTheirGrid()!.updateCurrentColumn();
     }
 
     notifyListeners();
@@ -182,6 +210,14 @@ class GameState extends ChangeNotifier {
 
     if (isLevelWon()) {
       levelCompleted = true;
+      if (getTheirGrid() != null) {
+        getTheirGrid()!.resetCurrentColumn();
+      }
+    }
+
+    if (getTheirGrid() != null && !levelCompleted) {
+      _logger.info('kramprs');
+      getTheirGrid()!.updateCurrentColumn();
     }
 
     notifyListeners();
@@ -456,12 +492,16 @@ class GameState extends ChangeNotifier {
     // set qualifiesToBeBlasted from my guess
     List<int> indexesToBeBlasted = [];
     if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
-      indexesToBeBlasted.addAll(
-          LetterGrid.indexesToBlast(index: currentGuess.last.index, blastDirection: blastDirection, currentColumn: getMyGrid()!.currentColumn));
+      indexesToBeBlasted.addAll(LetterGrid.indexesToBlast(
+          index: currentGuess.last.index,
+          blastDirection: blastDirection,
+          currentColumn: getMyGrid()!.currentColumn));
     }
     if (blastFromPartner != null) {
-      indexesToBeBlasted
-          .addAll(LetterGrid.indexesToBlast(index: blastFromPartner, blastDirection: blastDirection, currentColumn: getMyGrid()!.currentColumn));
+      indexesToBeBlasted.addAll(LetterGrid.indexesToBlast(
+          index: blastFromPartner,
+          blastDirection: blastDirection,
+          currentColumn: getMyGrid()!.currentColumn));
     }
     if (tiles.length > 0) {
       for (int i = 0; i < indexesToBeBlasted.length; i++) {
@@ -487,11 +527,15 @@ class GameState extends ChangeNotifier {
       thisTile.qualifiesToBeBlasted = false;
       thisTile.qualifiesToBeBlastedFromPartner = false;
       if (thisTile.primedForBlast) {
-        indexesToBlastFromMe =
-            LetterGrid.indexesToBlast(index: thisTile.index, blastDirection: theirBlastDirection, currentColumn: getTheirGrid()!.currentColumn);
+        indexesToBlastFromMe = LetterGrid.indexesToBlast(
+            index: thisTile.index,
+            blastDirection: theirBlastDirection,
+            currentColumn: getTheirGrid()!.currentColumn);
       } else if (thisTile.primedForBlastFromPartner) {
-        indexesToBlastFromThem =
-            LetterGrid.indexesToBlast(index: thisTile.index, blastDirection: theirBlastDirection, currentColumn: getTheirGrid()!.currentColumn);
+        indexesToBlastFromThem = LetterGrid.indexesToBlast(
+            index: thisTile.index,
+            blastDirection: theirBlastDirection,
+            currentColumn: getTheirGrid()!.currentColumn);
       }
     }
 
@@ -648,7 +692,8 @@ class GameState extends ChangeNotifier {
       LetterGrid myGrid = getMyGrid() as LetterGrid;
       int indexAdjustedForCurrentColumn =
           clickedTileIndex + myGrid.currentColumn * 4;
-      LetterTile clickedTile = myGrid.letterTiles[indexAdjustedForCurrentColumn];
+      LetterTile clickedTile =
+          myGrid.letterTiles[indexAdjustedForCurrentColumn];
       if (clickedTile.tileType != TileType.empty) {
         if (context != null && !clickedTile.selected) {
           final AudioController audioController =

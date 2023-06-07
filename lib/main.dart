@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:lexpedition/src/build_puzzle/build_one_player_lexpedition_widget.dart';
 import 'package:lexpedition/src/build_puzzle/build_two_player_lexpedition_widget.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
+import 'package:lexpedition/src/main_menu/lexpedition_menu.dart';
 import 'package:lexpedition/src/main_menu/more_menu.dart';
 import 'package:lexpedition/src/party/video_call_wrapper_widget.dart';
 import 'package:lexpedition/src/play_session/two_player_play_session_screen.dart';
@@ -308,7 +309,7 @@ class MyApp extends StatelessWidget {
             GoRoute(
                 path: 'lexpedition',
                 builder: (context, state) =>
-                    Container(),
+                    VideoCallWrapperWidget(screen: LexpeditionMenu()),
                 routes:[
                     GoRoute (
                       path: 'oneplayer',
@@ -318,7 +319,7 @@ class MyApp extends StatelessWidget {
                     GoRoute (
                       path: 'twoplayer',
                       builder: (context, state) => 
-                          Container()),
+                          VideoCallWrapperWidget(screen: TwoPlayerPlaySessionScreen())),
                     GoRoute (
                       path: 'backlog',
                       builder: (context, state) => 

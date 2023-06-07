@@ -127,6 +127,47 @@ class LevelDatabaseConnection {
     }
   }
 
+  static Future<GameLevel?> getTwoPlayerLexpedition() async {
+    GameLevel? possibleGameLevel = null;
+
+    int puzzleType = new Random().nextInt(4);
+    try {
+      switch (puzzleType) {
+        case 0:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getNewTwoPlayerLexpedition();
+          break;
+        case 1:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getTwoPlayerLexpeditionInGuessRange(
+                  0, 10);
+          break;
+        case 2:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getTwoPlayerLexpeditionInGuessRange(
+                  8, 15);
+          break;
+        case 3:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getTwoPlayerLexpeditionInGuessRange(
+                  15, 1000);
+          break;
+        default:
+          possibleGameLevel =
+              await LevelDatabaseConnection.getNewTwoPlayerLexpedition();
+          break;
+      }
+
+      if (possibleGameLevel != null) {
+        return possibleGameLevel;
+      } else {
+        return LevelDatabaseConnection.getTwoPlayerLexpedition();
+      }
+    } catch (error) {
+      return possibleGameLevel;
+    }
+  }
+
   static Future<GameLevel?> getNewOnePlayerPuzzle() async {
     GameLevel? gameLevel = null;
     int numberToFetch = 10;
@@ -209,7 +250,38 @@ class LevelDatabaseConnection {
             averageGuesses: par.toDouble(),
             gridCode: gridString.split(','),
             puzzleId: int.parse(puzzleIdString),
-            gameLevelCode: '1' + int.parse(puzzleIdString).toString(),
+            gameLevelCode: '3' + int.parse(puzzleIdString).toString(),
+            bestAttempt: best);
+      }
+    });
+    return gameLevel;
+  }
+
+  static Future<GameLevel?> getNewTwoPlayerLexpedition() async {
+    GameLevel? gameLevel = null;
+    int numberToFetch = 10;
+
+    await FirebaseDatabase.instance
+        .ref('twoPlayerLexpeditions')
+        .orderByChild('attempts')
+        .startAt(0)
+        .limitToFirst(numberToFetch)
+        .once(DatabaseEventType.value)
+        .then((value) {
+      if (value.snapshot.children.length > 0) {
+        DataSnapshot puzzleEntry = value.snapshot.children
+            .elementAt(new Random().nextInt(value.snapshot.children.length));
+        String gridStringA = puzzleEntry.child('gridCodeA').value as String;
+        String gridStringB = puzzleEntry.child('gridCodeB').value as String;
+        num par = puzzleEntry.child('averageGuesses').value as num;
+        int best = puzzleEntry.child('bestAttempt').value as int;
+        String puzzleIdString = puzzleEntry.key as String;
+        gameLevel = GameLevel(
+            averageGuesses: par.toDouble(),
+            gridCode: gridStringA.split(','),
+            gridCodeB: gridStringB.split(','),
+            puzzleId: int.parse(puzzleIdString),
+            gameLevelCode: '4' + int.parse(puzzleIdString).toString(),
             bestAttempt: best);
       }
     });
@@ -304,7 +376,40 @@ class LevelDatabaseConnection {
             averageGuesses: par.toDouble(),
             gridCode: gridString.split(','),
             puzzleId: int.parse(puzzleIdString),
-            gameLevelCode: '1' + int.parse(puzzleIdString).toString(),
+            gameLevelCode: '3' + int.parse(puzzleIdString).toString(),
+            bestAttempt: best);
+      }
+    });
+    return gameLevel;
+  }
+
+  static Future<GameLevel?> getTwoPlayerLexpeditionInGuessRange(
+      int bottomRange, int topRange) async {
+    GameLevel? gameLevel = null;
+    int numberToFetch = 10;
+
+    await FirebaseDatabase.instance
+        .ref('twoPlayerLexpeditions')
+        .orderByChild('averageGuesses')
+        .startAt(bottomRange)
+        .endAt(topRange)
+        .limitToFirst(numberToFetch)
+        .once(DatabaseEventType.value)
+        .then((value) {
+      if (value.snapshot.children.length > 0) {
+        DataSnapshot puzzleEntry = value.snapshot.children
+            .elementAt(new Random().nextInt(value.snapshot.children.length));
+        String gridStringA = puzzleEntry.child('gridCodeA').value as String;
+        String gridStringB = puzzleEntry.child('gridCodeB').value as String;
+        num par = puzzleEntry.child('averageGuesses').value as num;
+        int best = puzzleEntry.child('bestAttempt').value as int;
+        String puzzleIdString = puzzleEntry.key as String;
+        gameLevel = GameLevel(
+            averageGuesses: par.toDouble(),
+            gridCode: gridStringA.split(','),
+            gridCodeB: gridStringB.split(','),
+            puzzleId: int.parse(puzzleIdString),
+            gameLevelCode: '4' + int.parse(puzzleIdString).toString(),
             bestAttempt: best);
       }
     });
