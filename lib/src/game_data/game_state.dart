@@ -25,8 +25,6 @@ class GameState extends ChangeNotifier {
   LetterGrid? secondaryLetterGrid;
   List<TutorialStep> tutorialSteps = [];
   int currentTutorialStep = 0;
-  int currentNumberTutorials =
-      0; //this number will be different depending on the tutorial path chosen
   RealTimeCommunication realTimeCommunication = RealTimeCommunication();
   List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guessList = [];
@@ -193,32 +191,38 @@ class GameState extends ChangeNotifier {
 
     if (isLevelWon()) {
       levelCompleted = true;
-      if (getTheirGrid() != null) {
-        getTheirGrid()!.resetCurrentColumn();
-      }
     }
 
     notifyListeners();
 
     if (getTheirGrid() != null && !levelCompleted) {
       getTheirGrid()!.updateCurrentColumn();
+    } else if (getTheirGrid() != null && levelCompleted) {
+      getTheirGrid()!.resetCurrentColumn();
     }
   }
 
-  void blastPuzzleFromPeerUpdate(int blastIndex) {
-    blastTilesAndDontNotify(blastIndex);
+  void blastPuzzleFromPeerUpdate(int blastIndex) async {
+    //peer blasted their grid and sends the index
+    if (getMyGrid() != null && !blasting) {
+      blasting = true;
 
-    if (isLevelWon()) {
-      levelCompleted = true;
-      if (getTheirGrid() != null) {
-        getTheirGrid()!.resetCurrentColumn();
+      getMyGrid()!.blastFromIndex(blastIndex);
+      notifyListeners();
+      if (isLevelWon()) {
+        levelCompleted = true;
       }
-    }
 
-    notifyListeners();
+      await Future<void>.delayed(Constants.blastDuration);
+      getMyGrid()!.unblast();
+      blasting = false;
+      notifyListeners();
 
-    if (getTheirGrid() != null && !levelCompleted) {
-      getTheirGrid()!.updateCurrentColumn();
+      if (levelCompleted) {
+        getTheirGrid()!.resetCurrentColumn();
+      } else {
+        getTheirGrid()!.updateCurrentColumn();
+      }
     }
   }
 
@@ -252,9 +256,8 @@ class GameState extends ChangeNotifier {
     }
 
     if (secondaryLetterGrid != null) {
-      LetterGrid secondaryGrid = secondaryLetterGrid as LetterGrid;
       return primaryLetterGrid.isFullyCharged() &&
-          secondaryGrid.isFullyCharged();
+          secondaryLetterGrid!.isFullyCharged();
     } else {
       return primaryLetterGrid.isFullyCharged();
     }
@@ -285,7 +288,6 @@ class GameState extends ChangeNotifier {
     celebrating = false;
     showBadGuess = false;
     currentTutorialStep = 0;
-    currentNumberTutorials = 0;
     tutorialSteps = [];
 
     if (notify) {
@@ -612,12 +614,9 @@ class GameState extends ChangeNotifier {
 
   Future<void> blastTilesAndNotify(int index) async {
     if (getMyGrid() != null) {
-      if (!blasting) {
-        blasting = true;
-      }
-      LetterGrid myGrid = getMyGrid()!;
+      blasting = true;
 
-      myGrid.blastFromIndex(index);
+      getMyGrid()!.blastFromIndex(index);
       realTimeCommunication.sendBlastIndexDataToPeer(index);
 
       // peer won't update us with new grid
@@ -626,37 +625,18 @@ class GameState extends ChangeNotifier {
         getTheirGrid()!.blastFromIndex(index);
       }
 
-      notifyListeners();
+      notifyAllPlayers();
       if (isLevelWon()) {
         levelCompleted = true;
         notifyListeners();
       }
 
       await Future<void>.delayed(Constants.blastDuration);
-      myGrid.unblast();
+      getMyGrid()!.unblast();
       if (getTheirGrid() != null) {
         getTheirGrid()!.unblast();
       }
       blasting = false;
-    }
-  }
-
-  void blastTilesAndDontNotify(int index) async {
-    LetterGrid gridToBlast =
-        getMyGrid() != null ? getMyGrid()! : getTheirGrid()!;
-
-    if (!blasting) {
-      blasting = true;
-
-      gridToBlast.blastFromIndex(index);
-      if (isLevelWon()) {
-        levelCompleted = true;
-      }
-
-      await Future<void>.delayed(Constants.blastDuration);
-      gridToBlast.unblast();
-      blasting = false;
-      notifyListeners();
     }
   }
 
