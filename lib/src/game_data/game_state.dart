@@ -195,34 +195,34 @@ class GameState extends ChangeNotifier {
 
     notifyListeners();
 
-    if (getTheirGrid() != null && !levelCompleted) {
-      getTheirGrid()!.updateCurrentColumn();
-    } else if (getTheirGrid() != null && levelCompleted) {
-      getTheirGrid()!.resetCurrentColumn();
+    if (!blasting && !levelCompleted) {
+      getTheirGrid()?.updateCurrentColumn();
+    } else if (!blasting && levelCompleted) {
+      getTheirGrid()?.resetCurrentColumn();
     }
   }
 
   void blastPuzzleFromPeerUpdate(int blastIndex) async {
     //peer blasted their grid and sends the index
     if (getMyGrid() != null && !blasting) {
-      blasting = true;
+      // blasting = true;
 
-      getMyGrid()!.blastFromIndex(blastIndex);
-      notifyListeners();
-      if (isLevelWon()) {
-        levelCompleted = true;
-      }
+      // getMyGrid()!.blastFromIndex(blastIndex);
+      // notifyListeners();
+      // if (isLevelWon()) {
+      //   levelCompleted = true;
+      // }
 
-      await Future<void>.delayed(Constants.blastDuration);
-      getMyGrid()!.unblast();
-      blasting = false;
-      notifyListeners();
+      // await Future<void>.delayed(Constants.blastDuration);
+      // getMyGrid()!.unblast();
+      // blasting = false;
+      // notifyListeners();
 
-      if (levelCompleted) {
-        getTheirGrid()!.resetCurrentColumn();
-      } else {
-        getTheirGrid()!.updateCurrentColumn();
-      }
+      // if (levelCompleted) {
+      //   getTheirGrid()!.resetCurrentColumn();
+      // } else {
+      //   getTheirGrid()!.updateCurrentColumn();
+      // }
     }
   }
 
