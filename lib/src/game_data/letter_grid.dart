@@ -215,6 +215,7 @@ class LetterGrid {
   void resetGrid() {
     blastDirection = BlastDirection.vertical;
     guesses = [];
+    currentGuess = [];
     for (var tile in this.letterTiles) {
       tile.resetTile();
     }

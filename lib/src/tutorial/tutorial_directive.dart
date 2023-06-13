@@ -181,16 +181,16 @@ class TutorialDirective {
     switch (windowType) {
       case TutorialDirectiveType.tile:
       case TutorialDirectiveType.tileHighlight:
-        gameState.clickTileAtIndex(tileIndex, false, null);
+        gameState.clickTileAtIndex(clickedTileIndex: tileIndex);
         break;
       case TutorialDirectiveType.blastDirection:
         gameState.changeBlastDirectionAndNotify();
         break;
       case TutorialDirectiveType.clear:
-        gameState.clearGuessAndNotify();
+        gameState.clearGuessAndNotify(true);
         break;
       case TutorialDirectiveType.submit:
-        gameState.submitGuess(null);
+        gameState.submitGuess(null, true);
         break;
       default:
       //do nothing

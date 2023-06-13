@@ -125,7 +125,7 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
         determineTileIndex(pointerx, pointery, shrinkClickableSpace);
 
     if (selectedIndex > -1) {
-      widget.gameState.clickTileAtIndex(selectedIndex, isSlideEvent, context);
+      widget.gameState.clickTileAtIndex(clickedTileIndex: selectedIndex, context: context);
     }
   }
 

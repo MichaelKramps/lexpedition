@@ -17,7 +17,7 @@ class LetterGridActionsWidget extends StatelessWidget {
       Container(
           width: Constants().tileSize() * 3,
           margin: EdgeInsets.all(Constants().tileMargin() * 2),
-          child: Text(gameState.getCurrentGuess(),
+          child: Text(gameState.getCurrentGuessString(true),
               style: TextStyle(
                   fontSize: Constants().tileSize() * 0.4,
                   backgroundColor: Colors.white.withOpacity(0.3),
@@ -25,11 +25,11 @@ class LetterGridActionsWidget extends StatelessWidget {
       Container(
           margin: EdgeInsets.all(Constants().tileMargin() * 2),
           child: FeaturedGameButton(
-              onPressed: () => gameState.submitGuess(context),
+              onPressed: () => gameState.submitGuess(context, true),
               muted: true,
               buttonText: 'Submit')),
       BasicGameButton(
-          onPressed: () => gameState.clearGuessAndNotify(),
+          onPressed: () => gameState.clearGuessAndNotify(true),
           buttonText: 'Clear'),
     ]);
   }

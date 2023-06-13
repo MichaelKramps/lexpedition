@@ -27,7 +27,6 @@ class GameState extends ChangeNotifier {
   List<TutorialStep> tutorialSteps = [];
   int currentTutorialStep = 0;
   RealTimeCommunication realTimeCommunication = RealTimeCommunication();
-  List<LetterTile> currentGuess = [];
   List<AcceptedGuess> guessList = [];
   bool levelCompleted = false;
   bool loadingLevel = true;
@@ -274,7 +273,6 @@ class GameState extends ChangeNotifier {
       secondaryLetterGrid?.resetGrid();
     }
 
-    currentGuess = [];
     guessList = [];
     levelCompleted = false;
     celebrating = false;
@@ -377,22 +375,22 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  String getCurrentGuess() {
+  String getCurrentGuessString(bool isMyGrid) {
     String currentGuessString = '';
-    for (LetterTile tile in currentGuess) {
+    for (LetterTile tile in getCurrentGuess(isMyGrid)) {
       currentGuessString += tile.letter.toUpperCase();
     }
     return currentGuessString;
   }
 
-  void clearGuessAndNotify() {
-    currentGuess = [];
-    if (getMyGrid() != null) {
-      LetterGrid myGrid = getMyGrid() as LetterGrid;
-      for (LetterTile tile in myGrid.letterTiles) {
+  void clearGuessAndNotify(bool isMyGrid) {
+    LetterGrid? gridToClear = isMyGrid ? getMyGrid() : getTheirGrid();
+    if (gridToClear != null) {
+      gridToClear.currentGuess = [];
+      for (LetterTile tile in gridToClear.letterTiles) {
         tile.unselect();
         tile.unprimeForBlast();
-        attemptToUnprimePartnersGrid(tile.index);
+        attemptToUnprimeOtherGrid(tile.index, isMyGrid);
       }
     }
     setQualifiesValuesForTiles();
@@ -401,7 +399,9 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateGuessAndNotify(LetterTile letterTile, bool isSlideEvent) {
+  void updateGuessAndNotify(LetterTile letterTile, bool isMyGrid) {
+    List<LetterTile> currentGuess =
+        isMyGrid ? getMyGrid()!.currentGuess : getTheirGrid()!.currentGuess;
     //verify we are allowed to select this tile
     if (letterTile.clearOfObstacles() &&
         (currentGuess.length == 0 ||
@@ -412,28 +412,30 @@ class GameState extends ChangeNotifier {
       //if this tile could fire a magic blast, prime for blast
       if (currentGuess.length >= Constants.guessLengthToActivateBlast) {
         letterTile.primeForBlast();
-        attemptToPrimePartnersGrid(letterTile.index);
+        attemptToPrimeOtherGrid(letterTile.index, isMyGrid);
       }
       //if tile another tile was primed for blast, unprime it
       if (currentGuess.length >= Constants.guessLengthToActivateBlast + 1) {
         currentGuess[currentGuess.length - 2].unprimeForBlast();
-        attemptToUnprimePartnersGrid(
-            currentGuess[currentGuess.length - 2].index);
+        attemptToUnprimeOtherGrid(
+            currentGuess[currentGuess.length - 2].index, isMyGrid);
       }
       setQualifiesValuesForTiles(); //sets qualifiesToBeCharged and qualifiesToBeBlasted
     }
     notifyListeners();
   }
 
-  void attemptToPrimePartnersGrid(int index) {
+  void attemptToPrimeOtherGrid(int index, bool isMyGrid) {
+    LetterGrid? otherGrid = isMyGrid ? getTheirGrid() : getMyGrid()!;
     if (realTimeCommunication.isConnected && getTheirGrid() != null) {
-      getTheirGrid()!.letterTiles[index].primeForBlast();
+      otherGrid!.letterTiles[index].primeForBlast();
     }
   }
 
-  void attemptToUnprimePartnersGrid(int index) {
+  void attemptToUnprimeOtherGrid(int index, isMyGrid) {
+    LetterGrid? otherGrid = isMyGrid ? getTheirGrid() : getMyGrid()!;
     if (realTimeCommunication.isConnected && getTheirGrid() != null) {
-      getTheirGrid()!.letterTiles[index].unprimeForBlast();
+      otherGrid!.letterTiles[index].unprimeForBlast();
     }
   }
 
@@ -451,6 +453,8 @@ class GameState extends ChangeNotifier {
     List<LetterTile> tiles = [];
     BlastDirection blastDirection = BlastDirection.horizontal;
     int? blastFromPartner = null;
+    List<LetterTile> currentGuess =
+        getMyGrid() != null ? getMyGrid()!.currentGuess : [];
     if (getMyGrid() != null) {
       tiles = getMyGrid()!.letterTiles;
       blastDirection = getMyGrid()!.blastDirection;
@@ -548,19 +552,21 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  bool currentGuessIsValid() {
+  bool currentGuessIsValid(bool isMyGrid) {
     //return false if word has already been guessed
     for (AcceptedGuess previousGuess in guessList) {
-      if (previousGuess.guess.toUpperCase() == getCurrentGuess()) {
+      if (previousGuess.guess.toUpperCase() == getCurrentGuessString(isMyGrid)) {
         return false;
       }
     }
 
     //return true only if guess is a valid word
-    return WordHelper.isValidWord(getCurrentGuess());
+    return WordHelper.isValidWord(getCurrentGuessString(isMyGrid));
   }
 
-  chargeTilesFromGuess() {
+  chargeTilesFromGuess(bool isMyGrid) {
+    List<LetterTile> currentGuess = getCurrentGuess(isMyGrid);
+    if (isMyGrid) {}
     for (int index = 0; index < currentGuess.length; index++) {
       LetterTile thisTile = currentGuess[index];
       if (index == 0) {
@@ -573,12 +579,12 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  void handleAcceptedGuess(BuildContext? context) async {
-    guessList.add(AcceptedGuess(guess: getCurrentGuess()));
-    getMyGrid()?.addGuess(getCurrentGuess());
-    chargeTilesFromGuess();
+  void handleAcceptedGuess(BuildContext? context, bool isMyGrid) async {
+    guessList.add(AcceptedGuess(guess: getCurrentGuessString(isMyGrid)));
+    getMyGrid()?.addGuess(getCurrentGuessString(isMyGrid));
+    chargeTilesFromGuess(isMyGrid);
     bool activateBlast =
-        currentGuess.length >= Constants.guessLengthToActivateBlast;
+        getCurrentGuess(isMyGrid).length >= Constants.guessLengthToActivateBlast;
     if (context != null) {
       final AudioController audioController = context.read<AudioController>();
       if (activateBlast) {
@@ -596,14 +602,14 @@ class GameState extends ChangeNotifier {
     } else if (activateBlast) {
       //clearGuess() at end of this method will fire notifyListeners
       //before blastTiles() unblasts the tiles
-      await blastTilesAndNotify(currentGuess.last.index);
+      await blastTilesAndNotify(getCurrentGuess(isMyGrid).last.index);
     }
     // attempt to update current column for lexpedition puzzles
     if (getMyGrid() != null && !levelCompleted) {
       getMyGrid()!.updateCurrentColumn();
     }
     //notifyListeners() is called here
-    clearGuessAndNotify();
+    clearGuessAndNotify(isMyGrid);
   }
 
   Future<void> blastTilesAndNotify(int index) async {
@@ -633,7 +639,7 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  void flipBadGuess() async {
+  void flipBadGuess(bool isMyGrid) async {
     showBadGuess = true;
     notifyListeners();
 
@@ -642,41 +648,55 @@ class GameState extends ChangeNotifier {
     await Future<void>.delayed(Constants.showBadGuessDuration);
 
     showBadGuess = false;
-    clearGuessAndNotify();
+    clearGuessAndNotify(isMyGrid);
   }
 
-  void submitGuess(BuildContext? context) {
-    if (currentGuess.length < 3 || !currentGuessIsValid()) {
+  void submitGuess(BuildContext? context, bool isMyGrid) {
+    if (getCurrentGuess(isMyGrid).length < 3 || !currentGuessIsValid(isMyGrid)) {
       if (context != null) {
         final AudioController audioController = context.read<AudioController>();
         audioController.playSfx(SfxType.incorrectGuess);
       }
-      flipBadGuess();
+      flipBadGuess(isMyGrid);
     } else {
       realTimeCommunication.sendButtonPushToPeer(
           buttonPushed: ButtonPush.submitGuess);
-      handleAcceptedGuess(context);
+      handleAcceptedGuess(context, isMyGrid);
     }
   }
 
+  List<LetterTile> getCurrentGuess(bool isMyGrid) {
+    List<LetterTile> currentGuess;
+    if (isMyGrid) {
+      currentGuess = getMyGrid() != null ? getMyGrid()!.currentGuess : [];
+    } else {
+      currentGuess = getTheirGrid() != null ? getTheirGrid()!.currentGuess : [];
+    }
+    return currentGuess;
+  }
+
   void clickTileAtIndex(
-      int clickedTileIndex, bool isSlideEvent, BuildContext? context) {
+      {required int clickedTileIndex,
+      BuildContext? context,
+      bool isMyGrid = true}) {
     if (getMyGrid() != null) {
-      LetterGrid myGrid = getMyGrid() as LetterGrid;
+      LetterGrid gridToClick = isMyGrid ? getMyGrid()! : getTheirGrid()!;
       int indexAdjustedForCurrentColumn =
-          clickedTileIndex + myGrid.currentColumn * 4;
+          clickedTileIndex + gridToClick.currentColumn * 4;
       LetterTile clickedTile =
-          myGrid.letterTiles[indexAdjustedForCurrentColumn];
+          gridToClick.letterTiles[indexAdjustedForCurrentColumn];
       if (clickedTile.tileType != TileType.empty) {
         if (context != null && !clickedTile.selected) {
           final AudioController audioController =
               context.read<AudioController>();
           audioController.playSfx(SfxType.tapLetter);
         }
-        realTimeCommunication.sendButtonPushToPeer(
-            buttonPushed: ButtonPush.selectLetterTile,
-            tileIndex: clickedTileIndex);
-        updateGuessAndNotify(clickedTile, isSlideEvent);
+        if (isMyGrid) {
+          realTimeCommunication.sendButtonPushToPeer(
+              buttonPushed: ButtonPush.selectLetterTile,
+              tileIndex: clickedTileIndex);
+        }
+        updateGuessAndNotify(clickedTile, isMyGrid);
       }
     }
   }
