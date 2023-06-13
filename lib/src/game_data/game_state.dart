@@ -419,7 +419,7 @@ class GameState extends ChangeNotifier {
 
     if (otherGrid != null) {
       if (realTimeCommunication.isConnected) {
-        otherGrid.letterTiles[index].primeForBlast();
+        otherGrid.letterTiles[index].primeForBlastFromPartner();
       }
     }
   }
@@ -429,7 +429,7 @@ class GameState extends ChangeNotifier {
 
     if (otherGrid != null) {
       if (realTimeCommunication.isConnected) {
-        otherGrid.letterTiles[index].unprimeForBlast();
+        otherGrid.letterTiles[index].unprimeForBlastFromPartner();
       }
     }
   }
@@ -443,8 +443,9 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  void setGridQualifiesValuesForTiles(LetterGrid gridToSet, LetterGrid? otherGrid) {
-    int? blastIndexFromOtherGrid;
+  void setGridQualifiesValuesForTiles(
+      LetterGrid gridToSet, LetterGrid? otherGrid) {
+    List<int> indexesPrimedForBlast = [];
     // notifyListeners is called elsewhere
     for (int tileIndex = 0;
         tileIndex < gridToSet.letterTiles.length;
@@ -471,73 +472,24 @@ class GameState extends ChangeNotifier {
       } else {
         thisTile.qualifiesToBeCharged = false;
       }
-      if (thisTile.qualifiesToBeBlastedFromPartner) {
-        blastIndexFromOtherGrid = thisTile.index;
+      if (thisTile.primedForBlastFromPartner || thisTile.primedForBlast) {
+        indexesPrimedForBlast.add(thisTile.index);
       }
     }
     // set qualifiesToBeBlasted
-    List<int> indexesToBeBlasted = [];
-    if (gridToSet.currentGuess.length >= Constants.guessLengthToActivateBlast) {
-      indexesToBeBlasted.addAll(LetterGrid.indexesToBlast(
-          index: gridToSet.currentGuess.last.index,
-          blastDirection: gridToSet.blastDirection,
-          currentColumn: gridToSet.currentColumn));
+    List<int> indexesQualifiedToBeBlasted = [];
+    for (int i = 0; i < indexesPrimedForBlast.length; i++) {
+      indexesQualifiedToBeBlasted.addAll(LetterGrid.indexesToBlast(
+            index: indexesPrimedForBlast[i],
+            blastDirection: gridToSet.blastDirection,
+            currentColumn: gridToSet.currentColumn));
     }
-    if (blastIndexFromOtherGrid != null) {
-      indexesToBeBlasted.addAll(LetterGrid.indexesToBlast(
-          index: blastIndexFromOtherGrid,
-          blastDirection: gridToSet.blastDirection,
-          currentColumn: gridToSet.currentColumn));
-    }
-    if (gridToSet.letterTiles.length > 0) {
-      for (int i = 0; i < indexesToBeBlasted.length; i++) {
-        int thisIndex = indexesToBeBlasted[i];
-        gridToSet.letterTiles[thisIndex].qualifiesToBeBlasted = true;
-        // all tiles set to false earlier
-      }
+    for (int i = 0; i < indexesQualifiedToBeBlasted.length; i++) {
+      int thisIndex = indexesQualifiedToBeBlasted[i];
+      gridToSet.letterTiles[thisIndex].qualifiesToBeBlasted = true;
+      // all tiles set to false earlier
     }
   }
-
-  // void setTheirQualifiesValuesForTiles() {
-  //   // notifyListeners is called elsewhere
-  //   List<LetterTile> tiles = [];
-  //   List<int> indexesToBlastFromMe = [];
-  //   List<int> indexesToBlastFromThem = [];
-  //   BlastDirection theirBlastDirection = BlastDirection.horizontal;
-  //   if (getTheirGrid() != null) {
-  //     tiles = getTheirGrid()!.letterTiles;
-  //     theirBlastDirection = getTheirGrid()!.blastDirection;
-  //   }
-  //   for (int tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
-  //     LetterTile thisTile = tiles[tileIndex];
-  //     thisTile.qualifiesToBeBlasted = false;
-  //     thisTile.qualifiesToBeBlastedFromPartner = false;
-  //     if (thisTile.primedForBlast) {
-  //       indexesToBlastFromMe = LetterGrid.indexesToBlast(
-  //           index: thisTile.index,
-  //           blastDirection: theirBlastDirection,
-  //           currentColumn: getTheirGrid()!.currentColumn);
-  //     } else if (thisTile.primedForBlastFromPartner) {
-  //       indexesToBlastFromThem = LetterGrid.indexesToBlast(
-  //           index: thisTile.index,
-  //           blastDirection: theirBlastDirection,
-  //           currentColumn: getTheirGrid()!.currentColumn);
-  //     }
-  //   }
-
-  //   // set qualifiesToBeBlasted
-  //   for (int i = 0; i < indexesToBlastFromMe.length; i++) {
-  //     int primedIndex = indexesToBlastFromMe[i];
-  //     getTheirGrid()!.letterTiles[primedIndex].qualifiesToBeBlasted = true;
-  //   }
-
-  //   // set qualifiesToBeBlastedFromPartner
-  //   for (int i = 0; i < indexesToBlastFromThem.length; i++) {
-  //     int primedIndex = indexesToBlastFromThem[i];
-  //     getTheirGrid()!.letterTiles[primedIndex].qualifiesToBeBlastedFromPartner =
-  //         true;
-  //   }
-  // }
 
   bool currentGuessIsValid(bool isMyGrid) {
     //return false if word has already been guessed
