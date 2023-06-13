@@ -251,10 +251,7 @@ class GameState extends ChangeNotifier {
     primaryLetterGrid = level.letterGrid;
     primaryLetterGrid.resetGrid();
 
-    if (level.letterGridB != null) {
-      secondaryLetterGrid = level.letterGridB as LetterGrid;
-      secondaryLetterGrid?.resetGrid();
-    }
+    secondaryLetterGrid = null;
 
     guessList = [];
     levelCompleted = false;
@@ -480,9 +477,9 @@ class GameState extends ChangeNotifier {
     List<int> indexesQualifiedToBeBlasted = [];
     for (int i = 0; i < indexesPrimedForBlast.length; i++) {
       indexesQualifiedToBeBlasted.addAll(LetterGrid.indexesToBlast(
-            index: indexesPrimedForBlast[i],
-            blastDirection: gridToSet.blastDirection,
-            currentColumn: gridToSet.currentColumn));
+          index: indexesPrimedForBlast[i],
+          blastDirection: gridToSet.blastDirection,
+          currentColumn: gridToSet.currentColumn));
     }
     for (int i = 0; i < indexesQualifiedToBeBlasted.length; i++) {
       int thisIndex = indexesQualifiedToBeBlasted[i];
