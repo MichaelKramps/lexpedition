@@ -144,6 +144,7 @@ class Constants {
 
   static const String rtcMessageSplitter = ':;:!:';
   static const String rtcLoadLevelDataSplitter = ':';
+  static const String rtcButtonPushSplitter = '&';
 
   //User Interface Constants
   static const double buttonWidth = 240;

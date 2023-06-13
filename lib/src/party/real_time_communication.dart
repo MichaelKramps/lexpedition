@@ -1,5 +1,6 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
+import 'package:lexpedition/src/game_data/button_push.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
 import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/party/lexpedition_data_message.dart';
@@ -29,9 +30,7 @@ class RealTimeCommunication {
   bool isConnected = false;
   late Function notifyListeners;
   late Function(GameLevel) loadPuzzleFromPeerUpdate;
-  late Function(LetterGrid) updatePuzzleFromPeerUpdate;
-  late Function(int) blastPuzzleFromPeerUpdate;
-  late Function(String) updateGuessListFromPeerUpdate;
+  late Function(ButtonPush, int?) pushButtonFromPeerUpdate;
   int numberLocalIceCandidates = 0;
   StreamStateCallback? onAddRemoteStream;
   late DatabaseReference roomDbReference;
@@ -45,14 +44,10 @@ class RealTimeCommunication {
   void setGameStateFunctions(
       {required Function notifyListeners,
       required Function(GameLevel) loadPuzzleFromPeerUpdate,
-      required Function(LetterGrid) updatePuzzleFromPeerUpdate,
-      required Function(int) blastPuzzleFromPeerUpdate,
-      required Function(String) updateGuessListFromPeerUpdate}) {
+      required Function(ButtonPush, int?) pushButtonFromPeerUpdate}) {
     this.notifyListeners = notifyListeners;
     this.loadPuzzleFromPeerUpdate = loadPuzzleFromPeerUpdate;
-    this.updatePuzzleFromPeerUpdate = updatePuzzleFromPeerUpdate;
-    this.blastPuzzleFromPeerUpdate = blastPuzzleFromPeerUpdate;
-    this.updateGuessListFromPeerUpdate = updateGuessListFromPeerUpdate;
+    this.pushButtonFromPeerUpdate = pushButtonFromPeerUpdate;
   }
 
   void addRoomId(String roomId) {
@@ -296,20 +291,13 @@ class RealTimeCommunication {
   }
 
   void handleDataChannelMessage(LexpeditionDataMessage message) {
-    if (message.type == LexpeditionDataMessageType.updateLevel) {
-      //handle game data
-      LetterGrid theirGrid = LetterGrid(message.text.split(','));
-      updatePuzzleFromPeerUpdate(theirGrid);
-    } else if (message.type == LexpeditionDataMessageType.loadLevel) {
+    if (message.type == LexpeditionDataMessageType.loadLevel) {
       //handle level load data
       GameLevel level = GameLevel.fromPeer(message.text);
       loadPuzzleFromPeerUpdate(level);
-    } else if (message.type == LexpeditionDataMessageType.blastIndex) {
-      //handle blast data
-      blastPuzzleFromPeerUpdate(int.parse(message.text));
-    } else if (message.type == LexpeditionDataMessageType.acceptedGuess) {
-      //handle accepted guess data
-      updateGuessListFromPeerUpdate(message.text);
+    } else if (message.type == LexpeditionDataMessageType.buttonPush) {
+      //handle button push
+      pushButtonFromPeerUpdate(message.buttonPush, message.tileIndexSelected);
     } else {
       //handle raw data
     }
@@ -324,30 +312,13 @@ class RealTimeCommunication {
     }
   }
 
-  void sendUpdatedGameDataToPeer(String gameDataString) {
-    if (this.isConnected) {
-      LexpeditionDataMessage thisMessage =
-          LexpeditionDataMessage.fromGameData(gameDataString);
-      _dataChannel
+  void sendButtonPushToPeer({
+    required ButtonPush buttonPushed,
+    int? tileIndex
+  }) {
+    LexpeditionDataMessage thisMessage =
+        LexpeditionDataMessage.fromButtonPush(buttonPushed: buttonPushed, tileIndex: tileIndex);
+    _dataChannel
           ?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
-    }
-  }
-
-  void sendBlastIndexDataToPeer(int blastIndex) {
-    if (this.isConnected) {
-      LexpeditionDataMessage thisMessage =
-          LexpeditionDataMessage.fromBlastIndex(blastIndex);
-      _dataChannel
-          ?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
-    }
-  }
-
-  void sendAcceptedGuessToPeer(String acceptedGuess) {
-    if (this.isConnected) {
-      LexpeditionDataMessage thisMessage =
-          LexpeditionDataMessage.fromAcceptedGuess(acceptedGuess);
-      _dataChannel
-          ?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
-    }
   }
 }
