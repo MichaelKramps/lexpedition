@@ -22,7 +22,7 @@ class OnePlayerRightColumnWidget extends StatelessWidget {
       ),
       BasicGameButton(
         onPressed: () {
-          gameState.resetPuzzle(notify: true);
+          gameState.resetPuzzle(notify: true, loadNew: false);
           logPuzzleQuit();
         },
         buttonText: 'Restart',

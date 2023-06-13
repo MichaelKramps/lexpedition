@@ -247,11 +247,16 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void resetPuzzle({bool notify = false}) {
+  void resetPuzzle({bool notify = false, bool loadNew = true}) {
     primaryLetterGrid = level.letterGrid;
     primaryLetterGrid.resetGrid();
 
-    secondaryLetterGrid = null;
+    if (loadNew) {
+      secondaryLetterGrid = null;
+    } else if (secondaryLetterGrid != null) {
+      secondaryLetterGrid = level.letterGridB;
+      secondaryLetterGrid!.resetGrid();
+    }
 
     guessList = [];
     levelCompleted = false;

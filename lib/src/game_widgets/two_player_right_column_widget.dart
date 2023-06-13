@@ -18,7 +18,7 @@ class TwoPlayerRightColumnWidget extends StatelessWidget {
       children: [
         BasicGameButton(
           onPressed: () {
-            gameState.resetPuzzle(notify: true);
+            gameState.resetPuzzle(notify: true, loadNew: false);
             logPuzzleQuit();
           },
           buttonText: 'Restart',
