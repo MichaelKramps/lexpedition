@@ -184,7 +184,7 @@ class TutorialDirective {
         gameState.clickTileAtIndex(clickedTileIndex: tileIndex);
         break;
       case TutorialDirectiveType.blastDirection:
-        gameState.changeBlastDirectionAndNotify();
+        gameState.changeBlastDirectionAndNotify(true);
         break;
       case TutorialDirectiveType.clear:
         gameState.clearGuessAndNotify(true);

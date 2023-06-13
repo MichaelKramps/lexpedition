@@ -182,41 +182,24 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updatePuzzleFromPeerUpdate(LetterGrid theirLetterGrid) {
-    theirLetterGrid.setChargedFromPartnerTiles();
-    setTheirGrid(theirLetterGrid);
-    setMyGridFromTheirs(theirLetterGrid);
-
-    if (isLevelWon()) {
-      levelCompleted = true;
-    }
-
-    notifyListeners();
-
-    if (getTheirGrid() != null && !levelCompleted) {
-      getTheirGrid()!.updateCurrentColumn();
-    } else if (getTheirGrid() != null && levelCompleted) {
-      getTheirGrid()!.resetCurrentColumn();
-    }
-  }
-
   void pushButtonFromPeerUpdate(ButtonPush buttonPushed, int? tileIndex) async {
     //peer pushed a button on their grid
     if (getTheirGrid() != null) {
       switch (buttonPushed) {
         case ButtonPush.clearGuess:
-          getTheirGrid()!.clearCurrentGuess();
+          clearGuessAndNotify(false);
           notifyListeners();
           break;
         case ButtonPush.changeBlastDirection:
-          getTheirGrid()!.changeBlastDirection();
+          changeBlastDirectionAndNotify(false);
           notifyListeners();
           break;
         case ButtonPush.submitGuess:
+          submitGuess(null, false);
           break;
         case ButtonPush.selectLetterTile:
           assert(tileIndex != null);
-
+          clickTileAtIndex(clickedTileIndex: tileIndex!, isMyGrid: false);
           break;
         default:
           //not a valid message
@@ -394,8 +377,10 @@ class GameState extends ChangeNotifier {
       }
     }
     setQualifiesValuesForTiles();
-    realTimeCommunication.sendButtonPushToPeer(
-        buttonPushed: ButtonPush.clearGuess);
+    if (isMyGrid) {
+      realTimeCommunication.sendButtonPushToPeer(
+          buttonPushed: ButtonPush.clearGuess);
+    }
     notifyListeners();
   }
 
@@ -555,7 +540,8 @@ class GameState extends ChangeNotifier {
   bool currentGuessIsValid(bool isMyGrid) {
     //return false if word has already been guessed
     for (AcceptedGuess previousGuess in guessList) {
-      if (previousGuess.guess.toUpperCase() == getCurrentGuessString(isMyGrid)) {
+      if (previousGuess.guess.toUpperCase() ==
+          getCurrentGuessString(isMyGrid)) {
         return false;
       }
     }
@@ -580,11 +566,13 @@ class GameState extends ChangeNotifier {
   }
 
   void handleAcceptedGuess(BuildContext? context, bool isMyGrid) async {
-    guessList.add(AcceptedGuess(guess: getCurrentGuessString(isMyGrid)));
-    getMyGrid()?.addGuess(getCurrentGuessString(isMyGrid));
+    guessList.add(AcceptedGuess(
+        guess: getCurrentGuessString(isMyGrid), fromMe: isMyGrid));
+    LetterGrid? gridWithGuess = isMyGrid ? getMyGrid() : getTheirGrid();
+    gridWithGuess?.addGuess(getCurrentGuessString(isMyGrid));
     chargeTilesFromGuess(isMyGrid);
-    bool activateBlast =
-        getCurrentGuess(isMyGrid).length >= Constants.guessLengthToActivateBlast;
+    bool activateBlast = getCurrentGuess(isMyGrid).length >=
+        Constants.guessLengthToActivateBlast;
     if (context != null) {
       final AudioController audioController = context.read<AudioController>();
       if (activateBlast) {
@@ -596,47 +584,36 @@ class GameState extends ChangeNotifier {
     // check for win condition
     if (isLevelWon()) {
       levelCompleted = true;
-      if (getMyGrid() != null) {
-        getMyGrid()!.resetCurrentColumn();
-      }
+      getMyGrid()?.resetCurrentColumn();
+      getTheirGrid()?.resetCurrentColumn();
     } else if (activateBlast) {
       //clearGuess() at end of this method will fire notifyListeners
       //before blastTiles() unblasts the tiles
       await blastTilesAndNotify(getCurrentGuess(isMyGrid).last.index);
     }
     // attempt to update current column for lexpedition puzzles
-    if (getMyGrid() != null && !levelCompleted) {
-      getMyGrid()!.updateCurrentColumn();
-    }
+    getMyGrid()?.updateCurrentColumn();
+    getTheirGrid()?.updateCurrentColumn();
     //notifyListeners() is called here
     clearGuessAndNotify(isMyGrid);
   }
 
   Future<void> blastTilesAndNotify(int index) async {
-    if (getMyGrid() != null) {
-      blasting = true;
+    blasting = true;
 
-      getMyGrid()!.blastFromIndex(index);
+    getMyGrid()?.blastFromIndex(index);
+    getTheirGrid()?.blastFromIndex(index);
 
-      // peer won't update us with new grid
-      // so we should blast their grid
-      if (getTheirGrid() != null) {
-        getTheirGrid()!.blastFromIndex(index);
-      }
-
+    notifyListeners();
+    if (isLevelWon()) {
+      levelCompleted = true;
       notifyListeners();
-      if (isLevelWon()) {
-        levelCompleted = true;
-        notifyListeners();
-      }
-
-      await Future<void>.delayed(Constants.blastDuration);
-      getMyGrid()!.unblast();
-      if (getTheirGrid() != null) {
-        getTheirGrid()!.unblast();
-      }
-      blasting = false;
     }
+
+    await Future<void>.delayed(Constants.blastDuration);
+    getMyGrid()?.unblast();
+    getTheirGrid()?.unblast();
+    blasting = false;
   }
 
   void flipBadGuess(bool isMyGrid) async {
@@ -652,15 +629,18 @@ class GameState extends ChangeNotifier {
   }
 
   void submitGuess(BuildContext? context, bool isMyGrid) {
-    if (getCurrentGuess(isMyGrid).length < 3 || !currentGuessIsValid(isMyGrid)) {
+    if (getCurrentGuess(isMyGrid).length < 3 ||
+        !currentGuessIsValid(isMyGrid)) {
       if (context != null) {
         final AudioController audioController = context.read<AudioController>();
         audioController.playSfx(SfxType.incorrectGuess);
       }
       flipBadGuess(isMyGrid);
     } else {
-      realTimeCommunication.sendButtonPushToPeer(
-          buttonPushed: ButtonPush.submitGuess);
+      if (isMyGrid) {
+        realTimeCommunication.sendButtonPushToPeer(
+            buttonPushed: ButtonPush.submitGuess);
+      }
       handleAcceptedGuess(context, isMyGrid);
     }
   }
@@ -679,8 +659,8 @@ class GameState extends ChangeNotifier {
       {required int clickedTileIndex,
       BuildContext? context,
       bool isMyGrid = true}) {
-    if (getMyGrid() != null) {
-      LetterGrid gridToClick = isMyGrid ? getMyGrid()! : getTheirGrid()!;
+    LetterGrid? gridToClick = isMyGrid ? getMyGrid() : getTheirGrid();
+    if (gridToClick != null) {
       int indexAdjustedForCurrentColumn =
           clickedTileIndex + gridToClick.currentColumn * 4;
       LetterTile clickedTile =
@@ -701,13 +681,15 @@ class GameState extends ChangeNotifier {
     }
   }
 
-  void changeBlastDirectionAndNotify() {
-    if (getMyGrid() != null) {
-      LetterGrid myGrid = getMyGrid() as LetterGrid;
-      myGrid.changeBlastDirection();
+  void changeBlastDirectionAndNotify(bool isMyGrid) {
+    LetterGrid? clickedGrid = isMyGrid ? getMyGrid() : getTheirGrid();
+    if (clickedGrid != null) {
+      clickedGrid.changeBlastDirection();
       setQualifiesValuesForTiles();
-      realTimeCommunication.sendButtonPushToPeer(
-          buttonPushed: ButtonPush.changeBlastDirection);
+      if (isMyGrid) {
+        realTimeCommunication.sendButtonPushToPeer(
+            buttonPushed: ButtonPush.changeBlastDirection);
+      }
       notifyListeners();
     }
   }

@@ -17,7 +17,7 @@ class BlastDirectionWidget extends StatelessWidget {
       onTap: () {
         AudioController audioController = context.read<AudioController>();
         audioController.playSfx(SfxType.tapButton);
-        gameState.changeBlastDirectionAndNotify();
+        gameState.changeBlastDirectionAndNotify(true);
       },
       child: RotatedBox(
         quarterTurns:

@@ -2,8 +2,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:lexpedition/src/game_data/button_push.dart';
 import 'package:lexpedition/src/game_data/game_level.dart';
-import 'package:lexpedition/src/game_data/letter_grid.dart';
 import 'package:lexpedition/src/party/lexpedition_data_message.dart';
+import 'package:logging/logging.dart';
 
 typedef void StreamStateCallback(MediaStream stream);
 
@@ -34,6 +34,7 @@ class RealTimeCommunication {
   int numberLocalIceCandidates = 0;
   StreamStateCallback? onAddRemoteStream;
   late DatabaseReference roomDbReference;
+  Logger _logger = new Logger('rtc');
 
   RealTimeCommunication() {
     localRenderer.initialize();
@@ -297,6 +298,7 @@ class RealTimeCommunication {
       loadPuzzleFromPeerUpdate(level);
     } else if (message.type == LexpeditionDataMessageType.buttonPush) {
       //handle button push
+      _logger.info('receiving button push: ' + message.buttonPush.toString());
       pushButtonFromPeerUpdate(message.buttonPush, message.tileIndexSelected);
     } else {
       //handle raw data
@@ -312,13 +314,11 @@ class RealTimeCommunication {
     }
   }
 
-  void sendButtonPushToPeer({
-    required ButtonPush buttonPushed,
-    int? tileIndex
-  }) {
-    LexpeditionDataMessage thisMessage =
-        LexpeditionDataMessage.fromButtonPush(buttonPushed: buttonPushed, tileIndex: tileIndex);
-    _dataChannel
-          ?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
+  void sendButtonPushToPeer(
+      {required ButtonPush buttonPushed, int? tileIndex}) {
+    _logger.info('sending button push: ' + buttonPushed.toString());
+    LexpeditionDataMessage thisMessage = LexpeditionDataMessage.fromButtonPush(
+        buttonPushed: buttonPushed, tileIndex: tileIndex);
+    _dataChannel?.send(RTCDataChannelMessage(thisMessage.createMessageText()));
   }
 }
