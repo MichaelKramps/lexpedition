@@ -66,13 +66,13 @@ class _GameInstanceWidgetState extends State<GameInstanceWidget> {
   }
 
   Widget determineAnimationForGameBoard() {
-    if (widget.gameState.blasting) {
-      return getBaseGameBoard()
-          .animate()
-          .shake(rotation: 0, offset: determineOffset(), hz: determineHz());
-    } else {
+    // if (widget.gameState.blasting) {
+    //   return getBaseGameBoard()
+    //       .animate()
+    //       .shake(rotation: 0, offset: determineOffset(), hz: determineHz());
+    // } else {
       return getBaseGameBoard();
-    }
+    //}
   }
 
   Offset determineOffset() {

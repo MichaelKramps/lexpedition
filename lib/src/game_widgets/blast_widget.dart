@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 
-class BlastWidget extends StatefulWidget {
+class BlastWidget extends StatelessWidget {
   final BlastDirection blastDirection;
   final bool beginBlastAnimation;
 
@@ -12,17 +12,12 @@ class BlastWidget extends StatefulWidget {
       required this.beginBlastAnimation});
 
   @override
-  State<BlastWidget> createState() => _BlastWidgetState();
-}
-
-class _BlastWidgetState extends State<BlastWidget> {
-  @override
   Widget build(BuildContext context) {
     return Visibility(
-        visible: widget.beginBlastAnimation,
+        visible: beginBlastAnimation,
         maintainAnimation: false,
         child: RotatedBox(
-          quarterTurns: widget.blastDirection == BlastDirection.horizontal ? 0 : 1,
+          quarterTurns: blastDirection == BlastDirection.horizontal ? 0 : 1,
           child: Image.asset(Constants.blastImage,
               height: Constants().tileSize(), 
               width: Constants().tileSize()

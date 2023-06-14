@@ -308,50 +308,6 @@ class GameState extends ChangeNotifier {
     return false;
   }
 
-  void setMyGrid(LetterGrid newGrid) {
-    if (realTimeCommunication.isPartyLeader) {
-      primaryLetterGrid = newGrid;
-    } else {
-      secondaryLetterGrid = newGrid;
-    }
-  }
-
-  void setMyGridFromTheirs(LetterGrid theirGrid) {
-    if (getMyGrid() != null && getTheirGrid() != null) {
-      LetterGrid myGrid = getMyGrid()!;
-      for (int index = 0;
-          index < primaryLetterGrid.letterTiles.length;
-          index++) {
-        LetterTile myTile = myGrid.letterTiles[index];
-        LetterTile theirTile = theirGrid.letterTiles[index];
-        myTile.primedForBlastFromPartner = theirTile.primedForBlastFromPartner;
-      }
-      setQualifiesValuesForTiles();
-    }
-  }
-
-  void addNewGuessesFromPartner(LetterGrid theirGrid) {
-    for (AcceptedGuess theirGuess in theirGrid.guesses) {
-      bool foundString = false;
-      for (AcceptedGuess currentGuess in guessList) {
-        if (currentGuess.matchesGuess(theirGuess)) {
-          foundString = true;
-        }
-      }
-      if (!foundString) {
-        guessList.add(theirGuess);
-      }
-    }
-  }
-
-  void setTheirGrid(LetterGrid newGrid) {
-    if (realTimeCommunication.isPartyLeader) {
-      secondaryLetterGrid?.updateGrid(newGrid);
-    } else {
-      primaryLetterGrid.updateGrid(newGrid);
-    }
-  }
-
   LetterGrid? getTheirGrid() {
     if (realTimeCommunication.isPartyLeader) {
       return secondaryLetterGrid;
