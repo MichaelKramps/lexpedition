@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_data/game_column.dart';
+import 'package:lexpedition/src/game_widgets/current_guess_widget.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
 import 'package:lexpedition/src/game_widgets/observer_blast_direction_widget.dart';
 import 'package:lexpedition/src/game_widgets/two_player_left_column_widget.dart';
@@ -32,7 +33,13 @@ class ObserverGameInstanceWidget extends StatelessWidget {
           Expanded(child: determineColumn(leftColumn)),
           Column( 
             children: [
-              ObserverBlastDirectionWidget(gameState: gameState),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ObserverBlastDirectionWidget(gameState: gameState),
+                  CurrentGuessWidget(gameState: gameState, myGrid: false)
+                ]
+              ),
               LetterGridWidget(
                   gameState: gameState,
                   letterGrid: gameState.getTheirGrid()!),

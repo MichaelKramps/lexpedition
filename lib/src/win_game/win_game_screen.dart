@@ -75,25 +75,32 @@ class WinGameScreen extends StatelessWidget {
                   if (gameState.realTimeCommunication.isPartyLeader) {
                     switch (gameState.gameMode) {
                       case GameMode.OnePlayerFreePlay:
-                        await gameState.loadOnePlayerPuzzle();
-                        if (gameState.errorDefinition ==
-                            ErrorDefinition.noError) {
-                          GoRouter.of(context).push('/freeplay/oneplayer');
+                        if (gameState.realTimeCommunication.isConnected) {
+                          GoRouter.of(context).push('/freeplay');
+                        } else {
+                          await gameState.loadOnePlayerPuzzle();
+                          if (gameState.errorDefinition ==
+                              ErrorDefinition.noError) {
+                            GoRouter.of(context).push('/freeplay/oneplayer');
+                          }
                         }
                         break;
                       case GameMode.TwoPlayerFreePlay:
-                        await gameState.loadTwoPlayerPuzzle();
-                        if (gameState.errorDefinition ==
-                            ErrorDefinition.noError) {
-                          GoRouter.of(context).push('/freeplay/twoplayer');
-                        }
+                        GoRouter.of(context).push('/freeplay');
                         break;
                       case GameMode.OnePlayerLexpedition:
-                        await gameState.loadOnePlayerLexpedition();
-                        if (gameState.errorDefinition ==
-                            ErrorDefinition.noError) {
-                          GoRouter.of(context).push('/lexpedition/oneplayer');
+                        if (gameState.realTimeCommunication.isConnected) {
+                          GoRouter.of(context).push('/lexpedition');
+                        } else {
+                          await gameState.loadOnePlayerLexpedition();
+                          if (gameState.errorDefinition ==
+                              ErrorDefinition.noError) {
+                            GoRouter.of(context).push('/lexpedition/oneplayer');
+                          }
                         }
+                        break;
+                      case GameMode.TwoPlayerLexpedition:
+                        GoRouter.of(context).push('/lexpedition');
                         break;
                       default:
                         GoRouter.of(context).push(continueRoute);
