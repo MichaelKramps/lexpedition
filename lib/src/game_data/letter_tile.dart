@@ -183,7 +183,7 @@ class LetterTile {
     if (row == 0) {
       //first row
       rowsToCheck.add(row + 1);
-    } else if (row == 5) {
+    } else if (row == 3) {
       //last row
       rowsToCheck.add(row - 1);
     } else {
