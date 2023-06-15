@@ -187,14 +187,16 @@ class GameState extends ChangeNotifier {
       switch (buttonPushed) {
         case ButtonPush.clearGuess:
           clearGuessAndNotify(false);
-          notifyListeners();
           break;
         case ButtonPush.changeBlastDirection:
           changeBlastDirectionAndNotify(false);
-          notifyListeners();
           break;
         case ButtonPush.submitGuess:
           submitGuess(null, false);
+          break;
+        case ButtonPush.restartPuzzle:
+          _logger.info('restart please');
+          resetPuzzle(notify: true, loadNew: false);
           break;
         case ButtonPush.selectLetterTile:
           assert(tileIndex != null);

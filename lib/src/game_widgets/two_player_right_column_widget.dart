@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lexpedition/src/game_data/button_push.dart';
 import 'package:lexpedition/src/game_data/game_mode.dart';
 import 'package:lexpedition/src/game_data/game_state.dart';
 import 'package:lexpedition/src/game_widgets/letter_grid_widget.dart';
@@ -18,6 +19,7 @@ class TwoPlayerRightColumnWidget extends StatelessWidget {
       children: [
         BasicGameButton(
           onPressed: () {
+            gameState.realTimeCommunication.sendButtonPushToPeer(buttonPushed: ButtonPush.restartPuzzle);
             gameState.resetPuzzle(notify: true, loadNew: false);
             logPuzzleQuit();
           },
@@ -27,12 +29,12 @@ class TwoPlayerRightColumnWidget extends StatelessWidget {
         determinePartnerScreen(),
         SizedBox(height: 12),
         BasicGameButton(
-        onPressed: () {
-          logPuzzleQuit();
-          GoRouter.of(context).push('/');
-        },
-        buttonText: 'Home',
-      )
+          onPressed: () {
+            logPuzzleQuit();
+            GoRouter.of(context).push('/');
+          },
+          buttonText: 'Home',
+        )
       ],
     );
   }
@@ -53,12 +55,12 @@ class TwoPlayerRightColumnWidget extends StatelessWidget {
         case GameMode.OnePlayerFreePlay:
         case GameMode.OnePlayerLexpedition:
           LevelDatabaseConnection.logOnePlayerUnfinishedPuzzleResults(
-            gameState.level.puzzleId as int);
+              gameState.level.puzzleId as int);
           break;
         case GameMode.TwoPlayerFreePlay:
         case GameMode.TwoPlayerLexpedition:
           LevelDatabaseConnection.logTwoPlayerUnfinishedPuzzleResults(
-            gameState.level.puzzleId as int);
+              gameState.level.puzzleId as int);
           break;
         default:
           break;
