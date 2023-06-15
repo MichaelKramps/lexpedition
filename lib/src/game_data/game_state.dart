@@ -3,7 +3,6 @@ import 'package:lexpedition/src/audio/audio_controller.dart';
 import 'package:lexpedition/src/audio/sounds.dart';
 import 'package:lexpedition/src/build_puzzle/blank_grid.dart';
 import 'package:lexpedition/src/game_data/accepted_guess.dart';
-import 'package:lexpedition/src/game_data/blast_direction.dart';
 import 'package:lexpedition/src/game_data/button_push.dart';
 import 'package:lexpedition/src/game_data/constants.dart';
 import 'package:lexpedition/src/game_data/error_definitions.dart';
@@ -372,22 +371,32 @@ class GameState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void attemptToPrimeOtherGrid(int index, bool isMyGrid) {
+  void attemptToPrimeOtherGrid(int absoluteIndex, bool isMyGrid) {
+    LetterGrid? thisGrid = isMyGrid ? getMyGrid() : getTheirGrid();
     LetterGrid? otherGrid = isMyGrid ? getTheirGrid() : getMyGrid();
 
-    if (otherGrid != null) {
+    if (otherGrid != null && thisGrid != null) {
       if (realTimeCommunication.isConnected) {
-        otherGrid.letterTiles[index].primeForBlastFromPartner();
+        int indexToPrime =
+            otherGrid.getAbsoluteIndex(thisGrid.getVisualIndex(absoluteIndex));
+        if (indexToPrime >= 0 && indexToPrime < otherGrid.letterTiles.length) {
+          otherGrid.letterTiles[indexToPrime].primeForBlastFromPartner();
+        }
       }
     }
   }
 
-  void attemptToUnprimeOtherGrid(int index, isMyGrid) {
+  void attemptToUnprimeOtherGrid(int absoluteIndex, isMyGrid) {
+    LetterGrid? thisGrid = isMyGrid ? getMyGrid() : getTheirGrid();
     LetterGrid? otherGrid = isMyGrid ? getTheirGrid() : getMyGrid();
 
-    if (otherGrid != null) {
+    if (otherGrid != null && thisGrid != null) {
       if (realTimeCommunication.isConnected) {
-        otherGrid.letterTiles[index].unprimeForBlastFromPartner();
+        int indexToPrime =
+            otherGrid.getAbsoluteIndex(thisGrid.getVisualIndex(absoluteIndex));
+        if (indexToPrime >= 0 && indexToPrime < otherGrid.letterTiles.length) {
+          otherGrid.letterTiles[indexToPrime].unprimeForBlastFromPartner();
+        }
       }
     }
   }
@@ -501,7 +510,7 @@ class GameState extends ChangeNotifier {
     } else if (activateBlast) {
       //clearGuess() at end of this method will fire notifyListeners
       //before blastTiles() unblasts the tiles
-      await blastTilesAndNotify(getCurrentGuess(isMyGrid).last.index);
+      await blastTilesAndNotify(getCurrentGuess(isMyGrid).last.index, isMyGrid);
     }
     // attempt to update current column for lexpedition puzzles
     getMyGrid()?.updateCurrentColumn();
@@ -510,11 +519,17 @@ class GameState extends ChangeNotifier {
     clearGuessAndNotify(isMyGrid);
   }
 
-  Future<void> blastTilesAndNotify(int index) async {
+  Future<void> blastTilesAndNotify(int absoluteIndex, bool isMyGrid) async {
     blasting = true;
 
-    getMyGrid()?.blastFromIndex(index);
-    getTheirGrid()?.blastFromIndex(index);
+    LetterGrid? thisGrid = isMyGrid ? getMyGrid() : getTheirGrid();
+    LetterGrid? otherGrid = isMyGrid ? getTheirGrid() : getMyGrid();
+
+    thisGrid?.blastFromIndex(absoluteIndex);
+    if (thisGrid != null && otherGrid != null) {
+      otherGrid.blastFromIndex(
+          otherGrid.getAbsoluteIndex(thisGrid.getVisualIndex(absoluteIndex)));
+    }
 
     notifyListeners();
     if (isLevelWon()) {

@@ -275,6 +275,16 @@ class LetterGrid {
     }
   }
 
+  int getVisualIndex(int absoluteIndex) {
+    int numberIndexesOffScreen = this.currentColumn * 4;
+    return absoluteIndex - numberIndexesOffScreen;
+  }
+
+  int getAbsoluteIndex(int visualIndex) {
+    int numberIndexesOffScreen = this.currentColumn * 4;
+    return visualIndex + numberIndexesOffScreen;
+  }
+
   void clearCurrentGuess() {
     this.currentGuess = [];
     clearPrimedForBlast();
